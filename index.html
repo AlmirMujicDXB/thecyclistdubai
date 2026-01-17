@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheCyclistDubai - Cycling in Dubai</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            max-width: 500px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0a3d62 0%, #1e5799 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo i {
+            font-size: 32px;
+            margin-right: 15px;
+            color: #4cd137;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .tagline {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .tabs-container {
+            display: flex;
+            background-color: white;
+            border-bottom: 1px solid #e1e8ed;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 18px 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tab i {
+            font-size: 20px;
+            margin-bottom: 6px;
+            color: #7f8c8d;
+        }
+        
+        .tab.active {
+            color: #0a3d62;
+            border-bottom: 3px solid #4cd137;
+        }
+        
+        .tab.active i {
+            color: #0a3d62;
+        }
+        
+        .tab:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .content {
+            display: none;
+            padding: 25px 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .content h2 {
+            color: #0a3d62;
+            margin-bottom: 20px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .content h2 i {
+            margin-right: 12px;
+            color: #4cd137;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h3 {
+            color: #1e5799;
+            margin-bottom: 10px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h3 i {
+            margin-right: 10px;
+            color: #4cd137;
+        }
+        
+        .card p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .link-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #0a3d62, #1e5799);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(10, 61, 98, 0.2);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(10, 61, 98, 0.3);
+        }
+        
+        .link-btn i {
+            margin-left: 8px;
+        }
+        
+        .track-list, .shop-list, .event-list {
+            list-style: none;
+        }
+        
+        .track-list li, .shop-list li, .event-list li {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid #4cd137;
+        }
+        
+        .track-list li h4, .shop-list li h4, .event-list li h4 {
+            color: #0a3d62;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .track-list li p, .shop-list li p, .event-list li p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .track-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+        
+        .detail-item {
+            background-color: #eef7ff;
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 3px solid #4cd137;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #0a3d62;
+            display: block;
+            margin-bottom: 2px;
+        }
+        
+        .detail-value {
+            color: #555;
+        }
+        
+        .track-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .location {
+            display: inline-block;
+            background-color: #e8f4fc;
+            color: #1e5799;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-top: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .location:hover {
+            background-color: #d1e7ff;
+            transform: translateY(-2px);
+        }
+        
+        .location i {
+            margin-right: 5px;
+        }
+        
+        .date {
+            display: inline-block;
+            background-color: #f0f7f0;
+            color: #27ae60;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-top: 8px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid #e1e8ed;
+            font-size: 14px;
+            color: #666;
+            z-index: 100;
+        }
+        
+        .external-notice {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .external-notice i {
+            color: #ff9800;
+            margin-right: 10px;
+        }
+        
+        .shop-link, .event-link, .gallery-link, .map-link {
+            display: inline-block;
+            background: linear-gradient(to right, #0a3d62, #1e5799);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(10, 61, 98, 0.2);
+            text-align: center;
+            flex: 1;
+            min-width: 140px;
+        }
+        
+        .shop-link:hover, .event-link:hover, .gallery-link:hover, .map-link:hover {
+            background: linear-gradient(to right, #1e5799, #0a3d62);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(10, 61, 98, 0.3);
+        }
+        
+        .shop-link i, .event-link i, .gallery-link i, .map-link i {
+            margin-right: 5px;
+        }
+        
+        /* Fixed header layout for bike shops and events */
+        .shop-item-header, .event-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .shop-item-header h4, .event-item-header h4 {
+            margin-right: 15px;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .shop-item-header .shop-link, .event-item-header .event-link {
+            margin-top: 0;
+            flex-shrink: 0;
+            width: auto;
+            min-width: 120px;
+        }
+        
+        .event-category {
+            display: inline-block;
+            background-color: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+            width: 100%;
+        }
+        
+        @media (max-width: 500px) {
+            body {
+                box-shadow: none;
+            }
+            
+            footer {
+                border-radius: 0;
+            }
+            
+            .tab {
+                font-size: 14px;
+                padding: 16px 5px;
+            }
+            
+            .tab i {
+                font-size: 18px;
+            }
+            
+            .shop-item-header, .event-item-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .shop-item-header h4, .event-item-header h4 {
+                margin-right: 0;
+                margin-bottom: 8px;
+                min-width: 100%;
+            }
+            
+            .shop-item-header .shop-link, .event-item-header .event-link {
+                align-self: flex-start;
+                width: 100%;
+                max-width: 180px;
+            }
+            
+            .track-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .track-buttons {
+                flex-direction: column;
+            }
+            
+            .gallery-link, .map-link {
+                width: 100%;
+            }
+        }
+        
+        /* For very small screens */
+        @media (max-width: 350px) {
+            .shop-item-header .shop-link, .event-item-header .event-link {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-bicycle"></i>
+            <h1>TheCyclistDubai</h1>
+        </div>
+        <p class="tagline">Your guide to cycling in Dubai</p>
+    </header>
+    
+    <div class="tabs-container">
+        <div class="tab active" data-tab="tracks">
+            <i class="fas fa-route"></i>
+            <span>Cycling Tracks</span>
+        </div>
+        <div class="tab" data-tab="events">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Cycling Events</span>
+        </div>
+        <div class="tab" data-tab="rules">
+            <i class="fas fa-book"></i>
+            <span>Rules & Regulations</span>
+        </div>
+        <div class="tab" data-tab="shops">
+            <i class="fas fa-store"></i>
+            <span>Bike Shops</span>
+        </div>
+    </div>
+    
+    <!-- Cycling Tracks Content -->
+    <div id="tracks" class="content active">
+        <h2><i class="fas fa-route"></i> Cycling Tracks in Dubai</h2>
+        
+        <div class="external-notice">
+            <i class="fas fa-external-link-alt"></i>
+            <strong>External Resource:</strong> This section links to the comprehensive cycling tracks database at cyclingtracks.ae
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-map-marked-alt"></i> Best Cycling Tracks</h3>
+            <p>Dubai offers a variety of cycling tracks suitable for all skill levels. From scenic coastal routes to challenging mountain trails, there's something for every cyclist.</p>
+            
+            <ul class="track-list">
+                <li>
+                    <h4>Al Qudra Cycle Track</h4>
+                    <p>A stunning desert cycling experience with dedicated tracks through the beautiful Seih Al Salam desert landscape.</p>
+                    
+                    <div class="track-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Level:</span>
+                            <span class="detail-value">Flat, smooth tarmac, mostly car-free</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Distance:</span>
+                            <span class="detail-value">86km full loop, with 50km & 30km options</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Bike Type:</span>
+                            <span class="detail-value">Road, hybrid, or mountain bikes all suitable</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Water Stations:</span>
+                            <span class="detail-value">Available but widely spaced; carry own supply</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Scenery:</span>
+                            <span class="detail-value">Desert dunes, occasional wildlife (oryx, gazelles)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Facilities:</span>
+                            <span class="detail-value">Rest areas, bike rental, lit for night cycling</span>
+                        </div>
+                    </div>
+                    
+                    <div class="track-buttons">
+                        <a href="https://www.youtube.com/watch?v=JgcCSdmLtFU" target="_blank" class="gallery-link">
+                            <i class="fas fa-images"></i> Seih Al Salam Desert Gallery
+                        </a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Al+Qudra+Cycle+Track+Dubai" target="_blank" class="map-link">
+                            <i class="fas fa-map-marker-alt"></i> View on Google Maps
+                        </a>
+                    </div>
+                </li>
+                
+                <li>
+                    <h4>Nad Al Sheba Cycle Park</h4>
+                    <p>8.5 km floodlit track with varying difficulty levels and beautiful skyline views. Perfect for evening rides with friends or solo training sessions.</p>
+                    
+                    <div class="track-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Level:</span>
+                            <span class="detail-value">Beginner to intermediate, well-lit</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Distance:</span>
+                            <span class="detail-value">8.5km circuit with shorter options</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Surface:</span>
+                            <span class="detail-value">Smooth asphalt, excellent condition</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Lighting:</span>
+                            <span class="detail-value">Fully illuminated for night cycling</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Scenery:</span>
+                            <span class="detail-value">City skyline views, open desert</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Facilities:</span>
+                            <span class="detail-value">Parking, toilets, water stations</span>
+                        </div>
+                    </div>
+                    
+                    <div class="track-buttons">
+                        <a href="https://www.youtube.com/results?search_query=Nad+Al+Sheba+Cycle+Park+Dubai" target="_blank" class="gallery-link">
+                            <i class="fas fa-images"></i> Nad Al Sheba Gallery
+                        </a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Nad+Al+Sheba+Cycle+Park+Dubai" target="_blank" class="map-link">
+                            <i class="fas fa-map-marker-alt"></i> View on Google Maps
+                        </a>
+                    </div>
+                </li>
+                
+                <li>
+                    <h4>Dubai Canal Track</h4>
+                    <p>12.5 km track along the Dubai Water Canal with stunning city views. Enjoy the cool breeze from the water as you cycle past iconic Dubai landmarks.</p>
+                    
+                    <div class="track-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Level:</span>
+                            <span class="detail-value">Flat, easy, perfect for families</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Distance:</span>
+                            <span class="detail-value">12.5km along the water canal</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Surface:</span>
+                            <span class="detail-value">Smooth dedicated cycling path</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Scenery:</span>
+                            <span class="detail-value">Water views, city landmarks, bridges</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Best Time:</span>
+                            <span class="detail-value">Early morning or sunset</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Facilities:</span>
+                            <span class="detail-value">Rest areas, cafes nearby, bike racks</span>
+                        </div>
+                    </div>
+                    
+                    <div class="track-buttons">
+                        <a href="https://www.youtube.com/results?search_query=Dubai+Canal+Cycle+Track" target="_blank" class="gallery-link">
+                            <i class="fas fa-images"></i> Dubai Canal Gallery
+                        </a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Dubai+Canal+Cycle+Track" target="_blank" class="map-link">
+                            <i class="fas fa-map-marker-alt"></i> View on Google Maps
+                        </a>
+                    </div>
+                </li>
+                
+                <li>
+                    <h4>Meydan Racecourse Track</h4>
+                    <p>5 km track around the world-famous Meydan Racecourse with smooth surfaces and good lighting. Perfect for beginners and family cycling.</p>
+                    
+                    <div class="track-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Level:</span>
+                            <span class="detail-value">Beginner-friendly, flat</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Distance:</span>
+                            <span class="detail-value">5km circuit, easy to repeat</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Surface:</span>
+                            <span class="detail-value">Perfectly smooth asphalt</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Lighting:</span>
+                            <span class="detail-value">Good illumination for evening rides</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Scenery:</span>
+                            <span class="detail-value">Racecourse views, city backdrop</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Facilities:</span>
+                            <span class="detail-value">Parking, water fountains, seating</span>
+                        </div>
+                    </div>
+                    
+                    <div class="track-buttons">
+                        <a href="https://www.youtube.com/results?search_query=Meydan+Racecourse+Cycle+Track+Dubai" target="_blank" class="gallery-link">
+                            <i class="fas fa-images"></i> Meydan Racecourse Gallery
+                        </a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Meydan+Racecourse+Cycle+Track+Dubai" target="_blank" class="map-link">
+                            <i class="fas fa-map-marker-alt"></i> View on Google Maps
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            
+            <a href="https://www.cyclingtracks.ae/" target="_blank" class="link-btn">
+                Explore All Tracks <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Cycling Events Content -->
+    <div id="events" class="content">
+        <h2><i class="fas fa-calendar-alt"></i> Cycling Events</h2>
+        
+        <div class="card">
+            <h3><i class="fas fa-medal"></i> Event Platforms</h3>
+            <p>Discover and register for cycling events in Dubai through these premier platforms. Find races, group rides, charity events, and more for cyclists of all levels.</p>
+            
+            <ul class="event-list">
+                <li>
+                    <div class="event-item-header">
+                        <h4>Hopa Sports</h4>
+                        <a href="https://www.hopasports.com/en" target="_blank" class="event-link">
+                            <i class="fas fa-external-link-alt"></i> Visit Website
+                        </a>
+                    </div>
+                    <p>Leading platform for sports events in the UAE. Find cycling races, triathlons, and endurance challenges with easy online registration.</p>
+                    <span class="event-category">Event Registration Platform</span>
+                </li>
+                <li>
+                    <div class="event-item-header">
+                        <h4>Premier Online</h4>
+                        <a href="https://www.premieronline.com/" target="_blank" class="event-link">
+                            <i class="fas fa-external-link-alt"></i> Visit Website
+                        </a>
+                    </div>
+                    <p>Comprehensive event management and registration platform featuring cycling events, marathons, and sports competitions across Dubai.</p>
+                    <span class="event-category">Event Management Platform</span>
+                </li>
+            </ul>
+            
+            <div class="external-notice">
+                <i class="fas fa-info-circle"></i>
+                <strong>Tip:</strong> Check these platforms regularly for upcoming cycling events. Many events offer early bird registration discounts.
+            </div>
+            
+            <button class="link-btn" onclick="alert('Event calendar with filters coming soon!')">
+                View Event Calendar <i class="fas fa-calendar-day"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Rules & Regulations Content -->
+    <div id="rules" class="content">
+        <h2><i class="fas fa-book"></i> Rules & Regulations</h2>
+        
+        <div class="external-notice">
+            <i class="fas fa-external-link-alt"></i>
+            <strong>Official Regulations:</strong> This section links to the official RTA cycling regulations page
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-gavel"></i> Cycling Rules in Dubai</h3>
+            <p>To ensure safety for all road users, Dubai has specific regulations for cyclists. Following these rules is essential for safe and legal cycling.</p>
+            
+            <ul class="track-list">
+                <li>
+                    <h4>Mandatory Safety Gear</h4>
+                    <p>All cyclists must wear a helmet. Reflective clothing is required for night cycling.</p>
+                </li>
+                <li>
+                    <h4>Designated Cycling Paths</h4>
+                    <p>Cyclists must use dedicated cycling tracks where available. Riding on sidewalks is prohibited.</p>
+                </li>
+                <li>
+                    <h4>Traffic Rules Compliance</h4>
+                    <p>Cyclists must obey all traffic signals and signs. Use hand signals when turning.</p>
+                </li>
+                <li>
+                    <h4>Bicycle Requirements</h4>
+                    <p>Bicycles must have front and rear lights, reflectors, and a working bell or horn.</p>
+                </li>
+            </ul>
+            
+            <a href="https://www.rta.ae/wps/portal/rta/ae/home/about-rta/cycling-track" target="_blank" class="link-btn">
+                View Official RTA Rules <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Bike Shops Content -->
+    <div id="shops" class="content">
+        <h2><i class="fas fa-store"></i> Bike Shops in Dubai</h2>
+        
+        <div class="card">
+            <h3><i class="fas fa-bicycle"></i> Recommended Bike Shops</h3>
+            <p>Find the perfect bike, accessories, or repair services at these trusted Dubai bike shops. All shops offer professional services and quality products for cyclists of all levels.</p>
+            
+            <ul class="shop-list">
+                <li>
+                    <div class="shop-item-header">
+                        <h4>The Cycle Hub</h4>
+                        <a href="https://thecyclehub.com/" target="_blank" class="shop-link">
+                            <i class="fas fa-external-link-alt"></i> Visit Website
+                        </a>
+                    </div>
+                    <p>Community-focused cycling shop offering bikes, gear, repairs, and organized group rides. Great for both beginners and experienced cyclists.</p>
+                    <span class="location">Dubai Hills Mall & Jumeirah</span>
+                </li>
+                <li>
+                    <div class="shop-item-header">
+                        <h4>Wolfi's Bike Shop</h4>
+                        <a href="https://wolfis.ae/" target="_blank" class="shop-link">
+                            <i class="fas fa-external-link-alt"></i> Visit Website
+                        </a>
+                    </div>
+                    <p>Premium bike shop with professional bike fitting, high-end brands, and expert repair services. Known for quality and attention to detail.</p>
+                    <span class="location">Al Quoz, Dubai</span>
+                </li>
+                <li>
+                    <div class="shop-item-header">
+                        <h4>Bikeera</h4>
+                        <a href="https://bikeera.com/" target="_blank" class="shop-link">
+                            <i class="fas fa-external-link-alt"></i> Visit Website
+                        </a>
+                    </div>
+                    <p>Comprehensive cycling store with a wide range of bikes, components, apparel, and accessories. Regular maintenance workshops available.</p>
+                    <span class="location">Sheikh Zayed Road</span>
+                </li>
+                <li>
+                    <div class="shop-item-header">
+                        <h4>Revolution Cycles</h4>
+                        <a href="https://rcdxb.com/" target="_blank" class="shop-link">
+                            <i class="fas fa-external-link-alt"></i> Visit Website
+                        </a>
+                    </div>
+                    <p>Specializes in mountain bikes and trail gear with expert mechanics. Offers bike rentals and guided mountain biking tours.</p>
+                    <span class="location">Al Barsha, Dubai</span>
+                </li>
+            </ul>
+            
+            <div class="external-notice">
+                <i class="fas fa-info-circle"></i>
+                <strong>Tip:</strong> Contact shops directly for current stock, pricing, and repair appointment availability.
+            </div>
+            
+            <button class="link-btn" onclick="alert('Shop comparison tool coming soon!')">
+                Compare Shop Services <i class="fas fa-chart-bar"></i>
+            </button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>TheCyclistDubai &copy; 2023 | Your Guide to Cycling in Dubai</p>
+        <p style="font-size: 12px; margin-top: 5px; color: #888;">Mobile-Optimized Cycling Resource</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Simulate loading animation
+            setTimeout(() => {
+                document.body.style.opacity = 1;
+            }, 100);
+        });
+        
+        // Add visual feedback for external links
+        const externalLinks = document.querySelectorAll('a[target="_blank"]');
+        externalLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+        
+        // Add confirmation for the Seih Al Salam Desert Gallery link
+        const desertGalleryLink = document.querySelector('a[href*="youtube.com/watch"]');
+        if (desertGalleryLink) {
+            desertGalleryLink.addEventListener('click', function(e) {
+                if (!confirm('You are being redirected to a video about Seih Al Salam Desert Gallery. Continue?')) {
+                    e.preventDefault();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
