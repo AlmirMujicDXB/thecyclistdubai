@@ -313,34 +313,45 @@
             color: #DD2A7B;
         }
 
-        /* New Instagram Story button */
-        .story-button {
+        /* WhatsApp button — clean, no text outline */
+        .whatsapp-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+            background: #25D366;  /* WhatsApp green */
             width: 100%;
-            max-width: 260px;
-            margin: 1rem auto 0.8rem;
-            padding: 12px 20px;
+            max-width: 280px;
+            margin: 1rem auto 0.4rem;
+            padding: 12px 24px;
             border-radius: 60px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 0.9rem;
-            color: white;
+            font-size: 0.95rem;
+            color: #FFFFFF;
             transition: 0.2s ease;
-            box-shadow: 0 4px 12px rgba(221,42,123,0.2);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
             border: none;
             cursor: pointer;
         }
-        .story-button i {
-            font-size: 1.2rem;
+        .whatsapp-button i {
+            font-size: 1.3rem;
+            color: #FFFFFF;
         }
-        .story-button:hover {
+        .whatsapp-button:hover {
             transform: translateY(-2px);
-            filter: brightness(1.02);
-            box-shadow: 0 8px 16px rgba(221,42,123,0.3);
+            background: #075E54;
+            box-shadow: 0 8px 18px rgba(37, 211, 102, 0.4);
+        }
+
+        /* New subtitle below WhatsApp button */
+        .ask-text {
+            font-size: 0.75rem;
+            color: #6C6C74;
+            margin-top: 0.4rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
         }
 
         hr {
@@ -390,7 +401,7 @@
             .partner-card {
                 width: 100%;
             }
-            .story-button {
+            .whatsapp-button {
                 max-width: 100%;
             }
         }
@@ -477,10 +488,15 @@
         </div>
     </div>
 
-    <!-- Instagram Story share button (new) -->
-    <button id="shareStoryBtn" class="story-button">
-        <i class="fab fa-instagram"></i> Share to Instagram Story
-    </button>
+    <!-- WhatsApp group invite button -->
+    <a href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo" target="_blank" rel="noopener noreferrer" class="whatsapp-button">
+        <i class="fab fa-whatsapp"></i> Join TCD WhatsApp Group
+    </a>
+
+    <!-- New line: Ask cyclists in Dubai (grammatically correct) -->
+    <div class="ask-text">
+        <i class="fas fa-comment-dots"></i> Ask cyclists in Dubai
+    </div>
 
     <hr>
     <div class="footer-note">
@@ -490,40 +506,5 @@
     </div>
 </div>
 
-<script>
-    (function() {
-        const shareBtn = document.getElementById('shareStoryBtn');
-        const pageUrl = encodeURIComponent(window.location.href);
-        const instagramStoryIntent = `instagram://story-camera?link=${pageUrl}`;
-        
-        function shareToInstagramStory() {
-            // Attempt to open Instagram story camera with link
-            const start = Date.now();
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = instagramStoryIntent;
-            document.body.appendChild(iframe);
-            
-            // Fallback: if Instagram app is not installed, copy link and notify
-            const timeout = setTimeout(() => {
-                document.body.removeChild(iframe);
-                // Copy current page URL to clipboard
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    alert("Instagram app not detected. The page link has been copied to your clipboard. You can paste it into your Instagram Story as a link sticker.");
-                }).catch(() => {
-                    alert("Please open this page on your mobile device to share directly to Instagram Story, or copy the link manually: " + window.location.href);
-                });
-            }, 2500);
-            
-            // If the app opens, clear timeout
-            window.addEventListener('blur', () => {
-                clearTimeout(timeout);
-                setTimeout(() => document.body.removeChild(iframe), 500);
-            });
-        }
-        
-        shareBtn.addEventListener('click', shareToInstagramStory);
-    })();
-</script>
 </body>
 </html>
