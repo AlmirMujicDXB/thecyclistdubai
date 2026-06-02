@@ -111,7 +111,7 @@
             text-align: left;
         }
 
-        /* Two-button row (side by side) - now positioned above QR */
+        /* Two-button row (side by side) */
         .buttons-row {
             display: flex;
             gap: 1rem;
@@ -177,6 +177,36 @@
             box-shadow: 0 8px 16px rgba(252,76,2,0.3);
         }
 
+        /* Info row: two columns with clean text (no frames) */
+        .info-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 0.5rem 0 1rem;
+            flex-wrap: wrap;
+        }
+        .info-card {
+            flex: 1;
+            min-width: 160px;
+            text-align: center;
+        }
+        /* No background, no border, just text + icon */
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #3A3A40;
+            background: none;
+            padding: 0;
+            border: none;
+        }
+        .info-badge i {
+            color: #f58529;
+            font-size: 0.95rem;
+        }
+
         /* QR wrapper — Instagram gradient border */
         .qr-instagram-wrapper {
             background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af, #515bd4);
@@ -200,30 +230,6 @@
             height: 170px;
             display: block;
             border-radius: 28px;
-        }
-
-        /* New stats row (below QR) */
-        .new-stats-row {
-            display: flex;
-            justify-content: center;
-            gap: 1.2rem;
-            margin: 0.8rem 0 1.5rem;
-            flex-wrap: wrap;
-        }
-        .stat-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #F2F2F5;
-            padding: 0.4rem 1rem;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #1C1C1E;
-        }
-        .stat-badge i {
-            color: #f58529;
-            font-size: 0.9rem;
         }
 
         /* Partner section — refined */
@@ -307,6 +313,36 @@
             color: #DD2A7B;
         }
 
+        /* New Instagram Story button */
+        .story-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+            width: 100%;
+            max-width: 260px;
+            margin: 1rem auto 0.8rem;
+            padding: 12px 20px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: white;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 12px rgba(221,42,123,0.2);
+            border: none;
+            cursor: pointer;
+        }
+        .story-button i {
+            font-size: 1.2rem;
+        }
+        .story-button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.02);
+            box-shadow: 0 8px 16px rgba(221,42,123,0.3);
+        }
+
         hr {
             margin: 1.4rem 0 0.8rem;
             border: 0;
@@ -321,7 +357,7 @@
             margin-top: 0.8rem;
         }
 
-        /* Import Instagram-inspired font (Poppins for bold modern look) */
+        /* Import Instagram-inspired font */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
         @media (max-width: 520px) {
@@ -339,6 +375,10 @@
                 flex-direction: column;
                 gap: 0.8rem;
             }
+            .info-row {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
             .ig-cta-button, .strava-cta-button {
                 width: 100%;
             }
@@ -349,6 +389,9 @@
             }
             .partner-card {
                 width: 100%;
+            }
+            .story-button {
+                max-width: 100%;
             }
         }
     </style>
@@ -361,7 +404,6 @@
     <!-- Title -->
     <div>
         <div class="main-title">THE CYCLIST DUBAI</div>
-        <!-- Instagram-inspired subtitle: gradient + bold modern font -->
         <div class="guide-sub">DUBAI CYCLING GUIDE</div>
     </div>
 
@@ -377,7 +419,7 @@
         From Al Qudra the Guinness World Record’s longest road cycling track to MTB and gravel trails in Mushrif Park, urban routes through the city, enduro challenges in Hatta, and luxury beachside tracks on Jumeirah Beach—Dubai offers every cycling discipline. Add world-class bike shops and leading brands, and you get a truly premium destination where two wheels meet limitless terrain.
     </div>
 
-    <!-- Two buttons side by side: TheCyclistDubai (Instagram) and Strava Dubai -->
+    <!-- Two buttons side by side -->
     <div class="buttons-row">
         <a href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener noreferrer" class="ig-cta-button">
             <i class="fab fa-instagram"></i> TheCyclistDubai
@@ -387,6 +429,20 @@
         </a>
     </div>
 
+    <!-- Info row: Dubai Cycling Content + Dubai Group Rides (no frames, plain text) -->
+    <div class="info-row">
+        <div class="info-card">
+            <div class="info-badge">
+                <i class="fas fa-star"></i> Dubai Cycling Content
+            </div>
+        </div>
+        <div class="info-card">
+            <div class="info-badge">
+                <i class="fas fa-users"></i> Dubai Group Rides
+            </div>
+        </div>
+    </div>
+
     <!-- QR Code block -->
     <div class="qr-instagram-wrapper">
         <div class="qr-white-container">
@@ -394,17 +450,11 @@
         </div>
     </div>
 
-    <!-- Stats row: 21K followers + Best Dubai Cycling Content -->
-    <div class="new-stats-row">
-        <div class="stat-badge"><i class="fab fa-instagram"></i> 21K followers</div>
-        <div class="stat-badge"><i class="fas fa-star"></i> Best Dubai Cycling Content</div>
-    </div>
-
     <!-- Partner offers -->
     <div class="partner-section">
         <div class="partner-title"><i class="fas fa-tag"></i> EXCLUSIVE PARTNER OFFERS</div>
         <div class="partner-buttons">
-            <!-- LAMEDA card -->
+            <!-- LAMEDA -->
             <div class="partner-card">
                 <a href="https://www.lameda.cc" target="_blank" rel="noopener noreferrer" class="partner-btn">
                     <i class="fas fa-tshirt"></i> LAMEDA
@@ -414,7 +464,7 @@
                     <strong>DISCOUNT CODE:</strong> DXB
                 </div>
             </div>
-            <!-- INBIKE card — link updated to www.inbike.cc -->
+            <!-- INBIKE -->
             <div class="partner-card">
                 <a href="https://www.inbike.cc" target="_blank" rel="noopener noreferrer" class="partner-btn">
                     <i class="fas fa-tshirt"></i> INBIKE
@@ -427,6 +477,11 @@
         </div>
     </div>
 
+    <!-- Instagram Story share button (new) -->
+    <button id="shareStoryBtn" class="story-button">
+        <i class="fab fa-instagram"></i> Share to Instagram Story
+    </button>
+
     <hr>
     <div class="footer-note">
         <i class="fas fa-qrcode"></i> Scan QR or tap button — join the ride in Dubai
@@ -435,5 +490,40 @@
     </div>
 </div>
 
+<script>
+    (function() {
+        const shareBtn = document.getElementById('shareStoryBtn');
+        const pageUrl = encodeURIComponent(window.location.href);
+        const instagramStoryIntent = `instagram://story-camera?link=${pageUrl}`;
+        
+        function shareToInstagramStory() {
+            // Attempt to open Instagram story camera with link
+            const start = Date.now();
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = instagramStoryIntent;
+            document.body.appendChild(iframe);
+            
+            // Fallback: if Instagram app is not installed, copy link and notify
+            const timeout = setTimeout(() => {
+                document.body.removeChild(iframe);
+                // Copy current page URL to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert("Instagram app not detected. The page link has been copied to your clipboard. You can paste it into your Instagram Story as a link sticker.");
+                }).catch(() => {
+                    alert("Please open this page on your mobile device to share directly to Instagram Story, or copy the link manually: " + window.location.href);
+                });
+            }, 2500);
+            
+            // If the app opens, clear timeout
+            window.addEventListener('blur', () => {
+                clearTimeout(timeout);
+                setTimeout(() => document.body.removeChild(iframe), 500);
+            });
+        }
+        
+        shareBtn.addEventListener('click', shareToInstagramStory);
+    })();
+</script>
 </body>
 </html>
