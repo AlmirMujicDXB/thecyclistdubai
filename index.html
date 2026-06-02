@@ -347,6 +347,7 @@
     approvedEvents = storedEvents ? JSON.parse(storedEvents) : [];
     pendingEvents = storedPending ? JSON.parse(storedPending) : [];
 
+    // Ensure admin exists
     const existingAdmin = users.find(u => u.email === ADMIN_EMAIL);
     if (!existingAdmin) {
       users.push({
@@ -364,6 +365,7 @@
     }
     persistUsers();
 
+    // Seed demo approved events if empty
     if (approvedEvents.length === 0) {
       const now = new Date();
       const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1); tomorrow.setHours(7, 0, 0, 0);
@@ -397,6 +399,7 @@
       persistApproved();
     }
 
+    // Seed demo pending ride if empty
     if (pendingEvents.length === 0) {
       const future = new Date(); future.setDate(future.getDate() + 3);
       pendingEvents = [
@@ -490,6 +493,7 @@
       pendingEvents.splice(index, 1);
       persistPending();
       renderAll();
+      alert("✅ Ride rejected and removed from pending approvals.");
     }
   }
 
