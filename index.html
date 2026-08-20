@@ -456,10 +456,10 @@
         .lever-3 .value-display { color: #E1306C; }
         .lever-3 .lever-name { color: #E1306C; }
 
-        /* ── Footer / Buttons ── */
+        /* ── Footer – Centered Buttons ── */
         .device-footer {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             flex-shrink: 0;
             padding-top: clamp(6px, 1vmin, 12px);
@@ -468,43 +468,11 @@
             gap: 6px;
         }
 
-        .footer-left {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-shrink: 1;
-            min-width: 0;
-        }
-
-        .key-hint {
-            font-size: clamp(5px, 0.8vmin, 7px);
-            color: #6a6e76;
-            letter-spacing: 0.3px;
-            background: rgba(0, 0, 0, 0.01);
-            padding: 0.04rem 0.6rem;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 0, 0, 0.01);
-            white-space: nowrap;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-        .key-hint kbd {
-            display: inline-block;
-            background: rgba(0, 0, 0, 0.02);
-            padding: 0 6px;
-            border-radius: 4px;
-            font-family: inherit;
-            color: #1a1c20;
-            font-size: clamp(4px, 0.7vmin, 6px);
-            border: 1px solid rgba(0, 0, 0, 0.02);
-        }
-
-        .footer-right {
+        .footer-buttons {
             display: flex;
             align-items: center;
             gap: 6px;
             flex-wrap: nowrap;
-            flex-shrink: 0;
         }
 
         /* ── Bigger Buttons ── */
@@ -627,13 +595,12 @@
             .ig-btn svg { width: 14px; height: 14px; }
             .group-btn { font-size: 7px; padding: 0.04rem 0.6rem; min-height: 32px; }
             .group-btn svg { width: 14px; height: 14px; }
-            .key-hint { font-size: 4px; padding: 0.02rem 0.4rem; }
             .device-name { font-size: 10px; }
             .metric-value { font-size: 22px; }
             .metric-unit { font-size: 10px; }
             .disclaimer p { font-size: clamp(7px, 1.1vmin, 10px); }
             .device-footer { gap: 4px; }
-            .footer-right { gap: 4px; }
+            .footer-buttons { gap: 4px; }
         }
 
         @media (max-width: 380px) {
@@ -666,7 +633,6 @@
             .ig-btn svg { width: 14px; height: 14px; }
             .group-btn { font-size: 8px; padding: 0.04rem 0.6rem; min-height: 32px; }
             .group-btn svg { width: 14px; height: 14px; }
-            .key-hint { font-size: 4px; }
             .metric-value { font-size: 24px; }
             .device-name { font-size: 12px; }
             .face-dynamic { font-size: 24px; margin: 2px 0 0px 0; }
@@ -679,7 +645,7 @@
             .disclaimer { padding: 4px 6px; margin: 3px 0 4px 0; }
             .disclaimer p { font-size: clamp(7px, 1.1vmin, 10px); }
             .device-footer { gap: 4px; }
-            .footer-right { gap: 4px; }
+            .footer-buttons { gap: 4px; }
         }
 
         @media (max-height: 560px) {
@@ -699,7 +665,6 @@
             .ig-btn svg { width: 10px; height: 10px; }
             .group-btn { font-size: 6px; padding: 0.02rem 0.4rem; min-height: 24px; }
             .group-btn svg { width: 10px; height: 10px; }
-            .key-hint { font-size: 3px; padding: 0.01rem 0.3rem; }
             .lever-name { font-size: 6px; -webkit-text-stroke: 0.2px black; }
             .lever-label { font-size: 3px; }
             .levers { gap: 1px; }
@@ -714,7 +679,7 @@
             .disclaimer { padding: 2px 4px; margin: 2px 0 2px 0; }
             .disclaimer p { font-size: clamp(6px, 0.9vmin, 8px); }
             .device-footer { gap: 3px; }
-            .footer-right { gap: 3px; }
+            .footer-buttons { gap: 3px; }
         }
     </style>
 </head>
@@ -823,12 +788,9 @@
                 </div>
             </div>
 
-            <!-- Footer -->
+            <!-- Footer – Centered Buttons -->
             <div class="device-footer">
-                <div class="footer-left">
-                    <span class="key-hint">press <kbd>R</kbd> reset</span>
-                </div>
-                <div class="footer-right">
+                <div class="footer-buttons">
                     <!-- Instagram Follow Button -->
                     <a href="https://instagram.com/thecyclistdubai" target="_blank" rel="noopener noreferrer" class="ig-btn" aria-label="Follow us on Instagram">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
