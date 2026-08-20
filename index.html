@@ -17,7 +17,7 @@
             height: 100%;
             overflow: hidden;
             touch-action: manipulation;
-            background: #d4d4d4;
+            background: #d5d8dd;
         }
 
         body {
@@ -28,30 +28,39 @@
             padding: 12px;
             min-height: 100dvh;
             height: 100dvh;
-            background: radial-gradient(ellipse at 50% 30%, #e8e8e8, #b8b8b8);
+            background: radial-gradient(ellipse at 50% 30%, #e8ebf0, #c8ccd2);
             position: relative;
         }
 
-        /* ── Cycling Computer Frame ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 40%, rgba(0, 180, 255, 0.04), transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Premium Cycling Computer Frame ── */
         .device-frame {
-            background: linear-gradient(145deg, #d0d0d0, #b0b0b0);
-            padding: 18px 12px;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(145deg, #e4e8ee, #c8ccd4);
+            padding: 18px 14px;
             border-radius: 48px;
             box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.15),
-                0 0 0 2px #c8c8c8 inset,
-                0 -4px 12px rgba(0, 0, 0, 0.05) inset;
-            max-width: 440px;
+                0 20px 60px rgba(0, 0, 0, 0.08),
+                0 0 0 2px rgba(255, 255, 255, 0.6) inset,
+                0 -4px 16px rgba(0, 0, 0, 0.04) inset;
+            max-width: 460px;
             width: 100%;
             height: 100%;
-            max-height: 820px;
+            max-height: 860px;
             display: flex;
             flex-direction: column;
-            position: relative;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* subtle frame details */
         .device-frame::before {
             content: '';
             position: absolute;
@@ -60,20 +69,20 @@
             transform: translateX(-50%);
             width: 60px;
             height: 6px;
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(0, 0, 0, 0.04);
             border-radius: 10px;
         }
 
-        /* ── Screen – monochrome e-ink / LCD style ── */
+        /* ── Screen ── */
         .screen {
-            background: #f5f5ee;
+            background: #f4f6f9;
             border-radius: 32px;
             padding: 18px 14px 14px;
             flex: 1;
             display: flex;
             flex-direction: column;
-            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
-            border: 1px solid #d8d8d0;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6), 0 4px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.02);
             position: relative;
             overflow: hidden;
         }
@@ -85,84 +94,113 @@
             align-items: center;
             flex-shrink: 0;
             padding-bottom: 10px;
-            border-bottom: 1px solid #e0e0d8;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
             margin-bottom: 8px;
         }
 
         .device-name {
-            font-size: clamp(12px, 2.2vmin, 18px);
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            color: #3a3a3a;
+            font-size: clamp(14px, 2.8vmin, 24px);
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #1a1c20;
             text-transform: uppercase;
-        }
-        .device-name small {
-            font-weight: 400;
-            color: #8a8a8a;
-            font-size: 0.7em;
-            letter-spacing: 0.5px;
+            font-family: 'Inter', 'Helvetica Neue', sans-serif;
         }
 
         .device-status {
             display: flex;
             align-items: center;
             gap: 6px;
-            color: #6a6a6a;
-            font-size: clamp(10px, 1.6vmin, 14px);
+            color: #6a6e76;
+            font-size: clamp(6px, 1vmin, 9px);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
         .device-status .dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #3a3a3a;
+            background: #00AA55;
+            box-shadow: 0 0 12px rgba(0, 170, 85, 0.15);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
         }
 
-        /* ── Main Metric – 168 Hours ── */
+        /* ── Main Metric ── */
         .main-metric {
             text-align: center;
             flex-shrink: 0;
-            padding: 4px 0 10px;
+            padding: 4px 0 6px;
         }
 
         .metric-label {
-            font-size: clamp(8px, 1.2vmin, 11px);
-            font-weight: 600;
+            font-size: clamp(7px, 1.1vmin, 10px);
+            font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #8a8a8a;
+            color: #6a6e76;
         }
 
         .metric-value {
             font-family: 'SF Mono', 'Courier New', monospace;
-            font-size: clamp(38px, 8vmin, 64px);
+            font-size: clamp(28px, 7vmin, 48px);
             font-weight: 800;
-            color: #1c1c1e;
+            color: #1a1c20;
             line-height: 1;
             letter-spacing: -1px;
             display: inline-block;
         }
         .metric-unit {
-            font-size: clamp(12px, 2.2vmin, 18px);
-            font-weight: 600;
-            color: #6a6a6a;
+            font-size: clamp(10px, 2vmin, 18px);
+            font-weight: 700;
+            color: #6a6e76;
             margin-left: 4px;
             letter-spacing: 1px;
         }
 
         .metric-sub {
-            font-size: clamp(9px, 1.4vmin, 13px);
-            color: #8a8a8a;
+            font-size: clamp(6px, 0.9vmin, 9px);
+            color: #6a6e76;
             letter-spacing: 0.5px;
             margin-top: 2px;
+            font-weight: 400;
         }
 
-        /* ── Levers – like cycling computer data fields ── */
+        /* ── Disclaimer ── */
+        .disclaimer {
+            background: rgba(0, 0, 0, 0.01);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            border-radius: 16px;
+            padding: 8px 10px;
+            margin: 6px 0 8px 0;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .disclaimer p {
+            font-size: clamp(6px, 1vmin, 9px);
+            color: #6a6e76;
+            line-height: 1.4;
+            letter-spacing: 0.2px;
+            font-weight: 400;
+            font-style: italic;
+        }
+        .disclaimer strong {
+            color: #1a1c20;
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        /* ── Levers ── */
         .levers {
             display: flex;
             justify-content: center;
             align-items: stretch;
             gap: clamp(4px, 1vmin, 12px);
-            padding: 4px 0 2px;
+            padding: 2px 0 2px;
             flex: 1 1 auto;
             min-height: 0;
             flex-wrap: nowrap;
@@ -178,61 +216,52 @@
             max-width: 160px;
             background: rgba(0, 0, 0, 0.01);
             border-radius: clamp(12px, 2vmin, 20px);
-            padding: clamp(4px, 0.8vmin, 10px) clamp(2px, 0.3vmin, 6px) clamp(3px, 0.5vmin, 6px);
-            border: 1px solid #e8e8e0;
+            padding: clamp(4px, 0.8vmin, 10px) clamp(2px, 0.4vmin, 6px) clamp(4px, 0.6vmin, 8px);
+            border: 1px solid rgba(0, 0, 0, 0.02);
             transition: background 0.2s, border-color 0.2s;
         }
 
         .lever:hover {
             background: rgba(0, 0, 0, 0.02);
-            border-color: #d0d0c8;
+            border-color: rgba(0, 0, 0, 0.04);
         }
 
         .lever-header {
             display: flex;
             align-items: center;
-            gap: clamp(2px, 0.4vmin, 5px);
-            margin-bottom: clamp(1px, 0.2vmin, 4px);
+            justify-content: center;
+            gap: clamp(2px, 0.4vmin, 6px);
+            margin-bottom: clamp(2px, 0.4vmin, 6px);
             flex-shrink: 0;
         }
 
         .lever-header .icon {
-            font-size: clamp(12px, 2.2vmin, 18px);
-            filter: grayscale(1);
-            opacity: 0.7;
+            font-size: clamp(14px, 2.4vmin, 22px);
+            opacity: 0.9;
         }
 
-        .lever-header .name {
-            font-size: clamp(6px, 1.1vmin, 10px);
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            color: #6a6a6a;
-            white-space: nowrap;
-        }
-
-        /* ── Track – like a battery / power gauge ── */
+        /* ── Track ── */
         .track-wrap {
             position: relative;
-            width: clamp(18px, 3.8vmin, 34px);
+            width: clamp(22px, 4.5vmin, 38px);
             flex: 1 1 auto;
-            min-height: 30px;
+            min-height: 40px;
             max-height: 200px;
-            background: #e8e8e0;
+            background: rgba(0, 0, 0, 0.03);
             border-radius: 40px;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
-            border: 1px solid #d8d8d0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.04);
             cursor: pointer;
             touch-action: none;
-            margin: 1px 0;
+            margin: 2px 0;
         }
 
         .track-wrap::after {
             content: '';
             position: absolute;
-            inset: 1px;
-            border-radius: 38px;
-            background: rgba(255, 255, 255, 0.2);
+            inset: 2px;
+            border-radius: 36px;
+            background: rgba(255, 255, 255, 0.4);
             pointer-events: none;
         }
 
@@ -241,33 +270,32 @@
             bottom: 2px;
             left: 2px;
             right: 2px;
-            border-radius: 0 0 36px 36px;
+            border-radius: 0 0 34px 34px;
             transition: height 0.08s ease-out, background 0.3s;
             pointer-events: none;
             will-change: height;
-            min-height: 2px;
-            background: #3a3a3c;
+            min-height: 3px;
         }
 
         .fill::after {
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 0 0 36px 36px;
+            border-radius: 0 0 34px 34px;
             background: inherit;
             filter: blur(6px);
-            opacity: 0.2;
+            opacity: 0.3;
             z-index: -1;
             transition: opacity 0.3s;
         }
 
         .lever:hover .fill::after {
-            opacity: 0.4;
+            opacity: 0.5;
         }
 
         @keyframes pulseGlow {
             0% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
-            50% { filter: brightness(1.1) drop-shadow(0 0 12px rgba(0, 0, 0, 0.08)); }
+            50% { filter: brightness(1.1) drop-shadow(0 0 12px rgba(0, 0, 0, 0.04)); }
             100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
         }
 
@@ -279,22 +307,22 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            width: clamp(24px, 4.6vmin, 34px);
-            height: clamp(24px, 4.6vmin, 34px);
-            min-width: 40px;
-            min-height: 40px;
+            width: clamp(28px, 5.5vmin, 40px);
+            height: clamp(28px, 5.5vmin, 40px);
+            min-width: 48px;
+            min-height: 48px;
             border-radius: 50%;
-            background: radial-gradient(circle at 40% 35%, #ffffff, #e8e8e8);
+            background: radial-gradient(circle at 40% 35%, #ffffff, #e8eaf0);
             box-shadow: 
-                0 0 0 1px rgba(0, 0, 0, 0.04),
-                0 2px 12px rgba(0, 0, 0, 0.04),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                0 0 0 1px rgba(0, 0, 0, 0.02),
+                0 2px 12px rgba(0, 0, 0, 0.02),
+                inset 0 2px 0 rgba(255, 255, 255, 0.8);
             cursor: grab;
             touch-action: none;
             z-index: 10;
             transition: box-shadow 0.2s, transform 0.15s;
             will-change: transform;
-            border: 1px solid #c8c8c0;
+            border: 1px solid rgba(0, 0, 0, 0.04);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -303,7 +331,7 @@
         .handle:active {
             cursor: grabbing;
             transform: translateX(-50%) scale(0.92);
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .handle::after {
@@ -312,38 +340,45 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: clamp(6px, 1.2vmin, 10px);
-            height: clamp(6px, 1.2vmin, 10px);
+            width: clamp(8px, 1.6vmin, 14px);
+            height: clamp(8px, 1.6vmin, 14px);
             border-radius: 50%;
-            background: #3a3a3c;
+            background: #1a1c20;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.02);
             transition: transform 0.2s;
         }
 
+        /* ── Emoticon (Unified Set) ── */
         .face-dynamic {
-            position: absolute;
-            right: clamp(-20px, -3.6vmin, -36px);
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: clamp(16px, 3.2vmin, 26px);
-            line-height: 1;
-            filter: grayscale(1);
-            opacity: 0.8;
-            transition: transform 0.2s, filter 0.3s;
-            pointer-events: none;
+            font-size: clamp(28px, 7vmin, 48px);
+            line-height: 1.2;
+            text-align: center;
+            opacity: 1;
+            margin: 4px 0 2px 0;
+            width: 100%;
+            min-height: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
         }
 
+        .lever:hover .face-dynamic {
+            transform: scale(1.05);
+        }
+
+        /* ── Value Display ── */
         .value-display {
-            margin-top: clamp(2px, 0.4vmin, 6px);
+            margin-top: clamp(2px, 0.3vmin, 6px);
             font-family: 'SF Mono', 'Courier New', monospace;
-            font-size: clamp(10px, 2vmin, 16px);
-            font-weight: 700;
-            color: #1c1c1e;
-            letter-spacing: 0.2px;
-            background: #ecece6;
-            padding: 0.04rem 0.5rem;
+            font-size: clamp(9px, 2vmin, 16px);
+            font-weight: 800;
+            color: #1a1c20;
+            letter-spacing: 0.3px;
+            background: rgba(0, 0, 0, 0.01);
+            padding: 0.04rem 0.6rem;
             border-radius: 30px;
-            border: 1px solid #d8d8d0;
+            border: 1px solid rgba(0, 0, 0, 0.02);
             font-variant-numeric: tabular-nums;
             min-width: 1.6rem;
             text-align: center;
@@ -353,31 +388,69 @@
 
         .value-display .unit {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(6px, 1vmin, 9px);
-            font-weight: 400;
-            color: #8a8a8a;
-            margin-left: 1px;
+            font-size: clamp(5px, 0.9vmin, 8px);
+            font-weight: 500;
+            color: #6a6e76;
+            margin-left: 2px;
+        }
+
+        /* ── Lever Info ── */
+        .lever-info {
+            text-align: center;
+            margin-top: 4px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .lever-name {
+            font-size: clamp(10.5px, 1.875vmin, 16.5px);
+            font-weight: 900;
+            color: currentColor;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            line-height: 1.2;
+            -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.7);
+            -webkit-text-fill-color: currentColor;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
         }
 
         .lever-label {
-            font-size: clamp(5px, 0.9vmin, 8px);
+            font-size: clamp(5px, 0.8vmin, 7px);
             letter-spacing: 0.2px;
             text-transform: uppercase;
-            color: #8a8a8a;
-            margin-top: clamp(1px, 0.2vmin, 3px);
-            font-weight: 500;
+            color: #6a6e76;
+            font-weight: 600;
             text-align: center;
             line-height: 1.2;
-            flex-shrink: 0;
         }
 
-        .max-label {
-            display: block;
-            font-size: clamp(4px, 0.7vmin, 6px);
-            font-weight: 400;
-            color: #b0b0a8;
-            margin-top: 0px;
-        }
+        /* ── Color Themes ── */
+        .lever-0 .fill { background: linear-gradient(0deg, #FF6B00, #FF3D00); }
+        .lever-0 .handle { border-color: rgba(255, 107, 0, 0.08); }
+        .lever-0 .handle::after { background: #FF6B00; }
+        .lever-0 .value-display { color: #FF6B00; }
+        .lever-0 .lever-name { color: #FF6B00; }
+
+        .lever-1 .fill { background: linear-gradient(0deg, #00D4FF, #0066FF); }
+        .lever-1 .handle { border-color: rgba(0, 212, 255, 0.08); }
+        .lever-1 .handle::after { background: #00D4FF; }
+        .lever-1 .value-display { color: #00D4FF; }
+        .lever-1 .lever-name { color: #00D4FF; }
+
+        .lever-2 .fill { background: linear-gradient(0deg, #00FF88, #00CC66); }
+        .lever-2 .handle { border-color: rgba(0, 255, 136, 0.08); }
+        .lever-2 .handle::after { background: #00FF88; }
+        .lever-2 .value-display { color: #00FF88; }
+        .lever-2 .lever-name { color: #00FF88; }
+
+        .lever-3 .fill { background: linear-gradient(0deg, #E1306C, #833AB4); }
+        .lever-3 .handle { border-color: rgba(225, 48, 108, 0.08); }
+        .lever-3 .handle::after { background: #E1306C; }
+        .lever-3 .value-display { color: #E1306C; }
+        .lever-3 .lever-name { color: #E1306C; }
 
         /* ── Footer / Buttons ── */
         .device-footer {
@@ -387,126 +460,193 @@
             flex-shrink: 0;
             padding-top: clamp(6px, 1vmin, 12px);
             margin-top: auto;
-            border-top: 1px solid #e0e0d8;
-            gap: 8px;
+            border-top: 1px solid rgba(0, 0, 0, 0.02);
+            gap: 6px;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .key-hint {
-            font-size: clamp(7px, 1.2vmin, 10px);
-            color: #8a8a8a;
+            font-size: clamp(5px, 0.8vmin, 7px);
+            color: #6a6e76;
             letter-spacing: 0.3px;
-            background: rgba(0, 0, 0, 0.02);
+            background: rgba(0, 0, 0, 0.01);
             padding: 0.04rem 0.6rem;
             border-radius: 20px;
-            border: 1px solid #e0e0d8;
+            border: 1px solid rgba(0, 0, 0, 0.01);
             white-space: nowrap;
             text-transform: uppercase;
-            font-weight: 500;
+            font-weight: 600;
         }
         .key-hint kbd {
             display: inline-block;
-            background: #ecece6;
-            padding: 0 5px;
-            border-radius: 3px;
+            background: rgba(0, 0, 0, 0.02);
+            padding: 0 6px;
+            border-radius: 4px;
             font-family: inherit;
-            color: #3a3a3a;
-            font-size: clamp(6px, 1vmin, 9px);
-            border: 1px solid #d0d0c8;
+            color: #1a1c20;
+            font-size: clamp(4px, 0.7vmin, 6px);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ── Bigger Buttons ── */
+        .ig-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: clamp(4px, 0.8vmin, 10px);
+            background: transparent;
+            color: #1a1c20;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 0.06rem 1rem;
+            border-radius: 60px;
+            font-size: clamp(10px, 1.8vmin, 16px);
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+            touch-action: manipulation;
+            min-height: clamp(44px, 7vmin, 64px);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(0, 0, 0, 0.01);
+            text-decoration: none;
+        }
+        .ig-btn:active {
+            transform: scale(0.94);
+            background: rgba(0, 0, 0, 0.02);
+        }
+        .ig-btn svg {
+            width: clamp(18px, 3vmin, 28px);
+            height: clamp(18px, 3vmin, 28px);
+            fill: #1a1c20;
         }
 
         .share-btn {
             display: inline-flex;
             align-items: center;
-            gap: clamp(4px, 0.6vmin, 8px);
-            background: #3a3a3c;
+            gap: clamp(4px, 0.8vmin, 10px);
+            background: #25D366;
             color: #ffffff;
             border: none;
-            padding: 0.08rem 1rem;
+            padding: 0.06rem 1.2rem;
             border-radius: 60px;
-            font-size: clamp(8px, 1.4vmin, 12px);
-            font-weight: 600;
+            font-size: clamp(10px, 1.8vmin, 16px);
+            font-weight: 700;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
             white-space: nowrap;
             touch-action: manipulation;
-            min-height: 36px;
+            min-height: clamp(44px, 7vmin, 64px);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 2px 16px rgba(37, 211, 102, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.02);
         }
         .share-btn:active {
             transform: scale(0.94);
-            background: #2a2a2c;
+            background: #128C7E;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.05);
         }
-        .share-btn .icon {
-            font-size: clamp(12px, 2vmin, 18px);
+        .share-btn svg {
+            width: clamp(18px, 3vmin, 28px);
+            height: clamp(18px, 3vmin, 28px);
+            fill: #ffffff;
         }
 
         /* ── Scrollbar hide ── */
         ::-webkit-scrollbar { width: 0; }
 
-        /* ── Extra small screens ── */
+        /* ── Responsive Fine-Tuning ── */
         @media (max-width: 420px) {
             .device-frame { padding: 12px 8px; border-radius: 36px; }
             .screen { padding: 12px 8px 10px; border-radius: 24px; }
             .levers { gap: 2px; }
             .lever { padding: 3px 1px 3px; border-radius: 10px; }
-            .face-dynamic { right: auto; top: -14px; transform: none; font-size: 14px; }
-            .lever:hover .face-dynamic { transform: scale(1.05); }
-            .track-wrap { width: 16px; min-height: 24px; }
-            .handle { min-width: 32px; min-height: 32px; width: 22px; height: 22px; }
-            .handle::after { width: 5px; height: 5px; }
-            .value-display { font-size: 8px; min-width: 1rem; padding: 0 3px; }
-            .lever-header .name { font-size: 5px; }
+            .track-wrap { width: 18px; min-height: 30px; }
+            .handle { min-width: 36px; min-height: 36px; width: 24px; height: 24px; }
+            .handle::after { width: 6px; height: 6px; }
+            .value-display { font-size: 7px; min-width: 1.2rem; padding: 0 4px; }
             .lever-header .icon { font-size: 10px; }
-            .max-label { font-size: 3px; }
-            .share-btn { font-size: 7px; padding: 0.03rem 0.6rem; min-height: 28px; }
-            .share-btn .icon { font-size: 10px; }
-            .key-hint { font-size: 6px; padding: 0.02rem 0.4rem; }
+            .face-dynamic { font-size: 24px; margin: 2px 0 0px 0; }
+            .lever-name { font-size: 8px; -webkit-text-stroke: 0.3px black; }
+            .lever-label { font-size: 4px; }
+            .share-btn { font-size: 7px; padding: 0.04rem 0.8rem; min-height: 32px; }
+            .share-btn svg { width: 14px; height: 14px; }
+            .ig-btn { font-size: 7px; padding: 0.04rem 0.6rem; min-height: 32px; }
+            .ig-btn svg { width: 14px; height: 14px; }
+            .key-hint { font-size: 4px; padding: 0.02rem 0.4rem; }
             .device-name { font-size: 10px; }
-            .metric-value { font-size: 28px; }
-            .metric-unit { font-size: 12px; }
-            .header { margin-bottom: 2px; }
+            .metric-value { font-size: 22px; }
+            .metric-unit { font-size: 10px; }
+            .disclaimer p { font-size: 5px; }
         }
 
         @media (max-height: 640px) {
-            .device-frame { padding: 10px 8px; border-radius: 32px; max-height: 100dvh; }
-            .screen { padding: 10px 8px 8px; border-radius: 20px; }
-            .track-wrap { min-height: 24px; }
-            .handle { min-width: 28px; min-height: 28px; width: 20px; height: 20px; }
-            .face-dynamic { font-size: 14px; right: -16px; }
-            .value-display { font-size: 9px; min-width: 1rem; }
+            .device-frame { padding: 10px 6px; border-radius: 32px; max-height: 100dvh; }
+            .screen { padding: 10px 6px 6px; border-radius: 20px; }
+            .track-wrap { min-height: 30px; }
+            .handle { min-width: 32px; min-height: 32px; width: 20px; height: 20px; }
+            .value-display { font-size: 8px; min-width: 1.2rem; }
             .lever { padding: 2px 1px 2px; }
-            .lever-label { font-size: 5px; }
-            .max-label { font-size: 3px; }
-            .share-btn { font-size: 7px; padding: 0.03rem 0.6rem; min-height: 26px; }
-            .key-hint { font-size: 6px; }
-            .metric-value { font-size: 32px; }
-            .device-name { font-size: 11px; }
+            .lever-name { font-size: 8px; }
+            .lever-label { font-size: 4px; }
+            .share-btn { font-size: 8px; padding: 0.04rem 0.8rem; min-height: 32px; }
+            .share-btn svg { width: 14px; height: 14px; }
+            .ig-btn { font-size: 8px; padding: 0.04rem 0.6rem; min-height: 32px; }
+            .ig-btn svg { width: 14px; height: 14px; }
+            .key-hint { font-size: 4px; }
+            .metric-value { font-size: 24px; }
+            .device-name { font-size: 12px; }
+            .face-dynamic { font-size: 24px; margin: 2px 0 0px 0; }
+            .metric-label { font-size: 6px; }
+            .metric-sub { font-size: 5px; }
+            .device-header { padding-bottom: 6px; margin-bottom: 4px; }
+            .main-metric { padding: 2px 0 4px; }
+            .levers { padding: 2px 0; }
+            .lever-header .icon { font-size: 10px; }
+            .disclaimer { padding: 4px 6px; margin: 3px 0 4px 0; }
+            .disclaimer p { font-size: 5px; }
         }
 
         @media (max-height: 560px) {
-            .metric-value { font-size: 24px; }
-            .metric-label { font-size: 7px; }
-            .device-header { padding-bottom: 4px; margin-bottom: 4px; }
-            .main-metric { padding: 2px 0 6px; }
-            .levers { padding: 2px 0; }
-            .track-wrap { min-height: 18px; }
-            .handle { min-width: 24px; min-height: 24px; width: 16px; height: 16px; }
+            .metric-value { font-size: 18px; }
+            .metric-label { font-size: 5px; }
+            .device-header { padding-bottom: 4px; margin-bottom: 2px; }
+            .main-metric { padding: 1px 0 2px; }
+            .levers { padding: 1px 0; }
+            .track-wrap { min-height: 20px; }
+            .handle { min-width: 28px; min-height: 28px; width: 16px; height: 16px; }
             .handle::after { width: 4px; height: 4px; }
-            .face-dynamic { font-size: 10px; right: -12px; }
-            .value-display { font-size: 7px; min-width: 0.8rem; padding: 0 2px; }
-            .lever-header .name { font-size: 4px; }
+            .value-display { font-size: 6px; min-width: 1rem; padding: 0 2px; }
             .lever-header .icon { font-size: 8px; }
-            .share-btn { font-size: 6px; padding: 0.02rem 0.4rem; min-height: 20px; }
-            .share-btn .icon { font-size: 8px; }
-            .key-hint { font-size: 5px; padding: 0.01rem 0.3rem; }
-            .lever-label { font-size: 4px; }
-            .max-label { font-size: 2px; }
+            .share-btn { font-size: 6px; padding: 0.02rem 0.6rem; min-height: 24px; }
+            .share-btn svg { width: 10px; height: 10px; }
+            .ig-btn { font-size: 6px; padding: 0.02rem 0.4rem; min-height: 24px; }
+            .ig-btn svg { width: 10px; height: 10px; }
+            .key-hint { font-size: 3px; padding: 0.01rem 0.3rem; }
+            .lever-name { font-size: 6px; -webkit-text-stroke: 0.2px black; }
+            .lever-label { font-size: 3px; }
             .levers { gap: 1px; }
             .lever { padding: 1px 1px 1px; border-radius: 8px; }
             .device-frame { padding: 6px 4px; border-radius: 24px; }
             .screen { padding: 6px 4px 4px; border-radius: 16px; }
+            .face-dynamic { font-size: 16px; margin: 1px 0 0px 0; }
+            .device-name { font-size: 8px; }
+            .metric-unit { font-size: 8px; }
+            .device-status { font-size: 5px; }
+            .device-status .dot { width: 5px; height: 5px; }
+            .disclaimer { padding: 2px 4px; margin: 2px 0 2px 0; }
+            .disclaimer p { font-size: 4px; }
         }
     </style>
 </head>
@@ -515,9 +655,9 @@
     <div class="device-frame">
         <div class="screen">
 
-            <!-- Device Header: TheCyclistDubai -->
+            <!-- Device Header -->
             <div class="device-header">
-                <span class="device-name">TheCyclist<small>Dubai</small></span>
+                <span class="device-name">THECYCLISTDUBAI</span>
                 <span class="device-status">
                     <span class="dot"></span>
                     <span>LIVE</span>
@@ -534,6 +674,15 @@
                 <div class="metric-sub">⌛ 7 days · drag to allocate</div>
             </div>
 
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+                <p>
+                    ⚠️ <strong>DISCLAIMER:</strong> This isn't a real planner, just a playful nudge. 
+                    True balance isn't found in numbers, but in how you feel. 
+                    Ride hard, rest well, love deeply, and always make time for what matters. 🚴
+                </p>
+            </div>
+
             <!-- Levers -->
             <div class="levers" id="leversContainer">
 
@@ -541,73 +690,92 @@
                 <div class="lever lever-0" data-index="0">
                     <div class="lever-header">
                         <span class="icon">🚴</span>
-                        <span class="name">Ride</span>
                     </div>
                     <div class="track-wrap" id="track0">
                         <div class="fill" id="fill0" style="height:40%;"></div>
                         <div class="handle" id="handle0" style="bottom:40%;"></div>
-                        <div class="face-dynamic" id="face0">😐</div>
-                        <div class="tooltip">drag</div>
                     </div>
+                    <div class="face-dynamic" id="face0">😐</div>
                     <div class="value-display" id="value0">42 <span class="unit">h</span></div>
-                    <div class="lever-label">max 40h · happy 10h</div>
+                    <div class="lever-info">
+                        <div class="lever-name">Ride</div>
+                        <div class="lever-label">max 40h · happy 6h</div>
+                    </div>
                 </div>
 
                 <!-- 1: Family -->
                 <div class="lever lever-1" data-index="1">
                     <div class="lever-header">
                         <span class="icon">👨‍👩‍👧‍👦</span>
-                        <span class="name">Family</span>
                     </div>
                     <div class="track-wrap" id="track1">
                         <div class="fill" id="fill1" style="height:40%;"></div>
                         <div class="handle" id="handle1" style="bottom:40%;"></div>
-                        <div class="face-dynamic" id="face1">😐</div>
-                        <div class="tooltip">drag</div>
                     </div>
+                    <div class="face-dynamic" id="face1">😐</div>
                     <div class="value-display" id="value1">42 <span class="unit">h</span></div>
-                    <div class="lever-label">rest of 168h · happy 50h</div>
+                    <div class="lever-info">
+                        <div class="lever-name">Family</div>
+                        <div class="lever-label">max 84h · happy 30h</div>
+                    </div>
                 </div>
 
                 <!-- 2: Work -->
                 <div class="lever lever-2" data-index="2">
                     <div class="lever-header">
                         <span class="icon">💼</span>
-                        <span class="name">Work</span>
                     </div>
                     <div class="track-wrap" id="track2">
                         <div class="fill" id="fill2" style="height:40%;"></div>
                         <div class="handle" id="handle2" style="bottom:40%;"></div>
-                        <div class="face-dynamic" id="face2">😐</div>
-                        <div class="tooltip">drag</div>
                     </div>
+                    <div class="face-dynamic" id="face2">😐</div>
                     <div class="value-display" id="value2">42 <span class="unit">h</span></div>
-                    <div class="lever-label">max 84h · happy 48h</div>
+                    <div class="lever-info">
+                        <div class="lever-name">Work</div>
+                        <div class="lever-label">max 70h · happy 48h</div>
+                    </div>
                 </div>
 
                 <!-- 3: Recovery -->
                 <div class="lever lever-3" data-index="3">
                     <div class="lever-header">
                         <span class="icon">😴</span>
-                        <span class="name">Recovery</span>
                     </div>
                     <div class="track-wrap" id="track3">
                         <div class="fill" id="fill3" style="height:40%;"></div>
                         <div class="handle" id="handle3" style="bottom:40%;"></div>
-                        <div class="face-dynamic" id="face3">😐</div>
-                        <div class="tooltip">drag</div>
                     </div>
+                    <div class="face-dynamic" id="face3">😐</div>
                     <div class="value-display" id="value3">42 <span class="unit">h</span></div>
-                    <div class="lever-label">max 84h · happy 56h</div>
+                    <div class="lever-info">
+                        <div class="lever-name">Recovery</div>
+                        <div class="lever-label">max 84h · happy 49h</div>
+                    </div>
                 </div>
             </div>
 
             <!-- Footer -->
             <div class="device-footer">
-                <span class="key-hint">press <kbd>R</kbd> reset</span>
-                <button class="share-btn" id="shareBtn">
-                    <span class="icon">📤</span> Share
-                </button>
+                <div class="footer-left">
+                    <span class="key-hint">press <kbd>R</kbd> reset</span>
+                </div>
+                <div class="footer-right">
+                    <!-- Instagram Follow Button -->
+                    <a href="https://instagram.com/thecyclistdubai" target="_blank" rel="noopener noreferrer" class="ig-btn" aria-label="Follow us on Instagram">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                        </svg>
+                        Follow
+                    </a>
+                    <!-- WhatsApp Share Button -->
+                    <button class="share-btn" id="shareBtn">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        Share
+                    </button>
+                </div>
             </div>
 
         </div>
@@ -622,10 +790,10 @@
 
             // ── Lever Configuration ──
             const LEVER_CONFIG = [
-                { maxHours: 40, happyThreshold: 10, label: 'Ride' },
-                { maxHours: 168, happyThreshold: 50, label: 'Family' },
-                { maxHours: 84, happyThreshold: 48, label: 'Work' },
-                { maxHours: 84, happyThreshold: 56, label: 'Recovery' },
+                { maxHours: 40, happyThreshold: 6, label: 'Ride' },
+                { maxHours: 84, happyThreshold: 30, label: 'Family' },
+                { maxHours: 70, happyThreshold: 48, label: 'Work' },
+                { maxHours: 84, happyThreshold: 49, label: 'Recovery' },
             ];
 
             const values = [42, 42, 42, 42];
@@ -659,16 +827,48 @@
                 return (v / maxHours) * 100;
             }
 
+            // ── Unified Emoticon Set with Custom Curves ──
             function getMood(value, index) {
+                // The same set of emojis is used for all categories
+                const emojis = {
+                    veryHappy: '🤩',
+                    happy: '😊',
+                    neutral: '🙂',
+                    meh: '😐',
+                    angry: '😠',
+                    furious: '🤬'
+                };
+
+                // ── Ride (index 0): Happy up to 6h, Unhappy after 20h ──
+                if (index === 0) {
+                    if (value <= 6) return emojis.veryHappy;
+                    if (value <= 14) return emojis.happy;
+                    if (value <= 20) return emojis.neutral;
+                    if (value <= 30) return emojis.angry;
+                    return emojis.furious;
+                }
+
+                // ── Work (index 2): Happy up to 48h, Unhappy after 48h ──
+                if (index === 2) {
+                    if (value <= 12) return emojis.meh;
+                    if (value <= 24) return emojis.neutral;
+                    if (value <= 48) return emojis.happy;
+                    if (value <= 60) return emojis.angry;
+                    return emojis.furious;
+                }
+
+                // ── Family (index 1) & Recovery (index 3) ──
+                // Proportional mapping to the same unified set
                 const threshold = LEVER_CONFIG[index].happyThreshold;
-                if (value >= threshold) return '🤩';
-                if (value === 0) return '🤬';
                 const ratio = value / threshold;
-                if (ratio < 0.2) return '😡';
-                if (ratio < 0.4) return '😠';
-                if (ratio < 0.6) return '😕';
-                if (ratio < 0.8) return '😐';
-                return '🙂';
+
+                if (value === 0) return emojis.furious;
+                if (ratio < 0.2) return emojis.furious;
+                if (ratio < 0.4) return emojis.angry;
+                if (ratio < 0.6) return emojis.meh;
+                if (ratio < 0.8) return emojis.neutral;
+                if (ratio < 1.0) return emojis.happy;
+                return emojis.veryHappy;
             }
 
             function updateUI(index) {
@@ -920,13 +1120,12 @@
             // ── Share via WhatsApp ──
             function generateShareText() {
                 const lines = [
-                    '🚴 *TheCyclistDubai · 168-Hour Week*',
+                    '🚴 *THECYCLISTDUBAI · 168-Hour Week*',
                     '',
                 ];
                 const icons = ['🚴', '👨‍👩‍👧‍👦', '💼', '😴'];
                 const names = ['Ride', 'Family', 'Work', 'Recovery'];
                 for (let i = 0; i < NUM_LEVERS; i++) {
-                    const label = LEVER_CONFIG[i].label;
                     const val = Math.round(values[i]);
                     const mood = getMood(values[i], i);
                     const maxH = LEVER_CONFIG[i].maxHours;
@@ -937,7 +1136,8 @@
                 lines.push('');
                 lines.push(`📊 *Total: ${Math.round(values.reduce((a,b) => a + b, 0))}h / 168h*`);
                 lines.push('');
-                lines.push('⚡ Powered by TheCyclistDubai');
+                lines.push('⚡ Powered by THECYCLISTDUBAI');
+                lines.push('🔗 https://thecyclistdubai.com');
                 return lines.join('\n');
             }
 
@@ -984,15 +1184,16 @@
                 }
             });
 
-            console.log('🚴 TheCyclistDubai – Monochrome Cycling Computer');
-            console.log('   Ride: max 40h, happy from 10h');
-            console.log('   Family: rest of 168h, happy from 50h');
-            console.log('   Work: max 84h, happy from 48h');
-            console.log('   Recovery: max 84h, happy from 56h');
+            console.log('🚴 THECYCLISTDUBAI – Premium Cycling Computer');
+            console.log('   Ride: max 40h, happy from 6h, unhappy > 20h');
+            console.log('   Family: max 84h, happy from 30h');
+            console.log('   Work: max 70h, happy from 48h, unhappy > 48h');
+            console.log('   Recovery: max 84h, happy from 49h');
             console.log('   Drag UP to increase, DOWN to decrease. Others adjust proportionally.');
             console.log('   Press "R" to reset. Click "Share" to send via WhatsApp.');
 
         })();
     </script>
+
 </body>
 </html>
