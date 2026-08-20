@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>168 Hours · Weekly Allocator</title>
     <style>
-        /* ── Reset & base ── */
+        /* ── Reset & fullscreen base ── */
         * {
             margin: 0;
             padding: 0;
@@ -13,18 +13,23 @@
             user-select: none;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
         body {
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             background: radial-gradient(ellipse at 80% 20%, #f3f0ff, #ffffff 70%),
                         radial-gradient(ellipse at 20% 80%, #fffdf0, #ffffff 70%);
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            padding: 12px;
+            padding: 8px;
             position: relative;
-            overflow-x: hidden;
-            touch-action: manipulation;
+            min-height: 100dvh;
+            height: 100dvh;
         }
 
         body::before,
@@ -37,78 +42,84 @@
             z-index: 0;
         }
         body::before {
-            width: 400px;
-            height: 400px;
-            top: -100px;
-            right: -100px;
+            width: 40vmax;
+            height: 40vmax;
+            top: -10vmax;
+            right: -10vmax;
             background: rgba(64, 93, 230, 0.08);
             animation: floatOrb 14s ease-in-out infinite alternate;
         }
         body::after {
-            width: 350px;
-            height: 350px;
-            bottom: -80px;
-            left: -80px;
+            width: 35vmax;
+            height: 35vmax;
+            bottom: -8vmax;
+            left: -8vmax;
             background: rgba(252, 175, 69, 0.08);
             animation: floatOrb 18s ease-in-out infinite alternate-reverse;
         }
 
         @keyframes floatOrb {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 30px) scale(1.1); }
+            100% { transform: translate(3vmax, 2vmax) scale(1.1); }
         }
 
+        /* ── Main container – fills the screen ── */
         .equalizer {
             position: relative;
             z-index: 1;
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-radius: 40px;
-            padding: 24px 16px 18px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+            border-radius: clamp(28px, 4.5vmin, 48px);
+            padding: clamp(12px, 2.5vmin, 24px) clamp(10px, 2vmin, 20px) clamp(10px, 2vmin, 18px);
+            box-shadow: 0 2vmin 6vmin rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
             max-width: 960px;
             width: 100%;
+            height: 100%;
+            max-height: 100dvh;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
+        /* ── Header ── */
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            flex-shrink: 0;
+            padding-bottom: clamp(4px, 1vmin, 10px);
         }
 
         .header .badge {
             display: inline-block;
             background: linear-gradient(135deg, #405DE6, #5851DB, #833AB4);
-            padding: 4px 14px;
+            padding: 0.2rem 1.2rem;
             border-radius: 40px;
-            font-size: 10px;
+            font-size: clamp(8px, 1.6vmin, 11px);
             font-weight: 700;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
             color: #fff;
-            margin-bottom: 6px;
             box-shadow: 0 4px 16px rgba(64, 93, 230, 0.2);
+            margin-bottom: 0.2rem;
         }
 
         .header h1 {
-            font-size: 28px;
+            font-size: clamp(22px, 4.5vmin, 32px);
             font-weight: 800;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
             background: linear-gradient(135deg, #405DE6, #5851DB, #F56040, #FCAF45);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            line-height: 1.2;
+            line-height: 1.1;
         }
 
         .header .sub {
-            font-size: 12px;
+            font-size: clamp(9px, 1.8vmin, 13px);
             color: #8e8e8e;
-            letter-spacing: 0.3px;
-            margin-top: 2px;
+            letter-spacing: 0.2px;
             font-weight: 400;
         }
-
         .header .sub span {
             color: #262626;
             font-weight: 500;
@@ -118,10 +129,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
-            margin-top: 10px;
+            gap: clamp(4px, 1vmin, 10px);
+            margin-top: clamp(2px, 0.8vmin, 8px);
             background: rgba(255, 255, 255, 0.6);
-            padding: 4px 16px;
+            padding: 0.1rem 1.2rem;
             border-radius: 60px;
             border: 1px solid rgba(255, 255, 255, 0.6);
             width: fit-content;
@@ -131,97 +142,106 @@
         }
 
         .total-row .label {
-            font-size: 11px;
+            font-size: clamp(9px, 1.6vmin, 12px);
             color: #8e8e8e;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             font-weight: 400;
         }
 
         .total-row .number {
-            font-size: 24px;
+            font-size: clamp(20px, 4vmin, 28px);
             font-weight: 800;
             background: linear-gradient(135deg, #405DE6, #5851DB, #F56040, #FCAF45);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1;
-            min-width: 36px;
+            min-width: 2.4rem;
             text-align: center;
         }
 
         .total-row .unit {
-            font-size: 13px;
+            font-size: clamp(10px, 1.6vmin, 14px);
             font-weight: 400;
             color: #8e8e8e;
             -webkit-text-fill-color: #8e8e8e;
         }
-
         .total-row .week-icon {
-            font-size: 15px;
-            opacity: 0.6;
+            font-size: clamp(12px, 2vmin, 18px);
+            opacity: 0.5;
+        }
+        .total-row .separator {
+            color: #8e8e8e;
+            margin: 0 0.2rem;
+            font-size: clamp(10px, 1.4vmin, 14px);
+        }
+        .total-row .days {
+            color: #8e8e8e;
+            font-size: clamp(9px, 1.4vmin, 13px);
+            font-weight: 400;
         }
 
-        /* ── Levers row ── */
+        /* ── Levers container – fills remaining height ── */
         .levers {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            gap: 8px;
-            padding: 4px 0 2px;
-            flex-wrap: wrap;
+            align-items: stretch;
+            gap: clamp(4px, 1.2vmin, 14px);
+            padding: clamp(2px, 0.8vmin, 8px) 0;
+            flex: 1 1 auto;
+            min-height: 0;
+            flex-wrap: nowrap;
         }
 
+        /* ── Single lever card ── */
         .lever {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 120px;
-            flex-shrink: 0;
-            position: relative;
+            justify-content: flex-start;
+            flex: 1 1 0;
+            min-width: 0;
+            max-width: 160px;
             background: rgba(255, 255, 255, 0.3);
-            border-radius: 24px;
-            padding: 12px 4px 10px;
+            border-radius: clamp(16px, 2.5vmin, 28px);
+            padding: clamp(6px, 1.2vmin, 16px) clamp(2px, 0.6vmin, 8px) clamp(4px, 1vmin, 12px);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+            transition: background 0.3s, border-color 0.3s;
             backdrop-filter: blur(4px);
-        }
-
-        .lever:hover {
-            background: rgba(255, 255, 255, 0.6);
-            border-color: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
+            overflow: hidden;
         }
 
         .lever-header {
             display: flex;
             align-items: center;
-            gap: 4px;
-            margin-bottom: 6px;
+            gap: clamp(2px, 0.5vmin, 6px);
+            margin-bottom: clamp(2px, 0.5vmin, 6px);
+            flex-shrink: 0;
         }
 
         .lever-header .icon {
-            font-size: 18px;
+            font-size: clamp(14px, 2.6vmin, 22px);
             filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.04));
         }
 
         .lever-header .name {
-            font-size: 10px;
+            font-size: clamp(7px, 1.4vmin, 12px);
             font-weight: 700;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             text-transform: uppercase;
             color: #8e8e8e;
             transition: color 0.3s;
+            white-space: nowrap;
         }
 
-        .lever:hover .lever-header .name {
-            color: #262626;
-        }
-
+        /* ── Track – expands to fill available space ── */
         .track-wrap {
             position: relative;
-            width: 38px;
-            height: 180px;
+            width: clamp(24px, 5vmin, 44px);
+            flex: 1 1 auto;
+            min-height: 60px;
+            max-height: 300px;
             background: rgba(0, 0, 0, 0.03);
-            border-radius: 36px;
+            border-radius: 40px;
             box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
@@ -233,7 +253,7 @@
             content: '';
             position: absolute;
             inset: 2px;
-            border-radius: 34px;
+            border-radius: 38px;
             background: rgba(255, 255, 255, 0.2);
             pointer-events: none;
         }
@@ -243,7 +263,7 @@
             bottom: 2px;
             left: 2px;
             right: 2px;
-            border-radius: 0 0 32px 32px;
+            border-radius: 0 0 36px 36px;
             transition: height 0.08s ease-out, background 0.3s;
             pointer-events: none;
             will-change: height;
@@ -254,16 +274,12 @@
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 0 0 32px 32px;
+            border-radius: 0 0 36px 36px;
             background: inherit;
             filter: blur(12px);
             opacity: 0.5;
             z-index: -1;
             transition: opacity 0.3s;
-        }
-
-        .lever:hover .fill::after {
-            opacity: 0.7;
         }
 
         @keyframes pulseGlow {
@@ -280,8 +296,10 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            width: 34px;
-            height: 34px;
+            width: clamp(28px, 5.5vmin, 38px);
+            height: clamp(28px, 5.5vmin, 38px);
+            min-width: 44px;
+            min-height: 44px;
             border-radius: 50%;
             background: radial-gradient(circle at 35% 30%, #ffffff, #f0f0f5);
             box-shadow: 0 2px 16px rgba(64, 93, 230, 0.06), inset 0 -2px 4px rgba(0, 0, 0, 0.04), inset 0 2px 8px rgba(255, 255, 255, 0.8);
@@ -291,17 +309,9 @@
             transition: box-shadow 0.2s, transform 0.15s;
             will-change: transform;
             border: 2px solid rgba(255, 255, 255, 0.4);
-            /* ensure touch target at least 44px */
-            min-width: 44px;
-            min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .handle:hover {
-            box-shadow: 0 2px 24px rgba(64, 93, 230, 0.12), inset 0 -2px 4px rgba(0, 0, 0, 0.04), inset 0 2px 8px rgba(255, 255, 255, 0.8);
-            transform: translateX(-50%) scale(1.05);
         }
 
         .handle:active {
@@ -316,83 +326,69 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 12px;
-            height: 12px;
+            width: clamp(8px, 1.6vmin, 12px);
+            height: clamp(8px, 1.6vmin, 12px);
             border-radius: 50%;
             box-shadow: 0 0 16px rgba(64, 93, 230, 0.1);
             transition: transform 0.2s;
         }
 
-        .handle:hover::after {
-            transform: translate(-50%, -50%) scale(1.12);
-        }
-
         .face-dynamic {
             position: absolute;
-            right: -42px;
+            right: clamp(-28px, -5vmin, -44px);
             top: 50%;
             transform: translateY(-50%);
-            font-size: 28px;
+            font-size: clamp(20px, 4vmin, 32px);
             line-height: 1;
             filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.02));
             transition: transform 0.2s, filter 0.3s;
             pointer-events: none;
         }
 
-        .lever:hover .face-dynamic {
-            transform: translateY(-50%) scale(1.06);
-        }
-
         .value-display {
-            margin-top: 8px;
-            font-size: 15px;
+            margin-top: clamp(2px, 0.6vmin, 8px);
+            font-size: clamp(11px, 2.2vmin, 17px);
             font-weight: 700;
             color: #262626;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             background: rgba(255, 255, 255, 0.4);
-            padding: 2px 10px;
+            padding: 0.05rem 0.6rem;
             border-radius: 30px;
             border: 1px solid rgba(255, 255, 255, 0.4);
             font-variant-numeric: tabular-nums;
-            min-width: 40px;
+            min-width: 2.2rem;
             text-align: center;
             transition: background 0.3s;
             backdrop-filter: blur(4px);
-        }
-
-        .lever:hover .value-display {
-            background: rgba(255, 255, 255, 0.7);
+            flex-shrink: 0;
         }
 
         .value-display .unit {
-            font-size: 10px;
+            font-size: clamp(8px, 1.4vmin, 11px);
             font-weight: 400;
             color: #8e8e8e;
-            margin-left: 2px;
+            margin-left: 1px;
         }
 
         .lever-label {
-            font-size: 8px;
-            letter-spacing: 0.3px;
+            font-size: clamp(6px, 1.2vmin, 10px);
+            letter-spacing: 0.2px;
             text-transform: uppercase;
             color: #8e8e8e;
-            margin-top: 4px;
+            margin-top: clamp(1px, 0.4vmin, 4px);
             font-weight: 500;
             transition: color 0.3s;
             text-align: center;
-            line-height: 1.3;
-        }
-
-        .lever:hover .lever-label {
-            color: #262626;
+            line-height: 1.2;
+            flex-shrink: 0;
         }
 
         .max-label {
             display: block;
-            font-size: 7px;
+            font-size: clamp(5px, 1vmin, 8px);
             font-weight: 400;
             color: #b0b0b0;
-            margin-top: 1px;
+            margin-top: 0px;
         }
 
         /* ── Color themes ── */
@@ -416,236 +412,44 @@
         .lever-3 .handle::after { background: radial-gradient(circle, #405DE6, #5851DB); }
         .lever-3 .value-display { color: #5851DB; }
 
-        /* ── Responsive – Mobile First ── */
-        @media (max-width: 750px) {
-            .equalizer {
-                padding: 18px 12px 14px;
-                border-radius: 32px;
-            }
-            .lever {
-                width: 100px;
-                padding: 10px 3px 8px;
-                border-radius: 20px;
-            }
-            .track-wrap {
-                height: 150px;
-                width: 32px;
-            }
-            .handle {
-                width: 38px;
-                height: 38px;
-                min-width: 44px;
-                min-height: 44px;
-            }
-            .handle::after {
-                width: 10px;
-                height: 10px;
-            }
-            .face-dynamic {
-                right: -34px;
-                font-size: 24px;
-            }
-            .lever-header .icon {
-                font-size: 16px;
-            }
-            .lever-header .name {
-                font-size: 9px;
-                letter-spacing: 0.2px;
-            }
-            .value-display {
-                font-size: 13px;
-                padding: 2px 8px;
-                min-width: 34px;
-            }
-            .levers {
-                gap: 6px;
-            }
-            .header h1 {
-                font-size: 24px;
-            }
-            .total-row .number {
-                font-size: 20px;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .equalizer {
-                padding: 14px 8px 10px;
-                border-radius: 28px;
-            }
-            .lever {
-                width: 82px;
-                padding: 8px 2px 6px;
-                border-radius: 18px;
-            }
-            .track-wrap {
-                height: 120px;
-                width: 28px;
-            }
-            .handle {
-                width: 36px;
-                height: 36px;
-                min-width: 44px;
-                min-height: 44px;
-            }
-            .handle::after {
-                width: 8px;
-                height: 8px;
-            }
-            .face-dynamic {
-                right: auto;
-                top: -26px;
-                transform: none;
-                font-size: 20px;
-            }
-            .lever:hover .face-dynamic {
-                transform: scale(1.06);
-            }
-            .lever-header .icon {
-                font-size: 14px;
-            }
-            .lever-header .name {
-                font-size: 8px;
-                letter-spacing: 0.1px;
-            }
-            .lever-header {
-                gap: 3px;
-                margin-bottom: 4px;
-            }
-            .value-display {
-                font-size: 11px;
-                padding: 1px 6px;
-                min-width: 30px;
-                margin-top: 4px;
-            }
-            .levers {
-                gap: 4px;
-            }
-            .header h1 {
-                font-size: 20px;
-            }
-            .header .sub {
-                font-size: 10px;
-            }
-            .total-row {
-                padding: 3px 10px;
-                gap: 4px;
-            }
-            .total-row .number {
-                font-size: 18px;
-                min-width: 28px;
-            }
-            .total-row .label {
-                font-size: 9px;
-            }
-            .total-row .unit {
-                font-size: 10px;
-            }
-            .lever-label {
-                font-size: 7px;
-                letter-spacing: 0.2px;
-                margin-top: 2px;
-            }
-            .max-label {
-                font-size: 6px;
-            }
-            .header .badge {
-                font-size: 8px;
-                padding: 2px 10px;
-            }
-            .key-hint {
-                font-size: 8px;
-                padding: 2px 8px;
-            }
-            .footer {
-                margin-top: 10px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .lever {
-                width: 70px;
-            }
-            .track-wrap {
-                height: 100px;
-                width: 24px;
-            }
-            .handle {
-                width: 32px;
-                height: 32px;
-                min-width: 44px;
-                min-height: 44px;
-            }
-            .handle::after {
-                width: 6px;
-                height: 6px;
-            }
-            .value-display {
-                font-size: 10px;
-                min-width: 26px;
-                padding: 0 4px;
-            }
-            .face-dynamic {
-                font-size: 18px;
-                top: -22px;
-            }
-            .lever-header .name {
-                font-size: 7px;
-            }
-            .lever-header .icon {
-                font-size: 12px;
-            }
-            .header h1 {
-                font-size: 18px;
-            }
-            .total-row .number {
-                font-size: 16px;
-                min-width: 24px;
-            }
-        }
-
+        /* ── Tooltip ── */
         .track-wrap .tooltip {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            bottom: calc(100% + 6px);
+            bottom: calc(100% + 4px);
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #262626;
-            padding: 2px 10px;
+            padding: 1px 8px;
             border-radius: 8px;
-            font-size: 9px;
+            font-size: clamp(7px, 1.2vmin, 10px);
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s;
             border: 1px solid rgba(255, 255, 255, 0.5);
             font-weight: 500;
-            letter-spacing: 0.2px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
-        .track-wrap:hover .tooltip {
-            opacity: 1;
-        }
+        .track-wrap:hover .tooltip { opacity: 1; }
 
+        /* ── Footer ── */
         .footer {
             text-align: center;
-            margin-top: 12px;
-            font-size: 9px;
-            color: rgba(0, 0, 0, 0.1);
-            letter-spacing: 1px;
-            font-weight: 400;
+            flex-shrink: 0;
+            padding-top: clamp(2px, 0.6vmin, 8px);
+            margin-top: auto;
         }
 
         .key-hint {
             display: inline-block;
-            margin-top: 4px;
-            font-size: 9px;
+            font-size: clamp(7px, 1.2vmin, 10px);
             color: #8e8e8e;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             background: rgba(255, 255, 255, 0.2);
-            padding: 2px 10px;
+            padding: 0.1rem 0.8rem;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
@@ -656,11 +460,50 @@
             border-radius: 4px;
             font-family: inherit;
             color: #262626;
-            font-size: 8px;
+            font-size: clamp(6px, 1vmin, 9px);
         }
 
-        ::-webkit-scrollbar {
-            width: 0;
+        ::-webkit-scrollbar { width: 0; }
+
+        /* ── orientation / very small screens ── */
+        @media (max-width: 420px) {
+            .levers { gap: 3px; }
+            .lever { padding: 4px 2px 4px; border-radius: 14px; }
+            .face-dynamic { right: auto; top: -18px; transform: none; font-size: 16px; }
+            .lever:hover .face-dynamic { transform: scale(1.05); }
+            .track-wrap { width: 20px; min-height: 40px; }
+            .handle { min-width: 36px; min-height: 36px; width: 28px; height: 28px; }
+            .handle::after { width: 6px; height: 6px; }
+            .value-display { font-size: 9px; min-width: 1.6rem; padding: 0 4px; }
+            .lever-header .name { font-size: 6px; }
+            .lever-header .icon { font-size: 12px; }
+            .max-label { font-size: 5px; }
+        }
+
+        @media (max-height: 640px) {
+            .header h1 { font-size: 18px; }
+            .header .badge { font-size: 7px; padding: 0.1rem 0.8rem; }
+            .total-row .number { font-size: 16px; min-width: 1.6rem; }
+            .total-row { padding: 0.05rem 0.8rem; gap: 3px; }
+            .track-wrap { min-height: 40px; }
+            .handle { min-width: 32px; min-height: 32px; width: 24px; height: 24px; }
+            .face-dynamic { font-size: 16px; right: -20px; }
+            .value-display { font-size: 10px; min-width: 1.4rem; }
+            .lever { padding: 4px 2px 4px; }
+            .lever-label { font-size: 5px; }
+            .max-label { font-size: 4px; }
+        }
+
+        @media (max-height: 560px) {
+            .header h1 { font-size: 16px; }
+            .header .sub { font-size: 8px; }
+            .total-row .number { font-size: 14px; }
+            .track-wrap { min-height: 30px; }
+            .handle { min-width: 28px; min-height: 28px; width: 20px; height: 20px; }
+            .face-dynamic { font-size: 14px; right: -16px; }
+            .value-display { font-size: 8px; min-width: 1.2rem; padding: 0 2px; }
+            .lever-header .name { font-size: 5px; }
+            .lever-header .icon { font-size: 10px; }
         }
     </style>
 </head>
@@ -678,8 +521,8 @@
                 <span class="label">total</span>
                 <span class="number" id="totalDisplay">168</span>
                 <span class="unit">h</span>
-                <span style="color:#8e8e8e;margin:0 4px;">/</span>
-                <span style="color:#8e8e8e;font-size:11px;font-weight:400;">7 days</span>
+                <span class="separator">/</span>
+                <span class="days">7 days</span>
             </div>
         </div>
 
@@ -698,7 +541,7 @@
                     <div class="tooltip">drag or scroll</div>
                 </div>
                 <div class="value-display" id="value0">42 <span class="unit">h</span></div>
-                <div class="lever-label">miles &amp; trails <span class="max-label">max 40h · happy from 10h</span></div>
+                <div class="lever-label">miles &amp; trails <span class="max-label">max 40h · happy 10h</span></div>
             </div>
 
             <!-- 1: Family -->
@@ -714,7 +557,7 @@
                     <div class="tooltip">drag or scroll</div>
                 </div>
                 <div class="value-display" id="value1">42 <span class="unit">h</span></div>
-                <div class="lever-label">love &amp; connection <span class="max-label">rest of 168h · happy from 50h</span></div>
+                <div class="lever-label">love &amp; connection <span class="max-label">rest of 168h · happy 50h</span></div>
             </div>
 
             <!-- 2: Work -->
@@ -730,7 +573,7 @@
                     <div class="tooltip">drag or scroll</div>
                 </div>
                 <div class="value-display" id="value2">42 <span class="unit">h</span></div>
-                <div class="lever-label">craft &amp; purpose <span class="max-label">max 84h · happy from 48h</span></div>
+                <div class="lever-label">craft &amp; purpose <span class="max-label">max 84h · happy 48h</span></div>
             </div>
 
             <!-- 3: Sleep -->
@@ -746,7 +589,7 @@
                     <div class="tooltip">drag or scroll</div>
                 </div>
                 <div class="value-display" id="value3">42 <span class="unit">h</span></div>
-                <div class="lever-label">rest &amp; recharge <span class="max-label">max 84h · happy from 56h</span></div>
+                <div class="lever-label">rest &amp; recharge <span class="max-label">max 84h · happy 56h</span></div>
             </div>
         </div>
 
@@ -770,7 +613,6 @@
                 { maxHours: 84, happyThreshold: 56 },  // Sleep
             ];
 
-            // ── State ──
             const values = [42, 42, 42, 42];
             let draggingIndex = -1;
             let dragStartY = 0;
@@ -793,7 +635,6 @@
             }
             const totalDisplay = document.getElementById('totalDisplay');
 
-            // ── Helpers ──
             function getTrackHeight(index) {
                 return tracks[index].getBoundingClientRect().height;
             }
@@ -846,7 +687,6 @@
                 }
             }
 
-            // ── Core Redistribution Logic with Caps ──
             function redistribute(changedIndex, newValue) {
                 const config = LEVER_CONFIG[changedIndex];
                 newValue = Math.max(0, Math.min(config.maxHours, newValue));
@@ -860,7 +700,6 @@
                 let remaining = MAX_HOURS - newValue;
                 remaining = Math.max(0, remaining);
 
-                // 1. Distribute remaining to others proportionally
                 let sumOthers = 0;
                 for (const idx of others) {
                     sumOthers += values[idx];
@@ -878,14 +717,12 @@
                     }
                 }
 
-                // 2. Clamp others to their max and track total
                 let totalOthers = 0;
                 for (const idx of others) {
                     values[idx] = Math.max(0, Math.min(LEVER_CONFIG[idx].maxHours, values[idx]));
                     totalOthers += values[idx];
                 }
 
-                // 3. If totalOthers is less than remaining, distribute excess to those not at max
                 let diff = remaining - totalOthers;
                 if (diff > 0) {
                     let available = [];
@@ -905,7 +742,6 @@
                                 values[idx] += add;
                                 values[idx] = Math.min(LEVER_CONFIG[idx].maxHours, values[idx]);
                             }
-                            // Recalculate diff to handle rounding
                             let newTotalOthers = 0;
                             for (const idx of others) newTotalOthers += values[idx];
                             diff = remaining - newTotalOthers;
@@ -921,7 +757,6 @@
                         }
                     }
                 } else if (diff < 0) {
-                    // 4. If totalOthers is greater than remaining, reduce them proportionally
                     let sumOthersForReduction = 0;
                     for (const idx of others) sumOthersForReduction += values[idx];
                     if (sumOthersForReduction > 0) {
@@ -930,7 +765,6 @@
                             values[idx] -= reduction;
                             values[idx] = Math.max(0, values[idx]);
                         }
-                        // Fix rounding errors
                         let newTotalOthers = 0;
                         for (const idx of others) newTotalOthers += values[idx];
                         let finalDiff = remaining - newTotalOthers;
@@ -945,19 +779,15 @@
                     }
                 }
 
-                // 5. Set the changed value
                 values[changedIndex] = Math.round(newValue);
 
-                // 6. Final clamp all
                 for (let i = 0; i < NUM_LEVERS; i++) {
                     values[i] = Math.max(0, Math.min(LEVER_CONFIG[i].maxHours, Math.round(values[i])));
                 }
 
-                // 7. Ensure total is exactly MAX_HOURS
                 let total = values.reduce((a, b) => a + b, 0);
                 if (total !== MAX_HOURS) {
                     let diffTotal = MAX_HOURS - total;
-                    // Add diff to the first lever that is not at max (prefer others)
                     let added = false;
                     for (let i = 0; i < NUM_LEVERS; i++) {
                         if (i !== changedIndex && values[i] < LEVER_CONFIG[i].maxHours) {
@@ -968,7 +798,6 @@
                         }
                     }
                     if (!added) {
-                        // Force add to changedIndex if no other can take it
                         values[changedIndex] += diffTotal;
                         values[changedIndex] = Math.max(0, Math.min(LEVER_CONFIG[changedIndex].maxHours, values[changedIndex]));
                     }
@@ -979,7 +808,6 @@
                 console.log(`🔄 Lever ${changedIndex} → ${values[changedIndex]}h. All: [${values.join(', ')}]`);
             }
 
-            // ── Drag Handlers ──
             function startDrag(e, index) {
                 e.preventDefault();
                 draggingIndex = index;
@@ -1033,7 +861,6 @@
                 document.removeEventListener('touchcancel', onDragEnd);
             }
 
-            // ── Attach Events ──
             for (let i = 0; i < NUM_LEVERS; i++) {
                 const handle = handles[i];
                 const track = tracks[i];
@@ -1072,14 +899,12 @@
                 }, { passive: false });
             }
 
-            // ── Resize ──
             let resizeTimeout;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(updateAllUI, 100);
             });
 
-            // ── Init ──
             let initSum = values.reduce((a, b) => a + b, 0);
             if (initSum !== MAX_HOURS) {
                 const diff = MAX_HOURS - initSum;
@@ -1088,7 +913,6 @@
             }
             updateAllUI();
 
-            // ── Keyboard: Reset ──
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'r' || e.key === 'R') {
                     const base = MAX_HOURS / NUM_LEVERS;
@@ -1108,14 +932,13 @@
                 }
             });
 
-            console.log('✨ 168 Hours Allocator – Mobile Optimized');
+            console.log('✨ 168 Hours Allocator – Perfect Phone Fit');
             console.log('   Cycling: max 40h, happy from 10h');
             console.log('   Family: rest of 168h, happy from 50h');
             console.log('   Work: max 84h, happy from 48h');
             console.log('   Sleep: max 84h, happy from 56h');
             console.log('   Drag UP to increase, DOWN to decrease. Others adjust proportionally.');
             console.log('   Press "R" to reset to balanced.');
-
         })();
     </script>
 
