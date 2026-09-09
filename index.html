@@ -2,821 +2,818 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>TheCyclistDubai · 168 Hours</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Rider Up – Dubai Cycling Etiquette Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <style>
-        /* ── Fullscreen Reset ── */
+        /* ── Reset & Base ── */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
-        }
-
-        html, body {
-            height: 100%;
-            overflow: hidden;
-            touch-action: manipulation;
-            background: #d5d8dd;
         }
 
         body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0f2b3d 0%, #1a4a5f 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Inter', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
-            padding: 12px;
-            min-height: 100dvh;
-            height: 100dvh;
-            background: radial-gradient(ellipse at 50% 30%, #e8ebf0, #c8ccd2);
-            position: relative;
+            padding: 16px;
+            margin: 0;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(ellipse at 50% 40%, rgba(0, 180, 255, 0.04), transparent 60%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ── Premium Cycling Computer Frame ── */
-        .device-frame {
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(145deg, #e4e8ee, #c8ccd4);
-            padding: 18px 14px;
-            border-radius: 48px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.08),
-                0 0 0 2px rgba(255, 255, 255, 0.6) inset,
-                0 -4px 16px rgba(0, 0, 0, 0.04) inset;
-            max-width: 460px;
+        .quiz-wrapper {
             width: 100%;
-            height: 100%;
-            max-height: 860px;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .device-frame::before {
-            content: '';
-            position: absolute;
-            top: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 6px;
-            background: rgba(0, 0, 0, 0.04);
-            border-radius: 10px;
-        }
-
-        /* ── Screen ── */
-        .screen {
-            background: #f4f6f9;
+            max-width: 480px;
+            background: #ffffff;
             border-radius: 32px;
-            padding: 18px 14px 14px;
-            flex: 1;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            transition: all 0.2s;
+            border: 2px solid #fbbf24;
             display: flex;
             flex-direction: column;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6), 0 4px 20px rgba(0, 0, 0, 0.02);
-            border: 1px solid rgba(0, 0, 0, 0.02);
-            position: relative;
+            max-height: 95vh;
+        }
+
+        /* ── Header ── */
+        .quiz-header {
+            background: linear-gradient(145deg, #1e3a5f 0%, #2a4a6e 100%);
+            padding: 18px 20px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-bottom: 4px solid #fbbf24;
+            flex-shrink: 0;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-brand .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: #ffffff;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #1e3a5f;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-brand h1 {
+            font-size: 19px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+        }
+
+        .header-brand h1 span {
+            font-weight: 500;
+            font-size: 11px;
+            opacity: 0.85;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .header-brand h1 span a {
+            color: #fbbf24;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(251, 191, 36, 0.4);
+        }
+
+        .header-brand h1 span a:hover {
+            color: #ffffff;
+            border-bottom-color: #ffffff;
+        }
+
+        .header-badge {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(4px);
+            padding: 5px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            align-self: flex-start;
+        }
+
+        .header-badge .dot {
+            width: 9px;
+            height: 9px;
+            background: #fbbf24;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse-dot 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.85);
+            }
+        }
+
+        /* ── Navigation Tabs ── */
+        .nav-tabs {
+            display: flex;
+            background: #edf2f7;
+            border-radius: 40px;
+            padding: 4px;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #4a5568;
+            text-align: center;
+        }
+
+        .nav-tab.active {
+            background: #ffffff;
+            color: #1e3a5f;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: rgba(255,255,255,0.5);
+        }
+
+        /* ── Progress Bar ── */
+        .progress-section {
+            padding: 12px 20px 0;
+            background: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 4px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #e9edf2;
+            border-radius: 12px;
             overflow: hidden;
         }
 
-        /* ── Device Header: TheCyclistDubai (Centered) ── */
-        .device-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            flex-shrink: 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-            margin-bottom: 8px;
+        .progress-track .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            border-radius: 12px;
+            transition: width 0.5s ease;
         }
 
-        .device-name {
-            font-size: clamp(14px, 2.8vmin, 24px);
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: #1a1c20;
-            text-transform: uppercase;
-            font-family: 'Inter', 'Helvetica Neue', sans-serif;
-            text-align: center;
+        /* ── Body ── */
+        .quiz-body {
+            padding: 20px 20px 24px;
+            overflow-y: auto;
+            flex: 1;
         }
 
-        .device-status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #6a6e76;
-            font-size: clamp(6px, 1vmin, 9px);
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            position: absolute;
-            right: 0;
-        }
-        .device-status .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #00AA55;
-            box-shadow: 0 0 12px rgba(0, 170, 85, 0.15);
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
+        /* ── Question Card ── */
+        .question-card {
+            animation: fadeSlide 0.4s ease;
         }
 
-        /* ── Main Metric ── */
-        .main-metric {
-            text-align: center;
-            flex-shrink: 0;
-            padding: 4px 0 6px;
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .metric-label {
-            font-size: clamp(7px, 1.1vmin, 10px);
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #6a6e76;
-        }
-
-        .metric-value {
-            font-family: 'SF Mono', 'Courier New', monospace;
-            font-size: clamp(28px, 7vmin, 48px);
-            font-weight: 800;
-            color: #1a1c20;
-            line-height: 1;
-            letter-spacing: -1px;
+        .question-number {
             display: inline-block;
-        }
-        .metric-unit {
-            font-size: clamp(10px, 2vmin, 18px);
+            background: #fef3c7;
+            color: #b45309;
             font-weight: 700;
-            color: #6a6e76;
-            margin-left: 4px;
-            letter-spacing: 1px;
-        }
-
-        .metric-sub {
-            font-size: clamp(6px, 0.9vmin, 9px);
-            color: #6a6e76;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-            font-weight: 400;
-        }
-
-        /* ── Disclaimer (30% Bigger Text) ── */
-        .disclaimer {
-            background: rgba(0, 0, 0, 0.01);
-            border: 1px solid rgba(0, 0, 0, 0.02);
-            border-radius: 16px;
-            padding: 8px 10px;
-            margin: 6px 0 8px 0;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        .disclaimer p {
-            font-size: clamp(8px, 1.3vmin, 12px);
-            color: #6a6e76;
-            line-height: 1.4;
-            letter-spacing: 0.2px;
-            font-weight: 400;
-            font-style: italic;
-        }
-        .disclaimer strong {
-            color: #1a1c20;
-            font-style: normal;
-            font-weight: 700;
-        }
-
-        /* ── Levers ── */
-        .levers {
-            display: flex;
-            justify-content: center;
-            align-items: stretch;
-            gap: clamp(4px, 1vmin, 12px);
-            padding: 2px 0 2px;
-            flex: 1 1 auto;
-            min-height: 0;
-            flex-wrap: nowrap;
-        }
-
-        .lever {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            flex: 1 1 0;
-            min-width: 0;
-            max-width: 160px;
-            background: rgba(0, 0, 0, 0.01);
-            border-radius: clamp(12px, 2vmin, 20px);
-            padding: clamp(4px, 0.8vmin, 10px) clamp(2px, 0.4vmin, 6px) clamp(4px, 0.6vmin, 8px);
-            border: 1px solid rgba(0, 0, 0, 0.02);
-            transition: background 0.2s, border-color 0.2s;
-        }
-
-        .lever:hover {
-            background: rgba(0, 0, 0, 0.02);
-            border-color: rgba(0, 0, 0, 0.04);
-        }
-
-        .lever-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(2px, 0.4vmin, 6px);
-            margin-bottom: clamp(2px, 0.4vmin, 6px);
-            flex-shrink: 0;
-        }
-
-        .lever-header .icon {
-            font-size: clamp(14px, 2.4vmin, 22px);
-            opacity: 0.9;
-        }
-
-        /* ── Track ── */
-        .track-wrap {
-            position: relative;
-            width: clamp(22px, 4.5vmin, 38px);
-            flex: 1 1 auto;
-            min-height: 40px;
-            max-height: 200px;
-            background: rgba(0, 0, 0, 0.03);
+            font-size: 12px;
+            padding: 4px 14px;
             border-radius: 40px;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            cursor: pointer;
-            touch-action: none;
-            margin: 2px 0;
-        }
-
-        .track-wrap::after {
-            content: '';
-            position: absolute;
-            inset: 2px;
-            border-radius: 36px;
-            background: rgba(255, 255, 255, 0.4);
-            pointer-events: none;
-        }
-
-        .fill {
-            position: absolute;
-            bottom: 2px;
-            left: 2px;
-            right: 2px;
-            border-radius: 0 0 34px 34px;
-            transition: height 0.08s ease-out, background 0.3s;
-            pointer-events: none;
-            will-change: height;
-            min-height: 3px;
-        }
-
-        .fill::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 0 0 34px 34px;
-            background: inherit;
-            filter: blur(6px);
-            opacity: 0.3;
-            z-index: -1;
-            transition: opacity 0.3s;
-        }
-
-        .lever:hover .fill::after {
-            opacity: 0.5;
-        }
-
-        @keyframes pulseGlow {
-            0% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
-            50% { filter: brightness(1.1) drop-shadow(0 0 12px rgba(0, 0, 0, 0.04)); }
-            100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
-        }
-
-        .lever-pulse .fill {
-            animation: pulseGlow 0.5s ease 2;
-        }
-
-        .handle {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: clamp(28px, 5.5vmin, 40px);
-            height: clamp(28px, 5.5vmin, 40px);
-            min-width: 48px;
-            min-height: 48px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 40% 35%, #ffffff, #e8eaf0);
-            box-shadow: 
-                0 0 0 1px rgba(0, 0, 0, 0.02),
-                0 2px 12px rgba(0, 0, 0, 0.02),
-                inset 0 2px 0 rgba(255, 255, 255, 0.8);
-            cursor: grab;
-            touch-action: none;
-            z-index: 10;
-            transition: box-shadow 0.2s, transform 0.15s;
-            will-change: transform;
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .handle:active {
-            cursor: grabbing;
-            transform: translateX(-50%) scale(0.92);
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .handle::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: clamp(8px, 1.6vmin, 14px);
-            height: clamp(8px, 1.6vmin, 14px);
-            border-radius: 50%;
-            background: #1a1c20;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.02);
-            transition: transform 0.2s;
-        }
-
-        /* ── Emoticon (Unified Set) ── */
-        .face-dynamic {
-            font-size: clamp(28px, 7vmin, 48px);
-            line-height: 1.2;
-            text-align: center;
-            opacity: 1;
-            margin: 4px 0 2px 0;
-            width: 100%;
-            min-height: 1.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
-        }
-
-        .lever:hover .face-dynamic {
-            transform: scale(1.05);
-        }
-
-        /* ── Value Display ── */
-        .value-display {
-            margin-top: clamp(2px, 0.3vmin, 6px);
-            font-family: 'SF Mono', 'Courier New', monospace;
-            font-size: clamp(9px, 2vmin, 16px);
-            font-weight: 800;
-            color: #1a1c20;
             letter-spacing: 0.3px;
-            background: rgba(0, 0, 0, 0.01);
-            padding: 0.04rem 0.6rem;
-            border-radius: 30px;
-            border: 1px solid rgba(0, 0, 0, 0.02);
-            font-variant-numeric: tabular-nums;
-            min-width: 1.6rem;
-            text-align: center;
-            transition: background 0.3s;
-            flex-shrink: 0;
+            margin-bottom: 10px;
+            border: 1px solid #fcd34d;
         }
 
-        .value-display .unit {
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(5px, 0.9vmin, 8px);
+        .question-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a202c;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        /* ── Options ── */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            background: #f7fafc;
+            cursor: pointer;
+            transition: all 0.15s;
+            touch-action: manipulation;
+        }
+
+        .option-item:hover {
+            border-color: #b0c4de;
+            background: #edf2f7;
+        }
+
+        .option-item.selected {
+            border-color: #2a5298;
+            background: #ebf4ff;
+            box-shadow: 0 2px 8px rgba(42, 82, 152, 0.15);
+        }
+
+        .option-item.correct {
+            border-color: #38a169;
+            background: #f0fff4;
+        }
+
+        .option-item.wrong {
+            border-color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        .option-item.disabled {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .option-item .radio {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.15s;
+        }
+
+        .option-item.selected .radio {
+            border-color: #2a5298;
+            background: #2a5298;
+        }
+        .option-item.selected .radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+        .option-item.correct .radio {
+            border-color: #38a169;
+            background: #38a169;
+        }
+        .option-item.correct .radio::after {
+            content: '✓';
+            color: #fff;
+            font-size: 16px;
+            line-height: 1;
+            font-weight: 700;
+        }
+        .option-item.wrong .radio {
+            border-color: #e53e3e;
+            background: #e53e3e;
+        }
+        .option-item.wrong .radio::after {
+            content: '✕';
+            color: #fff;
+            font-size: 16px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .option-item .option-label {
+            font-size: 15px;
             font-weight: 500;
-            color: #6a6e76;
-            margin-left: 2px;
+            color: #2d3748;
+            flex: 1;
         }
 
-        /* ── Lever Info ── */
-        .lever-info {
+        .option-item .option-letter {
+            font-weight: 700;
+            color: #4a5568;
+            font-size: 13px;
+            margin-right: 6px;
+        }
+
+        /* ── Feedback ── */
+        .feedback-box {
+            margin-top: 18px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            display: none;
+            animation: fadeSlide 0.3s ease;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background: #f0fff4;
+            color: #276749;
+            border-left: 4px solid #38a169;
+        }
+
+        .feedback-box.wrong {
+            background: #fff5f5;
+            color: #9b2c2c;
+            border-left: 4px solid #e53e3e;
+        }
+
+        /* ── Navigation ── */
+        .nav-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 22px;
+            gap: 10px;
+        }
+
+        .btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 11px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            touch-action: manipulation;
+            flex: 1;
+            min-width: 70px;
+        }
+
+        .btn-primary {
+            background: #2a5298;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(42, 82, 152, 0.3);
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #1e3c72;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(42, 82, 152, 0.4);
+        }
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #e2e8f0;
+        }
+        .btn-secondary:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn-success {
+            background: #38a169;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(56, 161, 105, 0.3);
+        }
+        .btn-success:hover {
+            background: #2f855a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(56, 161, 105, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #2a5298;
+            border: 2px solid #cbd5e0;
+        }
+        .btn-outline:hover {
+            background: #f7fafc;
+            border-color: #a0aec0;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp:hover {
+            background: #1da851;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+        }
+
+        .counter-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4a5568;
+            padding: 0 6px;
+        }
+
+        /* ── Results ── */
+        .results-container {
             text-align: center;
-            margin-top: 4px;
-            flex-shrink: 0;
+            padding: 8px 0 4px;
+            animation: fadeSlide 0.5s ease;
+        }
+
+        .results-container .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #f7fafc, #edf2f7);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1px;
+            justify-content: center;
+            margin: 12px auto 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 4px solid #fbbf24;
         }
 
-        .lever-name {
-            font-size: clamp(10.5px, 1.875vmin, 16.5px);
-            font-weight: 900;
-            color: currentColor;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            line-height: 1.2;
-            -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.7);
-            -webkit-text-fill-color: currentColor;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+        .results-container .score-circle .score-number {
+            font-size: 38px;
+            font-weight: 800;
+            color: #1a202c;
+            line-height: 1;
         }
 
-        .lever-label {
-            font-size: clamp(5px, 0.8vmin, 7px);
-            letter-spacing: 0.2px;
-            text-transform: uppercase;
-            color: #6a6e76;
+        .results-container .score-circle .score-label {
+            font-size: 13px;
             font-weight: 600;
-            text-align: center;
-            line-height: 1.2;
+            color: #4a5568;
+            margin-top: 2px;
         }
 
-        /* ── Color Themes ── */
-        .lever-0 .fill { background: linear-gradient(0deg, #FF6B00, #FF3D00); }
-        .lever-0 .handle { border-color: rgba(255, 107, 0, 0.08); }
-        .lever-0 .handle::after { background: #FF6B00; }
-        .lever-0 .value-display { color: #FF6B00; }
-        .lever-0 .lever-name { color: #FF6B00; }
+        .results-container .result-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
 
-        .lever-1 .fill { background: linear-gradient(0deg, #00D4FF, #0066FF); }
-        .lever-1 .handle { border-color: rgba(0, 212, 255, 0.08); }
-        .lever-1 .handle::after { background: #00D4FF; }
-        .lever-1 .value-display { color: #00D4FF; }
-        .lever-1 .lever-name { color: #00D4FF; }
+        .results-container .result-sub {
+            font-size: 15px;
+            color: #4a5568;
+            max-width: 340px;
+            margin: 0 auto 12px;
+        }
 
-        .lever-2 .fill { background: linear-gradient(0deg, #00FF88, #00CC66); }
-        .lever-2 .handle { border-color: rgba(0, 255, 136, 0.08); }
-        .lever-2 .handle::after { background: #00FF88; }
-        .lever-2 .value-display { color: #00FF88; }
-        .lever-2 .lever-name { color: #00FF88; }
-
-        .lever-3 .fill { background: linear-gradient(0deg, #E1306C, #833AB4); }
-        .lever-3 .handle { border-color: rgba(225, 48, 108, 0.08); }
-        .lever-3 .handle::after { background: #E1306C; }
-        .lever-3 .value-display { color: #E1306C; }
-        .lever-3 .lever-name { color: #E1306C; }
-
-        /* ── Footer – Centered Buttons ── */
-        .device-footer {
+        .results-container .result-detail {
             display: flex;
             justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            padding-top: clamp(6px, 1vmin, 12px);
-            margin-top: auto;
-            border-top: 1px solid rgba(0, 0, 0, 0.02);
-            gap: 6px;
+            gap: 30px;
+            margin: 16px 0 24px;
+            flex-wrap: wrap;
         }
 
-        .footer-buttons {
+        .results-container .result-detail .stat {
+            text-align: center;
+        }
+
+        .results-container .result-detail .stat .num {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1a202c;
+        }
+
+        .results-container .result-detail .stat .label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .results-container .result-detail .stat.pass .num {
+            color: #38a169;
+        }
+        .results-container .result-detail .stat.fail .num {
+            color: #e53e3e;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .results-actions .btn {
+            flex: 1 1 auto;
+            min-width: 110px;
+        }
+
+        .cert-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fef3c7;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #92400e;
+            margin-bottom: 14px;
+            border: 2px solid #fcd34d;
+        }
+
+        /* ── Footer ── */
+        .quiz-footer {
+            padding: 12px 20px 16px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            font-size: 13px;
+            color: #4a5568;
+            background: #f7fafc;
+            flex-shrink: 0;
+        }
+
+        .quiz-footer a {
+            color: #1e3a5f;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1px dotted #1e3a5f;
+        }
+
+        .quiz-footer a:hover {
+            color: #f59e0b;
+            border-bottom-color: #f59e0b;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease;
+        }
+
+        .signal-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+            padding: 10px 14px;
+            background: #f0f7ff;
+            border-radius: 12px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .signal-item {
             display: flex;
             align-items: center;
             gap: 6px;
-            flex-wrap: nowrap;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e3a5f;
         }
 
-        /* ── Bigger Buttons ── */
-        .ig-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: clamp(4px, 0.8vmin, 10px);
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            color: #ffffff;
-            border: none;
-            padding: 0.06rem 1rem;
-            border-radius: 60px;
-            font-size: clamp(10px, 1.8vmin, 16px);
+        .signal-item .icon {
+            font-size: 22px;
+        }
+
+        .signal-item .label {
+            font-weight: 400;
+            color: #4a5568;
+        }
+
+        .signal-na {
+            color: #a0aec0;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        /* ── Study Page ── */
+        .study-container {
+            padding: 4px 0;
+        }
+
+        .study-item {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .study-item .q {
             font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            white-space: nowrap;
-            touch-action: manipulation;
-            min-height: clamp(44px, 7vmin, 64px);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 12px rgba(225, 48, 108, 0.15);
-            text-decoration: none;
-        }
-        .ig-btn:active {
-            transform: scale(0.94);
-            box-shadow: 0 2px 8px rgba(225, 48, 108, 0.1);
-        }
-        .ig-btn svg {
-            width: clamp(18px, 3vmin, 28px);
-            height: clamp(18px, 3vmin, 28px);
-            fill: #ffffff;
+            font-size: 15px;
+            color: #1a202c;
         }
 
-        .group-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: clamp(4px, 0.8vmin, 10px);
-            background: #25D366;
-            color: #ffffff;
-            border: none;
-            padding: 0.06rem 1rem;
-            border-radius: 60px;
-            font-size: clamp(10px, 1.8vmin, 16px);
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-            white-space: nowrap;
-            touch-action: manipulation;
-            min-height: clamp(44px, 7vmin, 64px);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 16px rgba(37, 211, 102, 0.15);
-            text-decoration: none;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-        }
-        .group-btn:active {
-            transform: scale(0.94);
-            background: #128C7E;
-            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.05);
-        }
-        .group-btn svg {
-            width: clamp(18px, 3vmin, 28px);
-            height: clamp(18px, 3vmin, 28px);
-            fill: #ffffff;
+        .study-item .a {
+            font-size: 14px;
+            color: #2d3748;
+            margin-top: 4px;
         }
 
-        .share-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: clamp(4px, 0.8vmin, 10px);
-            background: #25D366;
-            color: #ffffff;
-            border: none;
-            padding: 0.06rem 1.2rem;
-            border-radius: 60px;
-            font-size: clamp(10px, 1.8vmin, 16px);
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-            white-space: nowrap;
-            touch-action: manipulation;
-            min-height: clamp(44px, 7vmin, 64px);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 16px rgba(37, 211, 102, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.02);
-        }
-        .share-btn:active {
-            transform: scale(0.94);
-            background: #128C7E;
-            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.05);
-        }
-        .share-btn svg {
-            width: clamp(18px, 3vmin, 28px);
-            height: clamp(18px, 3vmin, 28px);
-            fill: #ffffff;
+        .study-item .a strong {
+            color: #38a169;
         }
 
-        /* ── Scrollbar hide ── */
-        ::-webkit-scrollbar { width: 0; }
+        .study-item .explanation {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 6px;
+            background: #edf2f7;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
 
-        /* ── Responsive Fine-Tuning ── */
-        @media (max-width: 420px) {
-            .device-frame { padding: 12px 8px; border-radius: 36px; }
-            .screen { padding: 12px 8px 10px; border-radius: 24px; }
-            .levers { gap: 2px; }
-            .lever { padding: 3px 1px 3px; border-radius: 10px; }
-            .track-wrap { width: 18px; min-height: 30px; }
-            .handle { min-width: 36px; min-height: 36px; width: 24px; height: 24px; }
-            .handle::after { width: 6px; height: 6px; }
-            .value-display { font-size: 7px; min-width: 1.2rem; padding: 0 4px; }
-            .lever-header .icon { font-size: 10px; }
-            .face-dynamic { font-size: 24px; margin: 2px 0 0px 0; }
-            .lever-name { font-size: 8px; -webkit-text-stroke: 0.3px black; }
-            .lever-label { font-size: 4px; }
-            .share-btn { font-size: 7px; padding: 0.04rem 0.8rem; min-height: 32px; }
-            .share-btn svg { width: 14px; height: 14px; }
-            .ig-btn { font-size: 7px; padding: 0.04rem 0.6rem; min-height: 32px; }
-            .ig-btn svg { width: 14px; height: 14px; }
-            .group-btn { font-size: 7px; padding: 0.04rem 0.6rem; min-height: 32px; }
-            .group-btn svg { width: 14px; height: 14px; }
-            .device-name { font-size: 10px; }
-            .metric-value { font-size: 22px; }
-            .metric-unit { font-size: 10px; }
-            .disclaimer p { font-size: clamp(7px, 1.1vmin, 10px); }
-            .device-footer { gap: 4px; }
-            .footer-buttons { gap: 4px; }
+        .study-item .signals {
+            margin-top: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .study-item .signals .tag {
+            background: #e0e7ff;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2a5298;
+        }
+
+        .study-item .signals .tag.verbal {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .quiz-wrapper {
+                border-radius: 24px;
+                max-width: 100%;
+                max-height: 98vh;
+            }
+            .quiz-header {
+                padding: 14px 16px 12px;
+            }
+            .header-brand h1 {
+                font-size: 17px;
+            }
+            .header-brand .logo-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 20px;
+            }
+            .quiz-body {
+                padding: 16px;
+            }
+            .question-text {
+                font-size: 16px;
+            }
+            .option-item {
+                padding: 12px 14px;
+                gap: 10px;
+            }
+            .option-item .option-label {
+                font-size: 14px;
+            }
+            .btn {
+                font-size: 13px;
+                padding: 10px 14px;
+                min-width: 60px;
+            }
+            .nav-actions {
+                gap: 8px;
+            }
+            .counter-text {
+                font-size: 13px;
+            }
+            .signal-box {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .results-actions .btn {
+                min-width: 90px;
+            }
+            .nav-tab {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
         }
 
         @media (max-width: 380px) {
-            .ig-btn, .group-btn, .share-btn {
-                font-size: 6px;
-                padding: 0.02rem 0.4rem;
-                min-height: 24px;
+            .header-brand h1 {
+                font-size: 15px;
             }
-            .ig-btn svg, .group-btn svg, .share-btn svg {
-                width: 10px;
-                height: 10px;
+            .question-text {
+                font-size: 15px;
             }
-            .ig-btn { gap: 3px; }
-            .group-btn { gap: 3px; }
-            .share-btn { gap: 3px; }
-        }
-
-        @media (max-height: 640px) {
-            .device-frame { padding: 10px 6px; border-radius: 32px; max-height: 100dvh; }
-            .screen { padding: 10px 6px 6px; border-radius: 20px; }
-            .track-wrap { min-height: 30px; }
-            .handle { min-width: 32px; min-height: 32px; width: 20px; height: 20px; }
-            .value-display { font-size: 8px; min-width: 1.2rem; }
-            .lever { padding: 2px 1px 2px; }
-            .lever-name { font-size: 8px; }
-            .lever-label { font-size: 4px; }
-            .share-btn { font-size: 8px; padding: 0.04rem 0.8rem; min-height: 32px; }
-            .share-btn svg { width: 14px; height: 14px; }
-            .ig-btn { font-size: 8px; padding: 0.04rem 0.6rem; min-height: 32px; }
-            .ig-btn svg { width: 14px; height: 14px; }
-            .group-btn { font-size: 8px; padding: 0.04rem 0.6rem; min-height: 32px; }
-            .group-btn svg { width: 14px; height: 14px; }
-            .metric-value { font-size: 24px; }
-            .device-name { font-size: 12px; }
-            .face-dynamic { font-size: 24px; margin: 2px 0 0px 0; }
-            .metric-label { font-size: 6px; }
-            .metric-sub { font-size: 5px; }
-            .device-header { padding-bottom: 6px; margin-bottom: 4px; }
-            .main-metric { padding: 2px 0 4px; }
-            .levers { padding: 2px 0; }
-            .lever-header .icon { font-size: 10px; }
-            .disclaimer { padding: 4px 6px; margin: 3px 0 4px 0; }
-            .disclaimer p { font-size: clamp(7px, 1.1vmin, 10px); }
-            .device-footer { gap: 4px; }
-            .footer-buttons { gap: 4px; }
-        }
-
-        @media (max-height: 560px) {
-            .metric-value { font-size: 18px; }
-            .metric-label { font-size: 5px; }
-            .device-header { padding-bottom: 4px; margin-bottom: 2px; }
-            .main-metric { padding: 1px 0 2px; }
-            .levers { padding: 1px 0; }
-            .track-wrap { min-height: 20px; }
-            .handle { min-width: 28px; min-height: 28px; width: 16px; height: 16px; }
-            .handle::after { width: 4px; height: 4px; }
-            .value-display { font-size: 6px; min-width: 1rem; padding: 0 2px; }
-            .lever-header .icon { font-size: 8px; }
-            .share-btn { font-size: 6px; padding: 0.02rem 0.6rem; min-height: 24px; }
-            .share-btn svg { width: 10px; height: 10px; }
-            .ig-btn { font-size: 6px; padding: 0.02rem 0.4rem; min-height: 24px; }
-            .ig-btn svg { width: 10px; height: 10px; }
-            .group-btn { font-size: 6px; padding: 0.02rem 0.4rem; min-height: 24px; }
-            .group-btn svg { width: 10px; height: 10px; }
-            .lever-name { font-size: 6px; -webkit-text-stroke: 0.2px black; }
-            .lever-label { font-size: 3px; }
-            .levers { gap: 1px; }
-            .lever { padding: 1px 1px 1px; border-radius: 8px; }
-            .device-frame { padding: 6px 4px; border-radius: 24px; }
-            .screen { padding: 6px 4px 4px; border-radius: 16px; }
-            .face-dynamic { font-size: 16px; margin: 1px 0 0px 0; }
-            .device-name { font-size: 8px; }
-            .metric-unit { font-size: 8px; }
-            .device-status { font-size: 5px; }
-            .device-status .dot { width: 5px; height: 5px; }
-            .disclaimer { padding: 2px 4px; margin: 2px 0 2px 0; }
-            .disclaimer p { font-size: clamp(6px, 0.9vmin, 8px); }
-            .device-footer { gap: 3px; }
-            .footer-buttons { gap: 3px; }
+            .option-item .option-label {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
-
-    <div class="device-frame">
-        <div class="screen">
-
-            <!-- Device Header: Centered -->
-            <div class="device-header">
-                <span class="device-name">THECYCLISTDUBAI</span>
-                <span class="device-status">
-                    <span class="dot"></span>
-                    <span>LIVE</span>
-                </span>
+    <div class="quiz-wrapper" id="app">
+        <header class="quiz-header">
+            <div class="header-brand">
+                <div class="logo-icon">🚴</div>
+                <h1>
+                    Rider Up – Etiquette Quiz
+                    <span>Dubai Cycling | Signals, Rules &amp; <a href="https://thecyclistdubai.com" target="_blank">thecyclistdubai.com</a></span>
+                </h1>
             </div>
-
-            <!-- Main Metric -->
-            <div class="main-metric">
-                <div class="metric-label">Weekly Power</div>
-                <div>
-                    <span class="metric-value" id="totalDisplay">168</span>
-                    <span class="metric-unit">H</span>
-                </div>
-                <div class="metric-sub">⌛ 7 days · drag to allocate</div>
+            <div class="header-badge">
+                <span class="dot"></span>
+                <span id="statusBadge">Ready</span>
             </div>
-
-            <!-- Disclaimer (30% Bigger Text) -->
-            <div class="disclaimer">
-                <p>
-                    ⚠️ <strong>DISCLAIMER:</strong> This isn't a real planner, just a playful nudge. 
-                    True balance isn't found in numbers, but in how you feel. 
-                    Ride hard, rest well, love deeply, and always make time for what matters. 🚴
-                </p>
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs" id="navTabs">
+                <button class="nav-tab active" data-view="quiz">📝 Quiz</button>
+                <button class="nav-tab" data-view="study">📖 Study</button>
             </div>
+        </header>
 
-            <!-- Levers -->
-            <div class="levers" id="leversContainer">
-
-                <!-- 0: Ride -->
-                <div class="lever lever-0" data-index="0">
-                    <div class="lever-header">
-                        <span class="icon">🚴</span>
-                    </div>
-                    <div class="track-wrap" id="track0">
-                        <div class="fill" id="fill0" style="height:40%;"></div>
-                        <div class="handle" id="handle0" style="bottom:40%;"></div>
-                    </div>
-                    <div class="face-dynamic" id="face0">😐</div>
-                    <div class="value-display" id="value0">42 <span class="unit">h</span></div>
-                    <div class="lever-info">
-                        <div class="lever-name">Ride</div>
-                        <div class="lever-label">max 40h · happy 6h</div>
-                    </div>
-                </div>
-
-                <!-- 1: Family -->
-                <div class="lever lever-1" data-index="1">
-                    <div class="lever-header">
-                        <span class="icon">👨‍👩‍👧‍👦</span>
-                    </div>
-                    <div class="track-wrap" id="track1">
-                        <div class="fill" id="fill1" style="height:40%;"></div>
-                        <div class="handle" id="handle1" style="bottom:40%;"></div>
-                    </div>
-                    <div class="face-dynamic" id="face1">😐</div>
-                    <div class="value-display" id="value1">42 <span class="unit">h</span></div>
-                    <div class="lever-info">
-                        <div class="lever-name">Family</div>
-                        <div class="lever-label">max 84h · happy 30h</div>
-                    </div>
-                </div>
-
-                <!-- 2: Work -->
-                <div class="lever lever-2" data-index="2">
-                    <div class="lever-header">
-                        <span class="icon">💼</span>
-                    </div>
-                    <div class="track-wrap" id="track2">
-                        <div class="fill" id="fill2" style="height:40%;"></div>
-                        <div class="handle" id="handle2" style="bottom:40%;"></div>
-                    </div>
-                    <div class="face-dynamic" id="face2">😐</div>
-                    <div class="value-display" id="value2">42 <span class="unit">h</span></div>
-                    <div class="lever-info">
-                        <div class="lever-name">Work</div>
-                        <div class="lever-label">max 70h · happy 48h</div>
-                    </div>
-                </div>
-
-                <!-- 3: Recovery -->
-                <div class="lever lever-3" data-index="3">
-                    <div class="lever-header">
-                        <span class="icon">😴</span>
-                    </div>
-                    <div class="track-wrap" id="track3">
-                        <div class="fill" id="fill3" style="height:40%;"></div>
-                        <div class="handle" id="handle3" style="bottom:40%;"></div>
-                    </div>
-                    <div class="face-dynamic" id="face3">😐</div>
-                    <div class="value-display" id="value3">42 <span class="unit">h</span></div>
-                    <div class="lever-info">
-                        <div class="lever-name">Recovery</div>
-                        <div class="lever-label">max 84h · happy 49h</div>
-                    </div>
-                </div>
+        <div class="progress-section" id="progressSection">
+            <div class="progress-meta">
+                <span id="questionCounter">Question 1 of 16</span>
+                <span id="scoreDisplay">0 correct</span>
             </div>
-
-            <!-- Footer – Centered Buttons -->
-            <div class="device-footer">
-                <div class="footer-buttons">
-                    <!-- Instagram Follow Button -->
-                    <a href="https://instagram.com/thecyclistdubai" target="_blank" rel="noopener noreferrer" class="ig-btn" aria-label="Follow us on Instagram">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-                        </svg>
-                        Follow
-                    </a>
-
-                    <!-- Join WhatsApp Group Button -->
-                    <a href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?s=cl&p=i&ilr=4" target="_blank" rel="noopener noreferrer" class="group-btn" aria-label="Join our WhatsApp group">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                        </svg>
-                        Group
-                    </a>
-
-                    <!-- WhatsApp Share Button -->
-                    <button class="share-btn" id="shareBtn">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                        </svg>
-                        Share
-                    </button>
-                </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width:0%;"></div>
             </div>
+        </div>
 
+        <div class="quiz-body" id="quizBody">
+            <div id="renderTarget"></div>
+        </div>
+
+        <div class="quiz-footer">
+            🚴 Brought to you by <a href="https://thecyclistdubai.com" target="_blank">thecyclistdubai.com</a> – Dubai's cycling community
         </div>
     </div>
 
@@ -824,420 +821,676 @@
         (function() {
             'use strict';
 
-            const MAX_HOURS = 168;
-            const NUM_LEVERS = 4;
+            // ─── QUESTIONS (16 total, updated) ─────────────────────────
+            const QUESTIONS = [{
+                id: 1,
+                text: 'What is the correct hand signal to indicate a right turn while cycling in Dubai?',
+                options: [
+                    'Left arm straight out horizontally',
+                    'Right arm straight out horizontally',
+                    'Left arm bent upward with palm forward',
+                    'Right arm bent downward with palm back'
+                ],
+                correct: 1,
+                explanation: 'Extend your right arm straight out to signal a right turn. Left arm out signals a left turn.',
+                visual: 'Right arm straight out horizontally',
+                verbal: 'Right turn'
+            }, {
+                id: 2,
+                text: 'What is the best formation for a group when riding over narrow cycling bridges, underpasses, or sections under construction?',
+                options: [
+                    'Single file',
+                    'Two abreast',
+                    'Staggered',
+                    'Ride in the middle of the track'
+                ],
+                correct: 0,
+                explanation: 'Single file is the safest and most courteous formation in narrow or obstructed areas, allowing others to pass and reducing the risk of collisions.',
+                visual: null,
+                verbal: null
+            }, {
+                id: 3,
+                text: 'What does a raised hand straight up signal mean in a group ride?',
+                options: [
+                    'Turning left',
+                    'Speeding up',
+                    'Stopping',
+                    'Hazard ahead'
+                ],
+                correct: 2,
+                explanation: 'Raise your hand straight up to signal that the group needs to stop.',
+                visual: 'Raised hand straight up',
+                verbal: 'Stop'
+            }, {
+                id: 4,
+                text: 'What verbal call and hand signal do cyclists use to indicate they are finishing their pull at the front and rotating to the back?',
+                options: [
+                    'Say "Rider change" and point downward with a circular motion',
+                    'Say "Rider up" and pat the rider behind on the hip',
+                    'Say "Rider off" and wave the hand sideways',
+                    'Say "Clear" and raise the hand straight up'
+                ],
+                correct: 0,
+                explanation: 'When a rider finishes their pull at the front, they call "Rider change" and make a circular motion with one hand, pointing downward, to signal the rotation to the back of the group.',
+                visual: 'Circular motion with finger pointing down',
+                verbal: '"Rider change"'
+            }, {
+                id: 5,
+                text: 'What is the standard signal used when a cycling group is passing another group or individual rider?',
+                options: [
+                    'Say "Rider change" and point down',
+                    'Say "Passing left" and point to the left',
+                    'Say "Car back" and wave your arm',
+                    'Say "Stop" and raise your hand'
+                ],
+                correct: 1,
+                explanation: 'When overtaking, call out "Passing left" (or "On your left") and clearly point to the left. This alerts the riders ahead and ensures a safe pass.',
+                visual: 'Point to the left',
+                verbal: '"Passing left" or "On your left"'
+            }, {
+                id: 6,
+                text: 'How should you signal that you are slowing down in a group ride?',
+                options: [
+                    'Raise your hand straight up',
+                    'Pat the air with an outstretched arm, palm down',
+                    'Point your arm down at the ground',
+                    'Wave your arm in a circle'
+                ],
+                correct: 1,
+                explanation: 'Pat the air with an outstretched arm, palm down, to signal slowing. This is widely recognized.',
+                visual: 'Pat the air with palm down',
+                verbal: 'Slowing / Slowing down'
+            }, {
+                id: 7,
+                text: 'What does it mean when a rider points down at the road surface with their hand?',
+                options: [
+                    'Turn left',
+                    'Stop immediately',
+                    'Hazard on the road (pothole, debris)',
+                    'Speed up'
+                ],
+                correct: 2,
+                explanation: 'Pointing down at the road surface warns riders behind of a hazard like a pothole or debris.',
+                visual: 'Point down at road',
+                verbal: '"Hole" or "Hazard"'
+            }, {
+                id: 8,
+                text: 'What is the recommended distance to keep between your front wheel and the wheel of the rider in front during a group ride?',
+                options: [
+                    '10-20 cm (4-8 inches)',
+                    '30-60 cm (1-2 feet)',
+                    '100-150 cm (3-5 feet)',
+                    'As close as possible'
+                ],
+                correct: 1,
+                explanation: 'Keep 30-60 cm (a foot or two) of distance between wheels to allow for safe braking and avoid overlapping wheels. This is the sweet spot for safety and drafting.',
+                visual: null,
+                verbal: null
+            }, {
+                id: 9,
+                text: 'What is the recommended group size for road cyclists on the Al Qudra Cycling Track?',
+                options: [
+                    '4–6 riders',
+                    '8–12 riders',
+                    '12–16 riders',
+                    '20+ riders'
+                ],
+                correct: 1,
+                explanation: 'Al Qudra track is popular; groups of 8–12 are manageable, safe, and allow good communication.',
+                visual: null,
+                verbal: null
+            }, {
+                id: 10,
+                text: 'Are time trial (TT) or triathlon bikes suitable for group rides?',
+                options: [
+                    'Yes, they are faster and more aero',
+                    'No, only road bikes are recommended for group rides',
+                    'Only if ridden carefully at the back',
+                    'Yes, with proper handling skills'
+                ],
+                correct: 1,
+                explanation: 'TT and triathlon bikes have aggressive geometry and poor handling in tight groups; road bikes are safer and more maneuverable.',
+                visual: null,
+                verbal: null
+            }, {
+                id: 11,
+                text: 'What verbal call should a cyclist make when a faster group or individual is approaching from behind?',
+                options: [
+                    '"Passing from behind"',
+                    '"Car back"',
+                    '"On your left"',
+                    '"Clear"'
+                ],
+                correct: 0,
+                explanation: '"Passing from behind" alerts riders ahead of an approaching faster group, allowing them to hold their line.',
+                visual: null,
+                verbal: '"Passing from behind"'
+            }, {
+                id: 12,
+                text: 'What safety equipment is essential when cycling early morning or late evening when it is dark on cycling tracks?',
+                options: [
+                    'Front light only',
+                    'Rear light only',
+                    'Front and rear lights',
+                    'Reflective vest only'
+                ],
+                correct: 2,
+                explanation: 'Both front (white) and rear (red) lights are mandatory for visibility to other road users, especially during early morning and late evening rides.',
+                visual: null,
+                verbal: null
+            }, {
+                id: 13,
+                text: 'What emergency equipment is recommended to carry in your saddle bag for a road cycling ride?',
+                options: [
+                    'Spare tube, pump, tire levers, and multitool',
+                    'Only a spare tube',
+                    'Only a pump',
+                    'First aid kit only'
+                ],
+                correct: 0,
+                explanation: 'A spare inner tube, mini pump, tire levers, and a multitool are the essential items to fix common roadside mechanical issues like punctures or loose bolts.',
+                visual: null,
+                verbal: null
+            }, {
+                id: 14,
+                text: 'Is wearing a helmet mandatory on DXBike cycling tracks and all cycling tracks in Dubai?',
+                options: [
+                    'Yes, it is mandatory by law',
+                    'No, it is only recommended',
+                    'Only for children under 12',
+                    'Only on weekends'
+                ],
+                correct: 0,
+                explanation: 'Dubai introduced legislation in 2010 mandating cyclists to wear helmets. The RTA safety guidelines state that riders "must wear a protective helmet". A new monitoring unit enforces this rule with fines for non-compliance.',
+                visual: null,
+                verbal: null
+            }, {
+                id: 15,
+                text: 'What is the minimum age for children to ride independently on the Mushrif Park mountain bike trails?',
+                options: [
+                    'Under 8 years',
+                    'Under 10 years',
+                    '12 years or older',
+                    '16 years or older'
+                ],
+                correct: 2,
+                explanation: 'Children aged 12 and older are allowed to ride independently on the Mushrif Park trails. Younger riders require adult supervision.',
+                visual: null,
+                verbal: null
+            }, {
+                id: 16,
+                text: 'What is the recommended minimum tire specification for riding on the Mushrif Park mountain bike trails?',
+                options: [
+                    'Slick road tires (23-25mm)',
+                    '40mm gravel tires or wider',
+                    'Narrow tires only',
+                    'Any tire type is fine'
+                ],
+                correct: 1,
+                explanation: 'The Mushrif Park MTB trails have a compact dirt surface; 40mm gravel tires or wider provide the necessary grip and stability. Narrow or slick tires may slip on loose sections.',
+                visual: null,
+                verbal: null
+            }];
 
-            // ── Lever Configuration ──
-            const LEVER_CONFIG = [
-                { maxHours: 40, happyThreshold: 6, label: 'Ride' },
-                { maxHours: 84, happyThreshold: 30, label: 'Family' },
-                { maxHours: 70, happyThreshold: 48, label: 'Work' },
-                { maxHours: 84, happyThreshold: 49, label: 'Recovery' },
-            ];
+            // ─── STATE ──────────────────────────────────────────────────
+            const state = {
+                currentIndex: 0,
+                answers: new Array(QUESTIONS.length).fill(null),
+                showFeedback: false,
+                examCompleted: false,
+                answered: new Array(QUESTIONS.length).fill(false),
+                currentView: 'quiz', // 'quiz' or 'study'
+            };
 
-            const values = [42, 42, 42, 42];
-            let draggingIndex = -1;
-            let dragStartY = 0;
-            let dragStartValue = 0;
+            // ─── DOM REFS ──────────────────────────────────────────────
+            const renderTarget = document.getElementById('renderTarget');
+            const progressFill = document.getElementById('progressFill');
+            const questionCounter = document.getElementById('questionCounter');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const statusBadge = document.getElementById('statusBadge');
+            const progressSection = document.getElementById('progressSection');
+            const navTabs = document.getElementById('navTabs');
 
-            const tracks = [];
-            const handles = [];
-            const fills = [];
-            const faceEls = [];
-            const valueEls = [];
-            const leverEls = [];
-
-            for (let i = 0; i < NUM_LEVERS; i++) {
-                tracks.push(document.getElementById('track' + i));
-                handles.push(document.getElementById('handle' + i));
-                fills.push(document.getElementById('fill' + i));
-                faceEls.push(document.getElementById('face' + i));
-                valueEls.push(document.getElementById('value' + i));
-                leverEls.push(document.querySelector(`.lever-${i}`));
-            }
-            const totalDisplay = document.getElementById('totalDisplay');
-            const shareBtn = document.getElementById('shareBtn');
-
-            function getTrackHeight(index) {
-                return tracks[index].getBoundingClientRect().height;
-            }
-
-            function valueToPercent(v, maxHours) {
-                return (v / maxHours) * 100;
-            }
-
-            // ── Unified Emoticon Set with Custom Curves for Ride & Work ──
-            function getMood(value, index) {
-                const emojis = {
-                    veryHappy: '🤩',
-                    happy: '😊',
-                    neutral: '🙂',
-                    meh: '😐',
-                    angry: '😠',
-                    furious: '🤬'
-                };
-
-                // ── Ride (index 0): Unhappy/Angry at 0 and 4, Happiest at 20 ──
-                if (index === 0) {
-                    if (value === 0) return emojis.furious;
-                    if (value <= 4) return emojis.angry;
-                    if (value <= 10) return emojis.meh;
-                    if (value <= 15) return emojis.neutral;
-                    if (value <= 20) return emojis.veryHappy;
-                    if (value <= 25) return emojis.happy;
-                    if (value <= 30) return emojis.neutral;
-                    if (value <= 35) return emojis.angry;
-                    return emojis.furious;
+            // ─── HELPERS ──────────────────────────────────────────────
+            function getCorrectCount() {
+                let count = 0;
+                for (let i = 0; i < QUESTIONS.length; i++) {
+                    if (state.answers[i] === QUESTIONS[i].correct) count++;
                 }
-
-                // ── Work (index 2): Happiest at 48, Angry at 0 and 70 ──
-                if (index === 2) {
-                    if (value === 0) return emojis.furious;
-                    if (value <= 12) return emojis.angry;
-                    if (value <= 24) return emojis.meh;
-                    if (value <= 36) return emojis.neutral;
-                    if (value <= 48) return emojis.veryHappy;
-                    if (value <= 56) return emojis.happy;
-                    if (value <= 64) return emojis.angry;
-                    return emojis.furious;
-                }
-
-                // ── Family (index 1) & Recovery (index 3) ──
-                const threshold = LEVER_CONFIG[index].happyThreshold;
-                const ratio = value / threshold;
-
-                if (value === 0) return emojis.furious;
-                if (ratio < 0.2) return emojis.furious;
-                if (ratio < 0.4) return emojis.angry;
-                if (ratio < 0.6) return emojis.meh;
-                if (ratio < 0.8) return emojis.neutral;
-                if (ratio < 1.0) return emojis.happy;
-                return emojis.veryHappy;
+                return count;
             }
 
-            function updateUI(index) {
-                const v = values[index];
-                const maxH = LEVER_CONFIG[index].maxHours;
-                const p = Math.max(0, Math.min(100, valueToPercent(v, maxH)));
-
-                fills[index].style.height = p + '%';
-                handles[index].style.bottom = p + '%';
-
-                const rounded = Math.round(v);
-                valueEls[index].innerHTML = rounded + ' <span class="unit">h</span>';
-
-                const mood = getMood(v, index);
-                faceEls[index].textContent = mood;
-                faceEls[index].title = mood + ' (' + rounded + 'h)';
-
-                const total = values.reduce((a, b) => a + b, 0);
-                totalDisplay.textContent = Math.round(total);
+            function getAnsweredCount() {
+                return state.answers.filter(a => a !== null).length;
             }
 
-            function updateAllUI() {
-                for (let i = 0; i < NUM_LEVERS; i++) updateUI(i);
+            function isPassing() {
+                const total = QUESTIONS.length;
+                const correct = getCorrectCount();
+                return correct / total >= 0.7;
             }
 
-            function pulseLevers(excludeIndex) {
-                for (let i = 0; i < NUM_LEVERS; i++) {
-                    if (i === excludeIndex) continue;
-                    leverEls[i].classList.remove('lever-pulse');
-                    void leverEls[i].offsetWidth;
-                    leverEls[i].classList.add('lever-pulse');
-                }
-            }
-
-            function redistribute(changedIndex, newValue) {
-                const config = LEVER_CONFIG[changedIndex];
-                newValue = Math.max(0, Math.min(config.maxHours, newValue));
-                newValue = Math.round(newValue);
-
-                let others = [];
-                for (let i = 0; i < NUM_LEVERS; i++) {
-                    if (i !== changedIndex) others.push(i);
-                }
-
-                let remaining = MAX_HOURS - newValue;
-                remaining = Math.max(0, remaining);
-
-                let sumOthers = 0;
-                for (const idx of others) {
-                    sumOthers += values[idx];
-                }
-
-                if (sumOthers === 0) {
-                    let each = remaining / others.length;
-                    for (const idx of others) {
-                        values[idx] = Math.round(each);
-                    }
+            // ─── RENDER FUNCTIONS ──────────────────────────────────────
+            function render() {
+                if (state.currentView === 'study') {
+                    renderStudy();
                 } else {
-                    for (const idx of others) {
-                        let proportion = values[idx] / sumOthers;
-                        values[idx] = Math.round(remaining * proportion);
-                    }
+                    renderQuiz();
                 }
-
-                let totalOthers = 0;
-                for (const idx of others) {
-                    values[idx] = Math.max(0, Math.min(LEVER_CONFIG[idx].maxHours, values[idx]));
-                    totalOthers += values[idx];
-                }
-
-                let diff = remaining - totalOthers;
-                if (diff > 0) {
-                    let available = [];
-                    for (const idx of others) {
-                        if (values[idx] < LEVER_CONFIG[idx].maxHours) {
-                            available.push(idx);
-                        }
-                    }
-                    if (available.length > 0) {
-                        let sumAvailable = 0;
-                        for (const idx of available) {
-                            sumAvailable += (LEVER_CONFIG[idx].maxHours - values[idx]);
-                        }
-                        if (sumAvailable > 0) {
-                            for (const idx of available) {
-                                let add = Math.round(diff * (LEVER_CONFIG[idx].maxHours - values[idx]) / sumAvailable);
-                                values[idx] += add;
-                                values[idx] = Math.min(LEVER_CONFIG[idx].maxHours, values[idx]);
-                            }
-                            let newTotalOthers = 0;
-                            for (const idx of others) newTotalOthers += values[idx];
-                            diff = remaining - newTotalOthers;
-                            if (diff > 0) {
-                                for (const idx of available) {
-                                    if (values[idx] < LEVER_CONFIG[idx].maxHours) {
-                                        values[idx] += diff;
-                                        values[idx] = Math.min(LEVER_CONFIG[idx].maxHours, values[idx]);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else if (diff < 0) {
-                    let sumOthersForReduction = 0;
-                    for (const idx of others) sumOthersForReduction += values[idx];
-                    if (sumOthersForReduction > 0) {
-                        for (const idx of others) {
-                            let reduction = Math.round(-diff * values[idx] / sumOthersForReduction);
-                            values[idx] -= reduction;
-                            values[idx] = Math.max(0, values[idx]);
-                        }
-                        let newTotalOthers = 0;
-                        for (const idx of others) newTotalOthers += values[idx];
-                        let finalDiff = remaining - newTotalOthers;
-                        if (finalDiff > 0) {
-                            for (const idx of others) {
-                                if (values[idx] < LEVER_CONFIG[idx].maxHours) {
-                                    values[idx] += finalDiff;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                values[changedIndex] = Math.round(newValue);
-
-                for (let i = 0; i < NUM_LEVERS; i++) {
-                    values[i] = Math.max(0, Math.min(LEVER_CONFIG[i].maxHours, Math.round(values[i])));
-                }
-
-                let total = values.reduce((a, b) => a + b, 0);
-                if (total !== MAX_HOURS) {
-                    let diffTotal = MAX_HOURS - total;
-                    let added = false;
-                    for (let i = 0; i < NUM_LEVERS; i++) {
-                        if (i !== changedIndex && values[i] < LEVER_CONFIG[i].maxHours) {
-                            values[i] += diffTotal;
-                            values[i] = Math.max(0, Math.min(LEVER_CONFIG[i].maxHours, values[i]));
-                            added = true;
-                            break;
-                        }
-                    }
-                    if (!added) {
-                        values[changedIndex] += diffTotal;
-                        values[changedIndex] = Math.max(0, Math.min(LEVER_CONFIG[changedIndex].maxHours, values[changedIndex]));
-                    }
-                }
-
-                updateAllUI();
-                pulseLevers(changedIndex);
-                console.log(`🔄 ${LEVER_CONFIG[changedIndex].label}: ${values[changedIndex]}h → [${values.join(', ')}]`);
+                updateMeta();
+                updateNavTabs();
             }
 
-            // ── Drag Handlers ──
-            function startDrag(e, index) {
-                e.preventDefault();
-                draggingIndex = index;
-                const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-                dragStartY = clientY;
-                dragStartValue = values[index];
-
-                if (e.type === 'touchstart') {
-                    document.addEventListener('touchmove', onDragMove, { passive: false });
-                    document.addEventListener('touchend', onDragEnd, { passive: false });
-                    document.addEventListener('touchcancel', onDragEnd, { passive: false });
-                } else {
-                    document.addEventListener('mousemove', onDragMove);
-                    document.addEventListener('mouseup', onDragEnd);
+            function renderQuiz() {
+                if (state.examCompleted) {
+                    renderResults();
+                    return;
                 }
 
-                handles[index].style.cursor = 'grabbing';
-                handles[index].style.transform = 'translateX(-50%) scale(0.92)';
-            }
+                const q = QUESTIONS[state.currentIndex];
+                const idx = state.currentIndex;
+                const selected = state.answers[idx];
+                const showFeedback = state.showFeedback;
 
-            function onDragMove(e) {
-                if (draggingIndex < 0) return;
-                e.preventDefault();
-
-                const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-                const index = draggingIndex;
-
-                const trackHeight = getTrackHeight(index);
-                const rect = tracks[index].getBoundingClientRect();
-                const deltaY = dragStartY - clientY;
-                const deltaFraction = deltaY / trackHeight;
-                const deltaHours = deltaFraction * MAX_HOURS;
-
-                let newValue = dragStartValue + deltaHours;
-                newValue = Math.max(0, Math.min(MAX_HOURS, newValue));
-
-                redistribute(index, newValue);
-            }
-
-            function onDragEnd(e) {
-                if (draggingIndex < 0) return;
-                const index = draggingIndex;
-                handles[index].style.cursor = 'grab';
-                handles[index].style.transform = 'translateX(-50%) scale(1)';
-                draggingIndex = -1;
-
-                document.removeEventListener('mousemove', onDragMove);
-                document.removeEventListener('mouseup', onDragEnd);
-                document.removeEventListener('touchmove', onDragMove);
-                document.removeEventListener('touchend', onDragEnd);
-                document.removeEventListener('touchcancel', onDragEnd);
-            }
-
-            // ── Attach Events ──
-            for (let i = 0; i < NUM_LEVERS; i++) {
-                const handle = handles[i];
-                const track = tracks[i];
-
-                handle.addEventListener('mousedown', (e) => startDrag(e, i));
-                handle.addEventListener('touchstart', (e) => startDrag(e, i), { passive: false });
-
-                track.addEventListener('mousedown', (e) => {
-                    if (e.target === handle) return;
-                    const rect = track.getBoundingClientRect();
-                    const fraction = 1 - (e.clientY - rect.top) / rect.height;
-                    let newValue = fraction * LEVER_CONFIG[i].maxHours;
-                    newValue = Math.max(0, Math.min(LEVER_CONFIG[i].maxHours, newValue));
-                    redistribute(i, newValue);
+                let optionsHtml = '';
+                const letters = ['A', 'B', 'C', 'D'];
+                q.options.forEach((opt, oi) => {
+                    let classes = 'option-item';
+                    if (selected === oi) classes += ' selected';
+                    if (showFeedback) {
+                        classes += ' disabled';
+                        if (oi === q.correct) classes += ' correct';
+                        if (selected === oi && oi !== q.correct) classes += ' wrong';
+                    }
+                    optionsHtml += `
+                        <div class="${classes}" data-optindex="${oi}">
+                            <span class="radio"></span>
+                            <span class="option-label"><span class="option-letter">${letters[oi]}.</span> ${opt}</span>
+                        </div>
+                    `;
                 });
 
-                track.addEventListener('touchstart', (e) => {
-                    if (e.target === handle) return;
-                    const touch = e.touches[0];
-                    const rect = track.getBoundingClientRect();
-                    const fraction = 1 - (touch.clientY - rect.top) / rect.height;
-                    let newValue = fraction * LEVER_CONFIG[i].maxHours;
-                    newValue = Math.max(0, Math.min(LEVER_CONFIG[i].maxHours, newValue));
-                    redistribute(i, newValue);
-                }, { passive: true });
-
-                track.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-                    const delta = e.deltaY > 0 ? -1 : 1;
-                    const currentValue = values[i];
-                    let newValue = currentValue + delta * 2;
-                    newValue = Math.max(0, Math.min(LEVER_CONFIG[i].maxHours, newValue));
-                    if (newValue !== currentValue) {
-                        redistribute(i, newValue);
-                    }
-                }, { passive: false });
-            }
-
-            // ── Share via WhatsApp ──
-            function generateShareText() {
-                const lines = [
-                    '🚴 *THECYCLISTDUBAI · 168-Hour Week*',
-                    '',
-                ];
-                const icons = ['🚴', '👨‍👩‍👧‍👦', '💼', '😴'];
-                const names = ['Ride', 'Family', 'Work', 'Recovery'];
-                for (let i = 0; i < NUM_LEVERS; i++) {
-                    const val = Math.round(values[i]);
-                    const mood = getMood(values[i], i);
-                    const maxH = LEVER_CONFIG[i].maxHours;
-                    const happy = LEVER_CONFIG[i].happyThreshold;
-                    const maxStr = maxH < 168 ? `max ${maxH}h` : 'rest of week';
-                    lines.push(`${icons[i]} *${names[i]}*: ${val}h (${maxStr} · happy ${happy}h) ${mood}`);
+                let feedbackHtml = '';
+                let explanationHtml = '';
+                if (showFeedback && selected !== null) {
+                    const isCorrect = selected === q.correct;
+                    const cls = isCorrect ? 'correct' : 'wrong';
+                    const msg = isCorrect ?
+                        '✅ Spot on! Great knowledge.' :
+                        `❌ Not quite. The correct answer was: ${q.options[q.correct]}.`;
+                    feedbackHtml = `
+                        <div class="feedback-box show ${cls}">
+                            ${msg}
+                        </div>
+                    `;
+                    explanationHtml = `
+                        <div style="margin-top:10px;padding:12px 16px;background:#f0f4f8;border-radius:12px;font-size:14px;color:#2d3748;border-left:3px solid #fbbf24;">
+                            <strong>💡 Learn more:</strong> ${q.explanation}
+                        </div>
+                    `;
                 }
-                lines.push('');
-                lines.push(`📊 *Total: ${Math.round(values.reduce((a,b) => a + b, 0))}h / 168h*`);
-                lines.push('');
-                lines.push('⚡ Powered by THECYCLISTDUBAI');
-                lines.push('🔗 https://thecyclistdubai.com');
-                return lines.join('\n');
-            }
 
-            shareBtn.addEventListener('click', () => {
-                const text = generateShareText();
-                const encoded = encodeURIComponent(text);
-                const url = `https://wa.me/?text=${encoded}`;
-                window.open(url, '_blank');
-            });
+                const isFirst = idx === 0;
+                const isLast = idx === QUESTIONS.length - 1;
+                const allAnswered = getAnsweredCount() === QUESTIONS.length;
 
-            // ── Resize ──
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(updateAllUI, 100);
-            });
+                let navHtml = `
+                    <div class="nav-actions">
+                        <button class="btn btn-secondary" id="prevBtn" ${isFirst ? 'disabled' : ''}>
+                            ← Prev
+                        </button>
+                        <span class="counter-text">${idx+1} / ${QUESTIONS.length}</span>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;flex:1;justify-content:flex-end;">
+                `;
 
-            // ── Init ──
-            let initSum = values.reduce((a, b) => a + b, 0);
-            if (initSum !== MAX_HOURS) {
-                const diff = MAX_HOURS - initSum;
-                values[0] += diff;
-                values[0] = Math.max(0, Math.min(LEVER_CONFIG[0].maxHours, values[0]));
-            }
-            updateAllUI();
+                if (!showFeedback && selected !== null) {
+                    navHtml += `
+                        <button class="btn btn-primary" id="checkBtn">Check</button>
+                    `;
+                }
 
-            // ── Keyboard: Reset ──
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'r' || e.key === 'R') {
-                    const base = MAX_HOURS / NUM_LEVERS;
-                    for (let i = 0; i < NUM_LEVERS; i++) {
-                        values[i] = Math.round(base);
+                if (showFeedback) {
+                    if (!isLast) {
+                        navHtml += `
+                            <button class="btn btn-primary" id="nextBtn">Next →</button>
+                        `;
+                    } else {
+                        if (allAnswered) {
+                            navHtml += `
+                                <button class="btn btn-success" id="finishBtn">🏁 Finish</button>
+                            `;
+                        } else {
+                            navHtml += `
+                                <button class="btn btn-primary" id="nextBtn" disabled style="opacity:0.5;">Next →</button>
+                                <span style="font-size:12px;color:#4a5568;align-self:center;">Answer all</span>
+                            `;
+                        }
                     }
-                    let total = values.reduce((a, b) => a + b, 0);
-                    let diff = MAX_HOURS - total;
-                    values[0] += diff;
-                    values[0] = Math.max(0, Math.min(LEVER_CONFIG[0].maxHours, values[0]));
-                    updateAllUI();
-                    document.querySelector('.device-frame').style.transition = 'transform 0.1s';
-                    document.querySelector('.device-frame').style.transform = 'scale(0.99)';
-                    setTimeout(() => {
-                        document.querySelector('.device-frame').style.transform = 'scale(1)';
-                    }, 100);
+                }
+
+                navHtml += `
+                        </div>
+                    </div>
+                `;
+
+                renderTarget.innerHTML = `
+                    <div class="question-card" id="questionCard">
+                        <div class="question-number">🚴 Rider Up #${idx+1}</div>
+                        <div class="question-text">${q.text}</div>
+                        <div class="options-list" id="optionsContainer">
+                            ${optionsHtml}
+                        </div>
+                        ${feedbackHtml}
+                        ${explanationHtml}
+                        ${navHtml}
+                    </div>
+                `;
+
+                // ─── EVENT BINDING ──────────────────────────────────────
+
+                const optItems = renderTarget.querySelectorAll('.option-item');
+                optItems.forEach(el => {
+                    el.addEventListener('click', function(e) {
+                        if (state.showFeedback) return;
+                        const oi = parseInt(this.dataset.optindex, 10);
+                        state.answers[state.currentIndex] = oi;
+                        state.answered[state.currentIndex] = true;
+                        render();
+                    });
+                });
+
+                const checkBtn = document.getElementById('checkBtn');
+                if (checkBtn) {
+                    checkBtn.addEventListener('click', function() {
+                        if (state.answers[state.currentIndex] !== null) {
+                            state.showFeedback = true;
+                            render();
+                            const card = document.getElementById('questionCard');
+                            const isCorrect = state.answers[state.currentIndex] === QUESTIONS[state.currentIndex]
+                                .correct;
+                            if (!isCorrect) {
+                                card.classList.add('shake');
+                                setTimeout(() => card.classList.remove('shake'), 500);
+                            }
+                        }
+                    });
+                }
+
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function() {
+                        if (state.currentIndex < QUESTIONS.length - 1) {
+                            state.currentIndex++;
+                            state.showFeedback = false;
+                            render();
+                        }
+                    });
+                }
+
+                const prevBtn = document.getElementById('prevBtn');
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', function() {
+                        if (state.currentIndex > 0) {
+                            state.currentIndex--;
+                            state.showFeedback = false;
+                            render();
+                        }
+                    });
+                }
+
+                const finishBtn = document.getElementById('finishBtn');
+                if (finishBtn) {
+                    finishBtn.addEventListener('click', function() {
+                        if (getAnsweredCount() === QUESTIONS.length) {
+                            state.examCompleted = true;
+                            render();
+                        } else {
+                            alert('Please answer all questions first.');
+                        }
+                    });
+                }
+
+                // Show progress bar
+                progressSection.style.display = 'block';
+                updateMeta();
+            }
+
+            function renderResults() {
+                const total = QUESTIONS.length;
+                const correct = getCorrectCount();
+                const wrong = total - correct;
+                const passed = isPassing();
+                const pct = Math.round((correct / total) * 100);
+
+                let detailHtml = `
+                    <div class="result-detail">
+                        <div class="stat pass">
+                            <div class="num">${correct}</div>
+                            <div class="label">Correct</div>
+                        </div>
+                        <div class="stat fail">
+                            <div class="num">${wrong}</div>
+                            <div class="label">Incorrect</div>
+                        </div>
+                        <div class="stat">
+                            <div class="num">${pct}%</div>
+                            <div class="label">Score</div>
+                        </div>
+                    </div>
+                `;
+
+                const certHtml = passed ? `
+                    <div class="cert-badge">🏆 Rider Up – Etiquette Certified</div>
+                ` : '';
+
+                const title = passed ? '🎉 Excellent Riding!' : '📚 Keep Learning';
+                const sub = passed ?
+                    'You know your signals, rules, and group riding etiquette. Ride safe with Rider Up!' :
+                    'Review the hand signals, RTA rules, and group riding guidelines. Aim for 70% to pass.';
+
+                renderTarget.innerHTML = `
+                    <div class="results-container">
+                        ${certHtml}
+                        <div class="score-circle">
+                            <div class="score-number">${pct}%</div>
+                            <div class="score-label">Score</div>
+                        </div>
+                        <div class="result-title">${title}</div>
+                        <div class="result-sub">${sub}</div>
+                        ${detailHtml}
+                        <div class="results-actions">
+                            <button class="btn btn-primary" id="retryBtn">🔄 Retry</button>
+                            <button class="btn btn-outline" id="reviewBtn">📋 Review</button>
+                            <button class="btn btn-whatsapp" id="shareWhatsAppBtn">📱 Share to WhatsApp</button>
+                        </div>
+                    </div>
+                `;
+
+                statusBadge.textContent = passed ? '✅ Passed' : '❌ Failed';
+
+                document.getElementById('retryBtn').addEventListener('click', resetQuiz);
+                document.getElementById('reviewBtn').addEventListener('click', reviewAnswers);
+
+                document.getElementById('shareWhatsAppBtn').addEventListener('click', function() {
+                    const total = QUESTIONS.length;
+                    const correct = getCorrectCount();
+                    const pct = Math.round((correct / total) * 100);
+                    const text =
+                        `I scored ${correct}/${total} (${pct}%) on the Rider Up Dubai Cycling Etiquette Quiz! 🚴 Can you beat me? Take the quiz here: ${window.location.href}`;
+                    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+                    window.open(url, '_blank');
+                });
+
+                progressFill.style.width = '100%';
+                questionCounter.textContent = 'Completed';
+                scoreDisplay.textContent = `${correct} / ${total} correct`;
+                progressSection.style.display = 'block';
+            }
+
+            // ─── REVIEW (with visual & verbal signals) ─────────────────
+            function reviewAnswers() {
+                let html = `
+                    <div style="padding: 4px 0;">
+                        <h3 style="font-size:18px;font-weight:800;color:#1a202c;margin-bottom:14px;">📋 Answer Review &amp; Signal Guide</h3>
+                        <div style="display:flex;flex-direction:column;gap:16px;max-height:420px;overflow-y:auto;padding-right:4px;">
+                `;
+                QUESTIONS.forEach((q, i) => {
+                    const selected = state.answers[i];
+                    const isCorrect = selected === q.correct;
+                    const selText = selected !== null ? q.options[selected] : 'Not answered';
+                    const correctText = q.options[q.correct];
+                    const statusIcon = selected !== null ? (isCorrect ? '✅' : '❌') : '⬜';
+                    const statusColor = selected !== null ? (isCorrect ? '#38a169' : '#e53e3e') : '#a0aec0';
+
+                    let signalHtml = '';
+                    if (q.visual || q.verbal) {
+                        signalHtml = `
+                            <div class="signal-box">
+                                ${q.visual ? `<div class="signal-item"><span class="icon">✋</span> <span class="label">Visual:</span> ${q.visual}</div>` : ''}
+                                ${q.verbal ? `<div class="signal-item"><span class="icon">🗣️</span> <span class="label">Verbal:</span> ${q.verbal}</div>` : ''}
+                            </div>
+                        `;
+                    } else {
+                        signalHtml = `
+                            <div class="signal-box">
+                                <div class="signal-item signal-na">No specific signal for this rule</div>
+                            </div>
+                        `;
+                    }
+
+                    html += `
+                        <div style="background:#f7fafc;border-radius:12px;padding:12px 16px;border-left:4px solid ${statusColor};">
+                            <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+                                <span style="font-weight:700;font-size:14px;color:#1a202c;">Q${i+1}: ${q.text}</span>
+                                <span style="font-size:12px;font-weight:600;color:${statusColor};">${statusIcon} ${selected !== null ? (isCorrect ? 'Correct' : 'Wrong') : 'Unanswered'}</span>
+                            </div>
+                            <div style="font-size:13px;color:#4a5568;margin-top:4px;">
+                                <span style="font-weight:600;">Your answer:</span> ${selText}
+                                ${selected !== null && !isCorrect ? ` <span style="color:#38a169;font-weight:600;">(Correct: ${correctText})</span>` : ''}
+                            </div>
+                            ${q.explanation ? `<div style="font-size:12px;color:#6b7280;margin-top:4px;background:#edf2f7;padding:6px 10px;border-radius:8px;">💡 ${q.explanation}</div>` : ''}
+                            ${signalHtml}
+                        </div>
+                    `;
+                });
+                html += `
+                        </div>
+                        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="closeReviewBtn">Close</button>
+                            <button class="btn btn-secondary" id="retryFromReviewBtn">🔄 Retry</button>
+                        </div>
+                    </div>
+                `;
+
+                renderTarget.innerHTML = html;
+
+                document.getElementById('closeReviewBtn').addEventListener('click', function() {
+                    state.examCompleted = true;
+                    render();
+                });
+                document.getElementById('retryFromReviewBtn').addEventListener('click', resetQuiz);
+                progressSection.style.display = 'none';
+            }
+
+            // ─── STUDY PAGE ─────────────────────────────────────────────
+            function renderStudy() {
+                let html = `
+                    <div class="study-container">
+                        <h3 style="font-size:18px;font-weight:800;color:#1a202c;margin-bottom:14px;">📖 Study Guide – All Questions</h3>
+                        <p style="font-size:14px;color:#4a5568;margin-bottom:16px;">Review all questions, correct answers, and signals below.</p>
+                `;
+                QUESTIONS.forEach((q, i) => {
+                    const correctText = q.options[q.correct];
+                    let signalTags = '';
+                    if (q.visual || q.verbal) {
+                        let tags = [];
+                        if (q.visual) tags.push(`<span class="tag">✋ ${q.visual}</span>`);
+                        if (q.verbal) tags.push(`<span class="tag verbal">🗣️ ${q.verbal}</span>`);
+                        signalTags = `<div class="signals">${tags.join(' ')}</div>`;
+                    } else {
+                        signalTags = `<div class="signals"><span class="tag" style="background:#edf2f7;color:#4a5568;">No specific signal</span></div>`;
+                    }
+                    html += `
+                        <div class="study-item">
+                            <div class="q">Q${i+1}: ${q.text}</div>
+                            <div class="a"><strong>Correct Answer:</strong> ${correctText}</div>
+                            ${q.explanation ? `<div class="explanation">💡 ${q.explanation}</div>` : ''}
+                            ${signalTags}
+                        </div>
+                    `;
+                });
+                html += `
+                    </div>
+                `;
+                renderTarget.innerHTML = html;
+                progressSection.style.display = 'none';
+                statusBadge.textContent = '📖 Study Mode';
+            }
+
+            // ─── NAVIGATION ─────────────────────────────────────────────
+            function updateNavTabs() {
+                const tabs = navTabs.querySelectorAll('.nav-tab');
+                tabs.forEach(tab => {
+                    const view = tab.dataset.view;
+                    tab.classList.toggle('active', view === state.currentView);
+                });
+            }
+
+            // ─── RESET ──────────────────────────────────────────────────
+            function resetQuiz() {
+                state.currentIndex = 0;
+                state.answers = new Array(QUESTIONS.length).fill(null);
+                state.answered = new Array(QUESTIONS.length).fill(false);
+                state.showFeedback = false;
+                state.examCompleted = false;
+                statusBadge.textContent = 'Ready';
+                state.currentView = 'quiz';
+                render();
+            }
+
+            // ─── UPDATE META ──────────────────────────────────────────
+            function updateMeta() {
+                if (state.currentView === 'study') return;
+                const total = QUESTIONS.length;
+                const idx = state.currentIndex;
+                const answered = getAnsweredCount();
+                const correct = getCorrectCount();
+
+                if (!state.examCompleted) {
+                    questionCounter.textContent = `Question ${idx+1} of ${total}`;
+                    scoreDisplay.textContent = `${correct} correct (${answered} answered)`;
+                    progressFill.style.width = `${((idx+1) / total) * 100}%`;
+                    if (answered === total) {
+                        statusBadge.textContent = '✅ All answered';
+                    } else if (answered > 0) {
+                        statusBadge.textContent = `📝 ${answered}/${total} answered`;
+                    } else {
+                        statusBadge.textContent = 'Ready';
+                    }
+                }
+            }
+
+            // ─── EVENT LISTENERS ──────────────────────────────────────
+            navTabs.addEventListener('click', function(e) {
+                const tab = e.target.closest('.nav-tab');
+                if (!tab) return;
+                const view = tab.dataset.view;
+                if (view === state.currentView) return;
+                state.currentView = view;
+                // Reset exam state if switching to quiz? Keep as is.
+                if (view === 'quiz') {
+                    // If we were in study, we don't reset progress.
+                    // Just re-render quiz with existing state.
+                    render();
+                } else {
+                    render();
                 }
             });
 
-            console.log('🚴 THECYCLISTDUBAI – Premium Cycling Computer');
-            console.log('   Ride: max 40h, angry at 0 & 4, happiest at 20h');
-            console.log('   Family: max 84h, happy from 30h');
-            console.log('   Work: max 70h, angry at 0 & 70, happiest at 48h');
-            console.log('   Recovery: max 84h, happy from 49h');
-            console.log('   Drag UP to increase, DOWN to decrease. Others adjust proportionally.');
-            console.log('   Press "R" to reset. Click "Share" to send via WhatsApp.');
+            // ─── INIT ──────────────────────────────────────────────────
+            render();
 
         })();
     </script>
-
 </body>
 </html>
