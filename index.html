@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>Rider Up – Dubai Cycling Etiquette Quiz</title>
+    <title>Dubai Group Ride Cycling Tracks – Etiquette Quiz</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
@@ -40,7 +40,6 @@
             max-height: 95vh;
         }
 
-        /* ── Header ── */
         .quiz-header {
             background: linear-gradient(145deg, #1e3a5f 0%, #2a4a6e 100%);
             padding: 18px 20px 14px;
@@ -122,21 +121,13 @@
         }
 
         @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(0.85);
-            }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
         }
 
-        /* ── Navigation Tabs ── */
         .nav-tabs {
             display: flex;
-            background: #edf2f7;
+            background: rgba(255,255,255,0.15);
             border-radius: 40px;
             padding: 4px;
             margin-top: 6px;
@@ -154,21 +145,21 @@
             cursor: pointer;
             transition: all 0.2s;
             background: transparent;
-            color: #4a5568;
+            color: rgba(255,255,255,0.7);
             text-align: center;
         }
 
         .nav-tab.active {
             background: #ffffff;
             color: #1e3a5f;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .nav-tab:hover:not(.active) {
-            background: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.2);
+            color: #ffffff;
         }
 
-        /* ── Progress Bar ── */
         .progress-section {
             padding: 12px 20px 0;
             background: #ffffff;
@@ -200,27 +191,19 @@
             transition: width 0.5s ease;
         }
 
-        /* ── Body ── */
         .quiz-body {
             padding: 20px 20px 24px;
             overflow-y: auto;
             flex: 1;
         }
 
-        /* ── Question Card ── */
         .question-card {
             animation: fadeSlide 0.4s ease;
         }
 
         @keyframes fadeSlide {
-            0% {
-                opacity: 0;
-                transform: translateY(14px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(14px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .question-number {
@@ -244,7 +227,6 @@
             margin-bottom: 18px;
         }
 
-        /* ── Options ── */
         .options-list {
             display: flex;
             flex-direction: column;
@@ -350,7 +332,6 @@
             margin-right: 6px;
         }
 
-        /* ── Feedback ── */
         .feedback-box {
             margin-top: 18px;
             padding: 14px 18px;
@@ -377,7 +358,6 @@
             border-left: 4px solid #e53e3e;
         }
 
-        /* ── Navigation ── */
         .nav-actions {
             display: flex;
             flex-wrap: wrap;
@@ -473,7 +453,6 @@
             padding: 0 6px;
         }
 
-        /* ── Results ── */
         .results-container {
             text-align: center;
             padding: 8px 0 4px;
@@ -580,7 +559,6 @@
             border: 2px solid #fcd34d;
         }
 
-        /* ── Footer ── */
         .quiz-footer {
             padding: 12px 20px 16px;
             text-align: center;
@@ -601,6 +579,25 @@
         .quiz-footer a:hover {
             color: #f59e0b;
             border-bottom-color: #f59e0b;
+        }
+
+        .disclaimer {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #718096;
+            line-height: 1.5;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 10px;
+        }
+
+        .disclaimer a {
+            color: #2a5298;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .disclaimer a:hover {
+            text-decoration: underline;
         }
 
         @keyframes shake {
@@ -650,7 +647,6 @@
             font-weight: 400;
         }
 
-        /* ── Study Page ── */
         .study-container {
             padding: 4px 0;
         }
@@ -709,7 +705,6 @@
             color: #b45309;
         }
 
-        /* ── Responsive ── */
         @media (max-width: 480px) {
             .quiz-wrapper {
                 border-radius: 24px;
@@ -783,15 +778,14 @@
             <div class="header-brand">
                 <div class="logo-icon">🚴</div>
                 <h1>
-                    Rider Up – Etiquette Quiz
-                    <span>Dubai Cycling | Signals, Rules &amp; <a href="https://thecyclistdubai.com" target="_blank">thecyclistdubai.com</a></span>
+                    Dubai Group Ride Cycling Tracks
+                    <span>Etiquette &amp; Safety Quiz – <a href="https://thecyclistdubai.com" target="_blank">thecyclistdubai.com</a></span>
                 </h1>
             </div>
             <div class="header-badge">
                 <span class="dot"></span>
                 <span id="statusBadge">Ready</span>
             </div>
-            <!-- Navigation Tabs -->
             <div class="nav-tabs" id="navTabs">
                 <button class="nav-tab active" data-view="quiz">📝 Quiz</button>
                 <button class="nav-tab" data-view="study">📖 Study</button>
@@ -813,7 +807,14 @@
         </div>
 
         <div class="quiz-footer">
-            🚴 Brought to you by <a href="https://thecyclistdubai.com" target="_blank">thecyclistdubai.com</a> – Dubai's cycling community
+            <div style="margin-bottom:6px;">
+                🚴 Brought to you by <a href="https://thecyclistdubai.com" target="_blank">thecyclistdubai.com</a>
+            </div>
+            <div class="disclaimer">
+                ⚠️ <strong>Disclaimer:</strong> This quiz is for educational and entertainment purposes only. It is not a substitute for official cycling rules and regulations. 
+                Always prioritise your safety and that of others. The creators are not liable for any incidents or injuries. 
+                For the official rules and regulations, please visit the <a href="https://www.rta.ae/wps/portal/rta/ae/home/about-rta/cycling-track" target="_blank">RTA Cycling Track page</a>.
+            </div>
         </div>
     </div>
 
@@ -821,7 +822,7 @@
         (function() {
             'use strict';
 
-            // ─── QUESTIONS (16 total, updated) ─────────────────────────
+            // ─── QUESTIONS (16 total) ───────────────────────────────────
             const QUESTIONS = [{
                 id: 1,
                 text: 'What is the correct hand signal to indicate a right turn while cycling in Dubai?',
@@ -1039,7 +1040,7 @@
                 showFeedback: false,
                 examCompleted: false,
                 answered: new Array(QUESTIONS.length).fill(false),
-                currentView: 'quiz', // 'quiz' or 'study'
+                currentView: 'quiz',
             };
 
             // ─── DOM REFS ──────────────────────────────────────────────
@@ -1175,7 +1176,7 @@
 
                 renderTarget.innerHTML = `
                     <div class="question-card" id="questionCard">
-                        <div class="question-number">🚴 Rider Up #${idx+1}</div>
+                        <div class="question-number">🚴 Group Ride #${idx+1}</div>
                         <div class="question-text">${q.text}</div>
                         <div class="options-list" id="optionsContainer">
                             ${optionsHtml}
@@ -1250,7 +1251,6 @@
                     });
                 }
 
-                // Show progress bar
                 progressSection.style.display = 'block';
                 updateMeta();
             }
@@ -1280,12 +1280,12 @@
                 `;
 
                 const certHtml = passed ? `
-                    <div class="cert-badge">🏆 Rider Up – Etiquette Certified</div>
+                    <div class="cert-badge">🏆 Group Ride Etiquette Certified</div>
                 ` : '';
 
                 const title = passed ? '🎉 Excellent Riding!' : '📚 Keep Learning';
                 const sub = passed ?
-                    'You know your signals, rules, and group riding etiquette. Ride safe with Rider Up!' :
+                    'You know your signals, rules, and group riding etiquette. Ride safe and enjoy the tracks!' :
                     'Review the hand signals, RTA rules, and group riding guidelines. Aim for 70% to pass.';
 
                 renderTarget.innerHTML = `
@@ -1316,7 +1316,7 @@
                     const correct = getCorrectCount();
                     const pct = Math.round((correct / total) * 100);
                     const text =
-                        `I scored ${correct}/${total} (${pct}%) on the Rider Up Dubai Cycling Etiquette Quiz! 🚴 Can you beat me? Take the quiz here: ${window.location.href}`;
+                        `I scored ${correct}/${total} (${pct}%) on the Dubai Group Ride Cycling Tracks Etiquette Quiz! 🚴 Can you beat me? Take the quiz here: ${window.location.href}`;
                     const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
                     window.open(url, '_blank');
                 });
@@ -1327,7 +1327,7 @@
                 progressSection.style.display = 'block';
             }
 
-            // ─── REVIEW (with visual & verbal signals) ─────────────────
+            // ─── REVIEW ──────────────────────────────────────────────────
             function reviewAnswers() {
                 let html = `
                     <div style="padding: 4px 0;">
@@ -1477,14 +1477,7 @@
                 const view = tab.dataset.view;
                 if (view === state.currentView) return;
                 state.currentView = view;
-                // Reset exam state if switching to quiz? Keep as is.
-                if (view === 'quiz') {
-                    // If we were in study, we don't reset progress.
-                    // Just re-render quiz with existing state.
-                    render();
-                } else {
-                    render();
-                }
+                render();
             });
 
             // ─── INIT ──────────────────────────────────────────────────
