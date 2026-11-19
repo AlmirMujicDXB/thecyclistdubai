@@ -106,7 +106,9 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 /* ---------- layout ---------- */
 .grid{display:grid;grid-template-columns:1.65fr 1fr;gap:14px;align-items:start}
 .grid>.mapcard{grid-column:1;grid-row:1}
-.grid>#evt{grid-column:1;grid-row:2}
+.grid>#evts{grid-column:1;grid-row:2}
+.evts{display:flex;flex-direction:column;gap:8px}
+.evts:empty{display:none}
 .grid>#cond{grid-column:2;grid-row:1/span 2}
 .evt{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 14px 8px 8px;border-radius:16px;text-decoration:none;color:#fff;
   background:radial-gradient(70% 140% at 100% 0%,#38bdf833 0%,transparent 60%),linear-gradient(110deg,#0b1f4b 0%,#123a8a 55%,#1d4ed8 100%);box-shadow:0 8px 22px #0b1f4b40;transition:.2s}
@@ -244,10 +246,40 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .sponsors h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
 .spgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
 .sp{border-radius:16px;min-height:118px;overflow:hidden}
-.sp.ride{grid-column:1/3;grid-row:2;position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;color:#fff;
+.spwrap{display:grid;grid-template-columns:1.65fr 1fr;gap:14px;align-items:start}
+.spstack{display:flex;flex-direction:column;gap:8px}
+.rides{display:flex;flex-direction:column;gap:8px}
+.spb{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;text-decoration:none}
+.spb-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.spb>*:not(.spb-route){position:relative}
+.spb.lameda{color:#f4f1ec;background:radial-gradient(70% 140% at 100% 0%,#f4f1ec26 0%,transparent 60%),linear-gradient(110deg,#0a0a0a 0%,#27272a 55%,#57534e 100%);box-shadow:0 8px 22px #0a0a0a40}
+.lm-art{flex:none;width:48px;height:48px;border-radius:12px;background:#f4f1ec;position:relative;overflow:hidden}
+.lm-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s}
+.lm-art img.on{opacity:1}
+.lm-art .fb{position:absolute;inset:0;display:grid;place-items:center;color:#111;font:800 22px Sora;letter-spacing:0}
+.spb-body{flex:1;min-width:0}
+.spb-tag{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:3px}
+.spb-tag span{font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#ffffff1f;border:1px solid #ffffff33;white-space:nowrap}
+.spb-tag .star{background:#f4f1ec;border-color:#f4f1ec;color:#111}
+.spb-title{font-weight:800;font-size:14.5px;letter-spacing:1.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spb-title span{letter-spacing:0;font-weight:600;color:#d6d3d1}
+.spb-meta{font-size:11.5px;color:#d6d3d1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spb-btns{flex:none;display:flex;gap:6px;align-items:center}
+.spb .lmcode{margin:0;background:#111;color:#f4f1ec;border-radius:10px;padding:6px 10px;font-size:12px;border:1.5px dashed #bef264;outline:0;cursor:pointer;white-space:nowrap;align-self:center}
+.spb .lmcode b{color:#bef264;letter-spacing:1px}
+.spshop{font-size:12px;font-weight:800;background:#f4f1ec;color:#111;padding:7px 11px;border-radius:10px;white-space:nowrap}
+.spb.empty{justify-content:center;gap:10px;border:2px dashed #cbd5e1;color:#94a3b8;background:repeating-linear-gradient(135deg,transparent 0 14px,#0f172a06 14px 28px)}
+.spb.empty span{font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:12px}
+.spb.empty small{font-size:11px}
+.spcta{border:1px solid var(--line);background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.spcta b{display:block;font-size:15px}
+.spcta p{font-size:12.5px;color:var(--muted);margin:6px 0 12px;line-height:1.5}
+.spcta a{display:inline-block;text-decoration:none;font-size:12.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,#c2410c,#ea580c 60%,#f59e0b);padding:8px 13px;border-radius:10px}
+.rides:empty{display:none}
+.ride{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;color:#fff;
   background:radial-gradient(70% 140% at 100% 0%,#bef26440 0%,transparent 60%),linear-gradient(110deg,#052e16 0%,#14532d 50%,#16a34a 100%);box-shadow:0 8px 22px #052e1640}
 .ride-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.sp.ride>*:not(.ride-route){position:relative}
+.ride>*:not(.ride-route){position:relative}
 .ride-date{flex:none;width:48px;height:48px;border-radius:12px;background:#fff;color:#052e16;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
 .ride-date span{font:800 8.5px Sora;letter-spacing:1.2px;color:#15803d}
 .ride-date span:first-child{color:#dc2626;margin-bottom:1px}
@@ -264,6 +296,24 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .ride-btns a{text-decoration:none;font-size:12px;font-weight:800;padding:7px 11px;border-radius:10px;white-space:nowrap}
 .rjoin{background:#25d366;color:#fff;box-shadow:0 4px 12px #25d36655}
 .rloc{background:#fff;color:#052e16}
+.cshare{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid #ffffff55;background:#ffffff1f;color:#fff;display:grid;place-items:center;cursor:pointer;position:relative}
+.cshare:hover{background:#ffffff33}
+.ride-btns .cshare{height:32px}
+#sheet{display:none;position:fixed;inset:0;background:#0f172a88;z-index:9997;align-items:flex-end;justify-content:center}
+#sheet .sbox{background:#fff;width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));max-height:86vh;overflow:auto;box-shadow:0 -10px 40px #0f172a33}
+@media(min-width:681px){#sheet{align-items:center}#sheet .sbox{border-radius:20px}}
+#sheet .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+#sheet .mh b{font-size:17px}
+#sheet .mx{border:0;background:var(--panel2);border-radius:10px;width:32px;height:32px;font-size:14px;cursor:pointer}
+.sgrp{font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:14px 2px 6px}
+.srow{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);background:#fff;border-radius:14px;padding:10px 12px;margin-bottom:8px;cursor:pointer;font:inherit;color:var(--text)}
+.srow:hover{border-color:#ea580c;background:#fff7ed}
+.srow .si{flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:20px;color:#fff}
+.srow .st{flex:1;min-width:0}
+.srow .st b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow .st small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow .sa{flex:none;font-size:12px;font-weight:800;color:#15803d}
+.snote{font-size:11.5px;color:var(--muted);margin:6px 2px 0}
 .sp.empty{border:2px dashed #cbd5e1;display:grid;place-items:center;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;background:repeating-linear-gradient(135deg,transparent 0 14px,#0f172a06 14px 28px)}
 .sp.lameda{display:grid;grid-template-columns:1.1fr 1fr;background:#f4f1ec;color:#111;text-decoration:none;border:1px solid #e7e2da;transition:.2s}
 .sp.lameda:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0f172a22}
@@ -307,10 +357,10 @@ footer a:hover{color:var(--text)}
 /* ---------- responsive ---------- */
 @media (max-width:1000px){
   .grid{grid-template-columns:1fr}
-  .grid>.mapcard,.grid>#evt,.grid>#cond{grid-column:1;grid-row:auto}
+  .grid>.mapcard,.grid>#evts,.grid>#cond{grid-column:1;grid-row:auto}
   .spgrid{grid-template-columns:1fr 1fr 1fr}
   .sp.lameda{grid-column:1/-1}
-  .sp.ride{grid-column:1/-1;grid-row:2}
+  .spwrap{grid-template-columns:1fr}
   .sp.lameda{grid-row:1}
 }
 @media (max-width:680px){
@@ -367,7 +417,14 @@ footer a:hover{color:var(--text)}
   .best{font-size:13px}
   .sp{min-height:64px}
   .sp.lameda{grid-template-columns:120px 1fr}
-  .sp.ride{gap:10px;padding:8px 10px 8px 8px;border-radius:14px;min-height:0;flex-wrap:wrap}
+  .ride,.spb.lameda{gap:10px;padding:8px 10px 8px 8px;border-radius:14px;min-height:0;flex-wrap:wrap}
+  .spb-tag .up{display:none}
+  .spb-title{font-size:13.5px;white-space:normal}
+  .spb-meta{white-space:normal;font-size:11px;line-height:1.35}
+  .lm-art{width:44px;height:46px}
+  .spb-btns{width:100%;padding-left:54px}
+  .spshop{flex:1;text-align:center}
+  .spb .lmcode{flex:1.4;text-align:center}
   .ride-tag .up{display:none}
   .ride-title{font-size:13.5px;white-space:normal}
   .ride-meta{white-space:normal;font-size:11px;line-height:1.35}
@@ -470,18 +527,8 @@ footer a:hover{color:var(--text)}
     </div>
   </div>
 
-  <!-- event -->
-  <a class="evt" id="evt" href="https://abudhabigranfondo.ae/" target="_blank" rel="noopener">
-    <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="20" cy="58" r="5" fill="#ffffff55"/><circle cx="580" cy="30" r="5" fill="#ffffff55"/></svg>
-    <div class="evt-date"><b>20</b><span>DEC</span></div>
-    <div class="evt-main">
-      <div class="evt-tag"><span class="star">★ Highly recommended</span><span class="up">Upcoming event</span></div>
-      <div class="evt-title">AD Ports Group Gran Fondo Abu Dhabi 2026</div>
-      <div class="evt-meta">Sun 7:00 AM · <b>150 km</b> Al Ain → Abu Dhabi<span class="evt-uci"> · UCI World Series qualifier</span><span class="evt-us"> · We're riding it 🚴</span></div>
-    </div>
-    <div class="evt-cd"><b id="evtDays">--</b><span>days to go</span></div>
-    <span class="evt-go">Details ↗</span>
-  </a>
+  <!-- events (from site-data.js) -->
+  <div class="evts" id="evts"></div>
 
   <!-- details -->
   <div class="panel band" id="cond">
@@ -527,34 +574,32 @@ footer a:hover{color:var(--text)}
 </div>
 
 <section class="sponsors">
-  <h3>Sponsors</h3>
-  <div class="spgrid">
-    <a class="sp lameda" href="https://lameda.cc/" target="_blank" rel="noopener">
-      <div class="lmart" id="lmArt"></div>
-      <div class="lmbody">
-        <div class="lmname">LAMEDA</div>
-        <div class="lmtag">Every Pedal, Every Mile</div>
-        <div class="lmdesc">Premium cycling apparel: jerseys, bibs, jackets & base layers</div>
-        <span class="lmcode" id="lmCode" title="Tap to copy">Use code <b>DXB</b> to get <b>15% OFF</b></span>
-        <span class="lmcta">Shop lameda.cc ↗</span>
-      </div>
-    </a>
-    <div class="sp empty"><span>Sponsor</span></div>
-    <div class="sp empty"><span>Sponsor</span></div>
-    <div class="sp empty"><span>Sponsor</span></div>
-    <div class="sp ride" id="ride">
-      <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
-      <div class="ride-date"><span id="rideDow">SAT</span><b id="rideDay">--</b><span id="rideMon">---</span></div>
-      <div class="ride-body">
-        <div class="ride-tag"><span class="star">★ Recommended</span><span class="up">Next group ride</span><span class="pace">⚡ 33–35 km/h avg</span></div>
-        <div class="ride-title">TCD Ride · <span>6:30 AM</span> · 86 km Al Qudra</div>
-        <div class="ride-meta" id="rideWx">Forecast loading…</div>
-      </div>
-      <div class="ride-btns">
-        <a class="rjoin" href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t" target="_blank" rel="noopener">Join ride</a>
-        <a class="rloc" href="https://maps.app.goo.gl/ntyxGBSEaKip7akR8" target="_blank" rel="noopener">Location ↗</a>
-      </div>
+  <h3>Sponsors & group rides</h3>
+  <div class="spwrap">
+    <div class="spstack">
+      <a class="spb lameda" href="https://lameda.cc/" target="_blank" rel="noopener">
+        <svg class="spb-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 50 C120 15 200 70 310 36 S480 10 590 44" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/></svg>
+        <div class="lm-art" id="lmArt"></div>
+        <div class="spb-body">
+          <div class="spb-tag"><span class="star">🎁 Sponsor</span><span class="up">Every Pedal, Every Mile</span></div>
+          <div class="spb-title">LAMEDA · <span>Premium cycling apparel</span></div>
+          <div class="spb-meta">Jerseys, bibs, jackets & base layers · tap the code to copy</div>
+        </div>
+        <div class="spb-btns">
+          <span class="lmcode" id="lmCode" title="Tap to copy">Code <b>DXB</b> · 15% OFF</span>
+          <span class="spshop">Shop ↗</span>
+          <button class="cshare" id="lmShare" aria-label="Share sponsor code" title="Share code"></button>
+        </div>
+      </a>
+      <div class="rides" id="rides"></div>
+      <div class="spb empty"><span>Sponsor</span><small>Your brand here</small></div>
+      <div class="spb empty"><span>Sponsor</span><small>Your brand here</small></div>
+      <div class="spb empty"><span>Sponsor</span><small>Your brand here</small></div>
     </div>
+    <div class="spcta">
+      <b>Sponsor TheCyclistDubai</b>
+      <p>Your brand on every live forecast and in every ride, event and weather share sent to Dubai's cycling community.</p>
+      <a href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener">Message us on Instagram ↗</a>
     </div>
   </div>
 </section>
@@ -574,6 +619,13 @@ footer a:hover{color:var(--text)}
 </button>
 
 <div class="toast" id="toast"></div>
+<div id="sheet" role="dialog" aria-label="Share">
+  <div class="sbox">
+    <div class="mh"><b>Share</b><button class="mx" id="sClose" aria-label="Close">✕</button></div>
+    <div id="sList"></div>
+    <p class="snote">Each message includes the site link and sponsor discount codes.</p>
+  </div>
+</div>
 <div id="modal">
   <div class="box">
     <div class="mh"><b>Share to WhatsApp</b><button class="mx" id="mClose" aria-label="Close">✕</button></div>
@@ -588,6 +640,7 @@ footer a:hover{color:var(--text)}
   </div>
 </div>
 
+<script src="site-data.js"></script>
 <script>
 /* ================= tracks ================= */
 const TRACKS = [
@@ -836,7 +889,7 @@ function renderBest(){
 /* ================= selection ================= */
 function setSel(i){i=Math.max(S.minOff,Math.min(S.maxOff,i|0));S.mode='fc';S.sel=i;renderWhen();renderTrackRow();renderCond()}
 function setAlt(hh){S.mode='alt';S.altH=hh;renderWhen();renderTrackRow();renderCond()}
-function renderAll(){renderTrackRow();renderBest();renderWhen();renderCond();if(typeof renderRide==='function')renderRide()}
+function renderAll(){renderTrackRow();renderBest();renderWhen();renderCond();if(typeof renderData==='function')renderData()}
 
 /* ================= map ================= */
 const map=L.map('map',{zoomControl:false,attributionControl:true}).setView([T().lat,T().lng],T().zoom);
@@ -953,8 +1006,14 @@ paintUnits();
 
 /* ================= share ================= */
 function toast(m,ms=3200){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),ms)}
-function shareText(){
-  if(!S.wx)return'TheCyclistDubai Weather';
+/* ================= share texts (built from site-data.js) ================= */
+const SITE=window.SITE||{links:{},sponsors:[],events:[],rides:[]};
+function siteUrl(){return /^https?:/.test(location.protocol)?location.origin+location.pathname:'https://almirmujicdxb.github.io/thecyclistdubai/'}
+function sponsorsText(){const sp=SITE.sponsors||[];if(!sp.length)return'';
+  return '\n🎁 *Sponsor discounts*\n'+sp.map(x=>`• *${x.name}*${x.what?` (${x.what})`:''}: use code *${x.code}* for *${x.discount}*\n  ${x.url}`).join('\n')+'\n'}
+function footerText(){return `\n📲 Live ride weather & forecast: ${siteUrl()}`+(SITE.links.whatsappGroup?`\n👥 Join our WhatsApp group: ${SITE.links.whatsappGroup}`:'')}
+function weatherText(){
+  if(!S.wx)return'TheCyclistDubai Weather\n'+siteUrl();
   const ti=TI(),h=cur(ti),lt=parseLocal(h.time),[lab]=scoreInfo(h.score),n=dubaiNow();
   const when=(S.mode==='fc'&&S.sel===0)?`Now (${n.hour}:${n.minute})`:`${dateLabel(h.time.slice(0,10))}, ${lt.hm}`+(S.mode==='alt'?(h.kind==='past'?' (recorded)':' (typical)'):'');
   const sun=sunFor(ti,h.time),uv=h.uv==null?'-':h.uv.toFixed(0),rain=h.pp!=null?h.pp+'%':h.mm!=null?h.mm.toFixed(1)+' mm':'-';
@@ -966,12 +1025,11 @@ function shareText(){
   if(segs.length)s+=`🧭 On the track (${$('xw').textContent.toLowerCase()}): headwind ${$('wsH').textContent} · tailwind ${$('wsT').textContent} · crosswind ${$('wsC').textContent}\n`;
   if(S.bestTxt)s+=`⭐ Best morning: ${S.bestTxt}\n`;
   s+=`👕 ${kitTip(h).replace(/<[^>]+>/g,'').replace(/^👕\s*/,'')}\n`;
-  s+=`\n🎁 *Sponsor:* Lameda cycling apparel, use code *DXB* for *15% OFF*\nhttps://lameda.cc/\n`;
-  {const rd=S.rideDate||nextRideDate(),l=parseLocal(rd+'T00:00');s+=`\n🚴‍♂️ *Next group ride:* TCD Ride, Sat ${l.date} ${l.mon}, 6:30 AM, 86 km Al Qudra, average speed 33–35 km/h`+(S.rideTxt?` (forecast ${S.rideTxt})`:'')+`\nJoin: https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo\nLocation: ${'https://maps.app.goo.gl/ntyxGBSEaKip7akR8'}\n`}
-  s+=`\n📅 *Recommended event:* AD Ports Group Gran Fondo Abu Dhabi, Sun 20 Dec, 150 km Al Ain → Abu Dhabi\nhttps://abudhabigranfondo.ae/\n`;
-  s+=`\n👥 Join our WhatsApp group: https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo\n📲 Live ride weather: ${location.href.split('#')[0]}`;
-  return s;
+  const rides=upcomingRides();if(rides.length){const r=rides[0];s+=`\n🚴‍♂️ *Next group ride:* ${r.name}, ${occLabel(r.occ)} ${fmtTime(r.time)}, ${r.distance} ${r.place}${r.pace?`, ${r.pace}`:''}\n  Join: ${r.join}\n`}
+  const evs=upcomingEvents();if(evs.length)s+='\n📅 *Upcoming events*\n'+evs.map(e=>`• ${e.name}, ${occLabel(e.date)}${e.distance?`, ${e.distance}`:''}\n  ${e.url}`).join('\n')+'\n';
+  return s+sponsorsText()+footerText();
 }
+const shareText=weatherText;
 
 /* ---------- map image (drawn directly, no page screenshot) ---------- */
 function loadImg(src,ms=7000){return new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';let done=false;
@@ -1031,20 +1089,15 @@ function copyText(t){try{navigator.clipboard.writeText(t).catch(()=>{})}catch(e)
 async function nativeShare(b,text){copyText(text);
   try{await navigator.share({files:[fileOf(b)],text,title:'TheCyclistDubai Weather'});toast('Shared ✔ The text is also copied, paste it if WhatsApp drops it');return true}
   catch(e){if(e.name==='AbortError')return true;return false}}
-$('share').onclick=()=>{
-  const text=shareText(),k=shotKey();
-  // fast path: image already prepared → open the share sheet straight from this tap
-  if(shot.key===k&&shot.blob&&canShareFile(shot.blob)){nativeShare(shot.blob,text).then(ok=>{if(!ok)openShareModal(text)});return}
-  openShareModal(text);
-};
-function openShareModal(text){
-  $('modal').style.display='grid';$('mImg').removeAttribute('src');$('mSpin').style.display='grid';$('mSpin').textContent='Preparing map image…';
+$('share').onclick=()=>openSheet();
+function openShareModal(text,imgP,name){
+  imgP=imgP||getShot();$('modal').style.display='grid';$('mImg').removeAttribute('src');$('mSpin').style.display='grid';$('mSpin').textContent='Preparing image…';
   $('mWa').href='https://wa.me/?text='+encodeURIComponent(text);$('mShare').style.display='none';$('mDl').style.display='none';
-  $('mTxt').textContent='The map image shows the track and weather. The message has all the details, sponsor code and event link.';
+  $('mTxt').textContent='Send the image with the message. The message has the details, site link and sponsor codes.';
   $('mCopy').onclick=()=>{copyText(text);toast('Text copied')};
-  getShot().then(b=>{
-    if(!b){$('mSpin').textContent='Map image isn\'t available right now. You can still send the text.';return}
-    const u=URL.createObjectURL(b);$('mImg').src=u;$('mSpin').style.display='none';$('mDl').href=u;$('mDl').download=fname();$('mDl').style.display='';
+  Promise.resolve(imgP).then(b=>{
+    if(!b){$('mSpin').textContent='Image isn\'t available right now. You can still send the text.';return}
+    const u=URL.createObjectURL(b);$('mImg').src=u;$('mSpin').style.display='none';$('mDl').href=u;$('mDl').download=name||fname();$('mDl').style.display='';
     if(canShareFile(b)){$('mShare').style.display='';$('mShare').onclick=()=>nativeShare(b,text).then(ok=>{if(ok)$('modal').style.display='none';else toast('Sharing isn\'t available. Download the image and send the text.')})}
     else $('mTxt').textContent='Download the image, then tap "Send text on WhatsApp" and attach it in the chat.';
   });
@@ -1053,9 +1106,9 @@ $('mClose').onclick=()=>{$('modal').style.display='none'};
 $('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').style.display='none'});
 
 /* ================= sponsor ================= */
-$('lmCode').addEventListener('click',async e=>{e.preventDefault();e.stopPropagation();
-  try{await navigator.clipboard.writeText('DXB');toast('Code DXB copied! 15% OFF at lameda.cc')}catch(_){toast('Use code DXB at lameda.cc for 15% OFF')}});
-(async function(){const box=$('lmArt');box.innerHTML='<div class="fb">LAMEDA</div>';
+$('lmCode').addEventListener('click',async e=>{e.preventDefault();e.stopPropagation();const x=(SITE.sponsors||[]).find(v=>/lameda/i.test(v.name))||{code:'DXB',discount:'15% OFF'};
+  try{await navigator.clipboard.writeText(x.code);toast(`Code ${x.code} copied! ${x.discount} at lameda.cc`)}catch(_){toast(`Use code ${x.code} at lameda.cc for ${x.discount}`)}});
+(async function(){const box=$('lmArt');box.innerHTML='<div class="fb">L</div>';
   try{const r=await fetch('https://lameda.cc/products.json?limit=12');if(!r.ok)throw 0;const j=await r.json();const imgs=[];
     (j.products||[]).forEach(p=>{if(p.images&&p.images[0])imgs.push(p.images[0].src.replace(/(\.[a-z]+)(\?|$)/i,'$1?width=700&'))});
     if(!imgs.length)throw 0;
@@ -1063,29 +1116,141 @@ $('lmCode').addEventListener('click',async e=>{e.preventDefault();e.stopPropagat
     let k=0;els[0].onload=()=>{els[0].classList.add('on');box.querySelector('.fb').style.display='none'};
     setInterval(()=>{els[k].classList.remove('on');k=(k+1)%els.length;els[k].classList.add('on')},3500)}catch(e){}})();
 
-/* ================= next TCD group ride (Saturday 06:30, Al Qudra 86 km) ================= */
-function nextRideDate(){const n=dubaiNow(),t=new Date(`${n.year}-${n.month}-${n.day}T00:00Z`),dow=t.getUTCDay();
-  let add=(6-dow+7)%7;if(add===0&&+n.hour>=10)add=7;const d=new Date(t.getTime()+add*864e5);return d.toISOString().slice(0,10)}
-function renderRide(){
-  const d=nextRideDate(),lt=parseLocal(d+'T00:00');S.rideDate=d;
-  $('rideDay').textContent=lt.date;$('rideMon').textContent=lt.mon.toUpperCase();
-  const rd=relDay(d+'T00:00');$('rideDow').textContent=rd==='Today'?'TODAY':'SAT';
-  if(!S.wx){return}
-  const ti=TRACKS.findIndex(t=>t.id==='alqudra'),H=S.wx[0].hourly.time,hs=[];
-  for(let i=S.minOff;i<=S.maxOff;i++){const t=H[S.start+i];if(t.startsWith(d)){const h=parseLocal(t).h;if(h>=6&&h<=9)hs.push(hourAt(ti,i))}}
-  if(!hs.length){$('rideWx').textContent='Saturday 6:30 AM · forecast available closer to the day';S.rideTxt=null;return}
-  const lo=Math.round(Math.min(...hs.map(h=>h.t))),hi=Math.round(Math.max(...hs.map(h=>h.t))),w=Math.round(hs.reduce((a,h)=>a+h.w,0)/hs.length*10)/10,
-    sc=Math.round(hs.reduce((a,h)=>a+h.score,0)/hs.length),dir=card(hs[Math.floor(hs.length/2)].dir),[lab]=scoreInfo(sc);
-  const tr=lo===hi?`${lo}°C`:`${lo}–${hi}°C`;
-  $('rideWx').innerHTML=`Sat 06:30–10:00 forecast: <b>${tr}</b> · wind ${spd(w)} ${uLbl()} ${dir} · <b>${lab} ${sc}</b>`;
-  S.rideTxt=`${tr}, wind ${spd(w)} ${uLbl()} ${dir}, ride score ${sc}`;
+/* ================= events & group rides (from site-data.js) ================= */
+const DOWN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const todayStr=()=>{const n=dubaiNow();return `${n.year}-${n.month}-${n.day}`};
+const tsOf=(d,t)=>Date.parse(`${d}T${t||'00:00'}:00+04:00`);
+function fmtTime(t){const [h,m]=t.split(':').map(Number);return `${(h%12)||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`}
+function occLabel(d){const l=parseLocal(d+'T00:00'),rd=relDay(d+'T00:00');return (rd==='Today'||rd==='Tomorrow'?rd+' '+l.day:l.day)+` ${l.date} ${l.mon}`}
+function addDays(d,k){return new Date(Date.parse(d+'T00:00Z')+k*864e5).toISOString().slice(0,10)}
+function upcomingEvents(){return (SITE.events||[]).filter(e=>e.date&&Date.now()<tsOf(e.date,e.time)+12*36e5).sort((a,b)=>tsOf(a.date,a.time)-tsOf(b.date,b.time))}
+function rideOcc(r){
+  if(r.date)return Date.now()<tsOf(r.date,r.time)+4*36e5?r.date:null;
+  const want=DOWN.indexOf((r.weekly||'').slice(0,3));if(want<0)return null;let d=todayStr();
+  for(let k=0;k<8;k++){const dd=addDays(d,k);if(new Date(dd+'T00:00Z').getUTCDay()===want&&Date.now()<tsOf(dd,r.time)+4*36e5)return dd}return null}
+function upcomingRides(){return (SITE.rides||[]).map(r=>({...r,occ:rideOcc(r)})).filter(r=>r.occ).sort((a,b)=>tsOf(a.occ,a.time)-tsOf(b.occ,b.time))}
+function rideForecast(r){
+  if(!S.wx)return null;const ti=Math.max(0,TRACKS.findIndex(t=>t.id===r.track)),H=S.wx[0].hourly.time,sh=+r.time.slice(0,2),hs=[];
+  for(let i=S.minOff;i<=S.maxOff;i++){const t=H[S.start+i];if(t.startsWith(r.occ)){const h=parseLocal(t).h;if(h>=sh&&h<=sh+3)hs.push(hourAt(ti,i))}}
+  if(!hs.length)return null;
+  const lo=Math.round(Math.min(...hs.map(h=>h.t))),hi=Math.round(Math.max(...hs.map(h=>h.t))),w=hs.reduce((a,h)=>a+h.w,0)/hs.length,
+    sc=Math.round(hs.reduce((a,h)=>a+h.score,0)/hs.length),dir=card(hs[Math.floor(hs.length/2)].dir),[lab]=scoreInfo(sc),tr=lo===hi?`${lo}°C`:`${lo}–${hi}°C`;
+  return {tr,w,dir,sc,lab,txt:`${tr}, wind ${spd(w)} ${uLbl()} ${dir}, ride score ${sc} (${lab})`}}
+const SHARE_ICO='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
+function esc(t){return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function renderEvents(){
+  const evs=upcomingEvents();
+  $('evts').innerHTML=evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
+    return `<a class="evt" href="${esc(e.url)}" target="_blank" rel="noopener">
+    <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="20" cy="58" r="5" fill="#ffffff55"/><circle cx="580" cy="30" r="5" fill="#ffffff55"/></svg>
+    <div class="evt-date"><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
+    <div class="evt-main">
+      <div class="evt-tag"><span class="star">★ ${esc(e.tag||'Recommended')}</span><span class="up">Upcoming event</span></div>
+      <div class="evt-title">${esc(e.name)}</div>
+      <div class="evt-meta">${l.day} ${fmtTime(e.time||'07:00')}${e.distance?` · <b>${esc(e.distance)}</b>`:''}${e.route?` ${esc(e.route)}`:''}${e.note?`<span class="evt-uci"> · ${esc(e.note)}</span>`:''}${e.weRide?'<span class="evt-us"> · We\'re riding it 🚴</span>':''}</div>
+    </div>
+    <div class="evt-cd"><b>${days<=0?'Today':days}</b><span>${days<=0?'race day':'days to go'}</span></div>
+    <button class="cshare" data-ev="${i}" aria-label="Share event" title="Share event">${SHARE_ICO}</button>
+    <span class="evt-go">Details ↗</span>
+  </a>`}).join('');
+  $('evts').querySelectorAll('[data-ev]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareEvent(upcomingEvents()[+b.dataset.ev])});
 }
-renderRide();
+function renderRides(){
+  const rs=upcomingRides();
+  $('rides').innerHTML=rs.map((r,i)=>{const l=parseLocal(r.occ+'T00:00'),rd=relDay(r.occ+'T00:00'),f=rideForecast(r);
+    const fx=f?`${l.day} ${r.time}–${String(+r.time.slice(0,2)+3).padStart(2,'0')}:${r.time.slice(3)} forecast: <b>${f.tr}</b> · wind ${spd(f.w)} ${uLbl()} ${f.dir} · <b>${f.lab} ${f.sc}</b>`:`${l.day} ${fmtTime(r.time)} · forecast available closer to the day`;
+    return `<div class="ride">
+      <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
+      <div class="ride-date"><span>${rd==='Today'?'TODAY':l.day.toUpperCase()}</span><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
+      <div class="ride-body">
+        <div class="ride-tag"><span class="star">★ Recommended</span><span class="up">${i===0?'Next group ride':'Group ride'}</span>${r.pace?`<span class="pace">⚡ ${esc(r.pace)}</span>`:''}</div>
+        <div class="ride-title">${esc(r.name)} · <span>${fmtTime(r.time)}</span> · ${esc(r.distance)} ${esc(r.place)}</div>
+        <div class="ride-meta">${fx}</div>
+      </div>
+      <div class="ride-btns">
+        ${r.join?`<a class="rjoin" href="${esc(r.join)}" target="_blank" rel="noopener">Join ride</a>`:''}
+        ${r.location?`<a class="rloc" href="${esc(r.location)}" target="_blank" rel="noopener">Location ↗</a>`:''}
+        <button class="cshare" data-rd="${i}" aria-label="Share ride" title="Share ride">${SHARE_ICO}</button>
+      </div>
+    </div>`}).join('');
+  $('rides').querySelectorAll('[data-rd]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareRide(upcomingRides()[+b.dataset.rd])});
+}
+function renderData(){renderEvents();renderRides()}
+renderData();setInterval(renderData,30*60e3);
 
-/* ================= event countdown ================= */
-(function(){const ev=Date.parse('2026-12-20T07:00:00+04:00');function upd(){const d=Math.ceil((ev-Date.now())/864e5);
-  if(Date.now()>ev+12*36e5){$('evt').style.display='none';return}$('evtDays').textContent=d<=0?'Today':d;
-  if(d<=0)$('evtDays').nextElementSibling.textContent='race day'}upd();setInterval(upd,36e5)})();
+/* ---------- item share texts ---------- */
+function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
+  return `📅 *${e.name}*\n🗓️ ${occLabel(e.date)} ${parseLocal(e.date+'T00:00').date?'':''}· ${fmtTime(e.time||'07:00')}\n`+
+    (e.distance||e.route?`🚴 ${[e.distance,e.route].filter(Boolean).join(' · ')}\n`:'')+(e.note?`🏅 ${e.note}\n`:'')+
+    (days>0?`⏳ ${days} days to go\n`:'')+(e.weRide?`💪 TheCyclistDubai is riding it. Join us!\n`:'')+`🔗 ${e.url}\n`+sponsorsText()+footerText()}
+function rideText(r){const f=rideForecast(r);
+  return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.place} · ${r.distance}${r.pace?` · ⚡ ${r.pace}`:''}\n`+
+    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+footerText()}
+function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\nUse code *${x.code}* for *${x.discount}*\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
+
+/* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */
+const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a']};
+function wrapLines(c,t,max){const w=t.split(' ');const out=[];let line='';w.forEach(x=>{const tt=line?line+' '+x:x;if(c.measureText(tt).width>max&&line){out.push(line);line=x}else line=tt});if(line)out.push(line);return out}
+function drawCard({theme,dow,day,mon,tags,title,lines}){
+  const S2=1080,c0=document.createElement('canvas');c0.width=S2;c0.height=S2;const c=c0.getContext('2d'),T3=THEMES[theme];
+  const g=c.createLinearGradient(0,0,S2,S2);g.addColorStop(0,T3[0]);g.addColorStop(.55,T3[1]);g.addColorStop(1,T3[2]);c.fillStyle=g;c.fillRect(0,0,S2,S2);
+  const rg=c.createRadialGradient(S2,0,0,S2,0,700);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S2,S2);
+  c.strokeStyle='rgba(255,255,255,.18)';c.lineWidth=8;c.setLineDash([4,22]);c.lineCap='round';c.beginPath();c.moveTo(-20,860);c.bezierCurveTo(260,620,520,900,760,700);c.bezierCurveTo(900,590,1000,620,1100,560);c.stroke();c.setLineDash([]);
+  [[-20,860],[760,700],[1100,560]].forEach(([x,y])=>{c.fillStyle='rgba(255,255,255,.35)';c.beginPath();c.arc(x,y,14,0,7);c.fill()});
+  // date tile
+  c.fillStyle='#fff';rr(c,80,90,220,240,34);c.fill();c.textAlign='center';
+  c.fillStyle='#dc2626';c.font='800 34px Sora,sans-serif';c.fillText(dow,190,150);
+  c.fillStyle=T3[0];c.font='800 104px Sora,sans-serif';c.fillText(day,190,258);c.fillStyle='#64748b';c.font='800 32px Sora,sans-serif';c.fillText(mon,190,305);c.textAlign='left';
+  // tags
+  let tx=340,ty=130;c.font='800 28px Sora,sans-serif';tags.forEach((t,k)=>{const w=c.measureText(t).width+36;if(tx+w>1010){tx=340;ty+=62}
+    c.fillStyle=k===0?T3[4]:'rgba(255,255,255,.16)';rr(c,tx,ty-38,w,52,12);c.fill();c.fillStyle=k===0?T3[0]:'#fff';c.fillText(t,tx+18,ty-2);tx+=w+14});
+  // title
+  c.fillStyle='#fff';c.font='800 72px Sora,sans-serif';let y=420;wrapLines(c,title,920).slice(0,3).forEach(l=>{c.fillText(l,80,y);y+=86});
+  y+=20;c.font='600 40px Sora,sans-serif';lines.filter(Boolean).forEach(l=>{wrapLines(c,l,920).slice(0,2).forEach(x=>{c.fillStyle='rgba(255,255,255,.92)';c.fillText(x,80,y);y+=58});y+=6});
+  // brand bar
+  const bg=c.createLinearGradient(0,0,S2,0);bg.addColorStop(0,'#7c2d12');bg.addColorStop(.5,'#c2410c');bg.addColorStop(1,'#f59e0b');c.fillStyle=bg;c.fillRect(0,S2-110,S2,110);
+  c.fillStyle='#fff';c.font='800 44px Sora,sans-serif';c.fillText('TheCyclist',60,S2-42);const w2=c.measureText('TheCyclist').width;c.fillStyle='#fde68a';c.fillText('Dubai',60+w2,S2-42);
+  c.fillStyle='#ffedd5';c.font='600 28px Sora,sans-serif';const rt=siteUrl().replace(/^https?:\/\//,'').replace(/\/$/,'');c.fillText(rt,S2-60-c.measureText(rt).width,S2-46);
+  return c0;
+}
+function canvasFile(cv,name){const d=cv.toDataURL('image/png'),b=atob(d.split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new File([u],name,{type:'image/png'})}
+function shareNow(file,text,title){
+  copyText(text);
+  try{if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],text,title}).then(()=>toast('Shared ✔ Text also copied, paste it if WhatsApp drops it')).catch(e=>{if(e.name!=='AbortError')openShareModal(text,file,file.name)});return}}catch(e){}
+  openShareModal(text,file,file&&file.name);
+}
+function shareEvent(e){if(!e)return;const l=parseLocal(e.date+'T00:00');
+  const cv=drawCard({theme:'blue',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ '+(e.tag||'Recommended'),'Upcoming event'],title:e.name,
+    lines:[`🕖 ${l.day} ${fmtTime(e.time||'07:00')}`,[e.distance,e.route].filter(Boolean).join(' · ')&&('🚴 '+[e.distance,e.route].filter(Boolean).join(' · ')),e.note&&('🏅 '+e.note),e.weRide&&'💪 TheCyclistDubai is riding it']});
+  shareNow(canvasFile(cv,'thecyclistdubai-event.png'),eventText(e),e.name)}
+function shareRide(r){if(!r)return;const l=parseLocal(r.occ+'T00:00'),f=rideForecast(r);
+  const cv=drawCard({theme:'green',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ Group ride',r.pace?'⚡ '+r.pace:''].filter(Boolean),title:`${r.name} · ${fmtTime(r.time)}`,
+    lines:[`📍 ${r.place} · ${r.distance}`,f&&`🌤️ ${f.tr} · wind ${spd(f.w)} ${uLbl()} ${f.dir}`,f&&`✅ Ride score ${f.sc} (${f.lab})`,'👥 Join via the WhatsApp group']});
+  shareNow(canvasFile(cv,'thecyclistdubai-ride.png'),rideText(r),r.name)}
+function shareSponsor(x){
+  const n=dubaiNow(),cv=drawCard({theme:'orange',dow:'CODE',day:x.code.length<=4?x.code:'%',mon:x.discount.toUpperCase(),tags:['🎁 Sponsor discount'],title:`${x.name}: ${x.discount} with code ${x.code}`,
+    lines:[x.what&&('🛍️ '+x.what.replace(/^./,m=>m.toUpperCase())),'🛒 '+x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
+  shareNow(canvasFile(cv,'thecyclistdubai-'+x.name.toLowerCase()+'.png'),sponsorText(x),x.name)}
+function shareWeather(){const text=weatherText(),k=shotKey();
+  if(shot.key===k&&shot.blob&&canShareFile(shot.blob)){nativeShare(shot.blob,text).then(ok=>{if(!ok)openShareModal(text)});return}
+  openShareModal(text)}
+
+$('lmShare').innerHTML=SHARE_ICO;$('lmShare').onclick=e=>{e.preventDefault();e.stopPropagation();const x=(SITE.sponsors||[]).find(v=>/lameda/i.test(v.name));if(x)shareSponsor(x)};
+
+/* ---------- share menu ---------- */
+function openSheet(){
+  getShot();const h=S.wx?cur(TI()):null,evs=upcomingEvents(),rs=upcomingRides(),sp=SITE.sponsors||[];
+  const row=(id,bg,ic,title,sub,act='Share')=>`<button class="srow" data-s="${id}"><span class="si" style="background:${bg}">${ic}</span><span class="st"><b>${esc(title)}</b><small>${esc(sub)}</small></span><span class="sa">${act}</span></button>`;
+  let H='<div class="sgrp">Weather</div>'+row('w','linear-gradient(135deg,#c2410c,#f59e0b)','🌤️',`${T().short} weather`,h?`${$('mWhen').textContent} · ${Math.round(h.t)}°C · ${spd(h.w)} ${uLbl()} ${card(h.dir)} · score ${h.score}`:'Map image + full forecast');
+  if(rs.length)H+='<div class="sgrp">Group rides</div>'+rs.map((r,i)=>row('r'+i,'linear-gradient(135deg,#052e16,#16a34a)','🚴‍♂️',`${r.name} · ${occLabel(r.occ)}`,`${fmtTime(r.time)} · ${r.distance} ${r.place}${r.pace?' · '+r.pace:''}`)).join('');
+  if(evs.length)H+='<div class="sgrp">Events</div>'+evs.map((e,i)=>row('e'+i,'linear-gradient(135deg,#0b1f4b,#1d4ed8)','📅',e.name,`${occLabel(e.date)} · ${[e.distance,e.route].filter(Boolean).join(' · ')}`)).join('');
+  if(sp.length)H+='<div class="sgrp">Sponsor codes</div>'+sp.map((x,i)=>row('p'+i,'linear-gradient(135deg,#111,#3f3f46)','🎁',`${x.name}: ${x.discount}`,`Code ${x.code} · ${x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')}`)).join('');
+  $('sList').innerHTML=H;$('sheet').style.display='flex';
+  $('sList').querySelectorAll('.srow').forEach(b=>b.onclick=()=>{const id=b.dataset.s,k=+id.slice(1);$('sheet').style.display='none';
+    if(id==='w')shareWeather();else if(id[0]==='r')shareRide(rs[k]);else if(id[0]==='e')shareEvent(evs[k]);else shareSponsor(sp[k])});
+}
+$('sClose').onclick=()=>{$('sheet').style.display='none'};
+$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')$('sheet').style.display='none'});
 
 /* ================= compass ticks & boot ================= */
 renderTrackRow();selectTrack(S.track);fetchWeather();
