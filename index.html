@@ -14,7 +14,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
-  --bg:#f5f8fb; --panel:#ffffff; --panel2:#f1f5f9; --line:#e2e8f0; --text:#0f172a; --muted:#64748b;
+  --bg:#f5f8fb; --panel:#ffffff; --panel2:#f1f5f9; --line:#e2e8f0; --text:#0f172a; --muted:#4b5a6e;
   --accent:#65a30d; --hot:#ea580c; --cool:#0284c7; --good:#16a34a; --warn:#d97706; --bad:#dc2626;
   --shadow:0 1px 2px #0f172a0a,0 6px 20px #0f172a0d;
   --r:18px;
@@ -60,6 +60,9 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 .grid{display:grid;grid-template-columns:380px 1fr;gap:16px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
 .panel h3{margin:0 0 10px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:600}
+#cond{position:relative;overflow:hidden}
+#cond::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#a3e635,#22c55e,#0ea5e9)}
+.mapcard::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#0ea5e9,#22c55e,#a3e635);z-index:2}
 .when{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .when .lbl{font-size:13px;color:var(--muted)}
 .when .val{font-weight:700;font-size:15px}
@@ -97,9 +100,8 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 .maphead{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
 .maphead .ti{font-weight:700}
 .maphead .ti small{display:block;color:var(--muted);font-weight:400;font-size:11px;margin-top:2px}
-.mapbox{position:relative;height:520px;flex:1 0 auto}
-#map,#gframe,#wind{position:absolute;inset:0;width:100%;height:100%}
-#gframe{border:0;display:none;background:#e5e7eb}
+.mapbox{position:relative;height:640px;flex:1 0 auto}
+#map,#wind{position:absolute;inset:0;width:100%;height:100%}
 #wind{pointer-events:none;z-index:450}
 .leaflet-container{background:#e5e7eb;font-family:Sora,sans-serif}
 .mapover{position:absolute;z-index:500;left:12px;bottom:12px;background:#ffffffe6;backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:11px;max-width:260px}
@@ -110,6 +112,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 .windbadge b{font-family:"JetBrains Mono",monospace;font-size:18px}
 .maploading{position:absolute;z-index:600;left:50%;top:12px;transform:translateX(-50%);background:#ffffffee;border:1px solid var(--line);padding:6px 12px;border-radius:20px;font-size:12px;display:none}
 .views{display:flex;gap:6px;flex-wrap:wrap}
+.viewseg button{padding:9px 16px;font-size:13px}
 .views .seg button{padding:6px 9px}
 .gl{font-size:10px;color:var(--muted);align-self:center;margin:0 2px 0 6px;text-transform:uppercase;letter-spacing:1px}
 
@@ -187,19 +190,37 @@ footer a{color:#334155}
   .views::-webkit-scrollbar{display:none}
   .views .seg{flex:none}
   .seg button{padding:9px 11px;min-height:38px}
-  .mapbox{height:380px}
-  .mapover{left:8px;bottom:8px;padding:7px 9px;font-size:10px}
+  .mapbox{height:max(440px,64vh)}
+  .maphead{flex-direction:column;align-items:stretch;gap:8px}
+  .maphead .ti{font-size:16px}
+  .views{width:100%}
+  .viewseg{width:100%}
+  .viewseg button{flex:1;padding:11px 10px;font-size:14px}
+  .mapover{left:8px;right:8px;bottom:8px;max-width:none;padding:7px 10px;font-size:11px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+  .mapover>b{width:100%;font-size:11px}
+  .mapover .lg{margin-top:0}
   .mapover .sub{display:none}
   .windbadge{right:8px;top:8px;padding:6px 10px}
   .windbadge b{font-size:15px}
-  .bigtemp .v{font-size:54px}
+  .bigtemp .v{font-size:64px}
+  .bigtemp .wx{font-size:44px}
+  .sub{font-size:14px}
+  #whenVal{font-size:16px!important}
+  .wstats .dir{font-size:15px}
+  .wstats .desc{font-size:13px}
+  .score .t1{font-size:16px}
+  .score .t2{font-size:13px}
+  .tcard{padding:14px 16px}
+  .tcard .nm{font-size:16px}
+  .tcard .row .tmp{font-size:24px}
+  .panel{padding:16px 14px}
   .windbox{grid-template-columns:118px 1fr;gap:12px}
   .compass{width:118px;height:118px}
   .wstats .w{font-size:28px}
   .kv{grid-template-columns:repeat(4,1fr);gap:6px}
-  .kv div{padding:8px 4px}
-  .kv b{font-size:13px}
-  .kv span{font-size:9px;letter-spacing:.3px}
+  .kv div{padding:10px 4px}
+  .kv b{font-size:16px}
+  .kv span{font-size:10px;letter-spacing:.3px;margin-bottom:2px}
   .tlhead{flex-direction:column;align-items:stretch}
   .picker{justify-content:center;padding:6px 10px;width:100%}
   .picker input{flex:1;max-width:170px}
@@ -207,9 +228,9 @@ footer a{color:#334155}
   .quick{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
   .quick::-webkit-scrollbar{display:none}
   .chip{flex:none;padding:8px 13px;font-size:13px}
-  #chart{min-width:880px}
+  #chart{min-width:960px}
   input[type=range]{height:32px}
-  .best{flex-wrap:wrap;font-size:12px}
+  .best{flex-wrap:wrap;font-size:14px;line-height:1.5}
   .spgrid{grid-template-columns:1fr 1fr 1fr}
   .sp{min-height:90px}
   .sp.empty{font-size:11px;letter-spacing:1px}
@@ -323,26 +344,15 @@ footer a{color:#334155}
     <div class="maphead">
       <div class="ti" id="mapTitle">—<small id="mapSub"></small></div>
       <div class="views" data-noshot>
-        <div class="seg" id="layers">
-          <button data-l="sat" class="on">Satellite</button>
-          <button data-l="hyb">Hybrid</button>
-          <button data-l="topo">Terrain</button>
-          <button data-l="cycle">Cycling</button>
-          <button data-l="dark">Dark</button>
-        </div>
-        <span class="gl">Google</span>
-        <div class="seg" id="glayers">
-          <button data-g="m">Map</button>
-          <button data-g="k">Sat</button>
-          <button data-g="h">Hybrid</button>
-          <button data-g="p">Terrain</button>
+        <div class="seg viewseg" id="layers">
+          <button data-l="sat" class="on">🛰️ Satellite</button>
+          <button data-l="cycle">🚲 Cycling</button>
         </div>
       </div>
     </div>
     <div class="mapbox">
       <div id="map"></div>
       <canvas id="wind"></canvas>
-      <iframe id="gframe" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Maps"></iframe>
       <div class="maploading" id="maploading">Loading track from OpenStreetMap…</div>
       <div class="windbadge" id="windbadge">
         <svg width="34" height="34" viewBox="0 0 34 34" id="badgeArrow"><circle cx="17" cy="17" r="16" fill="#f1f5f9" stroke="#cbd5e1"/><path d="M17 5 L23 21 L17 17 L11 21 Z" fill="#65a30d"/></svg>
@@ -396,7 +406,7 @@ footer a{color:#334155}
 
 <footer>
   <b>Data.</b> Forecasts come live from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>, which serves weather models from national weather services (ECMWF, NOAA GFS, DWD ICON, Météo-France and others) at 1–11 km resolution, so values can differ a little from the official UAE forecast. For official UAE warnings (fog, dust, wind) check the <a href="https://www.ncm.gov.ae/" target="_blank" rel="noopener">National Center of Meteorology (NCM)</a>. Updates every 15 minutes.<br>
-  <b>Maps.</b> Track lines are loaded live from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a> cycleway data. Satellite & hybrid © Esri, Maxar, Earthstar Geographics · Terrain © OpenTopoMap · Cycling © CyclOSM · Dark © CARTO · Google views via Google Maps embed. Track lengths are from RTA and Dubai Municipality.<br>
+  <b>Maps.</b> Track lines are loaded live from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a> cycleway data. Satellite © Esri, Maxar, Earthstar Geographics · Cycling map © CyclOSM / OpenStreetMap contributors. Tap the 🚴 start pin for Google Maps directions. Track lengths are from RTA and Dubai Municipality.<br>
   <b>TheCyclistDubai Weather</b> · <a href="quiz.html">🧠 Take the Dubai Group Ride Etiquette Quiz</a> · follow <a href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener">@thecyclistdubai on Instagram</a> · <span id="updated"></span>
 </footer>
 </div>
@@ -440,7 +450,7 @@ const TRACKS = [
 const S = {
   track: load('rw_track','alqudra'),
   unit: load('rw_unit','kmh'),
-  layer: (l=>['sat','hyb','topo','cycle','dark'].includes(l)?l:'sat')(load('rw_layer','sat')),
+  layer: (l=>['sat','cycle'].includes(l)?l:'sat')(load('rw_layer','sat')),
   google: null,
   sel: 0,          // hour offset 0..47
   wx: null,        // array per track
@@ -691,30 +701,15 @@ const map=L.map('map',{zoomControl:true,attributionControl:true,preferCanvas:fal
 const esriImg=()=>L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,crossOrigin:true,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'});
 const LAYERS={
   sat:esriImg(),
-  hyb:L.layerGroup([esriImg(),
-     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,crossOrigin:true,opacity:.9}),
-     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,crossOrigin:true})]),
-  topo:L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'© OpenTopoMap (CC-BY-SA), © OpenStreetMap'}),
-  cycle:L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',{maxZoom:20,attribution:'CyclOSM · © OpenStreetMap contributors'}),
-  dark:L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:20,crossOrigin:true,attribution:'© CARTO © OpenStreetMap'}),
+  cycle:L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',{maxZoom:20,crossOrigin:true,attribution:'CyclOSM · © OpenStreetMap contributors'}),
 };
 let curLayer=null;
 function setLayer(k){
-  S.google=null; save('rw_layer',k); S.layer=k;
-  $('gframe').style.display='none'; $('map').style.visibility='visible'; $('wind').style.display='block';$('legend').style.display='block';
+  save('rw_layer',k); S.layer=k;
   if(curLayer)map.removeLayer(curLayer); curLayer=LAYERS[k]||LAYERS.sat; curLayer.addTo(map);
   document.querySelectorAll('#layers button').forEach(b=>b.classList.toggle('on',b.dataset.l===k));
-  document.querySelectorAll('#glayers button').forEach(b=>b.classList.remove('on'));
-}
-function setGoogle(t){
-  S.google=t; const tr=T(); const c=map.getCenter(); const z=Math.min(map.getZoom(),18);
-  $('gframe').src=`https://maps.google.com/maps?q=${tr.lat},${tr.lng}&ll=${c.lat.toFixed(5)},${c.lng.toFixed(5)}&t=${t}&z=${z}&output=embed&hl=en`;
-  $('gframe').style.display='block'; $('map').style.visibility='hidden'; $('wind').style.display='none';$('legend').style.display='none';
-  document.querySelectorAll('#glayers button').forEach(b=>b.classList.toggle('on',b.dataset.g===t));
-  document.querySelectorAll('#layers button').forEach(b=>b.classList.remove('on'));
 }
 document.querySelectorAll('#layers button').forEach(b=>b.onclick=()=>setLayer(b.dataset.l));
-document.querySelectorAll('#glayers button').forEach(b=>b.onclick=()=>setGoogle(b.dataset.g));
 setLayer(S.layer);
 
 let trackLayer=L.layerGroup().addTo(map), startMarker=null, segs=[];
@@ -806,7 +801,6 @@ function selectTrack(id){
   S.track=id;save('rw_track',id);
   const t=T(); $('mapTitle').innerHTML=`${t.name}<small>${t.info}</small>`;
   renderTracks(); drawTrack();
-  if(S.google)setGoogle(S.google);
   if(S.wx){renderBest();renderCond();renderChart();renderQuick()}
 }
 function renderAll(){renderTracks();renderBest();renderCond();renderChart();renderQuick();buildPicker()}
@@ -877,7 +871,7 @@ $('share').onclick=async()=>{
   let blob=null;
   try{
     const canvas=await html2canvas($('capture'),{useCORS:true,backgroundColor:'#f5f8fb',scale:Math.min(2,devicePixelRatio||1),
-      ignoreElements:el=>el.hasAttribute&&el.hasAttribute('data-noshot')||el.id==='gframe'});
+      ignoreElements:el=>el.hasAttribute&&el.hasAttribute('data-noshot')});
     blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
   }catch(e){console.warn(e)}
   const fname=`thecyclistdubai-weather-${S.track}.png`;
