@@ -258,6 +258,7 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .ride-tag .star{background:#bef264;border-color:#bef264;color:#1a2e05}
 .ride-title{font-weight:800;font-size:14.5px;line-height:1.25;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ride-title span{color:#bef264}
+.ride-title .pace{color:#fff;font-size:11px;font-weight:800;background:#ffffff26;border:1px solid #ffffff40;border-radius:6px;padding:1px 6px;vertical-align:2px;white-space:nowrap}
 .ride-meta{font-size:11.5px;color:#dcfce7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ride-btns{flex:none;display:flex;gap:6px;align-items:center}
 .ride-btns a{text-decoration:none;font-size:12px;font-weight:800;padding:7px 11px;border-radius:10px;white-space:nowrap}
@@ -546,7 +547,7 @@ footer a:hover{color:var(--text)}
       <div class="ride-date"><span id="rideDow">SAT</span><b id="rideDay">--</b><span id="rideMon">---</span></div>
       <div class="ride-body">
         <div class="ride-tag"><span class="star">★ Recommended</span><span class="up">Next group ride</span></div>
-        <div class="ride-title">TCD Ride · <span>6:30 AM</span> · 86 km Al Qudra</div>
+        <div class="ride-title">TCD Ride · <span>6:30 AM</span> · 86 km Al Qudra · <span class="pace">33–35 km/h avg</span></div>
         <div class="ride-meta" id="rideWx">Forecast loading…</div>
       </div>
       <div class="ride-btns">
@@ -966,7 +967,7 @@ function shareText(){
   if(S.bestTxt)s+=`⭐ Best morning: ${S.bestTxt}\n`;
   s+=`👕 ${kitTip(h).replace(/<[^>]+>/g,'').replace(/^👕\s*/,'')}\n`;
   s+=`\n🎁 *Sponsor:* Lameda cycling apparel, use code *DXB* for *15% OFF*\nhttps://lameda.cc/\n`;
-  {const rd=S.rideDate||nextRideDate(),l=parseLocal(rd+'T00:00');s+=`\n🚴‍♂️ *Next group ride:* TCD Ride, Sat ${l.date} ${l.mon}, 6:30 AM, 86 km Al Qudra`+(S.rideTxt?` (forecast ${S.rideTxt})`:'')+`\nJoin: https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo\nLocation: ${'https://maps.app.goo.gl/ntyxGBSEaKip7akR8'}\n`}
+  {const rd=S.rideDate||nextRideDate(),l=parseLocal(rd+'T00:00');s+=`\n🚴‍♂️ *Next group ride:* TCD Ride, Sat ${l.date} ${l.mon}, 6:30 AM, 86 km Al Qudra, average speed 33–35 km/h`+(S.rideTxt?` (forecast ${S.rideTxt})`:'')+`\nJoin: https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo\nLocation: ${'https://maps.app.goo.gl/ntyxGBSEaKip7akR8'}\n`}
   s+=`\n📅 *Recommended event:* AD Ports Group Gran Fondo Abu Dhabi, Sun 20 Dec, 150 km Al Ain → Abu Dhabi\nhttps://abudhabigranfondo.ae/\n`;
   s+=`\n👥 Join our WhatsApp group: https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo\n📲 Live ride weather: ${location.href.split('#')[0]}`;
   return s;
