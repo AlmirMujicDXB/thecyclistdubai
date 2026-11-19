@@ -1009,9 +1009,10 @@ paintUnits();
 function toast(m,ms=3200){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),ms)}
 /* ================= share texts (built from site-data.js) ================= */
 const SITE=window.SITE||{links:{},sponsors:[],events:[],rides:[]};
-function siteUrl(){return /^https?:/.test(location.protocol)?location.origin+location.pathname:'https://almirmujicdxb.github.io/thecyclistdubai/'}
+function siteUrl(){return /^https?:/.test(location.protocol)?location.origin+location.pathname:'https://thecyclistdubai.com/'}
 function sponsorsText(){const sp=SITE.sponsors||[];if(!sp.length)return'';
   return '\n🎁 *Sponsor discounts*\n'+sp.map(x=>`• *${x.name}*${x.what?` (${x.what})`:''}: use code *${x.code}* for *${x.discount}*\n  ${x.url}`).join('\n')+'\n'}
+const sameLink=(a,b)=>!!a&&!!b&&a.split('?')[0].replace(/\/$/,'')===b.split('?')[0].replace(/\/$/,'');
 function footerText(){return `\n📲 Live ride weather & forecast: ${siteUrl()}`+(SITE.links.whatsappGroup?`\n👥 Join our WhatsApp group: ${SITE.links.whatsappGroup}`:'')}
 function weatherText(){
   if(!S.wx)return'TheCyclistDubai Weather\n'+siteUrl();
@@ -1026,7 +1027,7 @@ function weatherText(){
   if(segs.length)s+=`🧭 On the track (${$('xw').textContent.toLowerCase()}): headwind ${$('wsH').textContent} · tailwind ${$('wsT').textContent} · crosswind ${$('wsC').textContent}\n`;
   if(S.bestTxt)s+=`⭐ Best morning: ${S.bestTxt}\n`;
   s+=`👕 ${kitTip(h).replace(/<[^>]+>/g,'').replace(/^👕\s*/,'')}\n`;
-  const rides=upcomingRides();if(rides.length){const r=rides[0];s+=`\n🚴‍♂️ *Next group ride:* ${r.name}, ${occLabel(r.occ)} ${fmtTime(r.time)}, ${r.distance} ${r.place}${r.pace?`, ${r.pace}`:''}\n  Join: ${r.join}\n`}
+  const rides=upcomingRides();if(rides.length){const r=rides[0];s+=`\n🚴‍♂️ *Next group ride:* ${r.name}, ${occLabel(r.occ)} ${fmtTime(r.time)}, ${r.distance} ${r.place}${r.pace?`, ${r.pace}`:''}\n`+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`  Join: ${r.join}\n`:'')}
   const evs=upcomingEvents();if(evs.length)s+='\n📅 *Upcoming events*\n'+evs.map(e=>`• ${e.name}, ${occLabel(e.date)}${e.distance?`, ${e.distance}`:''}\n  ${e.url}`).join('\n')+'\n';
   return s+sponsorsText()+footerText();
 }
@@ -1186,7 +1187,7 @@ function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e
     (days>0?`⏳ ${days} days to go\n`:'')+(e.weRide?`💪 TheCyclistDubai is riding it. Join us!\n`:'')+`🔗 ${e.url}`}
 function rideText(r){const f=rideForecast(r);
   return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.place} · ${r.distance}${r.pace?` · ⚡ ${r.pace}`:''}\n`+
-    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+footerText()}
+    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+footerText()}
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\nUse code *${x.code}* for *${x.discount}*\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
 /* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */
