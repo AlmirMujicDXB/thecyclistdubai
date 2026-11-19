@@ -28,14 +28,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 a{color:inherit}
 
 /* ---------- header ---------- */
-header{display:flex;align-items:center;gap:12px;margin:2px 0 10px;padding:12px 14px 12px 16px;border-radius:18px;color:#fff;position:relative;overflow:hidden;
+header{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:12px;row-gap:10px;margin:2px 0 10px;padding:16px 16px 18px 18px;min-height:96px;border-radius:18px;color:#fff;position:relative;overflow:hidden;
   background:radial-gradient(90% 160% at 92% 0%,#fde68a 0%,#fbbf2499 22%,transparent 55%),linear-gradient(120deg,#7c2d12 0%,#9a3412 25%,#c2410c 52%,#ea580c 75%,#f59e0b 100%);box-shadow:0 10px 28px #c2410c40}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;pointer-events:none;opacity:.9;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 40' preserveAspectRatio='none'%3E%3Cpath d='M0 28 C60 10 110 12 170 26 S290 40 340 22 S390 14 400 18 V40 H0Z' fill='%23fcd34d' fill-opacity='.22'/%3E%3Cpath d='M0 34 C70 22 130 30 200 34 S320 26 400 32 V40 H0Z' fill='%23fef3c7' fill-opacity='.22'/%3E%3C/svg%3E") bottom/100% 100% no-repeat}
 header>*{position:relative;z-index:1}
 .brand{flex:1;min-width:0}
-.brand h1{font-size:19px;margin:0;letter-spacing:-.5px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand h1{font-size:22px;margin:0;letter-spacing:-.5px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand h1 span{background:linear-gradient(90deg,#fef3c7,#fde68a);-webkit-background-clip:text;background-clip:text;color:transparent}
-.brand .tag{display:flex;align-items:center;gap:8px;margin-top:5px;font-size:11.5px;color:#ffedd5;white-space:nowrap}
+header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:12.5px;color:#ffedd5;white-space:nowrap;justify-self:start}
 .wx-tag{font-weight:800;letter-spacing:1.4px;text-transform:uppercase;font-size:10px;color:#fff;background:#ffffff26;border:1px solid #ffffff40;padding:2px 7px;border-radius:6px}
 .clk{display:inline-flex;align-items:center;gap:5px;overflow:hidden;text-overflow:ellipsis}
 .clk i{width:6px;height:6px;border-radius:50%;background:#86efac;box-shadow:0 0 0 3px #86efac40;flex:none}
@@ -46,6 +46,8 @@ header>*{position:relative;z-index:1}
 .hbtns{display:flex;gap:8px;flex:none;position:relative;z-index:1}
 .ig.wa{color:#166534}
 .ig.wa .igi{background:#25d366}
+.ig.st{color:#c2410c}
+.ig.st .igi{background:#fc4c02}
 
 /* ---------- sticky control bar ---------- */
 .ctl{position:sticky;top:0;z-index:1200;margin:0 -16px 12px;padding:8px 16px 10px;background:#f5f8fbe8;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
@@ -294,8 +296,9 @@ footer a:hover{color:var(--text)}
   .hr{min-width:48px;padding:4px 5px 5px;font-size:12px}
   .hr small{font-size:9.5px}
   .hr i{margin-top:3px}
-  header{padding:9px 10px;gap:10px}
-  .brand h1{font-size:17px}
+  header{padding:12px 12px 14px 14px;column-gap:10px;row-gap:9px;min-height:0}
+  header .tag{font-size:12px}
+  .brand h1{font-size:19px}
   .ig{padding:3px 3px;gap:0}
   .ig .igt{display:none}
   .ig .igi{width:30px;height:30px}
@@ -352,7 +355,6 @@ footer a:hover{color:var(--text)}
 <header>
   <div class="brand">
     <h1>TheCyclist<span>Dubai</span></h1>
-    <div class="tag"><span class="wx-tag">Ride Weather</span><span class="clk"><i></i><b id="clk">--:--</b> <span id="clkd">Dubai</span></span></div>
   </div>
   <div class="hbtns">
     <a class="ig" href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener" title="Follow @thecyclistdubai on Instagram" data-noshot>
@@ -361,7 +363,11 @@ footer a:hover{color:var(--text)}
     <a class="ig wa" href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t" target="_blank" rel="noopener" title="Join TheCyclistDubai WhatsApp group" data-noshot>
       <span class="igi"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.13c-.24.68-1.41 1.3-1.95 1.38-.5.07-1.13.1-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2.01.89 2.16.07.14.12.31.02.5-.1.19-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.38-.24.65-.14.27.1 1.7.8 1.99.95.29.14.48.22.55.34.07.12.07.7-.17 1.38z"/></svg></span><span class="igt">Join group</span>
     </a>
+    <a class="ig st" href="https://www.strava.com/athletes/13924498" target="_blank" rel="noopener" title="Follow on Strava" data-noshot>
+      <span class="igi"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg></span><span class="igt">Strava</span>
+    </a>
   </div>
+  <div class="tag"><span class="wx-tag">Ride Weather</span><span class="clk"><i></i><b id="clk">--:--</b> <span id="clkd">Dubai</span></span></div>
 </header>
 
 <div class="ctl" id="ctl">
@@ -507,6 +513,7 @@ footer a:hover{color:var(--text)}
   <a href="quiz.html">Group Ride Etiquette Quiz</a>
   <a href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener">@thecyclistdubai</a>
   <a href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t" target="_blank" rel="noopener">WhatsApp group</a>
+  <a href="https://www.strava.com/athletes/13924498" target="_blank" rel="noopener">Strava</a>
 </footer>
 </div>
 
