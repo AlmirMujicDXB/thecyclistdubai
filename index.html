@@ -34,7 +34,7 @@ header{display:flex;align-items:center;gap:12px;padding:4px 0 10px}
 .brand h1{font-size:18px;margin:0;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand .clk{font-size:12px;color:var(--muted);margin-top:2px}
 .brand .clk b{font-family:"JetBrains Mono",monospace;color:var(--text);font-weight:700}
-.ig{width:36px;height:36px;border-radius:11px;flex:none;display:grid;place-items:center;color:#fff;background:linear-gradient(45deg,#f9a825,#e1306c 50%,#833ab4);box-shadow:0 4px 12px #e1306c40;transition:.15s}
+.ig{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;color:#fff;background:linear-gradient(45deg,#f9a825,#e1306c 50%,#833ab4);box-shadow:0 4px 12px #e1306c40;transition:.15s}
 .ig:hover{transform:scale(1.06)}
 
 /* ---------- sticky control bar ---------- */
@@ -122,10 +122,20 @@ header{display:flex;align-items:center;gap:12px;padding:4px 0 10px}
 .kv div{background:var(--panel2);border-radius:12px;padding:9px 4px;text-align:center}
 .kv span{display:block;font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
 .kv b{font:700 15px "JetBrains Mono",monospace}
-.score{margin-top:12px;background:var(--panel2);border-radius:14px;padding:12px 14px;display:flex;gap:14px;align-items:center}
+.score{margin-top:10px;background:var(--panel2);border-radius:14px;padding:12px 14px;display:flex;gap:14px;align-items:center}
 .ring{width:60px;height:60px;flex:none}
 .score .t1{font-weight:700}
 .score .t2{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.sky{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;font-weight:600}
+.sky #wxIcon{font-size:20px}
+.sky .units{margin:0 0 0 auto}
+.wt{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px;table-layout:fixed}
+.wt th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:7px 4px 7px 0;width:23%}
+.wt td{font:700 14px "JetBrains Mono",monospace;padding:7px 8px 7px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:27%}
+.wt tr+tr th,.wt tr+tr td{border-top:1px solid var(--line)}
+.wt td.sm{font-size:12px;letter-spacing:-.3px;overflow:visible}
+.wt .arr{display:inline-block;color:var(--accent);margin-right:6px;font-size:14px;transition:transform .7s}
+.wdesc{font-size:12px;color:var(--muted);margin-top:6px}
 .tip{margin-top:10px;font-size:13px;padding:10px 12px;border-radius:12px;line-height:1.45}
 .tip.kit{background:#fff7ed;color:#7c2d12}
 .tip.kite{background:#e0f2fe;color:#075985;display:none}
@@ -223,7 +233,7 @@ footer a:hover{color:var(--text)}
     <div class="clk"><b id="clk">--:--</b> · <span id="clkd">Dubai</span></div>
   </div>
   <a class="ig" href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener" title="Follow @thecyclistdubai on Instagram" aria-label="Instagram" data-noshot>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
   </a>
 </header>
 
@@ -268,46 +278,6 @@ footer a:hover{color:var(--text)}
       <span class="val" id="whenVal">—</span>
       <span id="liveTag" class="live"><i></i>LIVE</span>
     </div>
-    <div class="bigtemp">
-      <div class="v" id="temp">--<sup>°C</sup></div>
-      <div class="wx" id="wxIcon">⏳</div>
-    </div>
-    <div class="sub" id="wxDesc">Loading forecast…</div>
-    <div class="thermo"><b id="thermoB" style="left:50%"></b></div>
-    <div class="thermo-l"><span>10°</span><span>20°</span><span>30°</span><span>40°</span><span>50°</span></div>
-
-    <div class="windbox">
-      <svg class="compass" viewBox="0 0 150 150">
-        <circle cx="75" cy="75" r="70" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-        <g id="ticks"></g>
-        <text x="75" y="22" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="800">N</text>
-        <text x="131" y="79" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700">E</text>
-        <text x="75" y="137" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700">S</text>
-        <text x="19" y="79" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700">W</text>
-        <g class="needle" id="needle">
-          <path d="M75 30 L86 72 L75 66 L64 72 Z" fill="#65a30d"/>
-          <path d="M75 120 L83 80 L75 84 L67 80 Z" fill="#94a3b8"/>
-          <circle cx="75" cy="75" r="6" fill="#fff" stroke="#65a30d" stroke-width="2"/>
-        </g>
-      </svg>
-      <div class="wstats">
-        <div class="w" id="wspd">--<small> km/h</small></div>
-        <div class="dir" id="wdir">—</div>
-        <div class="desc" id="wdesc"></div>
-        <div class="units" id="units" data-noshot><button data-u="kmh">km/h</button><button data-u="kn">knots</button><button data-u="ms">m/s</button></div>
-      </div>
-    </div>
-
-    <div class="kv">
-      <div><span>Feels</span><b id="feels">--</b></div>
-      <div><span>Gusts</span><b id="gust">--</b></div>
-      <div><span>Humidity</span><b id="hum">--</b></div>
-      <div><span>UV</span><b id="uv">--</b></div>
-      <div><span>Rain</span><b id="rain">--</b></div>
-      <div><span>Sunrise</span><b id="sunr">--</b></div>
-      <div><span>Sunset</span><b id="suns">--</b></div>
-      <div><span>Crosswind</span><b id="xw">--</b></div>
-    </div>
 
     <div class="score">
       <svg class="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#e2e8f0" stroke-width="7"/><circle id="ringArc" cx="32" cy="32" r="27" fill="none" stroke="#65a30d" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 170" transform="rotate(-90 32 32)"/><text id="ringTxt" x="32" y="37" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a" font-family="JetBrains Mono">--</text></svg>
@@ -316,6 +286,20 @@ footer a:hover{color:var(--text)}
         <div class="t2" id="scoreD"></div>
       </div>
     </div>
+
+    <div class="sky"><span id="wxIcon">⏳</span><span id="wxDesc">Loading forecast…</span>
+      <div class="units" id="units" data-noshot><button data-u="kmh">km/h</button><button data-u="kn">kn</button><button data-u="ms">m/s</button></div>
+    </div>
+
+    <table class="wt">
+      <tr><th>Temp</th><td id="temp">--</td><th>Feels</th><td id="feels">--</td></tr>
+      <tr><th>Wind</th><td><span class="arr" id="wArr">➤</span><span id="wspd">--</span></td><th>Gusts</th><td id="gust">--</td></tr>
+      <tr><th>From</th><td id="wdir">--</td><th>Crosswind</th><td id="xw">--</td></tr>
+      <tr><th>Humidity</th><td id="hum">--</td><th>UV</th><td id="uv">--</td></tr>
+      <tr><th>Rain</th><td id="rain">--</td><th>Sun</th><td class="sm"><span id="sunr">--</span>–<span id="suns">--</span></td></tr>
+    </table>
+    <div class="wdesc" id="wdesc"></div>
+
     <div class="tip kit" id="kit"></div>
     <div class="tip kite" id="kite"></div>
   </div>
@@ -528,14 +512,13 @@ function renderCond(){
   const whenTxt=live?`Now · ${n.hour}:${n.minute}`:`${relDay(h.time)}, ${lt.day} ${lt.date} ${lt.mon} · ${lt.hm}`;
   $('liveTag').className=live?'live':'live fc';$('liveTag').innerHTML=live?'<i></i>LIVE':'<i></i>FORECAST';
   $('whenVal').textContent=whenTxt;
-  $('temp').innerHTML=`${Math.round(h.t)}<sup>°C</sup>`;
-  const [ic,desc]=wx(h.code,h.day);$('wxIcon').textContent=ic;$('wxDesc').textContent=`${desc} · feels like ${Math.round(h.fl)}°C`;
-  $('thermoB').style.left=Math.max(0,Math.min(100,(h.t-10)/40*100))+'%';
-  $('needle').style.transform=`rotate(${h.dir+180}deg)`;
-  $('wspd').innerHTML=`${spd(h.w)}<small> ${uLbl()}</small>`;
-  const c=card(h.dir);$('wdir').textContent=`From ${c} (${Math.round(h.dir)}°) → ${PTN[card(h.dir+180)]}`;
-  $('wdesc').textContent=windWords(h.w);
-  $('feels').textContent=Math.round(h.fl)+'°';$('gust').textContent=spd(h.g);$('hum').textContent=h.rh+'%';
+  $('temp').textContent=`${Math.round(h.t)}°C`;
+  const [ic,desc]=wx(h.code,h.day);$('wxIcon').textContent=ic;$('wxDesc').textContent=desc;
+  $('wArr').style.transform=`rotate(${h.dir+90}deg)`;
+  $('wspd').textContent=`${spd(h.w)} ${uLbl()}`;
+  const c=card(h.dir);$('wdir').textContent=`${c} ${Math.round(h.dir)}°`;
+  $('wdesc').textContent=`💨 Blowing ${PTN[card(h.dir+180)]}. ${windWords(h.w)}`;
+  $('feels').textContent=Math.round(h.fl)+'°C';$('gust').textContent=`${spd(h.g)} ${uLbl()}`;$('hum').textContent=h.rh+'%';
   $('uv').textContent=h.uv==null?'--':h.uv.toFixed(0);$('rain').textContent=(h.pp??0)+'%';
   const sun=sunFor(ti,h.time);$('sunr').textContent=sun?sun.rise:'--';$('suns').textContent=sun?sun.set:'--';
   const [lab,col,bg]=scoreInfo(h.score);
@@ -712,7 +695,6 @@ $('lmCode').addEventListener('click',async e=>{e.preventDefault();e.stopPropagat
     setInterval(()=>{els[k].classList.remove('on');k=(k+1)%els.length;els[k].classList.add('on')},3500)}catch(e){}})();
 
 /* ================= compass ticks & boot ================= */
-(function(){let g='';for(let i=0;i<72;i++){const a=i*5*Math.PI/180,r1=i%18===0?56:i%2===0?60:62;g+=`<line x1="${75+Math.sin(a)*r1}" y1="${75-Math.cos(a)*r1}" x2="${75+Math.sin(a)*65}" y2="${75-Math.cos(a)*65}" stroke="${i%18===0?'#65a30d':'#94a3b8'}" stroke-width="${i%18===0?2:1}"/>`}$('ticks').innerHTML=g})();
 renderTrackRow();renderDayRow();selectTrack(S.track);fetchWeather();
 </script>
 </body>
