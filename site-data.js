@@ -48,7 +48,9 @@ window.SITE = {
   /* ---------- GROUP RIDES ----------
      Use  weekly: 'Sat'  (Sun Mon Tue Wed Thu Fri Sat) for a repeating ride,
      or   date: '2026-12-05'  for a one-off ride.
-     track: alqudra | meydan | mushrif | kite | hatta  (used for the ride forecast) */
+     track: alqudra | meydan | mushrif | kite | hatta  (used for the ride forecast)
+     changes: one-off changes for a single date, e.g. { '2026-11-21': { time: '06:00' } }
+              or { '2026-12-25': { cancelled: true } } */
   rides: [
     {
       name: 'TCD Ride',
@@ -60,6 +62,9 @@ window.SITE = {
       pace: '33–35 km/h avg',
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
       location: 'https://maps.app.goo.gl/ntyxGBSEaKip7akR8',
+      changes: {
+        '2026-11-21': { time: '06:00' },   // this Saturday starts at 6:00 AM
+      },
     },
     // { name: 'Recovery Ride', date: '2026-12-02', time: '06:00', distance: '40 km', place: 'Meydan',
     //   track: 'meydan', pace: '28–30 km/h avg', join: 'https://chat.whatsapp.com/…', location: 'https://maps.app.goo.gl/…' },

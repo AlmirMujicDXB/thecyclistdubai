@@ -294,6 +294,7 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .ride-body{flex:1;min-width:0}
 .ride-tag{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:3px}
 .ride-tag span{font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#ffffff1f;border:1px solid #ffffff33;white-space:nowrap}
+.ride-tag .chg{background:#fbbf24;border-color:#fbbf24;color:#3b2a00}
 .ride-tag .star{background:#bef264;border-color:#bef264;color:#1a2e05}
 .ride-title{font-weight:800;font-size:14.5px;line-height:1.25;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ride-title span{color:#bef264}
@@ -1144,7 +1145,7 @@ function rideOcc(r){
   if(r.date)return Date.now()<tsOf(r.date,r.time)+4*36e5?r.date:null;
   const want=DOWN.indexOf((r.weekly||'').slice(0,3));if(want<0)return null;let d=todayStr();
   for(let k=0;k<8;k++){const dd=addDays(d,k);if(new Date(dd+'T00:00Z').getUTCDay()===want&&Date.now()<tsOf(dd,r.time)+4*36e5)return dd}return null}
-function upcomingRides(){return (SITE.rides||[]).map(r=>({...r,occ:rideOcc(r)})).filter(r=>r.occ).sort((a,b)=>tsOf(a.occ,a.time)-tsOf(b.occ,b.time))}
+function upcomingRides(){return (SITE.rides||[]).map(r=>{const occ=rideOcc(r),ov=occ&&r.changes&&r.changes[occ];return {...r,...(ov||{}),occ,changed:!!ov,usualTime:r.time}}).filter(r=>r.occ&&!r.cancelled).sort((a,b)=>tsOf(a.occ,a.time)-tsOf(b.occ,b.time))}
 function rideForecast(r){
   if(!S.wx)return null;const ti=Math.max(0,TRACKS.findIndex(t=>t.id===r.track)),H=S.wx[0].hourly.time,sh=+r.time.slice(0,2),hs=[];
   for(let i=S.minOff;i<=S.maxOff;i++){const t=H[S.start+i];if(t.startsWith(r.occ)){const h=parseLocal(t).h;if(h>=sh&&h<=sh+3)hs.push(hourAt(ti,i))}}
@@ -1179,7 +1180,7 @@ function renderRides(){
       <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
       <div class="ride-date"><span>${rd==='Today'?'TODAY':l.day.toUpperCase()}</span><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
       <div class="ride-body">
-        <div class="ride-tag"><span class="star">★ Recommended</span><span class="up">${i===0?'Next group ride':'Group ride'}</span>${r.pace?`<span class="pace">⚡ ${esc(r.pace)}</span>`:''}</div>
+        <div class="ride-tag"><span class="star">★ Recommended</span><span class="up">${i===0?'Next group ride':'Group ride'}</span>${r.changed&&r.time!==r.usualTime?`<span class="chg">🕕 New time ${fmtTime(r.time)}</span>`:''}${r.pace?`<span class="pace">⚡ ${esc(r.pace)}</span>`:''}</div>
         <div class="ride-title">${esc(r.name)} · <span>${fmtTime(r.time)}</span> · ${esc(r.distance)} ${esc(r.place)}</div>
         <div class="ride-meta">${fx}</div>
       </div>
@@ -1200,7 +1201,7 @@ function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e
     (e.distance||e.route?`🚴 ${[e.distance,e.route].filter(Boolean).join(' · ')}\n`:'')+(e.note?`🏅 ${e.note}\n`:'')+
     (days>0?`⏳ ${days} days to go\n`:'')+(e.weRide?`💪 TheCyclistDubai is riding it. Join us!\n`:'')+`🔗 ${e.url}`}
 function rideText(r){const f=rideForecast(r);
-  return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.place} · ${r.distance}${r.pace?` · ⚡ ${r.pace}`:''}\n`+
+  return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}${r.changed&&r.time!==r.usualTime?` (new time this week, usually ${fmtTime(r.usualTime)})`:''}\n📍 ${r.place} · ${r.distance}${r.pace?` · ⚡ ${r.pace}`:''}\n`+
     (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+footerText()}
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\nUse code *${x.code}* for *${x.discount}*\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
