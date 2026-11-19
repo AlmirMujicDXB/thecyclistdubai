@@ -12,7 +12,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
   --bg:#f5f8fb; --panel:#fff; --panel2:#f1f5f9; --line:#e2e8f0; --text:#0f172a; --muted:#4b5a6e;
@@ -274,7 +273,16 @@ footer a:hover{color:var(--text)}
 #modal .box{background:#fff;border-radius:18px;padding:20px;max-width:420px;width:100%}
 #modal .btns{display:flex;gap:8px;flex-wrap:wrap}
 #modal .btns a,#modal .btns button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700;text-decoration:none;color:var(--text)}
-#modal .btns a.wa{background:#25d366;border-color:#25d366;color:#fff}
+#modal .btns a.wa,#modal .btns button.wa{background:#25d366;border-color:#25d366;color:#fff}
+#modal .btns a.wa2{border-color:#25d366;color:#15803d}
+#modal .box{max-height:92vh;overflow:auto}
+#modal .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#modal .mh b{font-size:16px}
+#modal .mx{border:0;background:var(--panel2);border-radius:10px;width:32px;height:32px;font-size:14px;cursor:pointer}
+#modal .mprev{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--panel2);min-height:160px;margin-bottom:10px}
+#modal .mprev img{display:block;width:100%}
+#modal .mspin{position:absolute;inset:0;display:grid;place-items:center;font-size:13px;color:var(--muted);font-weight:600}
+#modal #mTxt{margin:0 0 12px;font-size:12.5px}
 
 /* ---------- responsive ---------- */
 @media (max-width:1000px){
@@ -525,13 +533,14 @@ footer a:hover{color:var(--text)}
 <div class="toast" id="toast"></div>
 <div id="modal">
   <div class="box">
-    <b style="font-size:16px">Share to WhatsApp</b>
-    <img id="mImg" style="width:100%;border-radius:10px;margin:12px 0;border:1px solid var(--line)" alt="Screenshot preview">
-    <p class="sub" id="mTxt" style="margin:0 0 14px"></p>
+    <div class="mh"><b>Share to WhatsApp</b><button class="mx" id="mClose" aria-label="Close">✕</button></div>
+    <div class="mprev"><img id="mImg" alt="Map image to share"><div class="mspin" id="mSpin">Preparing map image…</div></div>
+    <p class="sub" id="mTxt"></p>
     <div class="btns">
-      <a id="mWa" class="wa" target="_blank" rel="noopener">Open WhatsApp</a>
+      <button id="mShare" class="wa">Share image + text</button>
+      <a id="mWa" class="wa2" target="_blank" rel="noopener">Send text on WhatsApp</a>
       <a id="mDl">Download image</a>
-      <button onclick="document.getElementById('modal').style.display='none'">Close</button>
+      <button id="mCopy">Copy text</button>
     </div>
   </div>
 </div>
@@ -763,7 +772,7 @@ function renderCond(){
   $('mTemp').textContent=Math.round(h.t)+'°';$('mIcon').textContent=ic;
   $('mArrow').style.transform=`rotate(${h.dir+180}deg)`;$('mWind').textContent=`${spd(h.w)} ${uLbl()}`;$('mDir').textContent=`${c}`;
   $('mScore').textContent=`${lab} · ${h.score}`;$('mScore').style.color=col;$('mScore').style.background=bg;
-  colorTrack(h.dir);setParticles(h.dir,h.w);
+  colorTrack(h.dir);setParticles(h.dir,h.w);prepShot();
 }
 
 /* ================= best window ================= */
@@ -840,7 +849,7 @@ async function drawTrack(){
   S.axisBrg=(Math.atan2(ax[0],ax[1])*180/Math.PI+360)%360;
   lines.forEach(l=>{L.polyline(l.pts,{color:'#fff',weight:8,opacity:.8,interactive:false}).addTo(trackLayer);
     for(let i=0;i<l.pts.length-1;i++){const a=l.pts[i],b=l.pts[i+1];const p=L.polyline([a,b],{color:'#65a30d',weight:4.5,lineCap:'round'}).addTo(trackLayer);
-      p.bindTooltip(()=>segTip(p),{sticky:true});p._brg=bearing(a,b);p._km=dist(a,b);p._mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+      p.bindTooltip(()=>segTip(p),{sticky:true});p._brg=bearing(a,b);p._km=dist(a,b);p._mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];p._a=a;p._b=b;
       const vx=(b[1]-a[1])*k,vy=b[0]-a[0],mx=(p._mid[1]-cx0)*k,my=p._mid[0]-cy;
       p._ccw=(mx*vy-my*vx)>0; p._fwd=(vx*ax[0]+vy*ax[1])>=0; segs.push(p)}});
   paintDir();
@@ -905,25 +914,99 @@ function shareText(){
   if(!S.wx)return'TheCyclistDubai Weather';
   const ti=TI(),h=cur(ti),lt=parseLocal(h.time),[lab]=scoreInfo(h.score),n=dubaiNow();
   const when=(S.mode==='fc'&&S.sel===0)?`Now (${n.hour}:${n.minute})`:`${dateLabel(h.time.slice(0,10))}, ${lt.hm}`+(S.mode==='alt'?(h.kind==='past'?' (recorded)':' (typical)'):'');
-  let s=`🚴 *${T().name}*\n🕒 ${when} · Dubai\n🌡️ ${Math.round(h.t)}°C (feels ${Math.round(h.fl)}°C) ${wx(h.code,h.day)[0]}\n💨 Wind ${spd(h.w)} ${uLbl()} from ${card(h.dir)}, gusts ${spd(h.g)} ${uLbl()}\n💧 Humidity ${h.rh}% · UV ${h.uv==null?'-':h.uv.toFixed(0)}\n✅ Ride score ${h.score}/100 (${lab})`;
-  if(S.bestTxt)s+=`\n⭐ Best morning: ${S.bestTxt}`;
-  return s+`\n\n🎁 Lameda.cc · use code DXB for 15% OFF\n📲 TheCyclistDubai Weather: ${location.href.split('#')[0]}`;
+  const sun=sunFor(ti,h.time),uv=h.uv==null?'-':h.uv.toFixed(0),rain=h.pp!=null?h.pp+'%':h.mm!=null?h.mm.toFixed(1)+' mm':'-';
+  let s=`🚴 *${T().name}*\n🕒 ${when} · Dubai time\n\n`+
+    `🌡️ ${Math.round(h.t)}°C, feels ${Math.round(h.fl)}°C · ${wx(h.code,h.day)[1]} ${wx(h.code,h.day)[0]}\n`+
+    `💨 Wind ${spd(h.w)} ${uLbl()} from ${card(h.dir)}, gusts ${spd(h.g)} ${uLbl()}\n`+
+    `💧 Humidity ${h.rh}% · UV ${uv} · Rain ${rain}\n`+(sun?`🌅 Sunrise ${sun.rise} · Sunset ${sun.set}\n`:'')+
+    `✅ Ride score *${h.score}/100* (${lab})\n`;
+  if(segs.length)s+=`🧭 On the track (${$('xw').textContent.toLowerCase()}): headwind ${$('wsH').textContent} · tailwind ${$('wsT').textContent} · crosswind ${$('wsC').textContent}\n`;
+  if(S.bestTxt)s+=`⭐ Best morning: ${S.bestTxt}\n`;
+  s+=`👕 ${kitTip(h).replace(/<[^>]+>/g,'').replace(/^👕\s*/,'')}\n`;
+  s+=`\n🎁 *Sponsor:* Lameda cycling apparel, use code *DXB* for *15% OFF*\nhttps://lameda.cc/\n`;
+  s+=`\n📅 *Recommended event:* AD Ports Group Gran Fondo Abu Dhabi, Sun 20 Dec, 150 km Al Ain → Abu Dhabi\nhttps://abudhabigranfondo.ae/\n`;
+  s+=`\n👥 Join our WhatsApp group: https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo\n📲 Live ride weather: ${location.href.split('#')[0]}`;
+  return s;
 }
-$('share').onclick=async()=>{
-  const text=shareText();toast('📸 Taking screenshot…',8000);let blob=null;
-  try{const canvas=await html2canvas($('capture'),{useCORS:true,backgroundColor:'#f5f8fb',scale:Math.min(2,devicePixelRatio||1),
-      ignoreElements:el=>el.hasAttribute&&el.hasAttribute('data-noshot')});
-    blob=await new Promise(r=>canvas.toBlob(r,'image/png'))}catch(e){console.warn(e)}
-  const fname=`thecyclistdubai-weather-${S.track}.png`;
-  if(blob&&navigator.canShare){const file=new File([blob],fname,{type:'image/png'});
-    if(navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text,title:'TheCyclistDubai Weather'});toast('Choose WhatsApp in the share sheet ✔');return}catch(e){if(e.name==='AbortError'){toast('Share cancelled');return}}}}
-  $('mWa').href='https://wa.me/?text='+encodeURIComponent(text);
-  if(blob){const u=URL.createObjectURL(blob);$('mImg').src=u;$('mImg').style.display='block';$('mDl').href=u;$('mDl').download=fname;$('mDl').style.display='';
-    const a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();
-    $('mTxt').textContent='Screenshot saved to your Downloads. Tap Open WhatsApp, pick a chat and attach the image. The forecast text is already filled in.'}
-  else{$('mImg').style.display='none';$('mDl').style.display='none';$('mTxt').textContent='Screenshot isn\'t available in this browser, but you can still send the forecast as text.'}
-  $('toast').classList.remove('show');$('modal').style.display='grid';
+
+/* ---------- map image (drawn directly, no page screenshot) ---------- */
+function loadImg(src,ms=7000){return new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';let done=false;
+  const fin=v=>{if(!done){done=true;res(v)}};im.onload=()=>fin(im);im.onerror=()=>fin(null);setTimeout(()=>fin(null),ms);im.src=src})}
+const TILEURL={sat:(z,x,y)=>`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`,
+  cycle:(z,x,y)=>`https://${'abc'[(x+y)%3]}.tile-cyclosm.openstreetmap.fr/cyclosm/${z}/${x}/${y}.png`};
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+async function makeShot(){
+  const el=$('map'),W=Math.max(320,el.clientWidth),Hm=Math.max(240,el.clientHeight),sc=2,band=118;
+  const cv2=document.createElement('canvas');cv2.width=W*sc;cv2.height=(Hm+band)*sc;const c=cv2.getContext('2d');c.scale(sc,sc);
+  c.fillStyle='#e5e7eb';c.fillRect(0,0,W,Hm);
+  // tiles
+  const z=Math.round(map.getZoom()),pb=map.getPixelBounds(),n=2**z;
+  const tl=[];for(let tx=Math.floor(pb.min.x/256);tx<=Math.floor(pb.max.x/256);tx++)for(let ty=Math.floor(pb.min.y/256);ty<=Math.floor(pb.max.y/256);ty++){if(ty<0||ty>=n)continue;tl.push([tx,ty])}
+  const draw=async layer=>{const ims=await Promise.all(tl.map(([tx,ty])=>loadImg(TILEURL[layer](z,((tx%n)+n)%n,ty))));let ok=0;
+    ims.forEach((im,k)=>{if(im){ok++;c.drawImage(im,tl[k][0]*256-pb.min.x,tl[k][1]*256-pb.min.y,256,256)}});return ok};
+  let ok=await draw(S.layer);if(ok<tl.length/2&&S.layer!=='sat')await draw('sat');
+  // track
+  const h=cur(TI()),pt=ll=>{const q=map.latLngToContainerPoint(ll);return[q.x,q.y]};
+  c.lineCap='round';c.lineJoin='round';
+  if(segs.length){c.strokeStyle='rgba(255,255,255,.85)';c.lineWidth=7;c.beginPath();segs.forEach(p=>{const A=pt(p._a),B=pt(p._b);c.moveTo(A[0],A[1]);c.lineTo(B[0],B[1])});c.stroke();
+    ['cross','tail','head'].forEach(k=>{c.strokeStyle=KCOL[k];c.lineWidth=4.2;c.beginPath();segs.forEach(p=>{if(windKind(p,h.dir)!==k)return;const A=pt(p._a),B=pt(p._b);c.moveTo(A[0],A[1]);c.lineTo(B[0],B[1])});c.stroke()})}
+  const sp=pt([T().lat,T().lng]);c.fillStyle='#65a30d';c.strokeStyle='#fff';c.lineWidth=3;c.beginPath();c.arc(sp[0],sp[1],9,0,7);c.fill();c.stroke();
+  // weather card (top-left)
+  const [lab,col,bg]=scoreInfo(h.score),[ic,desc]=wx(h.code,h.day);
+  const cw=210,ch=128;c.shadowColor='rgba(15,23,42,.25)';c.shadowBlur=14;c.fillStyle='rgba(255,255,255,.95)';rr(c,12,12,cw,ch,14);c.fill();c.shadowBlur=0;
+  c.fillStyle='#0f172a';c.font='700 13px Sora,sans-serif';c.fillText(T().short,24,34);
+  c.fillStyle='#64748b';c.font='500 11px Sora,sans-serif';c.fillText($('mWhen').textContent,24,50);
+  c.fillStyle='#0f172a';c.font='800 36px Sora,sans-serif';c.fillText(Math.round(h.t)+'°',24,90);
+  c.font='26px sans-serif';c.fillText(ic,24+c.measureText(Math.round(h.t)+'°').width*1.0+28,88);
+  c.save();c.translate(32,108);c.rotate((h.dir+180)*Math.PI/180);c.fillStyle='#65a30d';c.beginPath();c.moveTo(0,-8);c.lineTo(6,7);c.lineTo(0,3);c.lineTo(-6,7);c.closePath();c.fill();c.restore();
+  c.fillStyle='#0f172a';c.font='700 13px "JetBrains Mono",monospace';c.fillText(`${spd(h.w)} ${uLbl()} ${card(h.dir)}`,46,113);
+  c.font='800 11px Sora,sans-serif';const sl=`${lab} · ${h.score}`,sw=c.measureText(sl).width+16;c.fillStyle=bg;rr(c,24,120,sw,16,6);c.fill();c.fillStyle=col;c.fillText(sl,32,132);
+  // bottom band
+  const y0=Hm;c.fillStyle='#ffffff';c.fillRect(0,y0,W,band);
+  c.fillStyle='#64748b';c.font='700 10px Sora,sans-serif';c.fillText('WIND ON THE TRACK · '+$('xw').textContent.toUpperCase(),14,y0+20);
+  const vals=segs.length?[['Headwind',$('wsH').textContent,KCOL.head],['Tailwind',$('wsT').textContent,KCOL.tail],['Crosswind',$('wsC').textContent,KCOL.cross]]:[];
+  let bx=14;const bw=W-28;c.fillStyle='#e2e8f0';rr(c,14,y0+28,bw,10,5);c.fill();
+  if(vals.length){c.save();rr(c,14,y0+28,bw,10,5);c.clip();vals.forEach(([,v,cl])=>{const w=bw*(parseInt(v)||0)/100;c.fillStyle=cl;c.fillRect(bx,y0+28,w,10);bx+=w});c.restore();
+    let lx=14;c.font='600 12px Sora,sans-serif';vals.forEach(([t,v,cl])=>{c.fillStyle=cl;c.beginPath();c.arc(lx+4,y0+56,4,0,7);c.fill();c.fillStyle='#0f172a';const s1=`${t} ${v}`;c.fillText(s1,lx+12,y0+60);lx+=c.measureText(s1).width+30})}
+  else{c.fillStyle='#64748b';c.font='600 12px Sora,sans-serif';c.fillText('Track loading…',14,y0+60)}
+  const g=c.createLinearGradient(0,0,W,0);g.addColorStop(0,'#7c2d12');g.addColorStop(.5,'#c2410c');g.addColorStop(1,'#f59e0b');c.fillStyle=g;c.fillRect(0,y0+band-40,W,40);
+  c.fillStyle='#fff';c.font='800 15px Sora,sans-serif';c.fillText('TheCyclist',14,y0+band-15);const tw=c.measureText('TheCyclist').width;c.fillStyle='#fde68a';c.fillText('Dubai',14+tw,y0+band-15);
+  c.fillStyle='#ffedd5';c.font='600 11px Sora,sans-serif';const rt='Ride Weather · '+(location.host||'thecyclistdubai');c.fillText(rt,W-14-c.measureText(rt).width,y0+band-16);
+  return await new Promise((res,rej)=>{try{cv2.toBlob(b=>b?res(b):rej(new Error('blob')),'image/png')}catch(e){rej(e)}});
+}
+const shot={key:null,blob:null,job:null};
+function shotKey(){const cc=map.getCenter();return[S.track,S.mode,S.sel,S.altH,S.alt&&S.alt.date,S.layer,S.unit,cc.lat.toFixed(4),cc.lng.toFixed(4),map.getZoom(),rideDir(),segs.length].join('|')}
+function getShot(){const k=shotKey();if(shot.key===k&&shot.blob)return Promise.resolve(shot.blob);if(shot.key===k&&shot.job)return shot.job;
+  shot.key=k;shot.blob=null;shot.job=makeShot().then(b=>{if(shot.key===k)shot.blob=b;return b}).catch(e=>{console.warn(e);if(shot.key===k)shot.job=null;return null});return shot.job}
+function prepShot(){clearTimeout(prepShot.t);prepShot.t=setTimeout(()=>{if(S.wx)getShot()},1500)}
+map.on('moveend',prepShot);
+const fname=()=>`thecyclistdubai-weather-${S.track}.png`;
+function fileOf(b){return new File([b],fname(),{type:'image/png'})}
+function canShareFile(b){try{return!!(b&&navigator.canShare&&navigator.canShare({files:[fileOf(b)]}))}catch(e){return false}}
+function copyText(t){try{navigator.clipboard.writeText(t).catch(()=>{})}catch(e){}}
+async function nativeShare(b,text){copyText(text);
+  try{await navigator.share({files:[fileOf(b)],text,title:'TheCyclistDubai Weather'});toast('Shared ✔ The text is also copied, paste it if WhatsApp drops it');return true}
+  catch(e){if(e.name==='AbortError')return true;return false}}
+$('share').onclick=()=>{
+  const text=shareText(),k=shotKey();
+  // fast path: image already prepared → open the share sheet straight from this tap
+  if(shot.key===k&&shot.blob&&canShareFile(shot.blob)){nativeShare(shot.blob,text).then(ok=>{if(!ok)openShareModal(text)});return}
+  openShareModal(text);
 };
+function openShareModal(text){
+  $('modal').style.display='grid';$('mImg').removeAttribute('src');$('mSpin').style.display='grid';$('mSpin').textContent='Preparing map image…';
+  $('mWa').href='https://wa.me/?text='+encodeURIComponent(text);$('mShare').style.display='none';$('mDl').style.display='none';
+  $('mTxt').textContent='The map image shows the track and weather. The message has all the details, sponsor code and event link.';
+  $('mCopy').onclick=()=>{copyText(text);toast('Text copied')};
+  getShot().then(b=>{
+    if(!b){$('mSpin').textContent='Map image isn\'t available right now. You can still send the text.';return}
+    const u=URL.createObjectURL(b);$('mImg').src=u;$('mSpin').style.display='none';$('mDl').href=u;$('mDl').download=fname();$('mDl').style.display='';
+    if(canShareFile(b)){$('mShare').style.display='';$('mShare').onclick=()=>nativeShare(b,text).then(ok=>{if(ok)$('modal').style.display='none';else toast('Sharing isn\'t available. Download the image and send the text.')})}
+    else $('mTxt').textContent='Download the image, then tap "Send text on WhatsApp" and attach it in the chat.';
+  });
+}
+$('mClose').onclick=()=>{$('modal').style.display='none'};
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').style.display='none'});
 
 /* ================= sponsor ================= */
 $('lmCode').addEventListener('click',async e=>{e.preventDefault();e.stopPropagation();
