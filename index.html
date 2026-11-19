@@ -1,1613 +1,908 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>Dubai Group Ride Etiquette – Quiz</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
-    <style>
-        /* ── Reset & Base ── */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #0f2b3d 0%, #1a4a5f 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 12px;
-            margin: 0;
-        }
-
-        .quiz-wrapper {
-            width: 100%;
-            max-width: 480px;
-            background: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-            overflow: hidden;
-            transition: all 0.2s;
-            border: 2px solid #fbbf24;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .quiz-header {
-            background: linear-gradient(145deg, #1e3a5f 0%, #2a4a6e 100%);
-            padding: 14px 16px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            border-bottom: 4px solid #fbbf24;
-            flex-shrink: 0;
-        }
-
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-brand .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: #ffffff;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #1e3a5f;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        .header-brand h1 {
-            font-size: 17px;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: -0.3px;
-            line-height: 1.2;
-        }
-
-        .header-brand h1 span {
-            font-weight: 500;
-            font-size: 10px;
-            opacity: 0.85;
-            display: block;
-            margin-top: 1px;
-        }
-
-        .header-brand h1 span a {
-            color: #fbbf24;
-            text-decoration: none;
-            border-bottom: 1px dotted rgba(251, 191, 36, 0.4);
-        }
-
-        .header-brand h1 span a:hover {
-            color: #ffffff;
-            border-bottom-color: #ffffff;
-        }
-
-        .header-badge {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(4px);
-            padding: 4px 12px;
-            border-radius: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            font-size: 11px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            align-self: flex-start;
-        }
-
-        .header-badge .dot {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse-dot 1.8s ease-in-out infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.85); }
-        }
-
-        .nav-tabs {
-            display: flex;
-            background: rgba(255,255,255,0.15);
-            border-radius: 40px;
-            padding: 3px;
-            margin-top: 4px;
-            flex-shrink: 0;
-        }
-
-        .nav-tab {
-            flex: 1;
-            padding: 6px 10px;
-            border: none;
-            border-radius: 30px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: transparent;
-            color: rgba(255,255,255,0.7);
-            text-align: center;
-        }
-
-        .nav-tab.active {
-            background: #ffffff;
-            color: #1e3a5f;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-
-        .nav-tab:hover:not(.active) {
-            background: rgba(255,255,255,0.2);
-            color: #ffffff;
-        }
-
-        .progress-section {
-            padding: 10px 16px 0;
-            background: #ffffff;
-            flex-shrink: 0;
-        }
-
-        .progress-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            font-weight: 600;
-            color: #1e3a5f;
-            margin-bottom: 4px;
-        }
-
-        .progress-track {
-            width: 100%;
-            height: 6px;
-            background: #e9edf2;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .progress-track .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #fbbf24, #f59e0b);
-            border-radius: 12px;
-            transition: width 0.5s ease;
-        }
-
-        .quiz-body {
-            padding: 16px 16px 8px;
-            flex: 1;
-        }
-
-        .question-card {
-            animation: fadeSlide 0.4s ease;
-        }
-
-        @keyframes fadeSlide {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .question-number {
-            display: inline-block;
-            background: #fef3c7;
-            color: #b45309;
-            font-weight: 700;
-            font-size: 11px;
-            padding: 3px 12px;
-            border-radius: 40px;
-            letter-spacing: 0.3px;
-            margin-bottom: 8px;
-            border: 1px solid #fcd34d;
-        }
-
-        .question-text {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1a202c;
-            line-height: 1.5;
-            margin-bottom: 14px;
-        }
-
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .option-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 11px 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background: #f7fafc;
-            cursor: pointer;
-            transition: all 0.15s;
-            touch-action: manipulation;
-        }
-
-        .option-item:hover {
-            border-color: #b0c4de;
-            background: #edf2f7;
-        }
-
-        .option-item.selected {
-            border-color: #2a5298;
-            background: #ebf4ff;
-            box-shadow: 0 2px 8px rgba(42, 82, 152, 0.15);
-        }
-
-        .option-item.correct {
-            border-color: #38a169;
-            background: #f0fff4;
-        }
-
-        .option-item.wrong {
-            border-color: #e53e3e;
-            background: #fff5f5;
-        }
-
-        .option-item.disabled {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
-        .option-item .radio {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #cbd5e0;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.15s;
-        }
-
-        .option-item.selected .radio {
-            border-color: #2a5298;
-            background: #2a5298;
-        }
-        .option-item.selected .radio::after {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: #ffffff;
-            border-radius: 50%;
-        }
-        .option-item.correct .radio {
-            border-color: #38a169;
-            background: #38a169;
-        }
-        .option-item.correct .radio::after {
-            content: '✓';
-            color: #fff;
-            font-size: 13px;
-            line-height: 1;
-            font-weight: 700;
-        }
-        .option-item.wrong .radio {
-            border-color: #e53e3e;
-            background: #e53e3e;
-        }
-        .option-item.wrong .radio::after {
-            content: '✕';
-            color: #fff;
-            font-size: 13px;
-            line-height: 1;
-            font-weight: 700;
-        }
-
-        .option-item .option-label {
-            font-size: 14px;
-            font-weight: 500;
-            color: #2d3748;
-            flex: 1;
-        }
-
-        .option-item .option-letter {
-            font-weight: 700;
-            color: #4a5568;
-            font-size: 12px;
-            margin-right: 4px;
-        }
-
-        .feedback-box {
-            margin-top: 14px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            display: none;
-            animation: fadeSlide 0.3s ease;
-        }
-
-        .feedback-box.show {
-            display: block;
-        }
-
-        .feedback-box.correct {
-            background: #f0fff4;
-            color: #276749;
-            border-left: 4px solid #38a169;
-        }
-
-        .feedback-box.wrong {
-            background: #fff5f5;
-            color: #9b2c2c;
-            border-left: 4px solid #e53e3e;
-        }
-
-        .nav-actions {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 16px;
-            gap: 8px;
-        }
-
-        .btn {
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 13px;
-            padding: 8px 14px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            touch-action: manipulation;
-            flex: 1;
-            min-width: 60px;
-        }
-
-        .btn-primary {
-            background: #2a5298;
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(42, 82, 152, 0.3);
-        }
-        .btn-primary:hover:not(:disabled) {
-            background: #1e3c72;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(42, 82, 152, 0.4);
-        }
-        .btn-primary:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-secondary {
-            background: #edf2f7;
-            color: #2d3748;
-        }
-        .btn-secondary:hover:not(:disabled) {
-            background: #e2e8f0;
-        }
-        .btn-secondary:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .btn-success {
-            background: #38a169;
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(56, 161, 105, 0.3);
-        }
-        .btn-success:hover {
-            background: #2f855a;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(56, 161, 105, 0.4);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #2a5298;
-            border: 2px solid #cbd5e0;
-        }
-        .btn-outline:hover {
-            background: #f7fafc;
-            border-color: #a0aec0;
-        }
-
-        .btn-whatsapp {
-            background: #25D366;
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
-        }
-        .btn-whatsapp:hover {
-            background: #1da851;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
-        }
-
-        .counter-text {
-            font-size: 13px;
-            font-weight: 600;
-            color: #4a5568;
-            padding: 0 4px;
-        }
-
-        .results-container {
-            text-align: center;
-            padding: 8px 0 4px;
-            animation: fadeSlide 0.5s ease;
-        }
-
-        .results-container .score-circle {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #f7fafc, #edf2f7);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 10px auto 16px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            border: 4px solid #fbbf24;
-        }
-
-        .results-container .score-circle .score-number {
-            font-size: 34px;
-            font-weight: 800;
-            color: #1a202c;
-            line-height: 1;
-        }
-
-        .results-container .score-circle .score-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #4a5568;
-            margin-top: 2px;
-        }
-
-        .results-container .result-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1a202c;
-            margin-bottom: 4px;
-        }
-
-        .results-container .result-sub {
-            font-size: 14px;
-            color: #4a5568;
-            max-width: 340px;
-            margin: 0 auto 10px;
-        }
-
-        .results-container .result-detail {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin: 12px 0 20px;
-            flex-wrap: wrap;
-        }
-
-        .results-container .result-detail .stat {
-            text-align: center;
-        }
-
-        .results-container .result-detail .stat .num {
-            font-size: 24px;
-            font-weight: 800;
-            color: #1a202c;
-        }
-
-        .results-container .result-detail .stat .label {
-            font-size: 11px;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        .results-container .result-detail .stat.pass .num {
-            color: #38a169;
-        }
-        .results-container .result-detail .stat.fail .num {
-            color: #e53e3e;
-        }
-
-        .results-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 6px;
-        }
-
-        .results-actions .btn {
-            flex: 1 1 auto;
-            min-width: 90px;
-        }
-
-        .cert-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #fef3c7;
-            padding: 6px 16px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 13px;
-            color: #92400e;
-            margin-bottom: 10px;
-            border: 2px solid #fcd34d;
-        }
-
-        .quiz-footer {
-            padding: 12px 16px 14px;
-            text-align: center;
-            border-top: 1px solid #e2e8f0;
-            background: #f7fafc;
-            flex-shrink: 0;
-        }
-
-        .footer-social {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .footer-social .label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        .social-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .social-links a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px 6px 10px;
-            border-radius: 40px;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.2s;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-        }
-
-        .social-links a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .social-links a svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-        }
-
-        .social-links a.instagram span {
-            color: #d62976;
-        }
-
-        .social-links a.whatsapp span {
-            color: #25D366;
-        }
-
-        .disclaimer {
-            margin-top: 10px;
-            font-size: 10px;
-            color: #718096;
-            line-height: 1.4;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 10px;
-        }
-
-        .disclaimer a {
-            color: #2a5298;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .disclaimer a:hover {
-            text-decoration: underline;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-6px); }
-            40% { transform: translateX(6px); }
-            60% { transform: translateX(-4px); }
-            80% { transform: translateX(4px); }
-        }
-
-        .shake {
-            animation: shake 0.4s ease;
-        }
-
-        .signal-box {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 6px;
-            padding: 8px 12px;
-            background: #f0f7ff;
-            border-radius: 10px;
-            border-left: 4px solid #2a5298;
-        }
-
-        .signal-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #1e3a5f;
-        }
-
-        .signal-item .icon {
-            font-size: 18px;
-        }
-
-        .signal-item .label {
-            font-weight: 400;
-            color: #4a5568;
-        }
-
-        .signal-na {
-            color: #a0aec0;
-            font-style: italic;
-            font-weight: 400;
-        }
-
-        .study-container {
-            padding: 4px 0;
-        }
-
-        .study-item {
-            background: #f7fafc;
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 10px;
-            border-left: 4px solid #2a5298;
-        }
-
-        .study-item .q {
-            font-weight: 700;
-            font-size: 14px;
-            color: #1a202c;
-        }
-
-        .study-item .a {
-            font-size: 13px;
-            color: #2d3748;
-            margin-top: 3px;
-        }
-
-        .study-item .a strong {
-            color: #38a169;
-        }
-
-        .study-item .explanation {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 4px;
-            background: #edf2f7;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-
-        .study-item .signals {
-            margin-top: 4px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .study-item .signals .tag {
-            background: #e0e7ff;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #2a5298;
-        }
-
-        .study-item .signals .tag.verbal {
-            background: #fef3c7;
-            color: #b45309;
-        }
-
-        @media (max-width: 480px) {
-            .quiz-wrapper {
-                border-radius: 20px;
-                max-width: 100%;
-            }
-            .quiz-header {
-                padding: 12px 14px 10px;
-            }
-            .header-brand h1 {
-                font-size: 16px;
-            }
-            .header-brand .logo-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
-            }
-            .quiz-body {
-                padding: 12px 14px 6px;
-            }
-            .question-text {
-                font-size: 15px;
-            }
-            .option-item {
-                padding: 10px 12px;
-                gap: 10px;
-            }
-            .option-item .option-label {
-                font-size: 13px;
-            }
-            .btn {
-                font-size: 12px;
-                padding: 8px 12px;
-                min-width: 55px;
-            }
-            .nav-actions {
-                gap: 6px;
-            }
-            .counter-text {
-                font-size: 12px;
-            }
-            .signal-box {
-                flex-direction: column;
-                gap: 4px;
-            }
-            .results-actions .btn {
-                min-width: 70px;
-            }
-            .nav-tab {
-                font-size: 12px;
-                padding: 5px 8px;
-            }
-            .social-links a {
-                font-size: 12px;
-                padding: 5px 12px 5px 8px;
-            }
-            .social-links a svg {
-                width: 18px;
-                height: 18px;
-            }
-            .footer-social .label {
-                font-size: 11px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .header-brand h1 {
-                font-size: 14px;
-            }
-            .question-text {
-                font-size: 14px;
-            }
-            .option-item .option-label {
-                font-size: 12px;
-            }
-            .social-links {
-                flex-direction: column;
-                align-items: center;
-            }
-            .social-links a {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f8fb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>TheCyclistDubai Weather · Al Qudra, Meydan, Mushrif, Kite Beach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{
+  --bg:#f5f8fb; --panel:#ffffff; --panel2:#f1f5f9; --line:#e2e8f0; --text:#0f172a; --muted:#64748b;
+  --accent:#65a30d; --hot:#ea580c; --cool:#0284c7; --good:#16a34a; --warn:#d97706; --bad:#dc2626;
+  --shadow:0 1px 2px #0f172a0a,0 6px 20px #0f172a0d;
+  --r:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:Sora,system-ui,sans-serif}
+body{background:radial-gradient(1200px 600px at 85% -10%,#ecfccb 0%,transparent 60%),radial-gradient(900px 500px at -10% 5%,#e0f2fe 0%,transparent 55%),var(--bg);min-height:100vh;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:1280px;margin:0 auto;padding:18px 18px 40px}
+.mono{font-family:"JetBrains Mono",monospace}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* header */
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#a3e635,#65a30d);display:grid;place-items:center;color:#fff;font-size:24px;box-shadow:0 6px 18px #65a30d40;flex:none}
+.brand h1{font-size:20px;margin:0;letter-spacing:-.3px}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.clock{text-align:right}
+.clock .t{font-family:"JetBrains Mono",monospace;font-size:28px;font-weight:700;letter-spacing:1px}
+.clock .d{color:var(--muted);font-size:12px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{background:none;border:0;padding:7px 11px;border-radius:9px;font-size:12px;color:var(--muted);font-weight:600}
+.seg button.on{background:var(--accent);color:#fff}
+.btn{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 14px;font-size:13px;font-weight:600;display:inline-flex;gap:8px;align-items:center;transition:.15s}
+.btn:hover{border-color:var(--accent)}
+.btn.wa{background:#25d366;border-color:#25d366;color:#fff}
+.btn.wa:hover{filter:brightness(1.08)}
+
+/* track tabs */
+.tracks{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.tcard{position:relative;box-shadow:var(--shadow);text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;transition:.2s;overflow:hidden}
+.tcard:hover{transform:translateY(-2px);border-color:#94a3b8}
+.tcard.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset,0 10px 30px #65a30d22;background:#f7fee7}
+.tcard .nm{font-weight:700;font-size:14px}
+.tcard .ar{color:var(--muted);font-size:11px;margin-top:2px}
+.tcard .row{display:flex;align-items:center;gap:10px;margin-top:10px;font-family:"JetBrains Mono",monospace;font-size:13px}
+.tcard .row .tmp{font-size:20px;font-weight:700}
+.tcard .mini{width:18px;height:18px;transition:transform .5s}
+.tcard .sc{margin-left:auto;font-size:11px;padding:3px 7px;border-radius:8px;font-weight:700}
+
+/* layout */
+.grid{display:grid;grid-template-columns:380px 1fr;gap:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 10px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.when{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.when .lbl{font-size:13px;color:var(--muted)}
+.when .val{font-weight:700;font-size:15px}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--good);font-weight:700}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--good);animation:pulse 1.6s infinite}
+.fc{color:var(--warn)} .fc i{background:var(--warn)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 #16a34a88}100%{box-shadow:0 0 0 10px #16a34a00}}
+.bigtemp{display:flex;align-items:center;gap:16px;margin:8px 0 4px}
+.bigtemp .v{font-size:64px;font-weight:800;line-height:1;letter-spacing:-2px}
+.bigtemp .v sup{font-size:26px;vertical-align:top;margin-left:2px}
+.bigtemp .wx{font-size:40px}
+.sub{color:var(--muted);font-size:13px}
+.thermo{height:8px;border-radius:6px;background:linear-gradient(90deg,#0284c7,#16a34a 35%,#d97706 60%,#ea580c 78%,#dc2626);position:relative;margin:14px 0 4px}
+.thermo b{position:absolute;top:-5px;width:6px;height:18px;margin-left:-3px;border-radius:3px;background:#0f172a;border:2px solid #fff;box-shadow:0 1px 4px #0f172a55;transition:left .5s}
+.thermo-l{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.windbox{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center;margin-top:16px}
+.compass{width:150px;height:150px}
+.compass .needle{transition:transform .7s cubic-bezier(.3,1.4,.5,1);transform-origin:75px 75px}
+.wstats .w{font-size:34px;font-weight:800;font-family:"JetBrains Mono",monospace}
+.wstats .w small{font-size:14px;color:var(--muted);font-weight:500}
+.wstats .dir{font-size:14px;font-weight:600;margin-top:2px}
+.wstats .desc{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+.kv{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.kv div{background:var(--panel2);border-radius:12px;padding:9px 8px;text-align:center}
+.kv span{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.kv b{font-family:"JetBrains Mono",monospace;font-size:15px}
+.score{margin-top:16px;background:var(--panel2);border-radius:14px;padding:12px 14px;display:flex;gap:14px;align-items:center}
+.ring{width:64px;height:64px;flex:none}
+.score .t1{font-weight:700}
+.score .t2{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.kite{margin-top:10px;font-size:12px;padding:8px 12px;border-radius:12px;background:#e0f2fe;color:#075985;display:none}
+
+/* map */
+.mapcard{padding:0;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.maphead{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.maphead .ti{font-weight:700}
+.maphead .ti small{display:block;color:var(--muted);font-weight:400;font-size:11px;margin-top:2px}
+.mapbox{position:relative;height:520px;flex:1 0 auto}
+#map,#gframe,#wind{position:absolute;inset:0;width:100%;height:100%}
+#gframe{border:0;display:none;background:#e5e7eb}
+#wind{pointer-events:none;z-index:450}
+.leaflet-container{background:#e5e7eb;font-family:Sora,sans-serif}
+.mapover{position:absolute;z-index:500;left:12px;bottom:12px;background:#ffffffe6;backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:11px;max-width:260px}
+.mapover .lg{display:flex;align-items:center;gap:8px;margin-top:4px}
+.mapover .sw{width:22px;height:5px;border-radius:3px}
+.windbadge{position:absolute;z-index:500;right:12px;top:12px;background:#ffffffe6;backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:14px;padding:8px 12px;display:flex;align-items:center;gap:10px}
+.windbadge svg{transition:transform .7s}
+.windbadge b{font-family:"JetBrains Mono",monospace;font-size:18px}
+.maploading{position:absolute;z-index:600;left:50%;top:12px;transform:translateX(-50%);background:#ffffffee;border:1px solid var(--line);padding:6px 12px;border-radius:20px;font-size:12px;display:none}
+.views{display:flex;gap:6px;flex-wrap:wrap}
+.views .seg button{padding:6px 9px}
+.gl{font-size:10px;color:var(--muted);align-self:center;margin:0 2px 0 6px;text-transform:uppercase;letter-spacing:1px}
+
+/* timeline */
+.timeline{margin-top:16px;min-width:0}
+.tlhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.quick{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600}
+.chip:hover,.chip.on{border-color:var(--accent);color:var(--accent)}
+.chartwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+#chart{width:100%;height:auto;display:block;cursor:crosshair;user-select:none;touch-action:pan-x pan-y}
+input[type=range]{width:100%;accent-color:var(--accent);margin-top:6px}
+.best{display:flex;align-items:center;gap:10px;font-size:13px;background:linear-gradient(90deg,#65a30d22,transparent);border:1px solid #65a30d44;padding:8px 12px;border-radius:12px}
+.best b{color:var(--accent)}
+
+.picker{display:flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:4px 8px}
+.picker input,.picker select{background:transparent;color:var(--text);border:0;font:600 13px "JetBrains Mono",monospace;padding:4px;color-scheme:light;outline:none;min-width:0}
+.picker select option{background:#ffffff}
+.picker select option:disabled{color:#94a3b8}
+.iglink{color:var(--accent);text-decoration:none;font-weight:600}
+.btn.ig{text-decoration:none;color:#fff;background:linear-gradient(45deg,#f9a825,#e1306c 50%,#833ab4);border:0}
+.sponsors{margin-top:16px}
+.sponsors h3{margin:0 0 10px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.spgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
+.sp{border-radius:16px;min-height:150px;overflow:hidden}
+.sp.empty{border:2px dashed #cbd5e1;display:grid;place-items:center;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:13px;background:repeating-linear-gradient(135deg,transparent 0 14px,#0f172a06 14px 28px)}
+.sp.lameda{display:grid;grid-template-columns:1.1fr 1fr;background:#f4f1ec;color:#111;text-decoration:none;border:1px solid #f4f1ec;transition:.2s}
+.sp.lameda:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0006}
+.lmart{position:relative;background:#111 center/cover no-repeat;min-height:150px;overflow:hidden}
+.lmart img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s}
+.lmart img.on{opacity:1}
+.lmart .fb{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 30% 30%,#2b2b2b,#0d0d0d);color:#f4f1ec;font:800 28px Sora;letter-spacing:6px}
+.lmbody{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.lmname{font:800 22px Sora;letter-spacing:5px}
+.lmtag{font-size:12px;font-style:italic;color:#444}
+.lmdesc{font-size:12px;color:#555;margin-top:4px;line-height:1.4}
+.lmcode{margin-top:8px;align-self:flex-start;background:#111;color:#f4f1ec;border-radius:10px;padding:8px 12px;font-size:13px;border:2px dashed #f4f1ec;outline:2px solid #111;cursor:pointer}
+.lmcode b{color:#bef264;letter-spacing:1px}
+.lmcode i{font-style:normal;opacity:.7;margin-left:4px}
+.lmcta{margin-top:8px;margin-top:auto;font-size:12px;font-weight:700;border-bottom:2px solid #111;align-self:flex-start}
+@media (max-width:1000px){.spgrid{grid-template-columns:1fr 1fr 1fr}.sp.lameda{grid-column:1/-1}}
+@media (max-width:520px){.sp.lameda{grid-template-columns:1fr}}
+footer{margin-top:18px;color:var(--muted);font-size:11px;line-height:1.6}
+footer a{color:#334155}
+.err{display:none;background:#fef2f2;border:1px solid #dc262666;color:#991b1b;padding:10px 14px;border-radius:12px;margin-bottom:12px;font-size:13px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140px);background:#0f172a;color:#fff;padding:12px 18px;border-radius:14px;font-size:13px;font-weight:600;z-index:9999;transition:.3s;max-width:90vw;box-shadow:0 10px 40px #0f172a33}
+.toast{opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.skel{opacity:.35}
+
+@media (max-width:1000px){
+  .grid{grid-template-columns:1fr}
+  .tracks{grid-template-columns:repeat(2,1fr)}
+  .mapbox{height:420px}
+}
+@media (max-width:680px){
+  .wrap{padding:12px 12px calc(96px + env(safe-area-inset-bottom))}
+  header{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:12px}
+  .brand h1{font-size:17px}
+  .brand p{font-size:11px}
+  .logo{width:38px;height:38px;font-size:20px}
+  .clock{text-align:right}
+  .clock .t{font-size:20px}
+  .clock .d{font-size:10px;max-width:130px;margin-left:auto}
+  .toolbar{grid-column:1/-1;order:3;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
+  .toolbar>*{flex:none}
+  .btn{padding:10px 14px;min-height:42px}
+  .btn.wa{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:9000;border-radius:30px;padding:14px 20px;box-shadow:0 8px 24px #25d36666,0 2px 6px #0f172a33;font-size:14px}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+  .tracks{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin:0 -12px 12px;padding:2px 12px 6px;scrollbar-width:none}
+  .tracks::-webkit-scrollbar{display:none}
+  .tcard{flex:0 0 72%;scroll-snap-align:start}
+  .maphead{padding:10px 12px}
+  .views{flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:none;padding-bottom:2px}
+  .views::-webkit-scrollbar{display:none}
+  .views .seg{flex:none}
+  .seg button{padding:9px 11px;min-height:38px}
+  .mapbox{height:380px}
+  .mapover{left:8px;bottom:8px;padding:7px 9px;font-size:10px}
+  .mapover .sub{display:none}
+  .windbadge{right:8px;top:8px;padding:6px 10px}
+  .windbadge b{font-size:15px}
+  .bigtemp .v{font-size:54px}
+  .windbox{grid-template-columns:118px 1fr;gap:12px}
+  .compass{width:118px;height:118px}
+  .wstats .w{font-size:28px}
+  .kv{grid-template-columns:repeat(4,1fr);gap:6px}
+  .kv div{padding:8px 4px}
+  .kv b{font-size:13px}
+  .kv span{font-size:9px;letter-spacing:.3px}
+  .tlhead{flex-direction:column;align-items:stretch}
+  .picker{justify-content:center;padding:6px 10px;width:100%}
+  .picker input{flex:1;max-width:170px}
+  .picker input,.picker select{font-size:15px;min-height:34px}
+  .quick{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .quick::-webkit-scrollbar{display:none}
+  .chip{flex:none;padding:8px 13px;font-size:13px}
+  #chart{min-width:880px}
+  input[type=range]{height:32px}
+  .best{flex-wrap:wrap;font-size:12px}
+  .spgrid{grid-template-columns:1fr 1fr 1fr}
+  .sp{min-height:90px}
+  .sp.empty{font-size:11px;letter-spacing:1px}
+  footer{font-size:10.5px}
+}
+@media (max-width:380px){
+  .kv{grid-template-columns:repeat(2,1fr)}
+  .tcard{flex-basis:80%}
+}
+</style>
 </head>
 <body>
-    <div class="quiz-wrapper" id="app">
-        <header class="quiz-header">
-            <div class="header-brand">
-                <div class="logo-icon">🚴</div>
-                <h1>
-                    Dubai Group Ride Etiquette
-                    <span>Cycling Tracks Etiquette &amp; Safety Quiz – <a href="https://thecyclistdubai.com" target="_blank">thecyclistdubai.com</a></span>
-                </h1>
-            </div>
-            <div class="header-badge">
-                <span class="dot"></span>
-                <span id="statusBadge">Ready</span>
-            </div>
-            <div class="nav-tabs" id="navTabs">
-                <button class="nav-tab active" data-view="quiz">📝 Quiz</button>
-                <button class="nav-tab" data-view="study">📖 Study</button>
-            </div>
-        </header>
+<div class="wrap" id="capture">
 
-        <div class="progress-section" id="progressSection">
-            <div class="progress-meta">
-                <span id="questionCounter">Q1 of 20</span>
-                <span id="scoreDisplay">0 correct</span>
-            </div>
-            <div class="progress-track">
-                <div class="progress-fill" id="progressFill" style="width:0%;"></div>
-            </div>
-        </div>
+<header>
+  <div class="brand">
+    <div class="logo">🚴</div>
+    <div>
+      <h1>TheCyclistDubai Weather</h1>
+      <p>Live conditions & 48-hour forecast on Dubai's cycling tracks</p>
+    </div>
+  </div>
+  <div class="toolbar" data-noshot>
+    <div class="seg" id="units">
+      <button data-u="kmh" class="on">km/h</button><button data-u="kn">knots</button><button data-u="ms">m/s</button>
+    </div>
+    <a class="btn ig" href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg> Follow</a>
+    <button class="btn" id="refresh" title="Refresh forecast">⟳ Refresh</button>
+    <button class="btn wa" id="share">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.13c-.24.68-1.41 1.3-1.95 1.38-.5.07-1.13.1-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2.01.89 2.16.07.14.12.31.02.5-.1.19-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.38-.24.65-.14.27.1 1.7.8 1.99.95.29.14.48.22.55.34.07.12.07.7-.17 1.38z"/></svg>
+      Share to WhatsApp
+    </button>
+  </div>
+  <div class="clock">
+    <div class="t" id="clk">--:--:--</div>
+    <div class="d" id="clkd">Dubai time (GST)</div>
+  </div>
+</header>
 
-        <div class="quiz-body" id="quizBody">
-            <div id="renderTarget"></div>
-        </div>
+<div class="err" id="err"></div>
 
-        <div class="quiz-footer">
-            <div class="footer-social">
-                <span class="label">🚴 Brought to you by</span>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/thecyclistdubai/?hl=en" target="_blank" class="instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                        <span>@thecyclistdubai</span>
-                    </a>
-                    <a href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t" target="_blank" class="whatsapp">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                        </svg>
-                        <span>TCD Group Ride</span>
-                    </a>
-                </div>
-            </div>
-            <div class="disclaimer">
-                ⚠️ <strong>Disclaimer:</strong> This quiz is for educational and entertainment purposes only. It is not a substitute for official cycling rules and regulations. 
-                Always prioritise your safety and that of others. The creators are not liable for any incidents or injuries. 
-                For the official rules and regulations, please visit the <a href="https://www.rta.ae/wps/portal/rta/ae/home/about-rta/cycling-track" target="_blank">RTA Cycling Track page</a>.
-            </div>
-        </div>
+<div class="tracks" id="tracks"></div>
+
+<div class="grid">
+  <!-- left: conditions -->
+  <div class="panel" id="cond">
+    <div class="when">
+      <span class="lbl" id="whenLbl">Conditions</span>
+      <span id="liveTag" class="live"><i></i>LIVE</span>
+    </div>
+    <div class="val" id="whenVal" style="font-weight:700;font-size:15px">—</div>
+
+    <div class="bigtemp">
+      <div class="v mono" id="temp">--<sup>°C</sup></div>
+      <div>
+        <div class="wx" id="wxIcon">⏳</div>
+      </div>
+    </div>
+    <div class="sub" id="wxDesc">Loading forecast…</div>
+    <div class="thermo"><b id="thermoB" style="left:50%"></b></div>
+    <div class="thermo-l"><span>10°</span><span>20°</span><span>30°</span><span>40°</span><span>50°</span></div>
+
+    <div class="windbox">
+      <svg class="compass" viewBox="0 0 150 150" id="compass">
+        <defs>
+          <radialGradient id="cg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f1f5f9"/></radialGradient>
+          <linearGradient id="ng" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#65a30d"/><stop offset="1" stop-color="#4d7c0f"/></linearGradient>
+        </defs>
+        <circle cx="75" cy="75" r="70" fill="url(#cg)" stroke="#cbd5e1" stroke-width="2"/>
+        <g id="ticks"></g>
+        <text x="75" y="22" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="800">N</text>
+        <text x="131" y="79" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700">E</text>
+        <text x="75" y="137" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700">S</text>
+        <text x="19" y="79" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700">W</text>
+        <g class="needle" id="needle">
+          <path d="M75 30 L86 72 L75 66 L64 72 Z" fill="url(#ng)"/>
+          <path d="M75 120 L83 80 L75 84 L67 80 Z" fill="#94a3b8"/>
+          <circle cx="75" cy="75" r="6" fill="#ffffff" stroke="#65a30d" stroke-width="2"/>
+        </g>
+      </svg>
+      <div class="wstats">
+        <div class="w" id="wspd">--<small> km/h</small></div>
+        <div class="dir" id="wdir">—</div>
+        <div class="desc" id="wdesc">Arrow shows where the wind is blowing <em>to</em>.</div>
+      </div>
     </div>
 
-    <script>
-        (function() {
-            'use strict';
+    <div class="kv">
+      <div><span>Feels</span><b id="feels">--</b></div>
+      <div><span>Gusts</span><b id="gust">--</b></div>
+      <div><span>Humidity</span><b id="hum">--</b></div>
+      <div><span>UV</span><b id="uv">--</b></div>
+      <div><span>Rain</span><b id="rain">--</b></div>
+      <div><span>Sunrise</span><b id="sunr">--</b></div>
+      <div><span>Sunset</span><b id="suns">--</b></div>
+      <div><span>Cross-wind</span><b id="xw">--</b></div>
+    </div>
 
-            // ─── 20 QUESTIONS – concise & clear ────────────────────────
-            const QUESTIONS = [{
-                id: 1,
-                text: 'Hand signal for a right turn?',
-                options: [
-                    'Left arm straight out',
-                    'Right arm straight out',
-                    'Left arm bent up',
-                    'Right arm bent down'
-                ],
-                correct: 1,
-                explanation: 'Extend right arm straight out for a right turn. Left arm out signals left turn.',
-                visual: 'Right arm straight out',
-                verbal: 'Right turn'
-            }, {
-                id: 2,
-                text: 'Best formation on narrow bridges, underpasses, or construction zones?',
-                options: [
-                    'Single file',
-                    'Two abreast',
-                    'Staggered',
-                    'Ride in the middle'
-                ],
-                correct: 0,
-                explanation: 'Single file is safest in narrow or obstructed areas, allowing others to pass safely.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 3,
-                text: 'What does a raised hand straight up signal?',
-                options: [
-                    'Turn left',
-                    'Speed up',
-                    'Stop',
-                    'Hazard ahead'
-                ],
-                correct: 2,
-                explanation: 'Raise your hand straight up to signal the group needs to stop.',
-                visual: 'Raised hand straight up',
-                verbal: 'Stop'
-            }, {
-                id: 4,
-                text: 'Signal for finishing a pull at the front and rotating back?',
-                options: [
-                    'Say "Rider change" + circular motion pointing down',
-                    'Say "Rider up" + pat hip',
-                    'Say "Rider off" + wave sideways',
-                    'Say "Clear" + raise hand up'
-                ],
-                correct: 0,
-                explanation: 'Call "Rider change" and make a circular motion with one hand pointing downward to signal rotation to the back.',
-                visual: 'Circular motion with finger pointing down',
-                verbal: '"Rider change"'
-            }, {
-                id: 5,
-                text: 'Signal when passing another group or rider?',
-                options: [
-                    'Say "Rider change" and point down',
-                    'Say "Passing left" and point left',
-                    'Say "Car back" and wave arm',
-                    'Say "Stop" and raise hand'
-                ],
-                correct: 1,
-                explanation: 'Call "Passing left" (or "On your left") and clearly point left to alert riders ahead.',
-                visual: 'Point to the left',
-                verbal: '"Passing left"'
-            }, {
-                id: 6,
-                text: 'How to signal slowing down?',
-                options: [
-                    'Raise hand straight up',
-                    'Pat air with palm down',
-                    'Point arm down at ground',
-                    'Wave arm in circle'
-                ],
-                correct: 1,
-                explanation: 'Pat the air with an outstretched arm, palm down, to signal slowing.',
-                visual: 'Pat air with palm down',
-                verbal: 'Slowing'
-            }, {
-                id: 7,
-                text: 'What does pointing down at the road mean?',
-                options: [
-                    'Turn left',
-                    'Stop',
-                    'Hazard ahead (pothole, debris)',
-                    'Speed up'
-                ],
-                correct: 2,
-                explanation: 'Pointing down warns riders behind of a hazard like potholes or debris.',
-                visual: 'Point down at road',
-                verbal: '"Hole" or "Hazard"'
-            }, {
-                id: 8,
-                text: 'Safe following distance between wheels?',
-                options: [
-                    '10-20 cm (4-8 inches)',
-                    '30-60 cm (1-2 feet)',
-                    '100-150 cm (3-5 feet)',
-                    'As close as possible'
-                ],
-                correct: 1,
-                explanation: 'Keep 30-60 cm (1-2 feet) between wheels for safe braking and drafting.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 9,
-                text: 'Recommended group size on Al Qudra Cycling Track?',
-                options: [
-                    '4–6 riders',
-                    '8–12 riders',
-                    '12–16 riders',
-                    '20+ riders'
-                ],
-                correct: 1,
-                explanation: 'Groups of 8–12 are manageable, safe, and allow good communication.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 10,
-                text: 'Are TT or triathlon bikes suitable for group rides?',
-                options: [
-                    'Yes, faster and more aero',
-                    'No, only road bikes recommended',
-                    'Only if ridden carefully at the back',
-                    'Yes, with proper handling'
-                ],
-                correct: 1,
-                explanation: 'TT and triathlon bikes have poor handling in tight groups; road bikes are safer.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 11,
-                text: 'Call when a faster group is approaching from behind?',
-                options: [
-                    '"Passing from behind"',
-                    '"Car back"',
-                    '"On your left"',
-                    '"Clear"'
-                ],
-                correct: 0,
-                explanation: '"Passing from behind" alerts riders ahead of an approaching faster group.',
-                visual: null,
-                verbal: '"Passing from behind"'
-            }, {
-                id: 12,
-                text: 'Essential lights for early morning or late evening rides?',
-                options: [
-                    'Front light only',
-                    'Rear light only',
-                    'Front and rear lights',
-                    'Reflective vest only'
-                ],
-                correct: 2,
-                explanation: 'Both front (white) and rear (red) lights are mandatory for visibility.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 13,
-                text: 'Essential items in your saddle bag?',
-                options: [
-                    'Spare tube, pump, tire levers, multitool',
-                    'Only a spare tube',
-                    'Only a pump',
-                    'First aid kit only'
-                ],
-                correct: 0,
-                explanation: 'Spare tube, mini pump, tire levers, and multitool fix common roadside issues.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 14,
-                text: 'Is wearing a helmet mandatory on Dubai cycling tracks?',
-                options: [
-                    'Yes, by law',
-                    'No, only recommended',
-                    'Only for children under 12',
-                    'Only on weekends'
-                ],
-                correct: 0,
-                explanation: 'Dubai law mandates helmets. RTA rules state riders "must wear a protective helmet".',
-                visual: null,
-                verbal: null
-            }, {
-                id: 15,
-                text: 'Minimum age to ride independently on Mushrif Park MTB trails?',
-                options: [
-                    'Under 8 years',
-                    'Under 10 years',
-                    '12 years or older',
-                    '16 years or older'
-                ],
-                correct: 2,
-                explanation: 'Children aged 12+ can ride independently. Younger riders need adult supervision.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 16,
-                text: 'Minimum tire spec for Mushrif Park MTB trails?',
-                options: [
-                    'Slick road tires (23-25mm)',
-                    '40mm gravel tires or wider',
-                    'Narrow tires only',
-                    'Any tire type is fine'
-                ],
-                correct: 1,
-                explanation: '40mm gravel tires or wider provide necessary grip on the compact dirt surface.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 17,
-                text: 'Can you take selfies or use your phone while riding?',
-                options: [
-                    'Yes, if riding slowly on the left',
-                    'Yes, with a selfie stick',
-                    'No, stop and move off the track if you are taking photos',
-                    'Yes, during rest breaks on the track'
-                ],
-                correct: 2,
-                explanation: 'Using your phone while riding is dangerous. Stop completely and move off the track.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 18,
-                text: 'Correct riding position on Dubai cycling tracks?',
-                options: [
-                    'Ride in the middle for visibility',
-                    'Ride on the left side',
-                    'Always ride on the right side',
-                    'Ride wherever feels comfortable'
-                ],
-                correct: 2,
-                explanation: 'Always keep to the right, whether solo or in a group, leaving the left clear for faster riders.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 19,
-                text: 'Correct procedure when a group overtakes another group or rider?',
-                options: [
-                    'Overtake immediately and move left',
-                    'Check for clear path, call "Passing", stay left until whole group has passed',
-                    'Overtake one by one without regrouping',
-                    'Only the front rider needs to check'
-                ],
-                correct: 1,
-                explanation: 'Wait for clear oncoming traffic, call "Passing", and stay right until the entire group has safely passed.',
-                visual: null,
-                verbal: null
-            }, {
-                id: 20,
-                text: 'Where can you find the official Dubai cycling rules and regulations?',
-                options: [
-                    'RTA website – this quiz is only for group ride etiquette',
-                    'Dubai Municipality website',
-                    'UAE Cycling Federation',
-                    'This quiz contains all official rules'
-                ],
-                correct: 0,
-                explanation: 'Official Dubai cycling rules are on the RTA website. This quiz covers group ride etiquette to help riders stay safe, not official regulations.',
-                visual: null,
-                verbal: null
-            }];
+    <div class="score">
+      <svg class="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#e2e8f0" stroke-width="7"/><circle id="ringArc" cx="32" cy="32" r="27" fill="none" stroke="#65a30d" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 170" transform="rotate(-90 32 32)"/><text id="ringTxt" x="32" y="37" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a" font-family="JetBrains Mono">--</text></svg>
+      <div>
+        <div class="t1" id="scoreT">Ride score</div>
+        <div class="t2" id="scoreD">Combines temperature, wind, gusts, UV, rain and daylight.</div>
+      </div>
+    </div>
+    <div class="kite" id="kite"></div>
+  </div>
 
-            // ─── STATE ──────────────────────────────────────────────────
-            const state = {
-                currentIndex: 0,
-                answers: new Array(QUESTIONS.length).fill(null),
-                showFeedback: false,
-                examCompleted: false,
-                answered: new Array(QUESTIONS.length).fill(false),
-                currentView: 'quiz',
-            };
+  <!-- right: map -->
+  <div class="panel mapcard">
+    <div class="maphead">
+      <div class="ti" id="mapTitle">—<small id="mapSub"></small></div>
+      <div class="views" data-noshot>
+        <div class="seg" id="layers">
+          <button data-l="sat" class="on">Satellite</button>
+          <button data-l="hyb">Hybrid</button>
+          <button data-l="topo">Terrain</button>
+          <button data-l="cycle">Cycling</button>
+          <button data-l="dark">Dark</button>
+        </div>
+        <span class="gl">Google</span>
+        <div class="seg" id="glayers">
+          <button data-g="m">Map</button>
+          <button data-g="k">Sat</button>
+          <button data-g="h">Hybrid</button>
+          <button data-g="p">Terrain</button>
+        </div>
+      </div>
+    </div>
+    <div class="mapbox">
+      <div id="map"></div>
+      <canvas id="wind"></canvas>
+      <iframe id="gframe" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Maps"></iframe>
+      <div class="maploading" id="maploading">Loading track from OpenStreetMap…</div>
+      <div class="windbadge" id="windbadge">
+        <svg width="34" height="34" viewBox="0 0 34 34" id="badgeArrow"><circle cx="17" cy="17" r="16" fill="#f1f5f9" stroke="#cbd5e1"/><path d="M17 5 L23 21 L17 17 L11 21 Z" fill="#65a30d"/></svg>
+        <div><b id="badgeSpd">--</b><div class="sub" style="font-size:11px" id="badgeDir">wind</div></div>
+      </div>
+      <div class="mapover" id="legend">
+        <b style="font-size:12px">Wind on the track</b>
+        <div class="lg"><span class="sw" style="background:#dc2626"></span>Head / tailwind</div>
+        <div class="lg"><span class="sw" style="background:#d97706"></span>Diagonal</div>
+        <div class="lg"><span class="sw" style="background:#0284c7"></span>Crosswind</div>
+        <div class="sub" style="font-size:10px;margin-top:6px" id="trackSrc">Track geometry: OpenStreetMap</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-            // ─── DOM REFS ──────────────────────────────────────────────
-            const renderTarget = document.getElementById('renderTarget');
-            const progressFill = document.getElementById('progressFill');
-            const questionCounter = document.getElementById('questionCounter');
-            const scoreDisplay = document.getElementById('scoreDisplay');
-            const statusBadge = document.getElementById('statusBadge');
-            const progressSection = document.getElementById('progressSection');
-            const navTabs = document.getElementById('navTabs');
+<!-- timeline -->
+<div class="panel timeline">
+  <div class="tlhead">
+    <h3 style="margin:0">Next 48 hours · tap or drag to pick a time</h3>
+    <div class="picker" data-noshot>
+      <span>📅</span><input type="date" id="pickDate" aria-label="Date">
+      <span>🕒</span><select id="pickHour" aria-label="Time"></select>
+    </div>
+    <div class="quick" data-noshot id="quick"></div>
+  </div>
+  <div class="chartwrap" id="chartwrap"><svg id="chart" viewBox="0 0 1000 230"></svg></div>
+  <input type="range" id="slider" min="0" max="47" value="0" data-noshot>
+  <div class="sub" style="font-size:10px;margin-top:2px">Coloured strip = ride score per hour · shaded = night</div>
+  <div class="best" id="best" style="margin-top:10px">⏳ Finding the best riding window…</div>
+</div>
 
-            // ─── HELPERS ──────────────────────────────────────────────
-            function getCorrectCount() {
-                let count = 0;
-                for (let i = 0; i < QUESTIONS.length; i++) {
-                    if (state.answers[i] === QUESTIONS[i].correct) count++;
-                }
-                return count;
-            }
+<section class="sponsors">
+  <h3>Sponsors</h3>
+  <div class="spgrid">
+    <a class="sp lameda" href="https://lameda.cc/" target="_blank" rel="noopener">
+      <div class="lmart" id="lmArt"></div>
+      <div class="lmbody">
+        <div class="lmname">LAMEDA</div>
+        <div class="lmtag">Every Pedal, Every Mile</div>
+        <div class="lmdesc">Premium cycling apparel: jerseys, bibs, jackets & base layers</div>
+        <span class="lmcode" id="lmCode" title="Tap to copy">Use code <b>DXB</b> to get <b>15% OFF</b> <i>⧉</i></span>
+        <span class="lmcta">Shop lameda.cc ↗</span>
+      </div>
+    </a>
+    <div class="sp empty"><span>Sponsor</span></div>
+    <div class="sp empty"><span>Sponsor</span></div>
+    <div class="sp empty"><span>Sponsor</span></div>
+  </div>
+</section>
 
-            function getAnsweredCount() {
-                return state.answers.filter(a => a !== null).length;
-            }
+<footer>
+  <b>Data.</b> Forecasts come live from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>, which serves weather models from national weather services (ECMWF, NOAA GFS, DWD ICON, Météo-France and others) at 1–11 km resolution, so values can differ a little from the official UAE forecast. For official UAE warnings (fog, dust, wind) check the <a href="https://www.ncm.gov.ae/" target="_blank" rel="noopener">National Center of Meteorology (NCM)</a>. Updates every 15 minutes.<br>
+  <b>Maps.</b> Track lines are loaded live from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a> cycleway data. Satellite & hybrid © Esri, Maxar, Earthstar Geographics · Terrain © OpenTopoMap · Cycling © CyclOSM · Dark © CARTO · Google views via Google Maps embed. Track lengths are from RTA and Dubai Municipality.<br>
+  <b>TheCyclistDubai Weather</b> · <a href="quiz.html">🧠 Take the Dubai Group Ride Etiquette Quiz</a> · follow <a href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener">@thecyclistdubai on Instagram</a> · <span id="updated"></span>
+</footer>
+</div>
 
-            function isPassing() {
-                const total = QUESTIONS.length;
-                const correct = getCorrectCount();
-                return correct / total >= 0.7;
-            }
+<div class="toast" id="toast"></div>
+<div id="modal" style="display:none;position:fixed;inset:0;background:#0f172a88;z-index:9998;place-items:center;padding:20px">
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;max-width:420px;width:100%">
+    <b style="font-size:16px">Share to WhatsApp</b>
+    <img id="mImg" style="width:100%;border-radius:10px;margin:12px 0;border:1px solid var(--line)" alt="Screenshot preview">
+    <p class="sub" id="mTxt" style="margin:0 0 14px">Screenshot saved to your Downloads. Open WhatsApp, pick a chat and attach the image. The forecast text is already filled in.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a id="mWa" class="btn wa" target="_blank" rel="noopener" style="text-decoration:none">Open WhatsApp</a>
+      <a id="mDl" class="btn" style="text-decoration:none;color:var(--text)">Download image</a>
+      <button class="btn" onclick="document.getElementById('modal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
 
-            // ─── RENDER FUNCTIONS ──────────────────────────────────────
-            function render() {
-                if (state.currentView === 'study') {
-                    renderStudy();
-                } else {
-                    renderQuiz();
-                }
-                updateMeta();
-                updateNavTabs();
-            }
+<script>
+/* ---------------- tracks ---------------- */
+const TRACKS = [
+  { id:'alqudra', name:'Al Qudra Cycle Track', short:'Al Qudra', area:'Saih Al Salam desert',
+    lat:24.8498, lng:55.3449, zoom:11,
+    info:'~80 km desert loop (18–86 km options) · start at Al Qudra Cycle Hub car park',
+    bbox:[24.60,55.12,24.93,55.52], filter:'way["highway"="cycleway"]' },
+  { id:'meydan', name:'Meydan · Nad Al Sheba Cycle Park', short:'Meydan', area:'Nad Al Sheba / Meydan',
+    lat:25.1487, lng:55.2864, zoom:14,
+    info:'4, 6 & 8 km loops, one-way anticlockwise · lit at night · Burj Khalifa views',
+    bbox:[25.133,55.262,25.172,55.308], filter:'way["highway"="cycleway"]' },
+  { id:'mushrif', name:'Mushrif National Park', short:'Mushrif Park', area:'Mushrif · Al Khawaneej',
+    lat:25.2190, lng:55.4560, zoom:14,
+    info:'50 km MTB trails (green / blue / red) + 4 km park cycle track',
+    bbox:[25.190,55.420,25.250,55.500], filter:'way["highway"~"cycleway|path|track"]["bicycle"~"designated|yes"];way["mtb:scale"]' , mtb:true},
+  { id:'kite', name:'Kite Beach · Jumeirah Beach Track', short:'Kite Beach', area:'Umm Suqeim 1, Jumeirah',
+    lat:25.1575, lng:55.1965, zoom:15,
+    info:'16 km beachfront track, 4 m wide · 20 km/h speed limit',
+    bbox:[25.140,55.178,25.176,55.215], filter:'way["highway"="cycleway"]', kite:true },
+];
 
-            function renderQuiz() {
-                if (state.examCompleted) {
-                    renderResults();
-                    return;
-                }
+/* ---------------- state ---------------- */
+const S = {
+  track: load('rw_track','alqudra'),
+  unit: load('rw_unit','kmh'),
+  layer: (l=>['sat','hyb','topo','cycle','dark'].includes(l)?l:'sat')(load('rw_layer','sat')),
+  google: null,
+  sel: 0,          // hour offset 0..47
+  wx: null,        // array per track
+  start: 0,        // index of current hour in hourly
+  geo: {},         // track geometry cache
+};
+function load(k,d){try{return localStorage.getItem(k)||d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+const $ = id => document.getElementById(id);
+const T = () => TRACKS.find(t=>t.id===S.track);
+const TI = () => TRACKS.findIndex(t=>t.id===S.track);
 
-                const q = QUESTIONS[state.currentIndex];
-                const idx = state.currentIndex;
-                const selected = state.answers[idx];
-                const showFeedback = state.showFeedback;
+/* ---------------- time helpers (Dubai) ---------------- */
+const fmtParts = new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dubai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
+function dubaiNow(){const p={};fmtParts.formatToParts(new Date()).forEach(x=>p[x.type]=x.value);return p}
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function parseLocal(s){const d=new Date(s+':00Z');return {d, day:DAYS[d.getUTCDay()], date:d.getUTCDate(), mon:MONTHS[d.getUTCMonth()], h:d.getUTCHours(), hm:s.slice(11,16)}}
+function relDay(s){const n=dubaiNow();const today=`${n.year}-${n.month}-${n.day}`;const dd=s.slice(0,10);
+  const diff=Math.round((new Date(dd+'T00:00Z')-new Date(today+'T00:00Z'))/864e5);
+  return diff===0?'Today':diff===1?'Tomorrow':parseLocal(s).day}
 
-                let optionsHtml = '';
-                const letters = ['A', 'B', 'C', 'D'];
-                q.options.forEach((opt, oi) => {
-                    let classes = 'option-item';
-                    if (selected === oi) classes += ' selected';
-                    if (showFeedback) {
-                        classes += ' disabled';
-                        if (oi === q.correct) classes += ' correct';
-                        if (selected === oi && oi !== q.correct) classes += ' wrong';
-                    }
-                    optionsHtml += `
-                        <div class="${classes}" data-optindex="${oi}">
-                            <span class="radio"></span>
-                            <span class="option-label"><span class="option-letter">${letters[oi]}.</span> ${opt}</span>
-                        </div>
-                    `;
-                });
+function tickClock(){
+  const p=dubaiNow();
+  $('clk').textContent=`${p.hour}:${p.minute}:${p.second}`;
+  const d=new Date(`${p.year}-${p.month}-${p.day}T00:00Z`);
+  $('clkd').textContent=`${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getUTCDay()]}, ${+p.day} ${MONTHS[d.getUTCMonth()]} ${p.year} · Dubai (GST)`;
+}
+setInterval(tickClock,1000);tickClock();
 
-                let feedbackHtml = '';
-                let explanationHtml = '';
-                if (showFeedback && selected !== null) {
-                    const isCorrect = selected === q.correct;
-                    const cls = isCorrect ? 'correct' : 'wrong';
-                    const msg = isCorrect ?
-                        '✅ Correct!' :
-                        `❌ Correct: ${q.options[q.correct]}`;
-                    feedbackHtml = `
-                        <div class="feedback-box show ${cls}">
-                            ${msg}
-                        </div>
-                    `;
-                    explanationHtml = `
-                        <div style="margin-top:6px;padding:8px 12px;background:#f0f4f8;border-radius:8px;font-size:13px;color:#2d3748;border-left:3px solid #fbbf24;">
-                            <strong>💡</strong> ${q.explanation}
-                        </div>
-                    `;
-                }
+/* ---------------- units & text ---------------- */
+function spd(kmh){ if(kmh==null) return '--';
+  if(S.unit==='kn') return (kmh/1.852).toFixed(0);
+  if(S.unit==='ms') return (kmh/3.6).toFixed(1);
+  return Math.round(kmh)+''; }
+const uLbl=()=>({kmh:'km/h',kn:'kn',ms:'m/s'})[S.unit];
+const PTS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+const PTN={N:'north',NNE:'north-northeast',NE:'northeast',ENE:'east-northeast',E:'east',ESE:'east-southeast',SE:'southeast',SSE:'south-southeast',S:'south',SSW:'south-southwest',SW:'southwest',WSW:'west-southwest',W:'west',WNW:'west-northwest',NW:'northwest',NNW:'north-northwest'};
+const card=d=>PTS[Math.round(((d%360)+360)%360/22.5)%16];
+function windWords(k){
+  if(k<6)return'Calm — barely a breath. Perfect for a PR attempt.';
+  if(k<12)return'Light breeze — easy riding in every direction.';
+  if(k<20)return'Gentle breeze — you\'ll feel it on the exposed stretches.';
+  if(k<29)return'Moderate wind — tough headwind sections, ride in a group.';
+  if(k<39)return'Fresh wind — hard going into it, sand may blow across.';
+  return'Strong wind — consider a short or sheltered ride.';
+}
+const WX={0:['☀️','Clear sky'],1:['🌤️','Mainly clear'],2:['⛅','Partly cloudy'],3:['☁️','Overcast'],45:['🌫️','Fog'],48:['🌫️','Rime fog'],51:['🌦️','Light drizzle'],53:['🌦️','Drizzle'],55:['🌧️','Heavy drizzle'],61:['🌧️','Light rain'],63:['🌧️','Rain'],65:['🌧️','Heavy rain'],80:['🌦️','Rain showers'],81:['🌧️','Showers'],82:['⛈️','Violent showers'],95:['⛈️','Thunderstorm'],96:['⛈️','Thunderstorm, hail'],99:['⛈️','Thunderstorm, hail']};
+function wx(code,isDay){const w=WX[code]||['🌡️','—'];let i=w[0];if(!isDay&&(code<=2))i=code===0?'🌙':'☁️';return [i,w[1]]}
 
-                const isFirst = idx === 0;
-                const isLast = idx === QUESTIONS.length - 1;
-                const allAnswered = getAnsweredCount() === QUESTIONS.length;
+/* ---------------- ride score ---------------- */
+function rideScore(h){
+  let s=100;
+  if(h.t>26)s-=(h.t-26)*4.2; if(h.t<16)s-=(16-h.t)*3;
+  if(h.w>12)s-=(h.w-12)*1.5; if(h.g>32)s-=(h.g-32)*0.9;
+  s-=(h.pp||0)*0.35; if(h.code>=95)s-=30;
+  if(h.uv>6)s-=(h.uv-6)*3; if(h.code===45||h.code===48)s-=15;
+  if(!h.day)s-=10;
+  return Math.max(0,Math.min(100,Math.round(s)));
+}
+function scoreInfo(s){
+  if(s>=80)return['Excellent','var(--good)','#16a34a33'];
+  if(s>=65)return['Good','var(--accent)','#65a30d33'];
+  if(s>=50)return['Fair','var(--warn)','#d9770633'];
+  return['Tough','var(--bad)','#dc262633'];
+}
 
-                let navHtml = `
-                    <div class="nav-actions">
-                        <button class="btn btn-secondary" id="prevBtn" ${isFirst ? 'disabled' : ''}>
-                            ← Prev
-                        </button>
-                        <span class="counter-text">${idx+1} / ${QUESTIONS.length}</span>
-                        <div style="display:flex;gap:6px;flex-wrap:wrap;flex:1;justify-content:flex-end;">
-                `;
+/* ---------------- data access ---------------- */
+function hourAt(ti,off){
+  const d=S.wx[ti]; const i=S.start+off; const H=d.hourly;
+  const h={time:H.time[i],t:H.temperature_2m[i],fl:H.apparent_temperature[i],w:H.wind_speed_10m[i],g:H.wind_gusts_10m[i],dir:H.wind_direction_10m[i],rh:H.relative_humidity_2m[i],uv:H.uv_index[i],pp:H.precipitation_probability[i],code:H.weather_code[i],day:H.is_day[i]};
+  if(off===0&&d.current){const c=d.current;Object.assign(h,{t:c.temperature_2m,fl:c.apparent_temperature,w:c.wind_speed_10m,g:c.wind_gusts_10m,dir:c.wind_direction_10m,rh:c.relative_humidity_2m,code:c.weather_code,day:c.is_day,cur:c.time})}
+  h.score=rideScore(h); return h;
+}
+function sunFor(ti,timeStr){const D=S.wx[ti].daily;const k=D.time.indexOf(timeStr.slice(0,10));return k<0?null:{rise:D.sunrise[k].slice(11),set:D.sunset[k].slice(11)}}
 
-                if (!showFeedback && selected !== null) {
-                    navHtml += `
-                        <button class="btn btn-primary" id="checkBtn">Check</button>
-                    `;
-                }
+/* ---------------- fetch weather ---------------- */
+async function fetchWeather(){
+  $('err').style.display='none';
+  const vars='temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,is_day';
+  const url='https://api.open-meteo.com/v1/forecast?latitude='+TRACKS.map(t=>t.lat).join(',')+'&longitude='+TRACKS.map(t=>t.lng).join(',')+
+    '&current='+vars+'&hourly='+vars+',uv_index,precipitation_probability&daily=sunrise,sunset&timezone=Asia%2FDubai&forecast_days=4&wind_speed_unit=kmh';
+  try{
+    const r=await fetch(url); if(!r.ok) throw new Error('HTTP '+r.status);
+    let j=await r.json(); if(!Array.isArray(j)) j=[j];
+    S.wx=j;
+    const p=dubaiNow(); const nowH=`${p.year}-${p.month}-${p.day}T${p.hour}:00`;
+    S.start=Math.max(0,j[0].hourly.time.findIndex(t=>t>=nowH));
+    $('updated').textContent='Forecast loaded '+p.hour+':'+p.minute+' Dubai time.';
+    renderAll();
+  }catch(e){
+    $('err').style.display='block';
+    $('err').innerHTML='⚠️ Couldn\'t load the forecast ('+e.message+'). Check your internet connection and tap <b>Refresh</b>. If you opened this inside a chat preview, open the downloaded file in Chrome or Safari instead.';
+  }
+}
 
-                if (showFeedback) {
-                    if (!isLast) {
-                        navHtml += `
-                            <button class="btn btn-primary" id="nextBtn">Next →</button>
-                        `;
-                    } else {
-                        if (allAnswered) {
-                            navHtml += `
-                                <button class="btn btn-success" id="finishBtn">🏁 Finish</button>
-                            `;
-                        } else {
-                            navHtml += `
-                                <button class="btn btn-primary" id="nextBtn" disabled style="opacity:0.5;">Next →</button>
-                                <span style="font-size:11px;color:#4a5568;align-self:center;">Answer all</span>
-                            `;
-                        }
-                    }
-                }
+/* ---------------- render: track cards ---------------- */
+function renderTracks(){
+  $('tracks').innerHTML=TRACKS.map((t,i)=>{
+    let row='<span class="sub">loading…</span>';
+    if(S.wx){const h=hourAt(i,S.sel);const [lab,col,bg]=scoreInfo(h.score);
+      row=`<span class="tmp">${Math.round(h.t)}°</span>
+      <svg class="mini" viewBox="0 0 20 20" style="transform:rotate(${h.dir+180}deg)"><path d="M10 1 L15 15 L10 12 L5 15 Z" fill="#65a30d"/></svg>
+      <span>${spd(h.w)} ${uLbl()} ${card(h.dir)}</span>
+      <span class="sc" style="color:${col};background:${bg}">${h.score}</span>`;}
+    return `<button class="tcard ${t.id===S.track?'on':''}" data-t="${t.id}">
+      <div class="nm">${t.short}</div><div class="ar">${t.area}</div><div class="row">${row}</div></button>`;
+  }).join('');
+  document.querySelectorAll('.tcard').forEach(b=>b.onclick=()=>selectTrack(b.dataset.t));
+}
 
-                navHtml += `
-                        </div>
-                    </div>
-                `;
+/* ---------------- render: conditions ---------------- */
+function renderCond(){
+  if(!S.wx)return;
+  const ti=TI(), h=hourAt(ti,S.sel), lt=parseLocal(h.time);
+  const live=S.sel===0;
+  $('liveTag').className=live?'live':'live fc';
+  $('liveTag').innerHTML=live?'<i></i>LIVE NOW':'<i></i>FORECAST';
+  $('whenLbl').textContent=T().name;
+  $('whenVal').textContent=live?`Now · ${dubaiNow().hour}:${dubaiNow().minute}`:`${relDay(h.time)}, ${lt.day} ${lt.date} ${lt.mon} · ${lt.hm}`;
+  $('temp').innerHTML=`${Math.round(h.t)}<sup>°C</sup>`;
+  const [ic,desc]=wx(h.code,h.day);
+  $('wxIcon').textContent=ic; $('wxDesc').textContent=`${desc} · feels like ${Math.round(h.fl)}°C`;
+  $('thermoB').style.left=Math.max(0,Math.min(100,(h.t-10)/40*100))+'%';
+  $('needle').style.transform=`rotate(${h.dir+180}deg)`;
+  $('wspd').innerHTML=`${spd(h.w)}<small> ${uLbl()}</small>`;
+  const c=card(h.dir), to=card(h.dir+180);
+  $('wdir').textContent=`From ${c} (${Math.round(h.dir)}°) → blowing ${PTN[to]}`;
+  $('wdesc').textContent=windWords(h.w);
+  $('feels').textContent=Math.round(h.fl)+'°';
+  $('gust').textContent=spd(h.g);
+  $('hum').textContent=h.rh+'%';
+  $('uv').textContent=h.uv==null?'--':h.uv.toFixed(0);
+  $('rain').textContent=(h.pp??0)+'%';
+  const sun=sunFor(ti,h.time); $('sunr').textContent=sun?sun.rise:'--'; $('suns').textContent=sun?sun.set:'--';
+  const [lab,col]=scoreInfo(h.score);
+  $('ringArc').setAttribute('stroke-dasharray',`${h.score/100*169.6} 170`); $('ringArc').setAttribute('stroke',getComputedStyle(document.documentElement).getPropertyValue(col.slice(4,-1)).trim()||'#65a30d');
+  $('ringTxt').textContent=h.score;
+  $('scoreT').innerHTML=`Ride score: <span style="color:${col}">${lab}</span>`;
+  $('scoreD').textContent=scoreReason(h);
+  // badge
+  $('badgeArrow').style.transform=`rotate(${h.dir+180}deg)`;
+  $('badgeSpd').textContent=`${spd(h.w)} ${uLbl()}`;
+  $('badgeDir').textContent=`from ${c} · gusts ${spd(h.g)}`;
+  // kite meter
+  const kb=$('kite');
+  if(T().kite){const kn=h.w/1.852;kb.style.display='block';
+    kb.innerHTML=kn<10?`🪁 Kitesurf: ${kn.toFixed(0)} kn, too light for most kites.`:kn<=25?`🪁 Kitesurf: ${kn.toFixed(0)} kn from ${c}, rideable! ${(h.dir>=225&&h.dir<=360)||h.dir<=30?'Onshore/side-on (good).':'Offshore component, take care.'}`:`🪁 Kitesurf: ${kn.toFixed(0)} kn, strong, experts only.`;}
+  else kb.style.display='none';
+  colorTrack(h.dir);
+  setParticles(h.dir,h.w);
+}
+function scoreReason(h){
+  const r=[];
+  if(h.t>32)r.push('very hot, bring extra water');else if(h.t>27)r.push('warm');else if(h.t>=18)r.push('comfortable temperature');else r.push('cool, bring a layer');
+  if(h.w>=29)r.push('strong wind');else if(h.w>=20)r.push('breezy');else r.push('light wind');
+  if(h.g>40)r.push('gusty');
+  if(h.uv>=8)r.push('very high UV');
+  if((h.pp||0)>=30)r.push(`${h.pp}% rain chance`);
+  if(!h.day)r.push('dark, use lights');
+  return r.join(' · ').replace(/^./,m=>m.toUpperCase())+'.';
+}
 
-                renderTarget.innerHTML = `
-                    <div class="question-card" id="questionCard">
-                        <div class="question-number">🚴 #${idx+1}</div>
-                        <div class="question-text">${q.text}</div>
-                        <div class="options-list" id="optionsContainer">
-                            ${optionsHtml}
-                        </div>
-                        ${feedbackHtml}
-                        ${explanationHtml}
-                        ${navHtml}
-                    </div>
-                `;
+/* ---------------- chart ---------------- */
+function renderChart(){
+  if(!S.wx)return;
+  const ti=TI(), N=48, W=1000, H=230, L=34, R=34, top=18, bot=168;
+  const hs=[...Array(N)].map((_,i)=>hourAt(ti,i));
+  const tMin=Math.floor(Math.min(...hs.map(h=>h.t))-2), tMax=Math.ceil(Math.max(...hs.map(h=>h.t))+2);
+  const wMax=Math.max(30,...hs.map(h=>h.g||0));
+  const x=i=>L+(W-L-R)*(i/(N-1)), yT=t=>bot-(t-tMin)/(tMax-tMin)*(bot-top), yW=w=>bot-(w/wMax)*(bot-top)*.85;
+  const bw=(W-L-R)/N*.62;
+  let s='';
+  // night shading
+  hs.forEach((h,i)=>{if(!h.day)s+=`<rect x="${x(i)-(W-L-R)/(N-1)/2}" y="${top-8}" width="${(W-L-R)/(N-1)+.5}" height="${bot-top+8}" fill="#eef2ff" opacity="1"/>`});
+  // gridlines
+  for(let k=0;k<=4;k++){const t=tMin+(tMax-tMin)*k/4;s+=`<line x1="${L}" x2="${W-R}" y1="${yT(t)}" y2="${yT(t)}" stroke="#e2e8f0" stroke-dasharray="3 5"/><text x="${L-6}" y="${yT(t)+4}" fill="#ea580c" font-size="10" text-anchor="end" font-family="JetBrains Mono">${Math.round(t)}°</text>`;
+    const w=wMax*.85*k/4/.85*(.85); s+=`<text x="${W-R+6}" y="${yW(wMax*k/4)+4}" fill="#0284c7" font-size="10" font-family="JetBrains Mono">${spd(wMax*k/4)}</text>`;}
+  // wind bars & gust ticks
+  hs.forEach((h,i)=>{s+=`<rect x="${x(i)-bw/2}" y="${yW(h.w)}" width="${bw}" height="${bot-yW(h.w)}" rx="2" fill="#0284c7" opacity=".38"/>`;
+    s+=`<line x1="${x(i)-bw/2}" x2="${x(i)+bw/2}" y1="${yW(h.g)}" y2="${yW(h.g)}" stroke="#0284c7" stroke-width="2" opacity=".75"/>`});
+  // temp area + line
+  const pts=hs.map((h,i)=>`${x(i).toFixed(1)},${yT(h.t).toFixed(1)}`);
+  s+=`<defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ea580c" stop-opacity=".35"/><stop offset="1" stop-color="#ea580c" stop-opacity="0"/></linearGradient></defs>`;
+  s+=`<polygon points="${x(0)},${bot} ${pts.join(' ')} ${x(N-1)},${bot}" fill="url(#tg)"/>`;
+  s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-linejoin="round"/>`;
+  // direction arrows + labels
+  hs.forEach((h,i)=>{
+    if(i%3===0){s+=`<g transform="translate(${x(i)},${bot+20}) rotate(${h.dir+180})"><path d="M0 -8 L5 6 L0 3 L-5 6 Z" fill="#65a30d"/></g>`;
+      const lt=parseLocal(h.time);s+=`<text x="${x(i)}" y="${bot+46}" fill="#64748b" font-size="10" text-anchor="middle" font-family="JetBrains Mono">${lt.hm}</text>`;}
+    const lt=parseLocal(h.time);
+    if(lt.h===0||i===0)s+=`<text x="${x(i)+3}" y="${top-4}" fill="#0f172a" font-size="11" font-weight="700">${i===0?'Now':(relDay(h.time)===lt.day?lt.day+' '+lt.date+' '+lt.mon:relDay(h.time)+' '+lt.day)}</text><line x1="${x(i)}" x2="${x(i)}" y1="${top-14}" y2="${bot}" stroke="#94a3b8"/>`;
+  });
+  // score strip
+  hs.forEach((h,i)=>{const c=scoreInfo(h.score)[1];s+=`<rect x="${x(i)-(W-L-R)/(N-1)/2}" y="${H-10}" width="${(W-L-R)/(N-1)+.5}" height="7" fill="${c}" opacity=".85"/>`});
+  // selection
+  const sx=x(S.sel), sh=hs[S.sel];
+  s+=`<line x1="${sx}" x2="${sx}" y1="${top-10}" y2="${bot+8}" stroke="#65a30d" stroke-width="2"/>`;
+  s+=`<circle cx="${sx}" cy="${yT(sh.t)}" r="6" fill="#ea580c" stroke="#fff" stroke-width="2"/>`;
+  const bx=Math.min(Math.max(sx-62,L),W-R-124);
+  s+=`<rect x="${bx}" y="${top+4}" width="124" height="40" rx="8" fill="#ffffff" stroke="#65a30d" opacity=".95"/>
+     <text x="${bx+62}" y="${top+20}" fill="#0f172a" font-size="12" font-weight="700" text-anchor="middle" font-family="JetBrains Mono">${Math.round(sh.t)}°C · ${spd(sh.w)} ${uLbl()}</text>
+     <text x="${bx+62}" y="${top+36}" fill="#64748b" font-size="10" text-anchor="middle">${relDay(sh.time)} ${parseLocal(sh.time).hm} · ${card(sh.dir)}</text>`;
+  
+  $('chart').innerHTML=s;
+  const cw=$('chartwrap');if(cw.scrollWidth>cw.clientWidth+4){const px=sx/W*cw.scrollWidth;if(px<cw.scrollLeft+40||px>cw.scrollLeft+cw.clientWidth-40)cw.scrollTo({left:px-cw.clientWidth/2,behavior:'smooth'})}
+  S._chartX={L,R,W,N};
+}
+function chartPick(e){
+  const r=$('chart').getBoundingClientRect(); const {L,R,W,N}=S._chartX||{L:34,R:34,W:1000,N:48};
+  const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left; const vx=cx/r.width*W;
+  setSel(Math.round((vx-L)/(W-L-R)*(N-1)));
+}
+let dragging=false;
+$('chart').addEventListener('pointerdown',e=>{dragging=true;chartPick(e)});
+window.addEventListener('pointermove',e=>{if(dragging&&e.pointerType==='mouse')chartPick(e)});
+window.addEventListener('pointerup',()=>dragging=false);
+$('slider').oninput=e=>setSel(+e.target.value);
+window.addEventListener('keydown',e=>{if(e.key==='ArrowRight')setSel(S.sel+1);if(e.key==='ArrowLeft')setSel(S.sel-1)});
 
-                // ─── EVENT BINDING ──────────────────────────────────────
+function setSel(i){i=Math.max(0,Math.min(47,i|0));if(i===S.sel&&S._painted)return;S.sel=i;$('slider').value=i;S._painted=true;renderCond();renderChart();renderTracks();renderQuick();syncPicker()}
 
-                const optItems = renderTarget.querySelectorAll('.option-item');
-                optItems.forEach(el => {
-                    el.addEventListener('click', function(e) {
-                        if (state.showFeedback) return;
-                        const oi = parseInt(this.dataset.optindex, 10);
-                        state.answers[state.currentIndex] = oi;
-                        state.answered[state.currentIndex] = true;
-                        render();
-                    });
-                });
+/* ---------------- quick picks & best window ---------------- */
+function findHour(pred){if(!S.wx)return -1;const ti=TI();for(let i=0;i<48;i++){if(pred(parseLocal(hourAt(ti,i).time),i))return i}return -1}
+function renderQuick(){
+  const q=[['Now',0]];
+  const n1=findHour((lt,i)=>i>0&&lt.h===6); if(n1>=0)q.push([`${relDay(hourAt(TI(),n1).time)} 6 AM`,n1]);
+  const n2=findHour((lt,i)=>i>0&&lt.h===17); if(n2>=0)q.push([`${relDay(hourAt(TI(),n2).time)} 5 PM`,n2]);
+  const n3=findHour((lt,i)=>i>n1&&n1>=0&&lt.h===6); if(n3>=0)q.push([`${relDay(hourAt(TI(),n3).time)} 6 AM`,n3]);
+  const n4=findHour((lt,i)=>i>24&&lt.h===17); if(n4>=0&&n4!==n2)q.push([`${relDay(hourAt(TI(),n4).time)} 5 PM`,n4]);
+  if(S.best!=null)q.push(['⭐ Best window',S.best]);
+  $('quick').innerHTML=q.map(([l,i])=>`<button class="chip ${i===S.sel?'on':''}" data-i="${i}">${l}</button>`).join('');
+  document.querySelectorAll('#quick .chip').forEach(b=>b.onclick=()=>setSel(+b.dataset.i));
+}
+function renderBest(){
+  const ti=TI(); let best=-1,bs=-1;
+  for(let i=0;i<48;i++){const h=hourAt(ti,i);if(!h.day)continue;const lt=parseLocal(h.time);if(lt.h<5||lt.h>19)continue;if(h.score>bs){bs=h.score;best=i}}
+  S.best=best>=0?best:null;
+  if(best<0){$('best').textContent='No daylight window found.';return}
+  const h=hourAt(ti,best),lt=parseLocal(h.time);
+  // stretch window: consecutive hours within 5 pts
+  let a=best,b=best;while(a>0&&hourAt(ti,a-1).day&&hourAt(ti,a-1).score>=bs-5)a--;while(b<47&&hourAt(ti,b+1).day&&hourAt(ti,b+1).score>=bs-5)b++;
+  const la=parseLocal(hourAt(ti,a).time).hm, lb=parseLocal(hourAt(ti,b).time); const end=String((lb.h+1)%24).padStart(2,'0')+':00';
+  $('best').innerHTML=`⭐ Best daylight ride at <b>${T().short}</b> in the next 48 h: <b>${relDay(h.time)} ${la}–${end}</b> · ${Math.round(h.t)}°C, wind ${spd(h.w)} ${uLbl()} from ${card(h.dir)} · score <b>${bs}</b> <button class="chip" style="margin-left:auto" onclick="setSel(${best})" data-noshot>Show</button>`;
+}
 
-                const checkBtn = document.getElementById('checkBtn');
-                if (checkBtn) {
-                    checkBtn.addEventListener('click', function() {
-                        if (state.answers[state.currentIndex] !== null) {
-                            state.showFeedback = true;
-                            render();
-                            const card = document.getElementById('questionCard');
-                            const isCorrect = state.answers[state.currentIndex] === QUESTIONS[state.currentIndex]
-                                .correct;
-                            if (!isCorrect) {
-                                card.classList.add('shake');
-                                setTimeout(() => card.classList.remove('shake'), 500);
-                            }
-                        }
-                    });
-                }
+/* ---------------- map ---------------- */
+const map=L.map('map',{zoomControl:true,attributionControl:true,preferCanvas:false}).setView([T().lat,T().lng],T().zoom);
+const esriImg=()=>L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,crossOrigin:true,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'});
+const LAYERS={
+  sat:esriImg(),
+  hyb:L.layerGroup([esriImg(),
+     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,crossOrigin:true,opacity:.9}),
+     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,crossOrigin:true})]),
+  topo:L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'© OpenTopoMap (CC-BY-SA), © OpenStreetMap'}),
+  cycle:L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',{maxZoom:20,attribution:'CyclOSM · © OpenStreetMap contributors'}),
+  dark:L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:20,crossOrigin:true,attribution:'© CARTO © OpenStreetMap'}),
+};
+let curLayer=null;
+function setLayer(k){
+  S.google=null; save('rw_layer',k); S.layer=k;
+  $('gframe').style.display='none'; $('map').style.visibility='visible'; $('wind').style.display='block';$('legend').style.display='block';
+  if(curLayer)map.removeLayer(curLayer); curLayer=LAYERS[k]||LAYERS.sat; curLayer.addTo(map);
+  document.querySelectorAll('#layers button').forEach(b=>b.classList.toggle('on',b.dataset.l===k));
+  document.querySelectorAll('#glayers button').forEach(b=>b.classList.remove('on'));
+}
+function setGoogle(t){
+  S.google=t; const tr=T(); const c=map.getCenter(); const z=Math.min(map.getZoom(),18);
+  $('gframe').src=`https://maps.google.com/maps?q=${tr.lat},${tr.lng}&ll=${c.lat.toFixed(5)},${c.lng.toFixed(5)}&t=${t}&z=${z}&output=embed&hl=en`;
+  $('gframe').style.display='block'; $('map').style.visibility='hidden'; $('wind').style.display='none';$('legend').style.display='none';
+  document.querySelectorAll('#glayers button').forEach(b=>b.classList.toggle('on',b.dataset.g===t));
+  document.querySelectorAll('#layers button').forEach(b=>b.classList.remove('on'));
+}
+document.querySelectorAll('#layers button').forEach(b=>b.onclick=()=>setLayer(b.dataset.l));
+document.querySelectorAll('#glayers button').forEach(b=>b.onclick=()=>setGoogle(b.dataset.g));
+setLayer(S.layer);
 
-                const nextBtn = document.getElementById('nextBtn');
-                if (nextBtn) {
-                    nextBtn.addEventListener('click', function() {
-                        if (state.currentIndex < QUESTIONS.length - 1) {
-                            state.currentIndex++;
-                            state.showFeedback = false;
-                            render();
-                        }
-                    });
-                }
+let trackLayer=L.layerGroup().addTo(map), startMarker=null, segs=[];
+const startIcon=L.divIcon({className:'',html:'<div style="width:30px;height:30px;border-radius:50%;background:#65a30d;border:3px solid #ffffff;box-shadow:0 0 0 3px #65a30d66,0 4px 14px #0f172a33;display:grid;place-items:center;font-size:15px">🚴</div>',iconSize:[30,30],iconAnchor:[15,15]});
 
-                const prevBtn = document.getElementById('prevBtn');
-                if (prevBtn) {
-                    prevBtn.addEventListener('click', function() {
-                        if (state.currentIndex > 0) {
-                            state.currentIndex--;
-                            state.showFeedback = false;
-                            render();
-                        }
-                    });
-                }
+function bearing(a,b){const r=Math.PI/180,y=Math.sin((b[1]-a[1])*r)*Math.cos(b[0]*r),x=Math.cos(a[0]*r)*Math.sin(b[0]*r)-Math.sin(a[0]*r)*Math.cos(b[0]*r)*Math.cos((b[1]-a[1])*r);return(Math.atan2(y,x)/r+360)%360}
+function dist(a,b){const r=Math.PI/180,dl=(b[0]-a[0])*r,dg=(b[1]-a[1])*r,h=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dg/2)**2;return 12742*Math.asin(Math.sqrt(h))}
 
-                const finishBtn = document.getElementById('finishBtn');
-                if (finishBtn) {
-                    finishBtn.addEventListener('click', function() {
-                        if (getAnsweredCount() === QUESTIONS.length) {
-                            state.examCompleted = true;
-                            render();
-                        } else {
-                            alert('Please answer all questions first.');
-                        }
-                    });
-                }
+async function loadTrack(tr){
+  if(S.geo[tr.id])return S.geo[tr.id];
+  try{const c=localStorage.getItem('rw_geo_'+tr.id);if(c){const g=JSON.parse(c);if(Date.now()-g.ts<7*864e5){S.geo[tr.id]=g.lines;return g.lines}}}catch(e){}
+  const [s,w,n,e]=tr.bbox, bb=`(${s},${w},${n},${e})`;
+  const q=`[out:json][timeout:30];(${tr.filter.split(';').map(f=>f+bb+';').join('')});out geom;`;
+  const mirrors=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter'];
+  for(const m of mirrors){
+    try{const r=await fetch(m,{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+      if(!r.ok)continue; const j=await r.json();
+      const lines=j.elements.filter(x=>x.geometry&&x.geometry.length>1).map(x=>({name:(x.tags&&x.tags.name)||'',mtb:x.tags&&x.tags['mtb:scale'],pts:x.geometry.map(p=>[p.lat,p.lon])}));
+      S.geo[tr.id]=lines; try{localStorage.setItem('rw_geo_'+tr.id,JSON.stringify({ts:Date.now(),lines}))}catch(e){}
+      return lines;
+    }catch(e){}
+  }
+  return null;
+}
 
-                progressSection.style.display = 'block';
-                updateMeta();
-            }
+async function drawTrack(){
+  const tr=T(); trackLayer.clearLayers(); segs=[];
+  if(startMarker)map.removeLayer(startMarker);
+  startMarker=L.marker([tr.lat,tr.lng],{icon:startIcon}).addTo(map).bindPopup(`<b>${tr.name}</b><br>${tr.info}<br><a href="https://www.google.com/maps/dir/?api=1&destination=${tr.lat},${tr.lng}" target="_blank">Directions in Google Maps ↗</a>`);
+  map.setView([tr.lat,tr.lng],tr.zoom);
+  $('maploading').style.display='block';
+  const lines=await loadTrack(tr);
+  $('maploading').style.display='none';
+  if(tr.id!==S.track)return;
+  if(!lines||!lines.length){
+    $('trackSrc').textContent='Couldn\'t reach OpenStreetMap, so only the start point is shown. Try Refresh.';
+    L.circle([tr.lat,tr.lng],{radius:tr.zoom<13?6000:600,color:'#65a30d',weight:2,dashArray:'6 6',fillOpacity:.05}).addTo(trackLayer);
+    return;
+  }
+  let km=0; const all=[];
+  lines.forEach(l=>{
+    // casing
+    L.polyline(l.pts,{color:'#ffffff',weight:8,opacity:.75,interactive:false}).addTo(trackLayer);
+    for(let i=0;i<l.pts.length-1;i++){const a=l.pts[i],b=l.pts[i+1];const d=dist(a,b);km+=d;
+      const p=L.polyline([a,b],{color:'#65a30d',weight:4.5,opacity:1,lineCap:'round'}).addTo(trackLayer);
+      p.bindTooltip(()=>segTip(p),{sticky:true}); p._brg=bearing(a,b); p._km=d; segs.push(p);}
+    all.push(...l.pts);
+  });
+  $('trackSrc').textContent=`Track geometry: OpenStreetMap · ${lines.length} mapped segments`;
+  map.fitBounds(L.latLngBounds(all),{padding:[30,30],maxZoom:16});
+  if(S.wx)colorTrack(hourAt(TI(),S.sel).dir);
+}
+function relAngle(brg,dir){let a=Math.abs(((brg-dir)%360+540)%360-180);return a} // 0 = riding into wind, 180 = tailwind
+function segTip(p){const h=S.wx?hourAt(TI(),S.sel):null;if(!h)return'';const a=relAngle(p._brg,h.dir);
+  const one=a<45?'headwind':a>135?'tailwind':'crosswind', other=a<45?'tailwind':a>135?'headwind':'crosswind';
+  return `Heading ${card(p._brg)}: <b>${one}</b><br>Heading ${card(p._brg+180)}: <b>${other}</b>`}
+function colorTrack(dir){
+  if(!segs.length){$('xw').textContent='--';return}
+  let along=0,cross=0,tot=0;
+  segs.forEach(p=>{const a=relAngle(p._brg,dir),al=Math.abs(Math.cos(a*Math.PI/180));
+    const col=al>.75?'#dc2626':al>.4?'#d97706':'#0284c7'; p.setStyle({color:col});
+    tot+=p._km; if(al>.75)along+=p._km; if(al<=.4)cross+=p._km;});
+  $('xw').textContent=Math.round(cross/tot*100)+'%';
+  $('xw').title=`${Math.round(along/tot*100)}% of the track runs along the wind (head/tailwind), ${Math.round(cross/tot*100)}% is crosswind`;
+}
 
-            function renderResults() {
-                const total = QUESTIONS.length;
-                const correct = getCorrectCount();
-                const wrong = total - correct;
-                const passed = isPassing();
-                const pct = Math.round((correct / total) * 100);
+/* ---------------- wind particles ---------------- */
+const cv=$('wind'),cx=cv.getContext('2d');let P=[],vx=0,vy=0,pAlpha=.5;
+function sizeCv(){const r=cv.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=r.height*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+new ResizeObserver(sizeCv).observe(cv);sizeCv();
+function setParticles(dir,kmh){const to=(dir+180)*Math.PI/180;const sp=.4+kmh/9;vx=Math.sin(to)*sp;vy=-Math.cos(to)*sp;pAlpha=Math.min(.75,.25+kmh/50);
+  const n=Math.round(60+kmh*7);const w=cv.clientWidth,h=cv.clientHeight;while(P.length<n)P.push({x:Math.random()*w,y:Math.random()*h,a:Math.random()*80});P.length=n;}
+function stepP(){
+  const w=cv.clientWidth,h=cv.clientHeight;
+  cx.clearRect(0,0,w,h);cx.lineCap='round';
+  for(const p of P){
+    const ox=p.x,oy=p.y;p.x+=vx*(0.85+Math.random()*.3);p.y+=vy*(0.85+Math.random()*.3);p.a++;
+    if(p.x<0||p.x>w||p.y<0||p.y>h||p.a>90){p.x=Math.random()*w;p.y=Math.random()*h;p.a=0;continue}
+    const life=Math.sin(p.a/90*Math.PI);
+    cx.strokeStyle=(S.layer==='sat'||S.layer==='hyb')?`rgba(255,255,255,${pAlpha*life})`:`rgba(15,23,42,${pAlpha*life*.8})`;cx.lineWidth=1.4;
+    cx.beginPath();cx.moveTo(ox-vx*6,oy-vy*6);cx.lineTo(p.x,p.y);cx.stroke();
+  }
+  requestAnimationFrame(stepP);
+}
+requestAnimationFrame(stepP);
 
-                let detailHtml = `
-                    <div class="result-detail">
-                        <div class="stat pass">
-                            <div class="num">${correct}</div>
-                            <div class="label">Correct</div>
-                        </div>
-                        <div class="stat fail">
-                            <div class="num">${wrong}</div>
-                            <div class="label">Incorrect</div>
-                        </div>
-                        <div class="stat">
-                            <div class="num">${pct}%</div>
-                            <div class="label">Score</div>
-                        </div>
-                    </div>
-                `;
+/* ---------------- track select ---------------- */
+function selectTrack(id){
+  S.track=id;save('rw_track',id);
+  const t=T(); $('mapTitle').innerHTML=`${t.name}<small>${t.info}</small>`;
+  renderTracks(); drawTrack();
+  if(S.google)setGoogle(S.google);
+  if(S.wx){renderBest();renderCond();renderChart();renderQuick()}
+}
+function renderAll(){renderTracks();renderBest();renderCond();renderChart();renderQuick();buildPicker()}
 
-                const certHtml = passed ? `
-                    <div class="cert-badge">🏆 Group Ride Etiquette Certified</div>
-                ` : '';
+/* ---------------- date & time picker ---------------- */
+function offsetOf(dateStr,hh){const t=`${dateStr}T${hh}:00`;const H=S.wx[0].hourly.time;const i=H.indexOf(t);return i<0?null:i-S.start}
+function buildPicker(){
+  if(!S.wx)return;const H=S.wx[0].hourly.time;
+  const first=H[S.start], last=H[S.start+47];
+  $('pickDate').min=first.slice(0,10); $('pickDate').max=last.slice(0,10);
+  syncPicker();
+}
+function fillHours(dateStr){
+  let o='';for(let h=0;h<24;h++){const hh=String(h).padStart(2,'0');const off=offsetOf(dateStr,hh);const ok=off!=null&&off>=0&&off<=47;
+    o+=`<option value="${hh}" ${ok?'':'disabled'}>${hh}:00${ok?'':' –'}</option>`}
+  $('pickHour').innerHTML=o;
+}
+function syncPicker(){
+  if(!S.wx)return;const t=S.wx[0].hourly.time[S.start+S.sel];
+  $('pickDate').value=t.slice(0,10); fillHours(t.slice(0,10)); $('pickHour').value=t.slice(11,13);
+}
+function applyPicker(){
+  if(!S.wx)return;const d=$('pickDate').value;if(!d)return;fillHours(d);
+  let hh=$('pickHour').value; let off=offsetOf(d,hh);
+  if(off==null||off<0||off>47){ // pick nearest available hour that day
+    const opts=[...$('pickHour').options].filter(o=>!o.disabled);
+    if(!opts.length){toast('Forecast covers the next 48 hours only');syncPicker();return}
+    const want=+hh; const best=opts.reduce((a,b)=>Math.abs(+b.value-want)<Math.abs(+a.value-want)?b:a);
+    hh=best.value; off=offsetOf(d,hh); $('pickHour').value=hh; toast(`Showing ${hh}:00, the nearest forecast hour`);
+  }
+  setSel(off);
+}
+$('pickDate').onchange=applyPicker; $('pickHour').onchange=applyPicker;
 
-                const title = passed ? '🎉 Excellent!' : '📚 Keep Learning';
-                const sub = passed ?
-                    'You know your group ride etiquette. Ride safe!' :
-                    'Review the guide and aim for 70% to pass.';
+$('lmCode').addEventListener('click',async e=>{e.preventDefault();e.stopPropagation();
+  try{await navigator.clipboard.writeText('DXB');toast('Code DXB copied! 15% OFF at lameda.cc')}catch(_){toast('Use code DXB at lameda.cc for 15% OFF')}});
+/* ---------------- Lameda sponsor artwork (live from lameda.cc) ---------------- */
+(async function lamedaArt(){
+  const box=$('lmArt'); box.innerHTML='<div class="fb">LAMEDA</div>';
+  try{
+    const r=await fetch('https://lameda.cc/products.json?limit=12'); if(!r.ok)throw 0;
+    const j=await r.json(); const imgs=[];
+    (j.products||[]).forEach(p=>{if(p.images&&p.images[0])imgs.push(p.images[0].src.replace(/(\.[a-z]+)(\?|$)/i,'$1?width=700&'))});
+    if(!imgs.length)throw 0;
+    const els=imgs.slice(0,8).map((src,i)=>{const im=new Image();im.alt='Lameda cycling apparel';im.referrerPolicy='no-referrer';im.src=src;box.appendChild(im);return im});
+    let k=0; els[0].onload=()=>{els[0].classList.add('on');box.querySelector('.fb').style.display='none'};
+    setInterval(()=>{els[k].classList.remove('on');k=(k+1)%els.length;els[k].classList.add('on')},3500);
+  }catch(e){/* keep text fallback */}
+})();
 
-                renderTarget.innerHTML = `
-                    <div class="results-container">
-                        ${certHtml}
-                        <div class="score-circle">
-                            <div class="score-number">${pct}%</div>
-                            <div class="score-label">Score</div>
-                        </div>
-                        <div class="result-title">${title}</div>
-                        <div class="result-sub">${sub}</div>
-                        ${detailHtml}
-                        <div class="results-actions">
-                            <button class="btn btn-primary" id="retryBtn">🔄 Retry</button>
-                            <button class="btn btn-outline" id="reviewBtn">📋 Review</button>
-                            <button class="btn btn-whatsapp" id="shareWhatsAppBtn">📱 Share</button>
-                        </div>
-                    </div>
-                `;
+/* ---------------- units ---------------- */
+document.querySelectorAll('#units button').forEach(b=>{b.classList.toggle('on',b.dataset.u===S.unit);b.onclick=()=>{S.unit=b.dataset.u;save('rw_unit',S.unit);document.querySelectorAll('#units button').forEach(x=>x.classList.toggle('on',x===b));if(S.wx)renderAll()}});
+$('refresh').onclick=()=>{fetchWeather();toast('Refreshing forecast…')};
 
-                statusBadge.textContent = passed ? '✅ Passed' : '❌ Failed';
+/* ---------------- share ---------------- */
+function toast(m,ms=3200){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),ms)}
+function shareText(){
+  if(!S.wx)return 'TheCyclistDubai Weather';
+  const ti=TI(),h=hourAt(ti,S.sel),lt=parseLocal(h.time),[lab]=scoreInfo(h.score);
+  const when=S.sel===0?`Now (${dubaiNow().hour}:${dubaiNow().minute})`:`${relDay(h.time)} ${lt.day} ${lt.date} ${lt.mon}, ${lt.hm}`;
+  let s=`🚴 *${T().name}*\n🕒 ${when} · Dubai\n🌡️ ${Math.round(h.t)}°C (feels ${Math.round(h.fl)}°C) ${wx(h.code,h.day)[0]}\n💨 Wind ${spd(h.w)} ${uLbl()} from ${card(h.dir)}, gusts ${spd(h.g)} ${uLbl()}\n💧 Humidity ${h.rh}% · UV ${h.uv??'-'}\n✅ Ride score ${h.score}/100 (${lab})`;
+  if(S.best!=null){const b=hourAt(ti,S.best);s+=`\n⭐ Best window: ${relDay(b.time)} ${parseLocal(b.time).hm} (score ${b.score})`}
+  return s+'\n\n🎁 Lameda.cc · use code DXB for 15% OFF\n📲 TheCyclistDubai Weather · instagram.com/thecyclistdubai';
+}
+$('share').onclick=async()=>{
+  const text=shareText();
+  toast('📸 Taking screenshot…',8000);
+  let blob=null;
+  try{
+    const canvas=await html2canvas($('capture'),{useCORS:true,backgroundColor:'#f5f8fb',scale:Math.min(2,devicePixelRatio||1),
+      ignoreElements:el=>el.hasAttribute&&el.hasAttribute('data-noshot')||el.id==='gframe'});
+    blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
+  }catch(e){console.warn(e)}
+  const fname=`thecyclistdubai-weather-${S.track}.png`;
+  if(blob&&navigator.canShare){
+    const file=new File([blob],fname,{type:'image/png'});
+    if(navigator.canShare({files:[file]})){
+      try{await navigator.share({files:[file],text,title:'TheCyclistDubai Weather'});toast('Choose WhatsApp in the share sheet ✔');return}catch(e){if(e.name==='AbortError'){toast('Share cancelled');return}}
+    }
+  }
+  // desktop fallback: save image + WhatsApp link in a dialog (avoids popup blockers)
+  $('mWa').href='https://wa.me/?text='+encodeURIComponent(text);
+  if(blob){const u=URL.createObjectURL(blob);$('mImg').src=u;$('mImg').style.display='block';$('mDl').href=u;$('mDl').download=fname;$('mDl').style.display='';
+    const a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();
+    $('mTxt').textContent='Screenshot saved to your Downloads. Tap Open WhatsApp, pick a chat and attach the image. The forecast text is already filled in.';}
+  else{$('mImg').style.display='none';$('mDl').style.display='none';$('mTxt').textContent='Screenshot isn\'t available in this browser, but you can still send the forecast as text.';}
+  $('toast').classList.remove('show');$('modal').style.display='grid';
+};
 
-                document.getElementById('retryBtn').addEventListener('click', resetQuiz);
-                document.getElementById('reviewBtn').addEventListener('click', reviewAnswers);
+/* ---------------- compass ticks ---------------- */
+(function(){let g='';for(let i=0;i<72;i++){const a=i*5*Math.PI/180,r1=i%18===0?56:i%2===0?60:62,r2=65;g+=`<line x1="${75+Math.sin(a)*r1}" y1="${75-Math.cos(a)*r1}" x2="${75+Math.sin(a)*r2}" y2="${75-Math.cos(a)*r2}" stroke="${i%18===0?'#65a30d':'#94a3b8'}" stroke-width="${i%18===0?2:1}"/>`}$('ticks').innerHTML=g})();
 
-                document.getElementById('shareWhatsAppBtn').addEventListener('click', function() {
-                    const total = QUESTIONS.length;
-                    const correct = getCorrectCount();
-                    const pct = Math.round((correct / total) * 100);
-                    const text =
-                        `I scored ${correct}/${total} (${pct}%) on the Dubai Group Ride Etiquette Quiz! 🚴 Can you beat me? Take it here: ${window.location.href}`;
-                    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
-                    window.open(url, '_blank');
-                });
-
-                progressFill.style.width = '100%';
-                questionCounter.textContent = 'Completed';
-                scoreDisplay.textContent = `${correct} / ${total} correct`;
-                progressSection.style.display = 'block';
-            }
-
-            // ─── REVIEW ──────────────────────────────────────────────────
-            function reviewAnswers() {
-                let html = `
-                    <div style="padding: 4px 0;">
-                        <h3 style="font-size:16px;font-weight:800;color:#1a202c;margin-bottom:12px;">📋 Review &amp; Signals</h3>
-                        <div style="display:flex;flex-direction:column;gap:12px;max-height:400px;overflow-y:auto;padding-right:4px;">
-                `;
-                QUESTIONS.forEach((q, i) => {
-                    const selected = state.answers[i];
-                    const isCorrect = selected === q.correct;
-                    const selText = selected !== null ? q.options[selected] : 'Not answered';
-                    const correctText = q.options[q.correct];
-                    const statusIcon = selected !== null ? (isCorrect ? '✅' : '❌') : '⬜';
-                    const statusColor = selected !== null ? (isCorrect ? '#38a169' : '#e53e3e') : '#a0aec0';
-
-                    let signalHtml = '';
-                    if (q.visual || q.verbal) {
-                        signalHtml = `
-                            <div class="signal-box">
-                                ${q.visual ? `<div class="signal-item"><span class="icon">✋</span> <span class="label">Visual:</span> ${q.visual}</div>` : ''}
-                                ${q.verbal ? `<div class="signal-item"><span class="icon">🗣️</span> <span class="label">Verbal:</span> ${q.verbal}</div>` : ''}
-                            </div>
-                        `;
-                    } else {
-                        signalHtml = `
-                            <div class="signal-box">
-                                <div class="signal-item signal-na">No specific signal</div>
-                            </div>
-                        `;
-                    }
-
-                    html += `
-                        <div style="background:#f7fafc;border-radius:10px;padding:10px 14px;border-left:4px solid ${statusColor};">
-                            <div style="display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;">
-                                <span style="font-weight:700;font-size:13px;color:#1a202c;">Q${i+1}: ${q.text}</span>
-                                <span style="font-size:11px;font-weight:600;color:${statusColor};">${statusIcon} ${selected !== null ? (isCorrect ? 'Correct' : 'Wrong') : 'Unanswered'}</span>
-                            </div>
-                            <div style="font-size:13px;color:#4a5568;margin-top:3px;">
-                                <span style="font-weight:600;">Your answer:</span> ${selText}
-                                ${selected !== null && !isCorrect ? ` <span style="color:#38a169;font-weight:600;">(Correct: ${correctText})</span>` : ''}
-                            </div>
-                            ${q.explanation ? `<div style="font-size:12px;color:#6b7280;margin-top:4px;background:#edf2f7;padding:4px 8px;border-radius:6px;">💡 ${q.explanation}</div>` : ''}
-                            ${signalHtml}
-                        </div>
-                    `;
-                });
-                html += `
-                        </div>
-                        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
-                            <button class="btn btn-primary" id="closeReviewBtn">Close</button>
-                            <button class="btn btn-secondary" id="retryFromReviewBtn">🔄 Retry</button>
-                        </div>
-                    </div>
-                `;
-
-                renderTarget.innerHTML = html;
-
-                document.getElementById('closeReviewBtn').addEventListener('click', function() {
-                    state.examCompleted = true;
-                    render();
-                });
-                document.getElementById('retryFromReviewBtn').addEventListener('click', resetQuiz);
-                progressSection.style.display = 'none';
-            }
-
-            // ─── STUDY PAGE ─────────────────────────────────────────────
-            function renderStudy() {
-                let html = `
-                    <div class="study-container">
-                        <h3 style="font-size:16px;font-weight:800;color:#1a202c;margin-bottom:10px;">📖 Study Guide – All 20 Questions</h3>
-                        <p style="font-size:13px;color:#4a5568;margin-bottom:12px;">Review questions, answers, and signals.</p>
-                `;
-                QUESTIONS.forEach((q, i) => {
-                    const correctText = q.options[q.correct];
-                    let signalTags = '';
-                    if (q.visual || q.verbal) {
-                        let tags = [];
-                        if (q.visual) tags.push(`<span class="tag">✋ ${q.visual}</span>`);
-                        if (q.verbal) tags.push(`<span class="tag verbal">🗣️ ${q.verbal}</span>`);
-                        signalTags = `<div class="signals">${tags.join(' ')}</div>`;
-                    } else {
-                        signalTags = `<div class="signals"><span class="tag" style="background:#edf2f7;color:#4a5568;">No specific signal</span></div>`;
-                    }
-                    html += `
-                        <div class="study-item">
-                            <div class="q">Q${i+1}: ${q.text}</div>
-                            <div class="a"><strong>Answer:</strong> ${correctText}</div>
-                            ${q.explanation ? `<div class="explanation">💡 ${q.explanation}</div>` : ''}
-                            ${signalTags}
-                        </div>
-                    `;
-                });
-                html += `
-                    </div>
-                `;
-                renderTarget.innerHTML = html;
-                progressSection.style.display = 'none';
-                statusBadge.textContent = '📖 Study Mode';
-            }
-
-            // ─── NAVIGATION ─────────────────────────────────────────────
-            function updateNavTabs() {
-                const tabs = navTabs.querySelectorAll('.nav-tab');
-                tabs.forEach(tab => {
-                    const view = tab.dataset.view;
-                    tab.classList.toggle('active', view === state.currentView);
-                });
-            }
-
-            // ─── RESET ──────────────────────────────────────────────────
-            function resetQuiz() {
-                state.currentIndex = 0;
-                state.answers = new Array(QUESTIONS.length).fill(null);
-                state.answered = new Array(QUESTIONS.length).fill(false);
-                state.showFeedback = false;
-                state.examCompleted = false;
-                statusBadge.textContent = 'Ready';
-                state.currentView = 'quiz';
-                render();
-            }
-
-            // ─── UPDATE META ──────────────────────────────────────────
-            function updateMeta() {
-                if (state.currentView === 'study') return;
-                const total = QUESTIONS.length;
-                const idx = state.currentIndex;
-                const answered = getAnsweredCount();
-                const correct = getCorrectCount();
-
-                if (!state.examCompleted) {
-                    questionCounter.textContent = `Q${idx+1} of ${total}`;
-                    scoreDisplay.textContent = `${correct} correct (${answered})`;
-                    progressFill.style.width = `${((idx+1) / total) * 100}%`;
-                    if (answered === total) {
-                        statusBadge.textContent = '✅ All answered';
-                    } else if (answered > 0) {
-                        statusBadge.textContent = `📝 ${answered}/${total}`;
-                    } else {
-                        statusBadge.textContent = 'Ready';
-                    }
-                }
-            }
-
-            // ─── EVENT LISTENERS ──────────────────────────────────────
-            navTabs.addEventListener('click', function(e) {
-                const tab = e.target.closest('.nav-tab');
-                if (!tab) return;
-                const view = tab.dataset.view;
-                if (view === state.currentView) return;
-                state.currentView = view;
-                render();
-            });
-
-            // ─── INIT ──────────────────────────────────────────────────
-            render();
-
-        })();
-    </script>
+/* ---------------- boot ---------------- */
+selectTrack(S.track);
+fetchWeather();
+setInterval(fetchWeather,15*60*1000);
+</script>
 </body>
 </html>
