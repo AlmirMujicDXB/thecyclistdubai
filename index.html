@@ -88,13 +88,18 @@ header{display:flex;align-items:center;gap:12px;margin:2px 0 10px;padding:10px 1
 .mhero .wd svg{transition:transform .7s}
 .mhero .wd span{font:500 12px Sora;color:var(--muted)}
 .mhero .sc{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px}
-.vsw{right:12px;top:12px;padding:3px;display:flex;gap:2px;border-radius:12px}
-.vsw button{border:0;background:none;padding:7px 10px;border-radius:9px;font-size:12px;font-weight:700;color:var(--muted)}
+.mbar{left:10px;right:10px;bottom:20px;padding:5px 5px 5px 12px;display:flex;align-items:center;gap:8px;border-radius:14px}
+.lgd{display:flex;gap:11px;align-items:center;font-size:11.5px;font-weight:600;flex:1;min-width:0}
+.lgd .lg{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.lgd i{width:14px;height:4px;border-radius:2px;display:block}
+.lgd em,.vsw em{font-style:normal}
+.dirb{flex:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.dirb:hover{border-color:var(--text)}
+.vsw{flex:none;display:flex;gap:2px;background:var(--panel2);border-radius:10px;padding:2px}
+.vsw button{border:0;background:none;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
 .vsw button.on{background:var(--text);color:#fff}
-.legend{left:12px;bottom:22px;padding:7px 11px;font-size:11px;display:flex;gap:12px;align-items:center;border-radius:12px}
-.legend .lg{display:flex;align-items:center;gap:5px;white-space:nowrap}
-.legend .sw{width:16px;height:4px;border-radius:2px}
-.maploading{left:50%;bottom:64px;transform:translateX(-50%);padding:6px 12px;font-size:12px;display:none;border-radius:999px}
+.darr{width:18px;height:18px;display:grid;place-items:center;color:#fff;font-size:13px;line-height:1;text-shadow:0 0 3px #000,0 0 2px #000;pointer-events:none}
+.maploading{left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;font-size:12px;display:none;border-radius:999px}
 .mapinfo{padding:10px 14px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .mapinfo b{color:var(--text)}
 .fac{order:3;width:100%;display:flex;gap:6px;flex-wrap:wrap}
@@ -221,13 +226,16 @@ footer a:hover{color:var(--text)}
   .mhero .wd{margin-top:3px;font-size:12px}
   .mhero .wd svg{width:18px;height:18px}
   .mhero .sc{margin-top:5px;font-size:11px;padding:3px 8px}
-  .vsw{right:10px;top:auto;bottom:62px}
   .leaflet-control-zoom{display:none}
   .mapinfo{padding:10px 14px 12px}
   .mapinfo a{margin-left:0;width:100%}
   .mhero{max-width:calc((100% - 20px)/.7)}
-  .vsw button{padding:8px 9px;font-size:12px}
-  .legend{left:10px;right:10px;bottom:20px;justify-content:space-between;font-size:10.5px;gap:6px}
+  .mbar{left:8px;right:8px;bottom:18px;padding:4px 4px 4px 9px;gap:6px}
+  .lgd{gap:8px;font-size:11px}
+  .lgd em,.vsw em{display:none}
+  .lgd i{width:10px}
+  .dirb{padding:6px 8px;font-size:11.5px}
+  .vsw button{padding:6px 8px;font-size:14px}
   .bigtemp .v{font-size:58px}
   .kv b{font-size:15px}
   .best{font-size:13px}
@@ -280,15 +288,18 @@ footer a:hover{color:var(--text)}
         <div class="wd"><svg width="22" height="22" viewBox="0 0 34 34" id="mArrow"><circle cx="17" cy="17" r="16" fill="#f1f5f9" stroke="#cbd5e1"/><path d="M17 5 L23 21 L17 17 L11 21 Z" fill="#65a30d"/></svg><b id="mWind">--</b><span id="mDir"></span></div>
         <div class="sc" id="mScore">—</div>
       </div>
-      <div class="ov vsw" id="layers" data-noshot>
-        <button data-l="sat" class="on">🛰️ Satellite</button>
-        <button data-l="cycle">🚲 Cycling</button>
-      </div>
       <div class="ov maploading" id="maploading">Loading track…</div>
-      <div class="ov legend" id="legend">
-        <div class="lg"><span class="sw" style="background:#dc2626"></span>Head / tailwind</div>
-        <div class="lg"><span class="sw" style="background:#d97706"></span>Diagonal</div>
-        <div class="lg"><span class="sw" style="background:#0284c7"></span>Crosswind</div>
+      <div class="ov mbar" id="mbar">
+        <div class="lgd">
+          <span class="lg"><i style="background:#dc2626"></i><span>Head<em>wind</em></span></span>
+          <span class="lg"><i style="background:#16a34a"></i><span>Tail<em>wind</em></span></span>
+          <span class="lg"><i style="background:#0284c7"></i><span>Cross<em>wind</em></span></span>
+        </div>
+        <button class="dirb" id="dirBtn" title="Your riding direction (tap to reverse)">↺ Anticlockwise</button>
+        <div class="vsw" id="layers" data-noshot>
+          <button data-l="sat" class="on" title="Satellite">🛰️<em> Satellite</em></button>
+          <button data-l="cycle" title="Cycling map">🚲<em> Cycling</em></button>
+        </div>
       </div>
     </div>
     <div class="mapinfo"><span id="mapInfo">—</span><div class="fac"><span>🚿 Free showers</span><span>🚻 Toilets</span><span>☕ Coffee shops</span><span>🚲 Bike rental</span></div><a id="dirLink" href="#" target="_blank" rel="noopener" data-noshot>Directions ↗</a></div>
@@ -378,16 +389,16 @@ footer a:hover{color:var(--text)}
 const TRACKS = [
   { id:'alqudra', name:'Al Qudra Cycle Track', short:'Al Qudra', lat:24.8498, lng:55.3449, zoom:11,
     info:'<b>~80 km</b> desert loop (18–86 km options) · start: Al Qudra Cycle Hub',
-    bbox:[24.60,55.12,24.93,55.52], filter:'way["highway"="cycleway"]' },
+    bbox:[24.60,55.12,24.93,55.52], filter:'way["highway"="cycleway"]', dir:'cw' },
   { id:'meydan', name:'Meydan · Nad Al Sheba Cycle Park', short:'Meydan', lat:25.1487, lng:55.2864, zoom:14,
     info:'<b>10 km</b> loop · one-way anticlockwise · lit at night',
-    bbox:[25.133,55.262,25.172,55.308], filter:'way["highway"="cycleway"]' },
+    bbox:[25.133,55.262,25.172,55.308], filter:'way["highway"="cycleway"]', dir:'ccw' },
   { id:'mushrif', name:'Mushrif National Park', short:'Mushrif', lat:25.2190, lng:55.4560, zoom:14,
     info:'<b>50 km</b> MTB trails (green / blue / red) + 4 km park track',
     bbox:[25.190,55.420,25.250,55.500], filter:'way["highway"~"cycleway|path|track"]["bicycle"~"designated|yes"];way["mtb:scale"]', mtb:true },
   { id:'kite', name:'Kite Beach · Jumeirah Beach Track', short:'Kite Beach', lat:25.1575, lng:55.1965, zoom:15,
     info:'<b>16 km</b> beachfront track · 20 km/h speed limit',
-    bbox:[25.140,55.178,25.176,55.215], filter:'way["highway"="cycleway"]', kite:true },
+    bbox:[25.140,55.178,25.176,55.215], filter:'way["highway"="cycleway"]', kite:true, line:true },
   { id:'hatta', name:'Hatta MTB Trail Centre', short:'Hatta MTB', lat:24.8030, lng:56.1260, zoom:13,
     info:'<b>~53 km</b> graded MTB trails, 21 routes · start: Hatta Wadi Hub',
     bbox:[24.755,56.060,24.860,56.195], filter:'way["mtb:scale"];way["highway"~"path|track|cycleway"]["bicycle"~"designated|yes"];way["highway"~"path|track"]["mtb"="yes"]', mtb:true },
@@ -599,26 +610,48 @@ async function loadTrack(tr){
   return null;
 }
 async function drawTrack(){
-  const tr=T();trackLayer.clearLayers();segs=[];if(startMarker)map.removeLayer(startMarker);
+  const tr=T();trackLayer.clearLayers();segs=[];arrowLayer.clearLayers();paintDirLabel();if(startMarker)map.removeLayer(startMarker);
   startMarker=L.marker([tr.lat,tr.lng],{icon:startIcon}).addTo(map).bindPopup(`<b>${tr.name}</b><br>${tr.info}<br>🚿 Free showers · 🚻 Toilets · ☕ Coffee · 🚲 Bike rental`);
   map.setView([tr.lat,tr.lng],tr.zoom);
   $('mapInfo').innerHTML=tr.info;$('dirLink').href=`https://www.google.com/maps/dir/?api=1&destination=${tr.lat},${tr.lng}`;
   $('maploading').style.display='block';const lines=await loadTrack(tr);$('maploading').style.display='none';
   if(tr.id!==S.track)return;
   if(!lines||!lines.length){L.circle([tr.lat,tr.lng],{radius:tr.zoom<13?6000:700,color:'#65a30d',weight:2,dashArray:'6 6',fillOpacity:.05}).addTo(trackLayer);return}
-  const all=[];
+  const all=[];lines.forEach(l=>all.push(...l.pts));
+  // centroid & main axis (for riding-direction maths)
+  const cy=all.reduce((s,p)=>s+p[0],0)/all.length,cx0=all.reduce((s,p)=>s+p[1],0)/all.length,k=Math.cos(cy*Math.PI/180);
+  let sxx=0,syy=0,sxy=0;all.forEach(p=>{const x=(p[1]-cx0)*k,y=p[0]-cy;sxx+=x*x;syy+=y*y;sxy+=x*y});
+  const ang=.5*Math.atan2(2*sxy,sxx-syy);let ax=[Math.cos(ang),Math.sin(ang)];if(ax[1]<0||(ax[1]===0&&ax[0]<0))ax=[-ax[0],-ax[1]];
+  S.axisBrg=(Math.atan2(ax[0],ax[1])*180/Math.PI+360)%360;
   lines.forEach(l=>{L.polyline(l.pts,{color:'#fff',weight:8,opacity:.8,interactive:false}).addTo(trackLayer);
     for(let i=0;i<l.pts.length-1;i++){const a=l.pts[i],b=l.pts[i+1];const p=L.polyline([a,b],{color:'#65a30d',weight:4.5,lineCap:'round'}).addTo(trackLayer);
-      p.bindTooltip(()=>segTip(p),{sticky:true});p._brg=bearing(a,b);p._km=dist(a,b);segs.push(p)}
-    all.push(...l.pts)});
+      p.bindTooltip(()=>segTip(p),{sticky:true});p._brg=bearing(a,b);p._km=dist(a,b);p._mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+      const vx=(b[1]-a[1])*k,vy=b[0]-a[0],mx=(p._mid[1]-cx0)*k,my=p._mid[0]-cy;
+      p._ccw=(mx*vy-my*vx)>0; p._fwd=(vx*ax[0]+vy*ax[1])>=0; segs.push(p)}});
+  paintDir();
   map.fitBounds(L.latLngBounds(all),{padding:[40,40],maxZoom:16});
   if(S.wx)colorTrack(hourAt(TI(),S.sel).dir);
 }
 const relAngle=(b,d)=>Math.abs(((b-d)%360+540)%360-180);
-function segTip(p){if(!S.wx)return'';const a=relAngle(p._brg,hourAt(TI(),S.sel).dir);const one=a<45?'headwind':a>135?'tailwind':'crosswind',oth=a<45?'tailwind':a>135?'headwind':'crosswind';
-  return `Riding ${card(p._brg)}: <b>${one}</b><br>Riding ${card(p._brg+180)}: <b>${oth}</b>`}
+/* riding direction: loops = clockwise / anticlockwise, lines = along main axis */
+function rideDir(){const t=T();const d=load('rw_dir_'+t.id,'');if(t.line)return d==='rev'?'rev':'fwd';return d==='cw'||d==='ccw'?d:(t.dir||'cw')}
+function effBrg(p){const t=T(),d=rideDir();const keep=t.line?(p._fwd===(d==='fwd')):(p._ccw===(d==='ccw'));return keep?p._brg:(p._brg+180)%360}
+function windKind(p,from){const a=relAngle(effBrg(p),from);return a<60?'head':a>120?'tail':'cross'}
+const KCOL={head:'#dc2626',tail:'#16a34a',cross:'#0284c7'},KTXT={head:'Headwind',tail:'Tailwind',cross:'Crosswind'};
+function paintDirLabel(){const t=T(),d=rideDir();$('dirBtn').innerHTML=t.line?'⇄ Direction':(d==='ccw'?'↺ Anticlockwise':'↻ Clockwise')}
+function paintDir(){const t=T(),d=rideDir();
+  if(t.line){const b=d==='fwd'?S.axisBrg||45:((S.axisBrg||45)+180)%360;$('dirBtn').innerHTML=`${'↑↗→↘↓↙←↖'[Math.round(b/45)%8]} Heading ${card(b)}`}
+  else $('dirBtn').innerHTML=d==='ccw'?'↺ Anticlockwise':'↻ Clockwise';
+  drawArrows();if(S.wx)colorTrack(hourAt(TI(),S.sel).dir)}
+$('dirBtn').onclick=()=>{const t=T(),d=rideDir();save('rw_dir_'+t.id,t.line?(d==='fwd'?'rev':'fwd'):(d==='ccw'?'cw':'ccw'));paintDir();
+  toast(t.line?'Riding direction reversed':`Riding ${rideDir()==='ccw'?'anticlockwise':'clockwise'}`)};
+const arrowLayer=L.layerGroup().addTo(map);
+function drawArrows(){arrowLayer.clearLayers();if(!segs.length)return;let acc=0;const tot=segs.reduce((s,p)=>s+p._km,0),gap=Math.max(.25,tot/14);
+  segs.forEach(p=>{acc+=p._km;if(acc<gap)return;acc=0;const b=effBrg(p);
+    L.marker(p._mid,{interactive:false,icon:L.divIcon({className:'',html:`<div class="darr" style="transform:rotate(${b-90}deg)">➤</div>`,iconSize:[18,18],iconAnchor:[9,9]})}).addTo(arrowLayer)})}
+function segTip(p){if(!S.wx)return'';const k=windKind(p,hourAt(TI(),S.sel).dir);return `Riding ${card(effBrg(p))}: <b style="color:${KCOL[k]}">${KTXT[k]}</b>`}
 function colorTrack(dir){if(!segs.length){$('xw').textContent='--';return}let cross=0,tot=0;
-  segs.forEach(p=>{const al=Math.abs(Math.cos(relAngle(p._brg,dir)*Math.PI/180));p.setStyle({color:al>.75?'#dc2626':al>.4?'#d97706':'#0284c7'});tot+=p._km;if(al<=.4)cross+=p._km});
+  segs.forEach(p=>{const k=windKind(p,dir);p.setStyle({color:KCOL[k]});tot+=p._km;if(k==='cross')cross+=p._km});
   $('xw').textContent=Math.round(cross/tot*100)+'%'}
 
 /* wind particles */
