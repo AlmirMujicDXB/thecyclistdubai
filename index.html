@@ -187,6 +187,15 @@ header>*{position:relative;z-index:1}
 .wt td.sm{font-size:12px;letter-spacing:-.3px;overflow:visible}
 .wt .arr{display:inline-block;color:var(--accent);margin-right:6px;font-size:14px;transition:transform .7s}
 .wdesc{font-size:12px;color:var(--muted);margin-top:6px}
+.wsplit{margin-top:10px;background:var(--panel2);border-radius:12px;padding:10px 12px}
+.ws-h{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.ws-h small{font-size:11px;text-transform:none;letter-spacing:0;font-weight:600}
+.ws-bar{display:flex;height:10px;border-radius:6px;overflow:hidden;margin:8px 0 8px;background:#e2e8f0}
+.ws-bar span{display:block;height:100%;width:0;transition:width .6s}
+.ws-l{display:flex;justify-content:space-between;gap:8px;font-size:12px;flex-wrap:wrap}
+.ws-l span{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.ws-l i{width:8px;height:8px;border-radius:50%;display:block}
+.ws-l b{font-family:"JetBrains Mono",monospace}
 .tip{margin-top:10px;font-size:13px;padding:10px 12px;border-radius:12px;line-height:1.45}
 .tip.kit{background:#fff7ed;color:#7c2d12}
 .tip.kite{background:#e0f2fe;color:#075985;display:none}
@@ -392,10 +401,19 @@ footer a:hover{color:var(--text)}
     <table class="wt">
       <tr><th>Temp</th><td id="temp">--</td><th>Feels</th><td id="feels">--</td></tr>
       <tr><th>Wind</th><td><span class="arr" id="wArr">➤</span><span id="wspd">--</span></td><th>Gusts</th><td id="gust">--</td></tr>
-      <tr><th>From</th><td id="wdir">--</td><th>Crosswind</th><td id="xw">--</td></tr>
+      <tr><th>From</th><td id="wdir">--</td><th>Riding</th><td id="xw">--</td></tr>
       <tr><th>Humidity</th><td id="hum">--</td><th>UV</th><td id="uv">--</td></tr>
       <tr><th>Rain</th><td id="rain">--</td><th>Sun</th><td class="sm"><span id="sunr">--</span>–<span id="suns">--</span></td></tr>
     </table>
+    <div class="wsplit" id="wsplit">
+      <div class="ws-h">Wind on the track <small id="wsDir"></small></div>
+      <div class="ws-bar"><span id="wsHb" style="background:#dc2626"></span><span id="wsTb" style="background:#16a34a"></span><span id="wsCb" style="background:#eab308"></span></div>
+      <div class="ws-l">
+        <span><i style="background:#dc2626"></i>Headwind <b id="wsH">--</b></span>
+        <span><i style="background:#16a34a"></i>Tailwind <b id="wsT">--</b></span>
+        <span><i style="background:#eab308"></i>Crosswind <b id="wsC">--</b></span>
+      </div>
+    </div>
     <div class="wdesc" id="wdesc"></div>
 
     <div class="best" id="best">⏳ Finding the best riding window…</div>
@@ -743,9 +761,16 @@ function drawArrows(){arrowLayer.clearLayers();if(!segs.length)return;let acc=0;
   segs.forEach(p=>{acc+=p._km;if(acc<gap)return;acc=0;const b=effBrg(p);
     L.marker(p._mid,{interactive:false,icon:L.divIcon({className:'',html:`<div class="darr" style="transform:rotate(${b-90}deg)">➤</div>`,iconSize:[18,18],iconAnchor:[9,9]})}).addTo(arrowLayer)})}
 function segTip(p){if(!S.wx)return'';const k=windKind(p,hourAt(TI(),S.sel).dir);return `Riding ${card(effBrg(p))}: <b style="color:${KCOL[k]}">${KTXT[k]}</b>`}
-function colorTrack(dir){if(!segs.length){$('xw').textContent='--';return}let cross=0,tot=0;
-  segs.forEach(p=>{const k=windKind(p,dir);p.setStyle({color:KCOL[k]});tot+=p._km;if(k==='cross')cross+=p._km});
-  $('xw').textContent=Math.round(cross/tot*100)+'%'}
+function colorTrack(dir){
+  const t=T(),d=rideDir(),dl=t.line?`Heading ${card(d==='fwd'?S.axisBrg||45:((S.axisBrg||45)+180)%360)}`:(d==='ccw'?'Anticlockwise':'Clockwise');
+  $('xw').textContent=dl;$('wsDir').textContent=`riding ${dl.toLowerCase()}`;
+  if(!segs.length){['wsH','wsT','wsC'].forEach(id=>$(id).textContent='--');['wsHb','wsTb','wsCb'].forEach(id=>$(id).style.width='0');return}
+  const km={head:0,tail:0,cross:0};let tot=0;
+  segs.forEach(p=>{const k=windKind(p,dir);p.setStyle({color:KCOL[k]});km[k]+=p._km;tot+=p._km});
+  let H=Math.round(km.head/tot*100),Tl=Math.round(km.tail/tot*100),C=100-H-Tl;if(C<0)C=0;
+  $('wsH').textContent=H+'%';$('wsT').textContent=Tl+'%';$('wsC').textContent=C+'%';
+  $('wsHb').style.width=H+'%';$('wsTb').style.width=Tl+'%';$('wsCb').style.width=C+'%';
+}
 
 /* wind particles */
 const cv=$('wind'),cx=cv.getContext('2d');let P=[],vx=0,vy=0,pA=.5;
