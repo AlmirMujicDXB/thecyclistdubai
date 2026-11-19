@@ -32,14 +32,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 a{color:inherit}
 
 /* ---------- header ---------- */
-header{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:12px;row-gap:10px;margin:2px 0 10px;padding:16px 16px 18px 18px;min-height:96px;border-radius:18px;color:#fff;position:relative;overflow:hidden;
+header{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:12px;row-gap:4px;margin:2px 0 10px;padding:8px 10px 8px 16px;height:70px;box-sizing:border-box;border-radius:16px;color:#fff;position:relative;overflow:hidden;
   background:var(--th-hdr);box-shadow:0 10px 28px var(--th-glow)}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;pointer-events:none;opacity:.9;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 40' preserveAspectRatio='none'%3E%3Cpath d='M0 28 C60 10 110 12 170 26 S290 40 340 22 S390 14 400 18 V40 H0Z' fill='%23bef264' fill-opacity='.16'/%3E%3Cpath d='M0 34 C70 22 130 30 200 34 S320 26 400 32 V40 H0Z' fill='%23ffffff' fill-opacity='.12'/%3E%3C/svg%3E") bottom/100% 100% no-repeat}
 header>*{position:relative;z-index:1}
 .brand{flex:1;min-width:0}
-.brand h1{font-size:22px;margin:0;letter-spacing:-.5px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand h1{font-size:19px;margin:0;letter-spacing:-.5px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand h1 span{background:linear-gradient(90deg,#d9f99d,var(--th-lime));-webkit-background-clip:text;background-clip:text;color:transparent}
-header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:12.5px;color:#e0f2fe;white-space:nowrap;justify-self:start}
+header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:12px;color:#e0f2fe;white-space:nowrap;justify-self:start}
 .wx-tag{font-weight:800;letter-spacing:1.4px;text-transform:uppercase;font-size:10px;color:#fff;background:#ffffff26;border:1px solid #ffffff40;padding:2px 7px;border-radius:6px}
 .clk{display:inline-flex;align-items:center;gap:5px;overflow:hidden;text-overflow:ellipsis}
 .clk i{width:6px;height:6px;border-radius:50%;background:#86efac;box-shadow:0 0 0 3px #86efac40;flex:none}
@@ -385,9 +385,9 @@ footer a:hover{color:var(--text)}
   .hr{min-width:48px;padding:4px 5px 5px;font-size:12px}
   .hr small{font-size:9.5px}
   .hr i{margin-top:3px}
-  header{padding:12px 12px 14px 14px;column-gap:10px;row-gap:9px;min-height:0}
+  header{padding:14px 12px 14px 14px;column-gap:10px;row-gap:12px;height:126px;border-radius:14px;align-content:center}
   header .tag{font-size:12px}
-  .brand h1{font-size:19px}
+  .brand h1{font-size:21px}
   .ig{padding:3px 3px;gap:0}
   .ig .igt{display:none}
   .ig .igi{width:30px;height:30px}
