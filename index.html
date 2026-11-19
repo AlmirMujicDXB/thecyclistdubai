@@ -76,6 +76,15 @@ header>*{position:relative;z-index:1}
 .cd i{width:5px;height:5px;border-radius:50%;display:block}
 .cd.on i{box-shadow:0 0 0 1.5px #fff}
 .cd.today{outline:1.5px solid #ea580c;outline-offset:-1.5px}
+.cd.av:not(.fc){background:#f8fafc;color:#334155}
+.cd i.nd,.calnote i.nd{background:#cbd5e1}
+.cal h4 span{flex:1;text-align:center}
+.cnav{border:1px solid var(--line);background:#fff;border-radius:9px;width:30px;height:30px;font-size:18px;line-height:1;color:var(--text);cursor:pointer}
+.cnav:hover{border-color:#ea580c;color:#c2410c}
+.calnote{display:flex;justify-content:space-between;gap:6px;margin-top:10px;font-size:10px;color:var(--muted);flex-wrap:wrap}
+.calnote span{display:flex;align-items:center;gap:4px}
+.calnote i{width:6px;height:6px;border-radius:50%;display:block}
+.calnow{margin-top:8px;width:100%;border:1px solid #fed7aa;background:#fff7ed;color:#c2410c;border-radius:10px;padding:7px;font-weight:700;font-size:12px;cursor:pointer}
 .fld{position:relative;flex:1;min-width:0;max-width:240px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:7px 12px 7px 8px;cursor:pointer;transition:.15s;box-shadow:0 1px 2px #0f172a0a}
 .fld:hover,.fld:focus-within{border-color:#ea580c;box-shadow:0 0 0 3px #ea580c22}
 .fi{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#c2410c;background:linear-gradient(135deg,#ffedd5,#fef3c7);flex:none}
@@ -547,7 +556,7 @@ const S = {
   track: (t=>TRACKS.some(x=>x.id===t)?t:'alqudra')(load('rw_track','alqudra')),
   unit: (u=>['kmh','kn','ms'].includes(u)?u:'kmh')(load('rw_unit','kmh')),
   layer: (l=>['sat','cycle'].includes(l)?l:'sat')(load('rw_layer','sat')),
-  sel:0, wx:null, start:0, geo:{}, best:null,
+  sel:0, wx:null, start:0, geo:{}, best:null, mode:'fc', alt:null, altH:7, altCache:{}, minOff:0, maxOff:47, calYM:null,
 };
 const $ = id => document.getElementById(id);
 const T = () => TRACKS.find(t=>t.id===S.track);
@@ -559,7 +568,7 @@ function dubaiNow(){const p={};fmtParts.formatToParts(new Date()).forEach(x=>p[x
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function parseLocal(s){const d=new Date(s+':00Z');return {day:DAYS[d.getUTCDay()], date:d.getUTCDate(), mon:MONTHS[d.getUTCMonth()], h:d.getUTCHours(), hm:s.slice(11,16)}}
 function relDay(s){const n=dubaiNow();const diff=Math.round((new Date(s.slice(0,10)+'T00:00Z')-new Date(`${n.year}-${n.month}-${n.day}T00:00Z`))/864e5);
-  return diff===0?'Today':diff===1?'Tomorrow':parseLocal(s).day}
+  return diff===0?'Today':diff===1?'Tomorrow':diff===-1?'Yesterday':parseLocal(s).day}
 function tickClock(){const p=dubaiNow();$('clk').textContent=`${p.hour}:${p.minute}`;
   const d=new Date(`${p.year}-${p.month}-${p.day}T00:00Z`);$('clkd').textContent=`${DAYS[d.getUTCDay()]} ${+p.day} ${MONTHS[d.getUTCMonth()]}`}
 setInterval(tickClock,5000);tickClock();
@@ -607,22 +616,45 @@ function hourAt(ti,off){const d=S.wx[ti],i=S.start+off,H=d.hourly;
   const h={time:H.time[i],t:H.temperature_2m[i],fl:H.apparent_temperature[i],w:H.wind_speed_10m[i],g:H.wind_gusts_10m[i],dir:H.wind_direction_10m[i],rh:H.relative_humidity_2m[i],uv:H.uv_index[i],pp:H.precipitation_probability[i],code:H.weather_code[i],day:H.is_day[i]};
   if(off===0&&d.current){const c=d.current;Object.assign(h,{t:c.temperature_2m,fl:c.apparent_temperature,w:c.wind_speed_10m,g:c.wind_gusts_10m,dir:c.wind_direction_10m,rh:c.relative_humidity_2m,code:c.weather_code,day:c.is_day})}
   h.score=rideScore(h);return h}
-function sunFor(ti,t){const D=S.wx[ti].daily,k=D.time.indexOf(t.slice(0,10));return k<0?null:{rise:D.sunrise[k].slice(11),set:D.sunset[k].slice(11)}}
+function altAt(ti,hh){const A=S.alt,d=A.data[ti],H=d.hourly,D=d.daily;
+  const rise=D&&D.sunrise?+D.sunrise[0].slice(11,13)+(+D.sunrise[0].slice(14,16))/60:6.5,set=D&&D.sunset?+D.sunset[0].slice(11,13)+(+D.sunset[0].slice(14,16))/60:17.5;
+  const h={time:`${A.date}T${String(hh).padStart(2,'0')}:00`,t:H.temperature_2m[hh],fl:H.apparent_temperature[hh],w:H.wind_speed_10m[hh],g:H.wind_gusts_10m[hh],dir:H.wind_direction_10m[hh],
+    rh:H.relative_humidity_2m[hh],uv:null,pp:null,mm:H.precipitation?H.precipitation[hh]:null,code:H.weather_code[hh],day:(hh+.5>=rise&&hh+.5<=set)?1:0,kind:A.kind};
+  h.score=rideScore(h);return h}
+function cur(ti){return S.mode==='alt'&&S.alt?altAt(ti,S.altH):hourAt(ti,S.sel)}
+function sunFor(ti,t){
+  if(S.mode==='alt'&&S.alt){const D=S.alt.data[ti].daily;return D&&D.sunrise?{rise:D.sunrise[0].slice(11),set:D.sunset[0].slice(11)}:null}
+  const D=S.wx[ti].daily,k=D.time.indexOf(t.slice(0,10));return k<0?null:{rise:D.sunrise[k].slice(11),set:D.sunset[k].slice(11)}}
+/* any date outside the forecast: past = recorded weather, later = same day last year (typical) */
+async function loadAlt(d){
+  if(S.altCache[d])return S.altCache[d];
+  const H=S.wx[0].hourly.time,first=H[0].slice(0,10),n=dubaiNow(),today=`${n.year}-${n.month}-${n.day}`;
+  let kind,src=d;
+  if(d<first)kind='past';
+  else{kind='typical';let y=+d.slice(0,4)-1;src=`${y}${d.slice(4)}`;
+    const lim=new Date(Date.parse(today+'T00:00Z')-8*864e5).toISOString().slice(0,10);
+    while(src>lim){y--;src=`${y}${d.slice(4)}`}
+    if(d.slice(5)==='02-29'&&!(y%4===0&&(y%100!==0||y%400===0)))src=`${y}-02-28`}
+  const v='temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,precipitation';
+  const url='https://archive-api.open-meteo.com/v1/archive?latitude='+TRACKS.map(t=>t.lat).join(',')+'&longitude='+TRACKS.map(t=>t.lng).join(',')+
+    `&start_date=${src}&end_date=${src}&hourly=${v}&daily=sunrise,sunset&timezone=Asia%2FDubai&wind_speed_unit=kmh`;
+  const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);let j=await r.json();if(!Array.isArray(j))j=[j];
+  const A={date:d,src,kind,data:j};S.altCache[d]=A;return A}
 
 let lastFetch=0;
 async function fetchWeather(){
   $('err').style.display='none';
   const v='temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,is_day';
   const url='https://api.open-meteo.com/v1/forecast?latitude='+TRACKS.map(t=>t.lat).join(',')+'&longitude='+TRACKS.map(t=>t.lng).join(',')+
-    '&current='+v+'&hourly='+v+',uv_index,precipitation_probability&daily=sunrise,sunset&timezone=Asia%2FDubai&forecast_days=4&wind_speed_unit=kmh';
+    '&current='+v+'&hourly='+v+',uv_index,precipitation_probability&daily=sunrise,sunset&timezone=Asia%2FDubai&past_days=7&forecast_days=16&wind_speed_unit=kmh';
   try{
     const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);
     let j=await r.json();if(!Array.isArray(j))j=[j];
     const keepTime=S.wx?S.wx[0].hourly.time[S.start+S.sel]:null;
     S.wx=j;lastFetch=Date.now();
     const p=dubaiNow(),nowH=`${p.year}-${p.month}-${p.day}T${p.hour}:00`;
-    S.start=Math.max(0,j[0].hourly.time.findIndex(t=>t>=nowH));
-    if(keepTime&&S.sel>0){const k=j[0].hourly.time.indexOf(keepTime)-S.start;S.sel=k>=0&&k<=47?k:0}
+    S.start=Math.max(0,j[0].hourly.time.findIndex(t=>t>=nowH));S.minOff=-S.start;S.maxOff=j[0].hourly.time.length-1-S.start;
+    if(keepTime&&S.sel!==0){const k=j[0].hourly.time.indexOf(keepTime)-S.start;S.sel=k>=S.minOff&&k<=S.maxOff?k:0}
     renderAll();
   }catch(e){
     $('err').style.display='block';
@@ -635,49 +667,59 @@ setInterval(()=>{if(!document.hidden)fetchWeather()},15*60e3);
 /* ================= control bar ================= */
 function renderTrackRow(){
   $('trackRow').innerHTML=TRACKS.map((t,i)=>{let ex='';
-    if(S.wx){const h=hourAt(i,S.sel);ex=`<span class="t">${Math.round(h.t)}°</span><span class="dot" style="background:${scoreInfo(h.score)[1]}"></span>`}
+    if(S.wx){const h=cur(i);ex=`<span class="t">${Math.round(h.t)}°</span><span class="dot" style="background:${scoreInfo(h.score)[1]}"></span>`}
     return `<button class="pill ${t.id===S.track?'on':''}" data-t="${t.id}">${t.short}${ex}</button>`}).join('');
   $('trackRow').querySelectorAll('.pill').forEach(b=>b.onclick=()=>selectTrack(b.dataset.t));
 }
 function days(){const H=S.wx[0].hourly.time,out=[];for(let i=0;i<48;i++){const d=H[S.start+i].slice(0,10);if(!out.includes(d))out.push(d)}return out}
 const SEMO=s=>s>=80?'🟢':s>=65?'🟩':s>=50?'🟡':'🔴';
+function selDate(){return S.mode==='alt'&&S.alt?S.alt.date:S.wx[0].hourly.time[S.start+S.sel].slice(0,10)}
+function dateLabel(d){const lt=parseLocal(d+'T00:00'),rd=relDay(d+'T00:00'),n=dubaiNow();
+  return (rd==='Today'||rd==='Tomorrow'||rd==='Yesterday'?rd:lt.day)+` ${lt.date} ${lt.mon}`+(d.slice(0,4)!==n.year?` ${d.slice(0,4)}`:'')}
 function renderWhen(){
-  if(!S.wx)return;const ti=TI(),H=S.wx[0].hourly.time,cur=H[S.start+S.sel],d=cur.slice(0,10),lt=parseLocal(cur),rd=relDay(cur),n=dubaiNow();
-  $('dateTxt').textContent=(rd==='Today'||rd==='Tomorrow'?rd:lt.day)+` ${lt.date} ${lt.mon}`;
+  if(!S.wx)return;const ti=TI(),H=S.wx[0].hourly.time,d=selDate(),n=dubaiNow();
+  $('dateTxt').textContent=dateLabel(d);
   let o='';
-  for(let i=0;i<48;i++){if(!H[S.start+i].startsWith(d))continue;const x=hourAt(ti,i),l=parseLocal(x.time);
-    const label=i===0?`Now (${n.hour}:${n.minute})`:l.hm;
-    o+=`<option value="${i}">${label}  ${SEMO(x.score)} ${Math.round(x.t)}° · ${spd(x.w)} ${uLbl()} ${card(x.dir)}</option>`}
-  $('pickHour').innerHTML=o;$('pickHour').value=String(S.sel);
-  $('timeTxt').textContent=S.sel===0?`Now · ${n.hour}:${n.minute}`:lt.hm;
-  const h=hourAt(ti,S.sel),[lab,col,bg]=scoreInfo(h.score);$('selScore').textContent=`${lab} · ${h.score}`;$('selScore').style.color=col;$('selScore').style.background=bg;
+  if(S.mode==='alt'&&S.alt){for(let hh=0;hh<24;hh++){const x=altAt(ti,hh);o+=`<option value="a${hh}">${String(hh).padStart(2,'0')}:00  ${SEMO(x.score)} ${Math.round(x.t)}° · ${spd(x.w)} ${uLbl()} ${card(x.dir)}</option>`}
+    $('pickHour').innerHTML=o;$('pickHour').value='a'+S.altH;$('timeTxt').textContent=`${String(S.altH).padStart(2,'0')}:00`}
+  else{for(let i=S.minOff;i<=S.maxOff;i++){if(!H[S.start+i].startsWith(d))continue;const x=hourAt(ti,i),l=parseLocal(x.time);
+      o+=`<option value="f${i}">${i===0?`Now (${n.hour}:${n.minute})`:l.hm}  ${SEMO(x.score)} ${Math.round(x.t)}° · ${spd(x.w)} ${uLbl()} ${card(x.dir)}</option>`}
+    $('pickHour').innerHTML=o;$('pickHour').value='f'+S.sel;$('timeTxt').textContent=S.sel===0?`Now · ${n.hour}:${n.minute}`:parseLocal(H[S.start+S.sel]).hm}
+  const h=cur(ti),[lab,col,bg]=scoreInfo(h.score);$('selScore').textContent=`${lab} · ${h.score}`;$('selScore').style.color=col;$('selScore').style.background=bg;
 }
-function pickDay(d){
-  const H=S.wx[0].hourly.time,curH=parseLocal(H[S.start+S.sel]).h,opts=[];
-  for(let i=0;i<48;i++)if(H[S.start+i].startsWith(d))opts.push(i);
-  if(!opts.length){toast('Forecast covers the next 48 hours');renderWhen();return}
-  if(opts[0]===0){setSel(0);return}
-  let pick=S.sel===0?null:opts.find(i=>parseLocal(H[S.start+i]).h===curH);
-  if(pick==null)pick=opts.find(i=>parseLocal(H[S.start+i]).h===6)??opts[0];
-  setSel(pick);
+async function pickDay(d){
+  const H=S.wx[0].hourly.time,curH=parseLocal(cur(TI()).time).h,wasNow=S.mode==='fc'&&S.sel===0,opts=[];
+  for(let i=S.minOff;i<=S.maxOff;i++)if(H[S.start+i].startsWith(d))opts.push(i);
+  if(opts.length){
+    if(opts.includes(0)&&(wasNow||S.mode==='alt')){setSel(0);return}
+    let pick=wasNow?null:opts.find(i=>parseLocal(H[S.start+i]).h===curH);
+    if(pick==null)pick=opts.find(i=>parseLocal(H[S.start+i]).h===7)??opts[0];
+    setSel(pick);return}
+  try{toast('Loading weather for '+dateLabel(d)+'…',6000);const A=await loadAlt(d);S.alt=A;S.mode='alt';S.altH=wasNow?7:curH;
+    $('toast').classList.remove('show');renderWhen();renderTrackRow();renderCond()}
+  catch(e){toast('Couldn\'t load weather for that date. Try again.')}
 }
-$('pickHour').addEventListener('change',e=>setSel(+e.target.value));
+$('pickHour').addEventListener('change',e=>{const v=e.target.value;v[0]==='a'?setAlt(+v.slice(1)):setSel(+v.slice(1))});
 /* own calendar: tap a date = selected immediately (no OK button) */
 const MONTHS_L=['January','February','March','April','May','June','July','August','September','October','November','December'];
 function renderCal(){
-  if(!S.wx)return;const ti=TI(),H=S.wx[0].hourly.time,sel=H[S.start+S.sel].slice(0,10),ds=days(),n=dubaiNow(),today=`${n.year}-${n.month}-${n.day}`;
-  const best={};ds.forEach(d=>{let m=-1;for(let i=0;i<48;i++)if(H[S.start+i].startsWith(d))m=Math.max(m,hourAt(ti,i).score);best[d]=m});
-  const months=[...new Set(ds.map(d=>d.slice(0,7)))];let h='';
-  months.forEach(ym=>{const [y,m]=ym.split('-').map(Number);const first=new Date(Date.UTC(y,m-1,1)).getUTCDay(),dim=new Date(Date.UTC(y,m,0)).getUTCDate();
-    h+=`<h4>${MONTHS_L[m-1]} ${y}<small>48-hour forecast</small></h4><div class="wk">${['S','M','T','W','T','F','S'].map(x=>`<span>${x}</span>`).join('')}</div><div class="gd">`;
-    for(let i=0;i<first;i++)h+='<span></span>';
-    for(let dd=1;dd<=dim;dd++){const d=`${ym}-${String(dd).padStart(2,'0')}`,av=ds.includes(d);
-      h+=`<button class="cd ${av?'av':''} ${d===sel?'on':''} ${d===today?'today':''}" ${av?`data-d="${d}"`:'disabled'}>${dd}${av?`<i style="background:${scoreInfo(best[d])[1]}"></i>`:''}</button>`}
-    h+='</div>'});
+  if(!S.wx)return;const ti=TI(),H=S.wx[0].hourly.time,sel=selDate(),n=dubaiNow(),today=`${n.year}-${n.month}-${n.day}`;
+  if(!S.calYM)S.calYM=sel.slice(0,7);const [y,m]=S.calYM.split('-').map(Number);
+  const best={};for(let i=S.minOff;i<=S.maxOff;i++){const d=H[S.start+i].slice(0,10),sc=hourAt(ti,i).score;best[d]=Math.max(best[d]??-1,sc)}
+  const first=new Date(Date.UTC(y,m-1,1)).getUTCDay(),dim=new Date(Date.UTC(y,m,0)).getUTCDate();
+  let h=`<h4><button class="cnav" data-nav="-1" aria-label="Previous month">‹</button><span>${MONTHS_L[m-1]} ${y}</span><button class="cnav" data-nav="1" aria-label="Next month">›</button></h4>
+    <div class="wk">${['S','M','T','W','T','F','S'].map(x=>`<span>${x}</span>`).join('')}</div><div class="gd">`;
+  for(let i=0;i<first;i++)h+='<span></span>';
+  for(let dd=1;dd<=dim;dd++){const d=`${S.calYM}-${String(dd).padStart(2,'0')}`,fc=d in best;
+    h+=`<button class="cd av ${fc?'fc':''} ${d===sel?'on':''} ${d===today?'today':''}" data-d="${d}">${dd}${fc?`<i style="background:${scoreInfo(best[d])[1]}"></i>`:'<i class="nd"></i>'}</button>`}
+  h+=`</div><div class="calnote"><span><i style="background:#16a34a"></i>Forecast (16 days)</span><span><i class="nd"></i>Past: recorded · Later: typical</span></div>`;
+  if(S.calYM!==today.slice(0,7))h+=`<button class="calnow" data-today>Back to today</button>`;
   $('cal').innerHTML=h;
   $('cal').querySelectorAll('.cd.av').forEach(b=>b.onclick=e=>{e.stopPropagation();closeCal();pickDay(b.dataset.d)});
+  $('cal').querySelectorAll('.cnav').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=+b.dataset.nav;let yy=y,mm=m+k;if(mm<1){mm=12;yy--}if(mm>12){mm=1;yy++}S.calYM=`${yy}-${String(mm).padStart(2,'0')}`;renderCal()});
+  const tb=$('cal').querySelector('[data-today]');if(tb)tb.onclick=e=>{e.stopPropagation();closeCal();setSel(0)};
 }
-function openCal(){renderCal();$('cal').hidden=false;$('dateFld').setAttribute('aria-expanded','true')}
+function openCal(){S.calYM=null;renderCal();$('cal').hidden=false;$('dateFld').setAttribute('aria-expanded','true')}
 function closeCal(){$('cal').hidden=true;$('dateFld').setAttribute('aria-expanded','false')}
 $('dateFld').addEventListener('click',e=>{e.stopPropagation();$('cal').hidden?openCal():closeCal()});
 $('dateFld').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('cal').hidden?openCal():closeCal()}});
@@ -687,18 +729,19 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCal()});
 
 /* ================= details panel ================= */
 function renderCond(){
-  if(!S.wx)return;const ti=TI(),h=hourAt(ti,S.sel),lt=parseLocal(h.time),live=S.sel===0,n=dubaiNow();
-  const whenTxt=live?`Now · ${n.hour}:${n.minute}`:`${relDay(h.time)}, ${lt.day} ${lt.date} ${lt.mon} · ${lt.hm}`;
-  $('liveTag').className=live?'live':'live fc';$('liveTag').innerHTML=live?'<i></i>LIVE':'<i></i>FORECAST';
+  if(!S.wx)return;const ti=TI(),h=cur(ti),lt=parseLocal(h.time),alt=S.mode==='alt',live=!alt&&S.sel===0,n=dubaiNow();
+  const whenTxt=live?`Now · ${n.hour}:${n.minute}`:`${dateLabel(h.time.slice(0,10))} · ${lt.hm}`;
+  const tag=live?'LIVE':alt?(h.kind==='past'?'RECORDED':'TYPICAL'):S.sel<0?'EARLIER':'FORECAST';
+  $('liveTag').className=live?'live':'live fc';$('liveTag').innerHTML='<i></i>'+tag;
   $('whenVal').textContent=whenTxt;
   $('temp').textContent=`${Math.round(h.t)}°C`;
   const [ic,desc]=wx(h.code,h.day);$('wxIcon').textContent=ic;$('wxDesc').textContent=desc;
   $('wArr').style.transform=`rotate(${h.dir+90}deg)`;
   $('wspd').textContent=`${spd(h.w)} ${uLbl()}`;
   const c=card(h.dir);$('wdir').textContent=`${c} ${Math.round(h.dir)}°`;
-  $('wdesc').textContent=`💨 Blowing ${PTN[card(h.dir+180)]}. ${windWords(h.w)}`;
+  $('wdesc').textContent=(alt?(h.kind==='past'?`📚 Recorded weather for this date. `:`📚 Typical: based on the same day in ${S.alt.src.slice(0,4)}. The forecast covers 16 days ahead. `):'')+`💨 Blowing ${PTN[card(h.dir+180)]}. ${windWords(h.w)}`;
   $('feels').textContent=Math.round(h.fl)+'°C';$('gust').textContent=`${spd(h.g)} ${uLbl()}`;$('hum').textContent=h.rh+'%';
-  $('uv').textContent=h.uv==null?'--':h.uv.toFixed(0);$('rain').textContent=(h.pp??0)+'%';
+  $('uv').textContent=h.uv==null?'--':h.uv.toFixed(0);$('rain').textContent=h.pp!=null?h.pp+'%':h.mm!=null?h.mm.toFixed(1)+' mm':'--';
   const sun=sunFor(ti,h.time);$('sunr').textContent=sun?sun.rise:'--';$('suns').textContent=sun?sun.set:'--';
   const [lab,col,bg]=scoreInfo(h.score);
   $('ringArc').setAttribute('stroke-dasharray',`${h.score/100*169.6} 170`);$('ringArc').setAttribute('stroke',col);$('ringTxt').textContent=h.score;
@@ -732,7 +775,8 @@ function renderBest(){
 }
 
 /* ================= selection ================= */
-function setSel(i){i=Math.max(0,Math.min(47,i|0));S.sel=i;renderWhen();renderTrackRow();renderCond()}
+function setSel(i){i=Math.max(S.minOff,Math.min(S.maxOff,i|0));S.mode='fc';S.sel=i;renderWhen();renderTrackRow();renderCond()}
+function setAlt(hh){S.mode='alt';S.altH=hh;renderWhen();renderTrackRow();renderCond()}
 function renderAll(){renderTrackRow();renderBest();renderWhen();renderCond()}
 
 /* ================= map ================= */
@@ -794,7 +838,7 @@ async function drawTrack(){
       p._ccw=(mx*vy-my*vx)>0; p._fwd=(vx*ax[0]+vy*ax[1])>=0; segs.push(p)}});
   paintDir();
   map.fitBounds(L.latLngBounds(all),{padding:[40,40],maxZoom:16});
-  if(S.wx)colorTrack(hourAt(TI(),S.sel).dir);
+  if(S.wx)colorTrack(cur(TI()).dir);
 }
 const relAngle=(b,d)=>Math.abs(((b-d)%360+540)%360-180);
 /* riding direction: loops = clockwise / anticlockwise, lines = along main axis */
@@ -806,14 +850,14 @@ function paintDirLabel(){const t=T(),d=rideDir();$('dirBtn').textContent=t.line?
 function paintDir(){const t=T(),d=rideDir();
   if(t.line){const b=d==='fwd'?S.axisBrg||45:((S.axisBrg||45)+180)%360;$('dirBtn').textContent=`Heading ${PTN[card(b)]}`}
   else $('dirBtn').textContent=d==='ccw'?'Anticlockwise':'Clockwise';
-  drawArrows();if(S.wx)colorTrack(hourAt(TI(),S.sel).dir)}
+  drawArrows();if(S.wx)colorTrack(cur(TI()).dir)}
 $('dirBtn').onclick=()=>{const t=T(),d=rideDir();save('rw_dir_'+t.id,t.line?(d==='fwd'?'rev':'fwd'):(d==='ccw'?'cw':'ccw'));paintDir();
   toast(t.line?'Riding direction reversed':`Riding ${rideDir()==='ccw'?'anticlockwise':'clockwise'}`)};
 const arrowLayer=L.layerGroup().addTo(map);
 function drawArrows(){arrowLayer.clearLayers();if(!segs.length)return;let acc=0;const tot=segs.reduce((s,p)=>s+p._km,0),gap=Math.max(.25,tot/14);
   segs.forEach(p=>{acc+=p._km;if(acc<gap)return;acc=0;const b=effBrg(p);
     L.marker(p._mid,{interactive:false,icon:L.divIcon({className:'',html:`<div class="darr" style="transform:rotate(${b-90}deg)">➤</div>`,iconSize:[18,18],iconAnchor:[9,9]})}).addTo(arrowLayer)})}
-function segTip(p){if(!S.wx)return'';const k=windKind(p,hourAt(TI(),S.sel).dir);return `Riding ${card(effBrg(p))}: <b style="color:${KCOL[k]}">${KTXT[k]}</b>`}
+function segTip(p){if(!S.wx)return'';const k=windKind(p,cur(TI()).dir);return `Riding ${card(effBrg(p))}: <b style="color:${KCOL[k]}">${KTXT[k]}</b>`}
 function colorTrack(dir){
   const t=T(),d=rideDir(),dl=t.line?`Heading ${card(d==='fwd'?S.axisBrg||45:((S.axisBrg||45)+180)%360)}`:(d==='ccw'?'Anticlockwise':'Clockwise');
   $('xw').textContent=dl;$('wsDir').textContent=`riding ${dl.toLowerCase()}`;
@@ -852,8 +896,8 @@ paintUnits();
 function toast(m,ms=3200){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),ms)}
 function shareText(){
   if(!S.wx)return'TheCyclistDubai Weather';
-  const ti=TI(),h=hourAt(ti,S.sel),lt=parseLocal(h.time),[lab]=scoreInfo(h.score),n=dubaiNow();
-  const when=S.sel===0?`Now (${n.hour}:${n.minute})`:`${relDay(h.time)} ${lt.day} ${lt.date} ${lt.mon}, ${lt.hm}`;
+  const ti=TI(),h=cur(ti),lt=parseLocal(h.time),[lab]=scoreInfo(h.score),n=dubaiNow();
+  const when=(S.mode==='fc'&&S.sel===0)?`Now (${n.hour}:${n.minute})`:`${dateLabel(h.time.slice(0,10))}, ${lt.hm}`+(S.mode==='alt'?(h.kind==='past'?' (recorded)':' (typical)'):'');
   let s=`🚴 *${T().name}*\n🕒 ${when} · Dubai\n🌡️ ${Math.round(h.t)}°C (feels ${Math.round(h.fl)}°C) ${wx(h.code,h.day)[0]}\n💨 Wind ${spd(h.w)} ${uLbl()} from ${card(h.dir)}, gusts ${spd(h.g)} ${uLbl()}\n💧 Humidity ${h.rh}% · UV ${h.uv==null?'-':h.uv.toFixed(0)}\n✅ Ride score ${h.score}/100 (${lab})`;
   if(S.bestTxt)s+=`\n⭐ Best morning: ${S.bestTxt}`;
   return s+`\n\n🎁 Lameda.cc · use code DXB for 15% OFF\n📲 TheCyclistDubai Weather: ${location.href.split('#')[0]}`;
