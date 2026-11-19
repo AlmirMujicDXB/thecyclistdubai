@@ -171,9 +171,10 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .mi-name{font-weight:800;font-size:15px}
 .mi-desc{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.45}
 .mi-desc b{color:var(--text)}
-.dirlink{flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:12.5px;font-weight:700;color:#fff;background:linear-gradient(135deg,#c2410c,#ea580c 60%,#f59e0b);padding:8px 13px;border-radius:10px;box-shadow:0 4px 12px #ea580c33}
-.dirlink::after{content:"↗"}
-.dirlink:hover{filter:brightness(1.07)}
+.dirlink{flex:none;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font:600 13px Sora,sans-serif;color:#fff;background:#1a73e8;padding:6px 14px 6px 6px;border-radius:12px;box-shadow:0 1px 2px #3c40434d,0 1px 3px 1px #3c404326;transition:.15s}
+.dirlink .gdi{width:26px;height:26px;border-radius:8px;background:#fff;display:grid;place-items:center}
+.dirlink:active{background:#1765cc}
+.dirlink:hover{background:#1b66c9;box-shadow:0 1px 3px #3c40434d,0 4px 8px 3px #3c404326}
 .fac{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
 .fac div{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px}
 .fac span{font-size:18px;line-height:1.2}
@@ -516,7 +517,7 @@ footer a:hover{color:var(--text)}
     <div class="mapinfo">
       <div class="mi-top">
         <div class="mi-txt"><div class="mi-name" id="miName">—</div><div class="mi-desc" id="mapInfo">—</div></div>
-        <a class="dirlink" id="dirLink" href="#" target="_blank" rel="noopener" data-noshot>Directions</a>
+        <a class="dirlink" id="dirLink" href="#" target="_blank" rel="noopener" data-noshot><span class="gdi"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#1a73e8" d="M21.71 11.29l-9-9a1 1 0 0 0-1.42 0l-9 9a1 1 0 0 0 0 1.42l9 9a1 1 0 0 0 1.42 0l9-9a1 1 0 0 0 0-1.42z"/><path fill="#fff" d="M14 14.5V12h-4v3H8v-4a1 1 0 0 1 1-1h5V7.5l3.5 3.5-3.5 3.5z"/></svg></span>Directions</a>
       </div>
       <div class="fac">
         <div><span>🚿</span><b>Showers</b><small>Free</small></div>
@@ -623,7 +624,7 @@ footer a:hover{color:var(--text)}
   <div class="sbox">
     <div class="mh"><b>Share</b><button class="mx" id="sClose" aria-label="Close">✕</button></div>
     <div id="sList"></div>
-    <p class="snote">Each message includes the site link and sponsor discount codes.</p>
+    <p class="snote">Weather, ride and sponsor messages include the site link and sponsor codes. Event messages include only the event details.</p>
   </div>
 </div>
 <div id="modal">
@@ -1180,9 +1181,9 @@ renderData();setInterval(renderData,30*60e3);
 
 /* ---------- item share texts ---------- */
 function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
-  return `📅 *${e.name}*\n🗓️ ${occLabel(e.date)} ${parseLocal(e.date+'T00:00').date?'':''}· ${fmtTime(e.time||'07:00')}\n`+
+  return `📅 *${e.name}*\n🗓️ ${occLabel(e.date)} · ${fmtTime(e.time||'07:00')}\n`+
     (e.distance||e.route?`🚴 ${[e.distance,e.route].filter(Boolean).join(' · ')}\n`:'')+(e.note?`🏅 ${e.note}\n`:'')+
-    (days>0?`⏳ ${days} days to go\n`:'')+(e.weRide?`💪 TheCyclistDubai is riding it. Join us!\n`:'')+`🔗 ${e.url}\n`+sponsorsText()+footerText()}
+    (days>0?`⏳ ${days} days to go\n`:'')+(e.weRide?`💪 TheCyclistDubai is riding it. Join us!\n`:'')+`🔗 ${e.url}`}
 function rideText(r){const f=rideForecast(r);
   return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.place} · ${r.distance}${r.pace?` · ⚡ ${r.pace}`:''}\n`+
     (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+footerText()}
