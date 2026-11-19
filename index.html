@@ -52,7 +52,8 @@ header>*{position:relative;z-index:1}
 .lbl{flex:none;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);width:42px}
 .pill{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:.15s;white-space:nowrap}
 .pill:hover{border-color:#94a3b8}
-.pill.on{background:var(--text);border-color:var(--text);color:#fff}
+.pill.on{background:linear-gradient(135deg,#c2410c,#ea580c 60%,#f59e0b);border-color:#c2410c;color:#fff;box-shadow:0 4px 12px #ea580c40}
+.pill.on .dot{box-shadow:0 0 0 2px #fff}
 .pill .t{font-family:"JetBrains Mono",monospace;font-size:12px;opacity:.75}
 .pill .dot{width:7px;height:7px;border-radius:50%}
 .pill.now{border-color:var(--accent);color:var(--accent)}
@@ -107,10 +108,11 @@ header>*{position:relative;z-index:1}
 .tright{display:flex;align-items:center;gap:8px;margin-left:auto}
 .tl{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted)}
 .dirb{flex:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 12px;font-size:12.5px;font-weight:700;white-space:nowrap}
-.dirb:hover{border-color:var(--text)}
+.dirb:hover{border-color:#ea580c;color:#c2410c}
+.dirb:active{background:#fff7ed}
 .vsw{flex:none;display:flex;gap:2px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:2px}
 .vsw button{border:0;background:none;padding:6px 11px;border-radius:9px;font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
-.vsw button.on{background:var(--text);color:#fff}
+.vsw button.on{background:linear-gradient(135deg,#c2410c,#ea580c 60%,#f59e0b);color:#fff;box-shadow:0 2px 8px #ea580c40}
 .darr{width:18px;height:18px;display:grid;place-items:center;color:#fff;font-size:13px;line-height:1;text-shadow:0 0 3px #000,0 0 2px #000;pointer-events:none}
 .maploading{left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;font-size:12px;display:none;border-radius:999px}
 .mapinfo{padding:12px 14px 14px;border-top:1px solid var(--line)}
@@ -119,9 +121,9 @@ header>*{position:relative;z-index:1}
 .mi-name{font-weight:800;font-size:15px}
 .mi-desc{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.45}
 .mi-desc b{color:var(--text)}
-.dirlink{flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:12.5px;font-weight:700;color:#fff;background:var(--text);padding:8px 13px;border-radius:10px}
+.dirlink{flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:12.5px;font-weight:700;color:#fff;background:linear-gradient(135deg,#c2410c,#ea580c 60%,#f59e0b);padding:8px 13px;border-radius:10px;box-shadow:0 4px 12px #ea580c33}
 .dirlink::after{content:"↗"}
-.dirlink:hover{background:#334155}
+.dirlink:hover{filter:brightness(1.07)}
 .fac{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
 .fac div{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px}
 .fac span{font-size:18px;line-height:1.2}
@@ -152,7 +154,7 @@ header>*{position:relative;z-index:1}
 .wstats .desc{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
 .units{display:inline-flex;background:var(--panel2);border-radius:9px;padding:2px;margin-top:8px}
 .units button{border:0;background:none;padding:4px 8px;border-radius:7px;font-size:11px;font-weight:700;color:var(--muted)}
-.units button.on{background:#fff;color:var(--text);box-shadow:0 1px 3px #0f172a22}
+.units button.on{background:#fff;color:#c2410c;box-shadow:0 1px 3px #0f172a22}
 .kv{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
 .kv div{background:var(--panel2);border-radius:12px;padding:9px 4px;text-align:center}
 .kv span{display:block;font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
@@ -618,11 +620,11 @@ function renderBest(){
     if(!idx.length)return;const hs=idx.map(i=>hourAt(ti,i));const avg=Math.round(hs.reduce((s,h)=>s+h.score,0)/hs.length);
     if(!best||avg>best.avg)best={d,idx,hs,avg}});
   S.best=best?best.idx[0]:null;S.bestTxt=null;
-  if(!best){$('best').innerHTML='<span>⭐ <b>Best time to ride this season: 06:30–10:00.</b> The next window is outside the 48-hour forecast.</span>';return}
+  if(!best){$('best').innerHTML='<span>⭐ No 06:30–10:00 morning in the 48-hour forecast yet.</span>';return}
   const t=best.hs.map(h=>h.t),w=best.hs.map(h=>h.w),mid=best.hs[Math.floor(best.hs.length/2)];
   const rng=(a,f)=>{const lo=f(Math.min(...a)),hi=f(Math.max(...a));return lo===hi?lo:`${lo}–${hi}`};
   S.bestTxt=`${relDay(best.hs[0].time)} 06:30–10:00`;
-  $('best').innerHTML=`<span>⭐ <b>Best time to ride this season: 06:30–10:00.</b><br>Best morning at <b>${T().short}</b>: <b>${S.bestTxt}</b> · ${rng(t,Math.round)}°C, wind ${rng(w,v=>spd(v))} ${uLbl()} ${card(mid.dir)} · score <b>${best.avg}</b></span>`;
+  $('best').innerHTML=`<span>⭐ Best morning at <b>${T().short}</b>: <b>${S.bestTxt}</b> · ${rng(t,Math.round)}°C, wind ${rng(w,v=>spd(v))} ${uLbl()} ${card(mid.dir)} · score <b>${best.avg}</b></span>`;
 }
 
 /* ================= selection ================= */
@@ -653,13 +655,18 @@ function bearing(a,b){const r=Math.PI/180,y=Math.sin((b[1]-a[1])*r)*Math.cos(b[0
 function dist(a,b){const r=Math.PI/180,dl=(b[0]-a[0])*r,dg=(b[1]-a[1])*r,h=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dg/2)**2;return 12742*Math.asin(Math.sqrt(h))}
 async function loadTrack(tr){
   if(S.geo[tr.id])return S.geo[tr.id];
-  try{const c=localStorage.getItem('rw_geo2_'+tr.id);if(c){const g=JSON.parse(c);if(Date.now()-g.ts<7*864e5){S.geo[tr.id]=g.lines;return g.lines}}}catch(e){}
+  // 1) geometry stored on this site (updated weekly from OpenStreetMap by GitHub Actions)
+  try{const r=await fetch(`tracks/${tr.id}.json`,{cache:'no-cache'});if(r.ok){const j=await r.json();
+    const lines=(j.lines||[]).map(pts=>({pts}));if(lines.length){S.geo[tr.id]=lines;return lines}}}catch(e){}
+  // 2) browser cache from an earlier live download
+  try{const c=localStorage.getItem('rw_geo2_'+tr.id);if(c){const g=JSON.parse(c);if(Date.now()-g.ts<7*864e5&&g.lines&&g.lines.length){S.geo[tr.id]=g.lines;return g.lines}}}catch(e){}
+  // 3) live from Overpass
   const [s,w,n,e]=tr.bbox,bb=`(${s},${w},${n},${e})`;
   const q=`[out:json][timeout:30];(${tr.filter.split(';').map(f=>f+bb+';').join('')});out geom;`;
-  for(const m of['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter']){
+  for(const m of['https://overpass-api.de/api/interpreter','https://overpass.private.coffee/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter','https://overpass.kumi.systems/api/interpreter']){
     try{const r=await fetch(m,{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}});if(!r.ok)continue;
       const j=await r.json();const lines=j.elements.filter(x=>x.geometry&&x.geometry.length>1).map(x=>({pts:x.geometry.map(p=>[p.lat,p.lon])}));
-      S.geo[tr.id]=lines;try{localStorage.setItem('rw_geo2_'+tr.id,JSON.stringify({ts:Date.now(),lines}))}catch(e){}return lines}catch(e){}}
+      if(!lines.length)continue;S.geo[tr.id]=lines;try{localStorage.setItem('rw_geo2_'+tr.id,JSON.stringify({ts:Date.now(),lines}))}catch(e){}return lines}catch(e){}}
   return null;
 }
 async function drawTrack(){

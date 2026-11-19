@@ -1,0 +1,42 @@
+# Downloads cycle-track geometry from OpenStreetMap into tracks/*.json
+# so the weather page can draw tracks without calling Overpass from the browser.
+name: Update track geometry
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 2 * * 1"   # weekly, Monday 06:17 Dubai time
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/fetch_tracks.py"
+      - ".github/workflows/tracks.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tracks
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Fetch tracks from OpenStreetMap
+        run: python scripts/fetch_tracks.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tracks/
+          if git diff --cached --quiet; then
+            echo "No track changes"
+          else
+            git commit -m "Update track geometry from OpenStreetMap"
+            git push
+          fi

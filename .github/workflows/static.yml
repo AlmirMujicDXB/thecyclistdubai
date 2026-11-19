@@ -9,6 +9,11 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+  # Redeploy after the weekly track-geometry update commits new files
+  workflow_run:
+    workflows: ["Update track geometry"]
+    types: [completed]
+
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
