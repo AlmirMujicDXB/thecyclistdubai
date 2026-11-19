@@ -244,27 +244,25 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .sponsors h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
 .spgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
 .sp{border-radius:16px;min-height:118px;overflow:hidden}
-.sp.ride{grid-column:1;grid-row:2;position:relative;display:flex;gap:14px;align-items:center;padding:14px 16px 14px 14px;color:#fff;
-  background:radial-gradient(70% 140% at 100% 0%,#38bdf833 0%,transparent 60%),linear-gradient(110deg,#0b1f4b 0%,#123a8a 55%,#1d4ed8 100%);box-shadow:0 8px 22px #0b1f4b40}
+.sp.ride{grid-column:1/3;grid-row:2;position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;color:#fff;
+  background:radial-gradient(70% 140% at 100% 0%,#bef26440 0%,transparent 60%),linear-gradient(110deg,#052e16 0%,#14532d 50%,#16a34a 100%);box-shadow:0 8px 22px #052e1640}
 .ride-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .sp.ride>*:not(.ride-route){position:relative}
-.ride-date{flex:none;width:62px;border-radius:13px;background:#fff;color:#0b1f4b;display:flex;flex-direction:column;align-items:center;padding:7px 0 8px;line-height:1}
-.ride-date span{font:800 10px Sora;letter-spacing:1.4px}
-.ride-date span:first-child{color:#dc2626}
-.ride-date b{font:800 26px Sora;margin:3px 0 2px}
+.ride-date{flex:none;width:48px;height:48px;border-radius:12px;background:#fff;color:#052e16;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.ride-date span{font:800 8.5px Sora;letter-spacing:1.2px;color:#15803d}
+.ride-date span:first-child{color:#dc2626;margin-bottom:1px}
+.ride-date b{font:800 19px Sora}
 .ride-body{flex:1;min-width:0}
-.ride-tag{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.ride-tag{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:3px}
 .ride-tag span{font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#ffffff1f;border:1px solid #ffffff33;white-space:nowrap}
-.ride-tag .star{background:#fbbf24;border-color:#fbbf24;color:#3b2a00}
-.ride-title{font-weight:800;font-size:18px;letter-spacing:-.3px}
-.ride-title span{color:#fbbf24}
-.ride-meta{font-size:12px;color:#dbeafe;margin-top:1px}
-.ride-wx{font-size:11.5px;color:#e0f2fe;margin-top:6px;background:#ffffff14;border:1px solid #ffffff26;border-radius:8px;padding:4px 8px;display:inline-block}
-.ride-btns{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
-.ride-btns a{text-decoration:none;font-size:12.5px;font-weight:800;padding:7px 12px;border-radius:10px;white-space:nowrap}
+.ride-tag .star{background:#bef264;border-color:#bef264;color:#1a2e05}
+.ride-title{font-weight:800;font-size:14.5px;line-height:1.25;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ride-title span{color:#bef264}
+.ride-meta{font-size:11.5px;color:#dcfce7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ride-btns{flex:none;display:flex;gap:6px;align-items:center}
+.ride-btns a{text-decoration:none;font-size:12px;font-weight:800;padding:7px 11px;border-radius:10px;white-space:nowrap}
 .rjoin{background:#25d366;color:#fff;box-shadow:0 4px 12px #25d36655}
-.rjoin::before{content:"";display:inline-block;width:13px;height:13px;margin:-2px 6px -2px 0;vertical-align:middle;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z'/%3E%3C/svg%3E") center/contain no-repeat}
-.rloc{background:#fff;color:#0b1f4b}
+.rloc{background:#fff;color:#052e16}
 .sp.empty{border:2px dashed #cbd5e1;display:grid;place-items:center;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;background:repeating-linear-gradient(135deg,transparent 0 14px,#0f172a06 14px 28px)}
 .sp.lameda{display:grid;grid-template-columns:1.1fr 1fr;background:#f4f1ec;color:#111;text-decoration:none;border:1px solid #e7e2da;transition:.2s}
 .sp.lameda:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0f172a22}
@@ -368,10 +366,13 @@ footer a:hover{color:var(--text)}
   .best{font-size:13px}
   .sp{min-height:64px}
   .sp.lameda{grid-template-columns:120px 1fr}
-  .sp.ride{padding:12px;gap:12px}
-  .ride-date{width:54px}
-  .ride-date b{font-size:22px}
-  .ride-title{font-size:16px}
+  .sp.ride{gap:10px;padding:8px 10px 8px 8px;border-radius:14px;min-height:0;flex-wrap:wrap}
+  .ride-tag .up{display:none}
+  .ride-title{font-size:13.5px;white-space:normal}
+  .ride-meta{white-space:normal;font-size:11px;line-height:1.35}
+  .ride-date{width:44px;height:46px}
+  .ride-btns{width:100%;padding-left:54px}
+  .ride-btns a{flex:1;text-align:center}
   .lmart{min-height:0}
   .lmart .fb{font-size:15px;letter-spacing:3px}
   .lmdesc{display:none}
@@ -541,18 +542,18 @@ footer a:hover{color:var(--text)}
     <div class="sp empty"><span>Sponsor</span></div>
     <div class="sp empty"><span>Sponsor</span></div>
     <div class="sp ride" id="ride">
-      <svg class="ride-route" viewBox="0 0 400 140" preserveAspectRatio="none" aria-hidden="true"><path d="M-10 110 C60 60 120 120 200 80 S330 30 410 60" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/></svg>
+      <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
       <div class="ride-date"><span id="rideDow">SAT</span><b id="rideDay">--</b><span id="rideMon">---</span></div>
       <div class="ride-body">
-        <div class="ride-tag"><span class="star">★ Recommended</span><span>Next group ride</span></div>
-        <div class="ride-title">TCD Ride · <span>6:30 AM</span></div>
-        <div class="ride-meta"><b>86 km</b> · Al Qudra Cycle Track · Saturday</div>
-        <div class="ride-wx" id="rideWx">Forecast loading…</div>
-        <div class="ride-btns">
-          <a class="rjoin" href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t" target="_blank" rel="noopener">Join ride</a>
-          <a class="rloc" href="https://maps.app.goo.gl/ntyxGBSEaKip7akR8" target="_blank" rel="noopener">Location ↗</a>
-        </div>
+        <div class="ride-tag"><span class="star">★ Recommended</span><span class="up">Next group ride</span></div>
+        <div class="ride-title">TCD Ride · <span>6:30 AM</span> · 86 km Al Qudra</div>
+        <div class="ride-meta" id="rideWx">Forecast loading…</div>
       </div>
+      <div class="ride-btns">
+        <a class="rjoin" href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t" target="_blank" rel="noopener">Join ride</a>
+        <a class="rloc" href="https://maps.app.goo.gl/ntyxGBSEaKip7akR8" target="_blank" rel="noopener">Location ↗</a>
+      </div>
+    </div>
     </div>
   </div>
 </section>
@@ -1071,11 +1072,11 @@ function renderRide(){
   if(!S.wx){return}
   const ti=TRACKS.findIndex(t=>t.id==='alqudra'),H=S.wx[0].hourly.time,hs=[];
   for(let i=S.minOff;i<=S.maxOff;i++){const t=H[S.start+i];if(t.startsWith(d)){const h=parseLocal(t).h;if(h>=6&&h<=9)hs.push(hourAt(ti,i))}}
-  if(!hs.length){$('rideWx').textContent='Forecast available closer to the day';S.rideTxt=null;return}
+  if(!hs.length){$('rideWx').textContent='Saturday 6:30 AM · forecast available closer to the day';S.rideTxt=null;return}
   const lo=Math.round(Math.min(...hs.map(h=>h.t))),hi=Math.round(Math.max(...hs.map(h=>h.t))),w=Math.round(hs.reduce((a,h)=>a+h.w,0)/hs.length*10)/10,
     sc=Math.round(hs.reduce((a,h)=>a+h.score,0)/hs.length),dir=card(hs[Math.floor(hs.length/2)].dir),[lab]=scoreInfo(sc);
   const tr=lo===hi?`${lo}°C`:`${lo}–${hi}°C`;
-  $('rideWx').innerHTML=`🌤️ Ride forecast: <b>${tr}</b> · wind ${spd(w)} ${uLbl()} ${dir} · <b>${lab} ${sc}</b>`;
+  $('rideWx').innerHTML=`Sat 06:30–10:00 forecast: <b>${tr}</b> · wind ${spd(w)} ${uLbl()} ${dir} · <b>${lab} ${sc}</b>`;
   S.rideTxt=`${tr}, wind ${spd(w)} ${uLbl()} ${dir}, ride score ${sc}`;
 }
 renderRide();
