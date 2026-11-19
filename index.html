@@ -105,7 +105,7 @@ header>*{position:relative;z-index:1}
 .leaflet-container{background:#e5e7eb;font-family:Sora,sans-serif}
 .leaflet-control-attribution{font-size:9px!important}
 .ov{position:absolute;z-index:500;background:#ffffffeb;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid #ffffff;border-radius:16px;box-shadow:0 4px 18px #0f172a26}
-.mhero{left:12px;top:12px;padding:10px 14px;min-width:170px;transform:scale(.7);transform-origin:top left}
+.mhero{left:12px;top:12px;padding:10px 14px;min-width:170px;transform:scale(.805);transform-origin:top left}
 .mhero .tn{font-size:12px;font-weight:700;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mhero .wn{font-size:11px;color:var(--muted);margin-top:1px}
 .mhero .big{display:flex;align-items:center;gap:10px;margin-top:6px}
@@ -276,7 +276,7 @@ footer a:hover{color:var(--text)}
   .lgd{gap:12px;font-size:11.5px;width:100%;justify-content:space-between}
   .tright{margin-left:0;width:100%}
   .tright .vsw{margin-left:auto}
-  .mhero{max-width:calc((100% - 20px)/.7)}
+  .mhero{max-width:calc((100% - 20px)/.805)}
   .bigtemp .v{font-size:58px}
   .kv b{font-size:15px}
   .best{font-size:13px}
@@ -345,7 +345,7 @@ footer a:hover{color:var(--text)}
       <div class="lgd">
         <span class="lg"><i style="background:#dc2626"></i>Headwind</span>
         <span class="lg"><i style="background:#16a34a"></i>Tailwind</span>
-        <span class="lg"><i style="background:#f97316"></i>Crosswind</span>
+        <span class="lg"><i style="background:#eab308"></i>Crosswind</span>
       </div>
       <div class="tright">
         <span class="tl">Riding</span>
@@ -730,7 +730,7 @@ const relAngle=(b,d)=>Math.abs(((b-d)%360+540)%360-180);
 function rideDir(){const t=T();const d=load('rw_dir_'+t.id,'');if(t.line)return d==='rev'?'rev':'fwd';return d==='cw'||d==='ccw'?d:(t.dir||'cw')}
 function effBrg(p){const t=T(),d=rideDir();const keep=t.line?(p._fwd===(d==='fwd')):(p._ccw===(d==='ccw'));return keep?p._brg:(p._brg+180)%360}
 function windKind(p,from){const a=relAngle(effBrg(p),from);return a<60?'head':a>120?'tail':'cross'}
-const KCOL={head:'#dc2626',tail:'#16a34a',cross:'#f97316'},KTXT={head:'Headwind',tail:'Tailwind',cross:'Crosswind'};
+const KCOL={head:'#dc2626',tail:'#16a34a',cross:'#eab308'},KTXT={head:'Headwind',tail:'Tailwind',cross:'Crosswind'};
 function paintDirLabel(){const t=T(),d=rideDir();$('dirBtn').textContent=t.line?'Direction':(d==='ccw'?'Anticlockwise':'Clockwise')}
 function paintDir(){const t=T(),d=rideDir();
   if(t.line){const b=d==='fwd'?S.axisBrg||45:((S.axisBrg||45)+180)%360;$('dirBtn').textContent=`Heading ${PTN[card(b)]}`}
