@@ -436,16 +436,16 @@ footer a:hover{color:var(--text)}
 <script>
 /* ================= tracks ================= */
 const TRACKS = [
-  { id:'alqudra', name:'Al Qudra Cycle Track', short:'Al Qudra', lat:24.8498, lng:55.3449, zoom:11,
-    info:'<b>~80 km</b> desert loop (18–86 km options) · start: Al Qudra Cycle Hub',
-    bbox:[24.60,55.12,24.93,55.52], filter:'way["highway"="cycleway"]', dir:'cw' },
+  { id:'alqudra', name:'Al Qudra Cycle Track', short:'Al Qudra', lat:24.99891, lng:55.30695, zoom:11,
+    info:'Desert loops of <b>18, 49, 86 & 100+ km</b>',
+    bbox:[24.60,55.12,25.02,55.52], filter:'way["highway"="cycleway"]', dir:'cw' },
   { id:'meydan', name:'Meydan · Nad Al Sheba Cycle Park', short:'Meydan', lat:25.1487, lng:55.2864, zoom:14,
     info:'<b>10 km</b> loop · one-way anticlockwise · lit at night',
     bbox:[25.133,55.262,25.172,55.308], filter:'way["highway"="cycleway"]', dir:'ccw' },
   { id:'mushrif', name:'Mushrif National Park', short:'Mushrif', lat:25.2190, lng:55.4560, zoom:14,
     info:'<b>50 km</b> MTB trails (green / blue / red) + 4 km park track',
     bbox:[25.190,55.420,25.250,55.500], filter:'way["highway"~"cycleway|path|track"]["bicycle"~"designated|yes"];way["mtb:scale"]', mtb:true },
-  { id:'kite', name:'Kite Beach · Jumeirah Beach Track', short:'Kite Beach', lat:25.1575, lng:55.1965, zoom:15,
+  { id:'kite', name:'Kite Beach · Jumeirah Beach Track', short:'Kite Beach', lat:25.16260, lng:55.20700, zoom:15,
     info:'<b>16 km</b> beachfront track · 20 km/h speed limit',
     bbox:[25.140,55.178,25.176,55.215], filter:'way["highway"="cycleway"]', kite:true, line:true },
   { id:'hatta', name:'Hatta MTB Trail Centre', short:'Hatta MTB', lat:24.8030, lng:56.1260, zoom:13,
@@ -612,12 +612,17 @@ function renderCond(){
 
 /* ================= best window ================= */
 function renderBest(){
-  const ti=TI();let best=-1,bs=-1;
-  for(let i=0;i<48;i++){const h=hourAt(ti,i);if(!h.day)continue;const lt=parseLocal(h.time);if(lt.h<5||lt.h>19)continue;if(h.score>bs){bs=h.score;best=i}}
-  S.best=best>=0?best:null;if(best<0){$('best').textContent='No daylight window in the next 48 h.';return}
-  let a=best,b=best;while(a>0&&hourAt(ti,a-1).day&&hourAt(ti,a-1).score>=bs-5)a--;while(b<47&&hourAt(ti,b+1).day&&hourAt(ti,b+1).score>=bs-5)b++;
-  const h=hourAt(ti,best),la=parseLocal(hourAt(ti,a).time).hm,end=String((parseLocal(hourAt(ti,b).time).h+1)%24).padStart(2,'0')+':00';
-  $('best').innerHTML=`<span>⭐ Best ride at <b>${T().short}</b>: <b>${relDay(h.time)} ${la}–${end}</b> · ${Math.round(h.t)}°C, ${spd(h.w)} ${uLbl()} ${card(h.dir)} · score <b>${bs}</b></span><button onclick="setSel(${best})" data-noshot>Show</button>`;
+  // Season tip (Nov–Mar): best to start 06:30 and finish 10:00. Compare that window across the next 48 h.
+  const ti=TI(),H=S.wx[0].hourly.time,n=dubaiNow(),nowH=+n.hour;let best=null;
+  days().forEach(d=>{const idx=[];for(let i=0;i<48;i++){const t=H[S.start+i];if(t.startsWith(d)){const h=parseLocal(t).h;if(h>=6&&h<=9)idx.push(i)}}
+    if(!idx.length)return;const hs=idx.map(i=>hourAt(ti,i));const avg=Math.round(hs.reduce((s,h)=>s+h.score,0)/hs.length);
+    if(!best||avg>best.avg)best={d,idx,hs,avg}});
+  S.best=best?best.idx[0]:null;S.bestTxt=null;
+  if(!best){$('best').innerHTML='<span>⭐ <b>Best time to ride this season: 06:30–10:00.</b> The next window is outside the 48-hour forecast.</span>';return}
+  const t=best.hs.map(h=>h.t),w=best.hs.map(h=>h.w),mid=best.hs[Math.floor(best.hs.length/2)];
+  const rng=(a,f)=>{const lo=f(Math.min(...a)),hi=f(Math.max(...a));return lo===hi?lo:`${lo}–${hi}`};
+  S.bestTxt=`${relDay(best.hs[0].time)} 06:30–10:00`;
+  $('best').innerHTML=`<span>⭐ <b>Best time to ride this season: 06:30–10:00.</b><br>Best morning at <b>${T().short}</b>: <b>${S.bestTxt}</b> · ${rng(t,Math.round)}°C, wind ${rng(w,v=>spd(v))} ${uLbl()} ${card(mid.dir)} · score <b>${best.avg}</b></span>`;
 }
 
 /* ================= selection ================= */
@@ -648,13 +653,13 @@ function bearing(a,b){const r=Math.PI/180,y=Math.sin((b[1]-a[1])*r)*Math.cos(b[0
 function dist(a,b){const r=Math.PI/180,dl=(b[0]-a[0])*r,dg=(b[1]-a[1])*r,h=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dg/2)**2;return 12742*Math.asin(Math.sqrt(h))}
 async function loadTrack(tr){
   if(S.geo[tr.id])return S.geo[tr.id];
-  try{const c=localStorage.getItem('rw_geo_'+tr.id);if(c){const g=JSON.parse(c);if(Date.now()-g.ts<7*864e5){S.geo[tr.id]=g.lines;return g.lines}}}catch(e){}
+  try{const c=localStorage.getItem('rw_geo2_'+tr.id);if(c){const g=JSON.parse(c);if(Date.now()-g.ts<7*864e5){S.geo[tr.id]=g.lines;return g.lines}}}catch(e){}
   const [s,w,n,e]=tr.bbox,bb=`(${s},${w},${n},${e})`;
   const q=`[out:json][timeout:30];(${tr.filter.split(';').map(f=>f+bb+';').join('')});out geom;`;
   for(const m of['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter']){
     try{const r=await fetch(m,{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}});if(!r.ok)continue;
       const j=await r.json();const lines=j.elements.filter(x=>x.geometry&&x.geometry.length>1).map(x=>({pts:x.geometry.map(p=>[p.lat,p.lon])}));
-      S.geo[tr.id]=lines;try{localStorage.setItem('rw_geo_'+tr.id,JSON.stringify({ts:Date.now(),lines}))}catch(e){}return lines}catch(e){}}
+      S.geo[tr.id]=lines;try{localStorage.setItem('rw_geo2_'+tr.id,JSON.stringify({ts:Date.now(),lines}))}catch(e){}return lines}catch(e){}}
   return null;
 }
 async function drawTrack(){
@@ -732,7 +737,7 @@ function shareText(){
   const ti=TI(),h=hourAt(ti,S.sel),lt=parseLocal(h.time),[lab]=scoreInfo(h.score),n=dubaiNow();
   const when=S.sel===0?`Now (${n.hour}:${n.minute})`:`${relDay(h.time)} ${lt.day} ${lt.date} ${lt.mon}, ${lt.hm}`;
   let s=`🚴 *${T().name}*\n🕒 ${when} · Dubai\n🌡️ ${Math.round(h.t)}°C (feels ${Math.round(h.fl)}°C) ${wx(h.code,h.day)[0]}\n💨 Wind ${spd(h.w)} ${uLbl()} from ${card(h.dir)}, gusts ${spd(h.g)} ${uLbl()}\n💧 Humidity ${h.rh}% · UV ${h.uv==null?'-':h.uv.toFixed(0)}\n✅ Ride score ${h.score}/100 (${lab})`;
-  if(S.best!=null){const b=hourAt(ti,S.best);s+=`\n⭐ Best window: ${relDay(b.time)} ${parseLocal(b.time).hm} (score ${b.score})`}
+  if(S.bestTxt)s+=`\n⭐ Best morning: ${S.bestTxt}`;
   return s+`\n\n🎁 Lameda.cc · use code DXB for 15% OFF\n📲 TheCyclistDubai Weather: ${location.href.split('#')[0]}`;
 }
 $('share').onclick=async()=>{
