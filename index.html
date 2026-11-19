@@ -656,7 +656,7 @@ footer a:hover{color:var(--text)}
   </div>
 </div>
 
-<script src="site-data.js"></script>
+<script>/* always load the latest rides/events/sponsors (GitHub caches files for 10 min) */document.write('<script src="site-data.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
 <script>
 /* ================= tracks ================= */
 const TRACKS = [
@@ -1201,7 +1201,7 @@ function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e
     (e.distance||e.route?`🚴 ${[e.distance,e.route].filter(Boolean).join(' · ')}\n`:'')+(e.note?`🏅 ${e.note}\n`:'')+
     (days>0?`⏳ ${days} days to go\n`:'')+(e.weRide?`💪 TheCyclistDubai is riding it. Join us!\n`:'')+`🔗 ${e.url}`}
 function rideText(r){const f=rideForecast(r);
-  return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}${r.changed&&r.time!==r.usualTime?` (new time this week, usually ${fmtTime(r.usualTime)})`:''}\n📍 ${r.place} · ${r.distance}${r.pace?` · ⚡ ${r.pace}`:''}\n`+
+  return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}${r.changed&&r.time!==r.usualTime?' (new time this week)':''}\n📍 ${r.place} · ${r.distance}${r.pace?` · ⚡ ${r.pace}`:''}\n`+
     (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+footerText()}
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\nUse code *${x.code}* for *${x.discount}*\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
