@@ -60,13 +60,14 @@ header{display:flex;align-items:center;gap:12px;padding:4px 0 10px}
 
 /* ---------- layout ---------- */
 .grid{display:grid;grid-template-columns:1.65fr 1fr;gap:14px;align-items:start}
+.grid+.sponsors{margin-top:14px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .panel.band::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#a3e635,#22c55e,#0ea5e9)}
 .panel h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
 
 /* ---------- map ---------- */
 .mapcard{padding:0}
-.mapbox{position:relative;height:620px}
+.mapbox{position:relative;height:440px}
 #map,#wind{position:absolute;inset:0;width:100%;height:100%}
 #wind{pointer-events:none;z-index:450}
 .leaflet-container{background:#e5e7eb;font-family:Sora,sans-serif}
@@ -141,12 +142,7 @@ header{display:flex;align-items:center;gap:12px;padding:4px 0 10px}
 .tip.kite{background:#e0f2fe;color:#075985;display:none}
 
 /* ---------- forecast ---------- */
-.fc48{margin-top:14px}
-.chartwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
-#chart{width:100%;height:auto;display:block;cursor:crosshair;user-select:none;touch-action:pan-x pan-y}
-input[type=range]{width:100%;accent-color:var(--accent);margin-top:6px}
-.cap{font-size:10.5px;color:var(--muted);margin-top:2px}
-.best{display:flex;align-items:center;gap:10px;font-size:13px;background:linear-gradient(90deg,#65a30d1f,transparent);border:1px solid #65a30d40;padding:10px 12px;border-radius:12px;margin-top:10px;flex-wrap:wrap}
+.best{display:flex;align-items:center;gap:8px;font-size:12.5px;line-height:1.45;background:linear-gradient(90deg,#65a30d1f,transparent);border:1px solid #65a30d40;padding:10px 12px;border-radius:12px;margin-top:10px;flex-wrap:wrap}
 .best b{color:var(--accent)}
 .best button{margin-left:auto;border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700}
 
@@ -154,15 +150,15 @@ input[type=range]{width:100%;accent-color:var(--accent);margin-top:6px}
 .sponsors{margin-top:16px}
 .sponsors h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
 .spgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
-.sp{border-radius:16px;min-height:150px;overflow:hidden}
+.sp{border-radius:16px;min-height:118px;overflow:hidden}
 .sp.empty{border:2px dashed #cbd5e1;display:grid;place-items:center;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;background:repeating-linear-gradient(135deg,transparent 0 14px,#0f172a06 14px 28px)}
 .sp.lameda{display:grid;grid-template-columns:1.1fr 1fr;background:#f4f1ec;color:#111;text-decoration:none;border:1px solid #e7e2da;transition:.2s}
 .sp.lameda:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0f172a22}
-.lmart{position:relative;background:#111;min-height:150px;overflow:hidden}
+.lmart{position:relative;background:#111;min-height:118px;overflow:hidden}
 .lmart img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s}
 .lmart img.on{opacity:1}
 .lmart .fb{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 30% 30%,#2b2b2b,#0d0d0d);color:#f4f1ec;font:800 26px Sora;letter-spacing:6px}
-.lmbody{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.lmbody{padding:12px 14px;display:flex;flex-direction:column;gap:3px}
 .lmname{font:800 20px Sora;letter-spacing:5px}
 .lmtag{font-size:12px;font-style:italic;color:#444}
 .lmdesc{font-size:12px;color:#555;margin-top:2px;line-height:1.4}
@@ -171,7 +167,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin-top:6px}
 .lmcta{margin-top:8px;font-size:12px;font-weight:700;border-bottom:2px solid #111;align-self:flex-start}
 
 /* ---------- footer, share, toast ---------- */
-footer{margin-top:18px;padding:14px 0;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;font-size:12px;color:var(--muted)}
+footer{margin-top:10px;padding:10px 0;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;font-size:12px;color:var(--muted)}
 footer a{text-decoration:none;font-weight:600;color:var(--muted)}
 footer a:hover{color:var(--text)}
 .fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:1300;display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;border:0;border-radius:999px;padding:13px 18px;font-size:14px;font-weight:700;box-shadow:0 8px 24px #25d36666,0 2px 6px #0f172a33}
@@ -194,12 +190,25 @@ footer a:hover{color:var(--text)}
 }
 @media (max-width:680px){
   .wrap{padding:10px 12px calc(92px + env(safe-area-inset-bottom))}
-  .ctl{margin:0 -12px 10px;padding:8px 12px 10px}
+  .ctl{margin:0 -12px 10px;padding:6px 12px 8px}
+  .row+.row{margin-top:6px}
+  .pill{padding:6px 11px;font-size:12.5px}
+  .hr{min-width:48px;padding:4px 5px 5px;font-size:12px}
+  .hr small{font-size:9.5px}
+  .hr i{margin-top:3px}
   .brand h1{font-size:16px}
   .mapcard{margin:0 -12px;border-radius:0;border-left:0;border-right:0}
-  .mapbox{height:max(430px,62vh)}
+  .mapbox{height:min(340px,46vh)}
   .mhero{left:10px;top:10px;padding:9px 12px;min-width:0}
-  .mhero .big .tp{font-size:34px}
+  .mhero{padding:7px 10px;border-radius:13px}
+  .mhero .tn{font-size:11px;max-width:170px}
+  .mhero .wn{font-size:10px}
+  .mhero .big{margin-top:3px;gap:6px}
+  .mhero .big .tp{font-size:26px}
+  .mhero .big .ic{font-size:20px}
+  .mhero .wd{margin-top:3px;font-size:12px}
+  .mhero .wd svg{width:18px;height:18px}
+  .mhero .sc{margin-top:5px;font-size:11px;padding:3px 8px}
   .vsw{right:10px;top:auto;bottom:62px}
   .leaflet-control-zoom{display:none}
   .mapinfo{padding:10px 14px 12px}
@@ -209,15 +218,16 @@ footer a:hover{color:var(--text)}
   .legend{left:10px;right:10px;bottom:20px;justify-content:space-between;font-size:10.5px;gap:6px}
   .bigtemp .v{font-size:58px}
   .kv b{font-size:15px}
-  #chart{min-width:960px}
-  .best{font-size:14px;line-height:1.5}
-  .sp{min-height:90px}
+  .best{font-size:13px}
+  .sp{min-height:64px}
+  .sp.lameda{grid-template-columns:120px 1fr}
+  .lmart{min-height:0}
+  .lmart .fb{font-size:15px;letter-spacing:3px}
+  .lmdesc{display:none}
   .sp.empty{font-size:10.5px;letter-spacing:1px}
   .fab{padding:13px 16px}
 }
 @media (max-width:420px){
-  .sp.lameda{grid-template-columns:1fr}
-  .lmart{min-height:130px}
   .windbox{grid-template-columns:112px 1fr;gap:12px}
   .compass{width:112px;height:112px}
 }
@@ -300,18 +310,10 @@ footer a:hover{color:var(--text)}
     </table>
     <div class="wdesc" id="wdesc"></div>
 
+    <div class="best" id="best">⏳ Finding the best riding window…</div>
     <div class="tip kit" id="kit"></div>
     <div class="tip kite" id="kite"></div>
   </div>
-</div>
-
-<!-- 48h -->
-<div class="panel fc48">
-  <h3>Next 48 hours · tap the chart to pick an hour</h3>
-  <div class="chartwrap" id="chartwrap"><svg id="chart" viewBox="0 0 1000 230"></svg></div>
-  <input type="range" id="slider" min="0" max="47" value="0" data-noshot aria-label="Forecast hour">
-  <div class="cap">Orange line = temperature · blue bars = wind (dash = gusts) · arrows = wind direction · strip = ride score · shaded = night</div>
-  <div class="best" id="best">⏳ Finding the best riding window…</div>
 </div>
 
 <section class="sponsors">
@@ -532,42 +534,10 @@ function renderCond(){
   // map hero
   $('mName').textContent=T().name;$('mWhen').textContent=whenTxt;
   $('mTemp').textContent=Math.round(h.t)+'°';$('mIcon').textContent=ic;
-  $('mArrow').style.transform=`rotate(${h.dir+180}deg)`;$('mWind').textContent=`${spd(h.w)} ${uLbl()}`;$('mDir').textContent=`from ${c} · gusts ${spd(h.g)}`;
+  $('mArrow').style.transform=`rotate(${h.dir+180}deg)`;$('mWind').textContent=`${spd(h.w)} ${uLbl()}`;$('mDir').textContent=`${c}`;
   $('mScore').textContent=`${lab} · ${h.score}`;$('mScore').style.color=col;$('mScore').style.background=bg;
   colorTrack(h.dir);setParticles(h.dir,h.w);
 }
-
-/* ================= chart ================= */
-function renderChart(){
-  if(!S.wx)return;const ti=TI(),N=48,W=1000,H=230,L=34,R=34,top=18,bot=168,step=(W-L-R)/(N-1);
-  const hs=[...Array(N)].map((_,i)=>hourAt(ti,i));
-  const tMin=Math.floor(Math.min(...hs.map(h=>h.t))-2),tMax=Math.ceil(Math.max(...hs.map(h=>h.t))+2),wMax=Math.max(30,...hs.map(h=>h.g||0));
-  const x=i=>L+step*i,yT=t=>bot-(t-tMin)/(tMax-tMin)*(bot-top),yW=w=>bot-(w/wMax)*(bot-top)*.85,bw=step*.62;
-  let s='';
-  hs.forEach((h,i)=>{if(!h.day)s+=`<rect x="${x(i)-step/2}" y="${top-8}" width="${step+.5}" height="${bot-top+8}" fill="#eef2ff"/>`});
-  for(let k=0;k<=4;k++){const t=tMin+(tMax-tMin)*k/4;s+=`<line x1="${L}" x2="${W-R}" y1="${yT(t)}" y2="${yT(t)}" stroke="#e2e8f0" stroke-dasharray="3 5"/><text x="${L-6}" y="${yT(t)+4}" fill="#ea580c" font-size="10" text-anchor="end" font-family="JetBrains Mono">${Math.round(t)}°</text><text x="${W-R+6}" y="${yW(wMax*k/4)+4}" fill="#0284c7" font-size="10" font-family="JetBrains Mono">${spd(wMax*k/4)}</text>`}
-  hs.forEach((h,i)=>{s+=`<rect x="${x(i)-bw/2}" y="${yW(h.w)}" width="${bw}" height="${bot-yW(h.w)}" rx="2" fill="#0284c7" opacity=".35"/><line x1="${x(i)-bw/2}" x2="${x(i)+bw/2}" y1="${yW(h.g)}" y2="${yW(h.g)}" stroke="#0284c7" stroke-width="2" opacity=".7"/>`});
-  const pts=hs.map((h,i)=>`${x(i).toFixed(1)},${yT(h.t).toFixed(1)}`);
-  s+=`<defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ea580c" stop-opacity=".3"/><stop offset="1" stop-color="#ea580c" stop-opacity="0"/></linearGradient></defs><polygon points="${x(0)},${bot} ${pts.join(' ')} ${x(N-1)},${bot}" fill="url(#tg)"/><polyline points="${pts.join(' ')}" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-linejoin="round"/>`;
-  hs.forEach((h,i)=>{const lt=parseLocal(h.time);
-    if(i%3===0)s+=`<g transform="translate(${x(i)},${bot+20}) rotate(${h.dir+180})"><path d="M0 -8 L5 6 L0 3 L-5 6 Z" fill="#65a30d"/></g><text x="${x(i)}" y="${bot+46}" fill="#64748b" font-size="10" text-anchor="middle" font-family="JetBrains Mono">${lt.hm}</text>`;
-    if(lt.h===0||i===0){const rd=relDay(h.time);s+=`<text x="${x(i)+3}" y="${top-4}" fill="#0f172a" font-size="11" font-weight="700">${i===0?'Now':(rd===lt.day?`${lt.day} ${lt.date} ${lt.mon}`:`${rd} ${lt.day}`)}</text><line x1="${x(i)}" x2="${x(i)}" y1="${top-14}" y2="${bot}" stroke="#94a3b8"/>`}});
-  hs.forEach((h,i)=>{s+=`<rect x="${x(i)-step/2}" y="${H-10}" width="${step+.5}" height="7" fill="${scoreInfo(h.score)[1]}"/>`});
-  const sx=x(S.sel),sh=hs[S.sel],bx=Math.min(Math.max(sx-62,L),W-R-124);
-  s+=`<line x1="${sx}" x2="${sx}" y1="${top-10}" y2="${bot+8}" stroke="#0f172a" stroke-width="2"/><circle cx="${sx}" cy="${yT(sh.t)}" r="6" fill="#ea580c" stroke="#fff" stroke-width="2"/>
-     <rect x="${bx}" y="${top+4}" width="124" height="40" rx="8" fill="#0f172a"/>
-     <text x="${bx+62}" y="${top+20}" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="JetBrains Mono">${Math.round(sh.t)}°C · ${spd(sh.w)} ${uLbl()}</text>
-     <text x="${bx+62}" y="${top+36}" fill="#cbd5e1" font-size="10" text-anchor="middle">${relDay(sh.time)} ${parseLocal(sh.time).hm} · ${card(sh.dir)}</text>`;
-  $('chart').innerHTML=s;
-  const cw=$('chartwrap');if(cw.scrollWidth>cw.clientWidth+4){const px=sx/W*cw.scrollWidth;if(px<cw.scrollLeft+40||px>cw.scrollLeft+cw.clientWidth-40)cw.scrollTo({left:px-cw.clientWidth/2,behavior:'smooth'})}
-}
-let dragging=false;
-function chartPick(e){const r=$('chart').getBoundingClientRect(),vx=(e.clientX-r.left)/r.width*1000;setSel(Math.round((vx-34)/(1000-68)*47))}
-$('chart').addEventListener('pointerdown',e=>{dragging=true;chartPick(e)});
-window.addEventListener('pointermove',e=>{if(dragging&&e.pointerType==='mouse')chartPick(e)});
-window.addEventListener('pointerup',()=>dragging=false);
-$('slider').oninput=e=>setSel(+e.target.value);
-window.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')setSel(S.sel+1);if(e.key==='ArrowLeft')setSel(S.sel-1)});
 
 /* ================= best window ================= */
 function renderBest(){
@@ -576,16 +546,21 @@ function renderBest(){
   S.best=best>=0?best:null;if(best<0){$('best').textContent='No daylight window in the next 48 h.';return}
   let a=best,b=best;while(a>0&&hourAt(ti,a-1).day&&hourAt(ti,a-1).score>=bs-5)a--;while(b<47&&hourAt(ti,b+1).day&&hourAt(ti,b+1).score>=bs-5)b++;
   const h=hourAt(ti,best),la=parseLocal(hourAt(ti,a).time).hm,end=String((parseLocal(hourAt(ti,b).time).h+1)%24).padStart(2,'0')+':00';
-  $('best').innerHTML=`<span>⭐ Best ride at <b>${T().short}</b>: <b>${relDay(h.time)} ${la}–${end}</b> · ${Math.round(h.t)}°C, ${spd(h.w)} ${uLbl()} ${card(h.dir)} · score <b>${bs}</b></span><button onclick="setSel(${best});window.scrollTo({top:0,behavior:'smooth'})" data-noshot>Show</button>`;
+  $('best').innerHTML=`<span>⭐ Best ride at <b>${T().short}</b>: <b>${relDay(h.time)} ${la}–${end}</b> · ${Math.round(h.t)}°C, ${spd(h.w)} ${uLbl()} ${card(h.dir)} · score <b>${bs}</b></span><button onclick="setSel(${best})" data-noshot>Show</button>`;
 }
 
 /* ================= selection ================= */
-function setSel(i){i=Math.max(0,Math.min(47,i|0));S.sel=i;$('slider').value=i;renderDayRow();renderHourRow();renderTrackRow();renderCond();renderChart()}
-function renderAll(){renderTrackRow();renderBest();renderDayRow();renderHourRow();renderCond();renderChart()}
+function setSel(i){i=Math.max(0,Math.min(47,i|0));S.sel=i;renderDayRow();renderHourRow();renderTrackRow();renderCond()}
+function renderAll(){renderTrackRow();renderBest();renderDayRow();renderHourRow();renderCond()}
 
 /* ================= map ================= */
 const map=L.map('map',{zoomControl:false,attributionControl:true}).setView([T().lat,T().lng],T().zoom);
 L.control.zoom({position:'bottomright'}).addTo(map);
+const touch=matchMedia('(pointer:coarse)').matches;
+if(touch){map.dragging.disable();map.tap&&map.tap.disable();
+  const el=$('map');el.addEventListener('touchstart',e=>{if(e.touches.length>1)map.dragging.enable()},{passive:true});
+  el.addEventListener('touchend',e=>{if(e.touches.length<2)map.dragging.disable()},{passive:true});
+  let hinted=false;el.addEventListener('touchmove',e=>{if(e.touches.length===1&&!hinted){hinted=true;toast('Use two fingers to move the map')}},{passive:true});}
 const LAYERS={
   sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,crossOrigin:true,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'}),
   cycle:L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',{maxZoom:20,crossOrigin:true,attribution:'CyclOSM · © OpenStreetMap contributors'}),
@@ -650,7 +625,7 @@ function setParticles(dir,k){const to=(dir+180)*Math.PI/180,sp=.4+k/9;vx=Math.si
 /* ================= track select ================= */
 function selectTrack(id){S.track=id;save('rw_track',id);renderTrackRow();drawTrack();
   const on=$('trackRow').querySelector('.pill.on');if(on)$('trackRow').scrollTo({left:on.offsetLeft-20,behavior:'smooth'});
-  if(S.wx){renderBest();renderHourRow();renderCond();renderChart()}}
+  if(S.wx){renderBest();renderHourRow();renderCond()}}
 
 /* ================= units ================= */
 function paintUnits(){document.querySelectorAll('#units button').forEach(b=>b.classList.toggle('on',b.dataset.u===S.unit))}
