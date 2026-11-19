@@ -244,6 +244,27 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .sponsors h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
 .spgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
 .sp{border-radius:16px;min-height:118px;overflow:hidden}
+.sp.ride{grid-column:1;grid-row:2;position:relative;display:flex;gap:14px;align-items:center;padding:14px 16px 14px 14px;color:#fff;
+  background:radial-gradient(70% 140% at 100% 0%,#38bdf833 0%,transparent 60%),linear-gradient(110deg,#0b1f4b 0%,#123a8a 55%,#1d4ed8 100%);box-shadow:0 8px 22px #0b1f4b40}
+.ride-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.sp.ride>*:not(.ride-route){position:relative}
+.ride-date{flex:none;width:62px;border-radius:13px;background:#fff;color:#0b1f4b;display:flex;flex-direction:column;align-items:center;padding:7px 0 8px;line-height:1}
+.ride-date span{font:800 10px Sora;letter-spacing:1.4px}
+.ride-date span:first-child{color:#dc2626}
+.ride-date b{font:800 26px Sora;margin:3px 0 2px}
+.ride-body{flex:1;min-width:0}
+.ride-tag{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.ride-tag span{font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#ffffff1f;border:1px solid #ffffff33;white-space:nowrap}
+.ride-tag .star{background:#fbbf24;border-color:#fbbf24;color:#3b2a00}
+.ride-title{font-weight:800;font-size:18px;letter-spacing:-.3px}
+.ride-title span{color:#fbbf24}
+.ride-meta{font-size:12px;color:#dbeafe;margin-top:1px}
+.ride-wx{font-size:11.5px;color:#e0f2fe;margin-top:6px;background:#ffffff14;border:1px solid #ffffff26;border-radius:8px;padding:4px 8px;display:inline-block}
+.ride-btns{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.ride-btns a{text-decoration:none;font-size:12.5px;font-weight:800;padding:7px 12px;border-radius:10px;white-space:nowrap}
+.rjoin{background:#25d366;color:#fff;box-shadow:0 4px 12px #25d36655}
+.rjoin::before{content:"";display:inline-block;width:13px;height:13px;margin:-2px 6px -2px 0;vertical-align:middle;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z'/%3E%3C/svg%3E") center/contain no-repeat}
+.rloc{background:#fff;color:#0b1f4b}
 .sp.empty{border:2px dashed #cbd5e1;display:grid;place-items:center;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;background:repeating-linear-gradient(135deg,transparent 0 14px,#0f172a06 14px 28px)}
 .sp.lameda{display:grid;grid-template-columns:1.1fr 1fr;background:#f4f1ec;color:#111;text-decoration:none;border:1px solid #e7e2da;transition:.2s}
 .sp.lameda:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0f172a22}
@@ -290,6 +311,8 @@ footer a:hover{color:var(--text)}
   .grid>.mapcard,.grid>#evt,.grid>#cond{grid-column:1;grid-row:auto}
   .spgrid{grid-template-columns:1fr 1fr 1fr}
   .sp.lameda{grid-column:1/-1}
+  .sp.ride{grid-column:1/-1;grid-row:2}
+  .sp.lameda{grid-row:1}
 }
 @media (max-width:680px){
   .wrap{padding:10px 12px calc(92px + env(safe-area-inset-bottom))}
@@ -345,6 +368,10 @@ footer a:hover{color:var(--text)}
   .best{font-size:13px}
   .sp{min-height:64px}
   .sp.lameda{grid-template-columns:120px 1fr}
+  .sp.ride{padding:12px;gap:12px}
+  .ride-date{width:54px}
+  .ride-date b{font-size:22px}
+  .ride-title{font-size:16px}
   .lmart{min-height:0}
   .lmart .fb{font-size:15px;letter-spacing:3px}
   .lmdesc{display:none}
@@ -513,6 +540,20 @@ footer a:hover{color:var(--text)}
     <div class="sp empty"><span>Sponsor</span></div>
     <div class="sp empty"><span>Sponsor</span></div>
     <div class="sp empty"><span>Sponsor</span></div>
+    <div class="sp ride" id="ride">
+      <svg class="ride-route" viewBox="0 0 400 140" preserveAspectRatio="none" aria-hidden="true"><path d="M-10 110 C60 60 120 120 200 80 S330 30 410 60" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/></svg>
+      <div class="ride-date"><span id="rideDow">SAT</span><b id="rideDay">--</b><span id="rideMon">---</span></div>
+      <div class="ride-body">
+        <div class="ride-tag"><span class="star">★ Recommended</span><span>Next group ride</span></div>
+        <div class="ride-title">TCD Ride · <span>6:30 AM</span></div>
+        <div class="ride-meta"><b>86 km</b> · Al Qudra Cycle Track · Saturday</div>
+        <div class="ride-wx" id="rideWx">Forecast loading…</div>
+        <div class="ride-btns">
+          <a class="rjoin" href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t" target="_blank" rel="noopener">Join ride</a>
+          <a class="rloc" href="https://maps.app.goo.gl/ntyxGBSEaKip7akR8" target="_blank" rel="noopener">Location ↗</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -793,7 +834,7 @@ function renderBest(){
 /* ================= selection ================= */
 function setSel(i){i=Math.max(S.minOff,Math.min(S.maxOff,i|0));S.mode='fc';S.sel=i;renderWhen();renderTrackRow();renderCond()}
 function setAlt(hh){S.mode='alt';S.altH=hh;renderWhen();renderTrackRow();renderCond()}
-function renderAll(){renderTrackRow();renderBest();renderWhen();renderCond()}
+function renderAll(){renderTrackRow();renderBest();renderWhen();renderCond();if(typeof renderRide==='function')renderRide()}
 
 /* ================= map ================= */
 const map=L.map('map',{zoomControl:false,attributionControl:true}).setView([T().lat,T().lng],T().zoom);
@@ -924,6 +965,7 @@ function shareText(){
   if(S.bestTxt)s+=`⭐ Best morning: ${S.bestTxt}\n`;
   s+=`👕 ${kitTip(h).replace(/<[^>]+>/g,'').replace(/^👕\s*/,'')}\n`;
   s+=`\n🎁 *Sponsor:* Lameda cycling apparel, use code *DXB* for *15% OFF*\nhttps://lameda.cc/\n`;
+  {const rd=S.rideDate||nextRideDate(),l=parseLocal(rd+'T00:00');s+=`\n🚴‍♂️ *Next group ride:* TCD Ride, Sat ${l.date} ${l.mon}, 6:30 AM, 86 km Al Qudra`+(S.rideTxt?` (forecast ${S.rideTxt})`:'')+`\nJoin: https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo\nLocation: ${'https://maps.app.goo.gl/ntyxGBSEaKip7akR8'}\n`}
   s+=`\n📅 *Recommended event:* AD Ports Group Gran Fondo Abu Dhabi, Sun 20 Dec, 150 km Al Ain → Abu Dhabi\nhttps://abudhabigranfondo.ae/\n`;
   s+=`\n👥 Join our WhatsApp group: https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo\n📲 Live ride weather: ${location.href.split('#')[0]}`;
   return s;
@@ -1018,6 +1060,25 @@ $('lmCode').addEventListener('click',async e=>{e.preventDefault();e.stopPropagat
     const els=imgs.slice(0,8).map(src=>{const im=new Image();im.alt='Lameda cycling apparel';im.referrerPolicy='no-referrer';im.src=src;box.appendChild(im);return im});
     let k=0;els[0].onload=()=>{els[0].classList.add('on');box.querySelector('.fb').style.display='none'};
     setInterval(()=>{els[k].classList.remove('on');k=(k+1)%els.length;els[k].classList.add('on')},3500)}catch(e){}})();
+
+/* ================= next TCD group ride (Saturday 06:30, Al Qudra 86 km) ================= */
+function nextRideDate(){const n=dubaiNow(),t=new Date(`${n.year}-${n.month}-${n.day}T00:00Z`),dow=t.getUTCDay();
+  let add=(6-dow+7)%7;if(add===0&&+n.hour>=10)add=7;const d=new Date(t.getTime()+add*864e5);return d.toISOString().slice(0,10)}
+function renderRide(){
+  const d=nextRideDate(),lt=parseLocal(d+'T00:00');S.rideDate=d;
+  $('rideDay').textContent=lt.date;$('rideMon').textContent=lt.mon.toUpperCase();
+  const rd=relDay(d+'T00:00');$('rideDow').textContent=rd==='Today'?'TODAY':'SAT';
+  if(!S.wx){return}
+  const ti=TRACKS.findIndex(t=>t.id==='alqudra'),H=S.wx[0].hourly.time,hs=[];
+  for(let i=S.minOff;i<=S.maxOff;i++){const t=H[S.start+i];if(t.startsWith(d)){const h=parseLocal(t).h;if(h>=6&&h<=9)hs.push(hourAt(ti,i))}}
+  if(!hs.length){$('rideWx').textContent='Forecast available closer to the day';S.rideTxt=null;return}
+  const lo=Math.round(Math.min(...hs.map(h=>h.t))),hi=Math.round(Math.max(...hs.map(h=>h.t))),w=Math.round(hs.reduce((a,h)=>a+h.w,0)/hs.length*10)/10,
+    sc=Math.round(hs.reduce((a,h)=>a+h.score,0)/hs.length),dir=card(hs[Math.floor(hs.length/2)].dir),[lab]=scoreInfo(sc);
+  const tr=lo===hi?`${lo}°C`:`${lo}–${hi}°C`;
+  $('rideWx').innerHTML=`🌤️ Ride forecast: <b>${tr}</b> · wind ${spd(w)} ${uLbl()} ${dir} · <b>${lab} ${sc}</b>`;
+  S.rideTxt=`${tr}, wind ${spd(w)} ${uLbl()} ${dir}, ride score ${sc}`;
+}
+renderRide();
 
 /* ================= event countdown ================= */
 (function(){const ev=Date.parse('2026-12-20T07:00:00+04:00');function upd(){const d=Math.ceil((ev-Date.now())/864e5);
