@@ -55,6 +55,7 @@ window.SITE = {
      or   date: '2026-12-05'  for a one-off ride (hidden once its start time passes).
      start: meeting point shown on the card and in every share (optional)
      type: e.g. 'MTB / Gravel' (optional) · distance is optional
+     until: 'YYYY-MM-DD' last date of a weekly ride (optional) · from: first date (optional)
      track: alqudra | meydan | mushrif | kite | hatta  (used for the ride forecast)
      changes: one-off changes for a single date, e.g. { '2026-11-21': { time: '06:00' } }
               or { '2026-12-25': { cancelled: true } } */
@@ -83,6 +84,19 @@ window.SITE = {
       pace: '20 km/h avg',
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
       location: 'https://www.google.com/maps/search/?api=1&query=Mushrif+National+Park+Mountain+Bike+Trail+Dubai',
+    },
+    {
+      name: 'Recovery & Social Ride',
+      weekly: 'Tue',               // every Tuesday, for four months
+      until: '2027-03-23',         // last ride: Tue 23 Mar 2027
+      time: '07:00',
+      type: 'Recovery / Social',
+      distance: '36 km',
+      place: 'Al Qudra',
+      start: 'BOTS',
+      track: 'alqudra',
+      join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
+      location: 'https://maps.app.goo.gl/ntyxGBSEaKip7akR8',
     },
     // { name: 'Recovery Ride', date: '2026-12-02', time: '06:00', distance: '40 km', place: 'Meydan',
     //   track: 'meydan', pace: '28–30 km/h avg', join: 'https://chat.whatsapp.com/…', location: 'https://maps.app.goo.gl/…' },

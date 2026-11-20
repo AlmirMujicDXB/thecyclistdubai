@@ -1126,7 +1126,8 @@ function rideOcc(r){
   const ch=d=>(r.changes&&r.changes[d])||{},startOf=d=>tsOf(d,ch(d).time||r.time);
   if(r.date)return !ch(r.date).cancelled&&Date.now()<startOf(r.date)?r.date:null;
   const want=DOWN.indexOf((r.weekly||'').slice(0,3));if(want<0)return null;const d=todayStr();
-  for(let k=0;k<22;k++){const dd=addDays(d,k);if(new Date(dd+'T00:00Z').getUTCDay()===want&&!ch(dd).cancelled&&Date.now()<startOf(dd))return dd}return null}
+  for(let k=0;k<22;k++){const dd=addDays(d,k);if(r.from&&dd<r.from)continue;if(r.until&&dd>r.until)return null;if(new Date(dd+'T00:00Z').getUTCDay()===want&&!ch(dd).cancelled&&Date.now()<startOf(dd))return dd}return null}
+/* rides listed soonest first: the next ride is always at the top */
 function upcomingRides(){return (SITE.rides||[]).map(r=>{const occ=rideOcc(r),ov=occ&&r.changes&&r.changes[occ];return {...r,...(ov||{}),occ,changed:!!ov,usualTime:r.time}}).filter(r=>r.occ&&!r.cancelled).sort((a,b)=>tsOf(a.occ,a.time)-tsOf(b.occ,b.time))}
 function rideWhere(r,sep=' '){return [r.distance,r.place].filter(Boolean).join(sep)}
 function rideRule(r){return r.rule||SITE.rideRule||''}
