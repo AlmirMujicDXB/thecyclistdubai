@@ -1151,10 +1151,12 @@ function fmtTime(t){const [h,m]=t.split(':').map(Number);return `${(h%12)||12}:$
 function occLabel(d){const l=parseLocal(d+'T00:00'),rd=relDay(d+'T00:00');return (rd==='Today'||rd==='Tomorrow'?rd+' '+l.day:l.day)+` ${l.date} ${l.mon}`}
 function addDays(d,k){return new Date(Date.parse(d+'T00:00Z')+k*864e5).toISOString().slice(0,10)}
 function upcomingEvents(){return (SITE.events||[]).filter(e=>e.date&&Date.now()<tsOf(e.date,e.time)+12*36e5).sort((a,b)=>tsOf(a.date,a.time)-tsOf(b.date,b.time))}
+/* next date of a ride: one-off rides disappear and weekly rides move to next week as soon as the start time passes */
 function rideOcc(r){
-  if(r.date)return Date.now()<tsOf(r.date,r.time)+4*36e5?r.date:null;
-  const want=DOWN.indexOf((r.weekly||'').slice(0,3));if(want<0)return null;let d=todayStr();
-  for(let k=0;k<8;k++){const dd=addDays(d,k);if(new Date(dd+'T00:00Z').getUTCDay()===want&&Date.now()<tsOf(dd,r.time)+4*36e5)return dd}return null}
+  const ch=d=>(r.changes&&r.changes[d])||{},startOf=d=>tsOf(d,ch(d).time||r.time);
+  if(r.date)return !ch(r.date).cancelled&&Date.now()<startOf(r.date)?r.date:null;
+  const want=DOWN.indexOf((r.weekly||'').slice(0,3));if(want<0)return null;const d=todayStr();
+  for(let k=0;k<22;k++){const dd=addDays(d,k);if(new Date(dd+'T00:00Z').getUTCDay()===want&&!ch(dd).cancelled&&Date.now()<startOf(dd))return dd}return null}
 function upcomingRides(){return (SITE.rides||[]).map(r=>{const occ=rideOcc(r),ov=occ&&r.changes&&r.changes[occ];return {...r,...(ov||{}),occ,changed:!!ov,usualTime:r.time}}).filter(r=>r.occ&&!r.cancelled).sort((a,b)=>tsOf(a.occ,a.time)-tsOf(b.occ,b.time))}
 function rideWhere(r,sep=' '){return [r.distance,r.place].filter(Boolean).join(sep)}
 function rideRule(r){return r.rule||SITE.rideRule||''}
@@ -1208,7 +1210,7 @@ function renderRides(){
   $('rides').querySelectorAll('[data-rd]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareRide(upcomingRides()[+b.dataset.rd])});
 }
 function renderData(){renderEvents();renderRides()}
-renderData();setInterval(renderData,30*60e3);
+renderData();setInterval(renderData,60e3);
 
 /* ---------- item share texts ---------- */
 function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);

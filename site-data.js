@@ -50,8 +50,9 @@ window.SITE = {
   rideRule: 'Lights & helmet mandatory',
 
   /* ---------- GROUP RIDES ----------
-     Use  weekly: 'Sat'  (Sun Mon Tue Wed Thu Fri Sat) for a repeating ride,
-     or   date: '2026-12-05'  for a one-off ride.
+     Use  weekly: 'Sat'  (Sun Mon Tue Wed Thu Fri Sat) for a repeating ride: as soon as its start
+          time passes it moves to the same day and time next week automatically.
+     or   date: '2026-12-05'  for a one-off ride (hidden once its start time passes).
      start: meeting point shown on the card and in every share (optional)
      type: e.g. 'MTB / Gravel' (optional) · distance is optional
      track: alqudra | meydan | mushrif | kite | hatta  (used for the ride forecast)
@@ -76,7 +77,7 @@ window.SITE = {
     },
     {
       name: 'Mushrif MTB Ride',
-      date: '2026-11-25',          // one-off: Wednesday 25 Nov
+      weekly: 'Wed',               // every Wednesday
       time: '06:30',
       type: 'MTB / Gravel',
       place: 'Mushrif MTB Track',
