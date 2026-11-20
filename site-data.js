@@ -58,6 +58,7 @@ window.SITE = {
       name: 'TCD Ride',
       weekly: 'Sat',
       time: '06:30',
+      type: 'Road',
       distance: '86 km',
       place: 'Al Qudra',
       start: 'BOTS',             // meeting / start point
