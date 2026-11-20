@@ -603,32 +603,10 @@ footer a:hover{color:var(--text)}
 </div>
 
 <section class="sponsors">
-  <h3>Sponsors & group rides</h3>
+  <h3>Group rides</h3>
   <div class="spwrap">
     <div class="spstack">
       <div class="rides" id="rides"></div>
-      <a class="spb lameda" href="https://lameda.cc/" target="_blank" rel="noopener">
-        <svg class="spb-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 50 C120 15 200 70 310 36 S480 10 590 44" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/></svg>
-        <div class="lm-art" id="lmArt"></div>
-        <div class="spb-body">
-          <div class="spb-tag"><span class="star">🎁 Sponsor</span><span class="up">Every Pedal, Every Mile</span></div>
-          <div class="spb-title">LAMEDA · <span>Premium cycling apparel</span></div>
-          <div class="spb-meta">Jerseys, bibs, jackets & base layers · tap the code to copy</div>
-        </div>
-        <div class="spb-btns">
-          <span class="lmcode" id="lmCode" title="Tap to copy">Code <b>DXB</b> · 15% OFF</span>
-          <span class="spshop">Shop ↗</span>
-          <button class="cshare" id="lmShare" aria-label="Share sponsor code" title="Share code"></button>
-        </div>
-      </a>
-      <div class="spb empty"><span>Sponsor</span><small>Your brand here</small></div>
-      <div class="spb empty"><span>Sponsor</span><small>Your brand here</small></div>
-      <div class="spb empty"><span>Sponsor</span><small>Your brand here</small></div>
-    </div>
-    <div class="spcta">
-      <b>Sponsor TheCyclistDubai</b>
-      <p>Your brand on every live forecast and in every ride, event and weather share sent to Dubai's cycling community.</p>
-      <a href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener">Message us on Instagram ↗</a>
     </div>
   </div>
 </section>
@@ -1135,17 +1113,6 @@ function openShareModal(text,imgP,name){
 $('mClose').onclick=()=>{$('modal').style.display='none'};
 $('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').style.display='none'});
 
-/* ================= sponsor ================= */
-$('lmCode').addEventListener('click',async e=>{e.preventDefault();e.stopPropagation();const x=(SITE.sponsors||[]).find(v=>/lameda/i.test(v.name))||{code:'DXB',discount:'15% OFF'};
-  try{await navigator.clipboard.writeText(x.code);toast(`Code ${x.code} copied! ${x.discount} at lameda.cc`)}catch(_){toast(`Use code ${x.code} at lameda.cc for ${x.discount}`)}});
-(async function(){const box=$('lmArt');box.innerHTML='<div class="fb">L</div>';
-  try{const r=await fetch('https://lameda.cc/products.json?limit=12');if(!r.ok)throw 0;const j=await r.json();const imgs=[];
-    (j.products||[]).forEach(p=>{if(p.images&&p.images[0])imgs.push(p.images[0].src.replace(/(\.[a-z]+)(\?|$)/i,'$1?width=700&'))});
-    if(!imgs.length)throw 0;
-    const els=imgs.slice(0,8).map(src=>{const im=new Image();im.alt='Lameda cycling apparel';im.referrerPolicy='no-referrer';im.src=src;box.appendChild(im);return im});
-    let k=0;els[0].onload=()=>{els[0].classList.add('on');box.querySelector('.fb').style.display='none'};
-    setInterval(()=>{els[k].classList.remove('on');k=(k+1)%els.length;els[k].classList.add('on')},3500)}catch(e){}})();
-
 /* ================= events & group rides (from site-data.js) ================= */
 const DOWN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const todayStr=()=>{const n=dubaiNow();return `${n.year}-${n.month}-${n.day}`};
@@ -1191,7 +1158,7 @@ function renderEvents(){
   $('evts').querySelectorAll('[data-ev]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareEvent(upcomingEvents()[+b.dataset.ev])});
 }
 function renderRides(){
-  const rs=upcomingRides(),lm=document.querySelector('.spb.lameda');if(lm)$('rides').before(lm);
+  const rs=upcomingRides();
   $('rides').innerHTML=rs.map((r,i)=>{const l=parseLocal(r.occ+'T00:00'),rd=relDay(r.occ+'T00:00'),f=rideForecast(r);
     const st=(r.start?`📍 Start: <b>${esc(r.start)}</b> · `:'')+(r.pace?`<span class="m-pace">⚡ ${esc(r.pace.replace(/\s*avg$/,''))} · </span>`:'');
     const fx=st+(f?`<span class="m-fl">${r.time}–${String(+r.time.slice(0,2)+3).padStart(2,'0')}:${r.time.slice(3)}: </span><b>${f.tr}</b> · ${spd(f.w)} ${uLbl()} ${f.dir} · <b>${f.lab} ${f.sc}</b>`:`${l.day} ${fmtTime(r.time)} · forecast available closer to the day`);
@@ -1209,7 +1176,6 @@ function renderRides(){
         <button class="cshare" data-rd="${i}" aria-label="Share ride" title="Share ride">${SHARE_ICO}</button>
       </div>
     </div>`}).join('');
-  {const cards=$('rides').querySelectorAll('.ride');if(lm&&cards.length>1)cards[0].after(lm);else if(lm)$('rides').after(lm)}
   $('rides').querySelectorAll('[data-rd]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareRide(upcomingRides()[+b.dataset.rd])});
 }
 function renderData(){renderEvents();renderRides()}
@@ -1272,7 +1238,6 @@ function shareWeather(){const text=weatherText(),k=shotKey();
   if(shot.key===k&&shot.blob&&canShareFile(shot.blob)){nativeShare(shot.blob,text).then(ok=>{if(!ok)openShareModal(text)});return}
   openShareModal(text)}
 
-$('lmShare').innerHTML=SHARE_ICO;$('lmShare').onclick=e=>{e.preventDefault();e.stopPropagation();const x=(SITE.sponsors||[]).find(v=>/lameda/i.test(v.name));if(x)shareSponsor(x)};
 
 /* ---------- share menu ---------- */
 function openSheet(){
