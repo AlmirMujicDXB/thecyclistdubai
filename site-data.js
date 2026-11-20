@@ -62,7 +62,7 @@ window.SITE = {
     {
       name: 'TCD Ride',
       weekly: 'Sat',
-      time: '06:30',
+      time: '06:00',               // every Saturday 6:00 AM
       type: 'Road',
       distance: '86 km',
       place: 'Al Qudra',
@@ -71,9 +71,6 @@ window.SITE = {
       pace: '33–35 km/h avg',
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
       location: 'https://maps.app.goo.gl/ntyxGBSEaKip7akR8',
-      changes: {
-        '2026-11-21': { time: '06:00' },   // this Saturday starts at 6:00 AM
-      },
     },
     {
       name: 'Mushrif MTB Ride',
