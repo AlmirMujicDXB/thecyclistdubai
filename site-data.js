@@ -48,6 +48,7 @@ window.SITE = {
   /* ---------- GROUP RIDES ----------
      Use  weekly: 'Sat'  (Sun Mon Tue Wed Thu Fri Sat) for a repeating ride,
      or   date: '2026-12-05'  for a one-off ride.
+     start: meeting point shown on the card and in every share (optional)
      track: alqudra | meydan | mushrif | kite | hatta  (used for the ride forecast)
      changes: one-off changes for a single date, e.g. { '2026-11-21': { time: '06:00' } }
               or { '2026-12-25': { cancelled: true } } */
@@ -58,6 +59,7 @@ window.SITE = {
       time: '06:30',
       distance: '86 km',
       place: 'Al Qudra',
+      start: 'BOTS',             // meeting / start point
       track: 'alqudra',
       pace: '33–35 km/h avg',
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
