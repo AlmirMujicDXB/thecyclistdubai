@@ -86,15 +86,16 @@ window.SITE = {
       location: 'https://www.google.com/maps/search/?api=1&query=Mushrif+National+Park+Mountain+Bike+Trail+Dubai',
     },
     {
-      name: 'Recovery & Social Ride',
+      name: 'Social Ride',
       weekly: 'Tue',               // every Tuesday, for four months
       until: '2027-03-23',         // last ride: Tue 23 Mar 2027
       time: '07:00',
-      type: 'Recovery / Social',
+      type: 'Road',
       distance: '36 km',
       place: 'Al Qudra',
       start: 'BOTS',
       track: 'alqudra',
+      pace: '30 km/h avg',
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
       location: 'https://maps.app.goo.gl/ntyxGBSEaKip7akR8',
     },
