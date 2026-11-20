@@ -45,6 +45,10 @@ window.SITE = {
     //   note: 'Short highlight', url: 'https://…', tag: 'Upcoming event', weRide: false },
   ],
 
+  /* ---------- RULE FOR EVERY GROUP RIDE ----------
+     Shown on every ride card and in every ride share. A ride can override it with  rule: '…'  */
+  rideRule: 'Lights & helmet mandatory',
+
   /* ---------- GROUP RIDES ----------
      Use  weekly: 'Sat'  (Sun Mon Tue Wed Thu Fri Sat) for a repeating ride,
      or   date: '2026-12-05'  for a one-off ride.
