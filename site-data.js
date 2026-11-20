@@ -49,6 +49,7 @@ window.SITE = {
      Use  weekly: 'Sat'  (Sun Mon Tue Wed Thu Fri Sat) for a repeating ride,
      or   date: '2026-12-05'  for a one-off ride.
      start: meeting point shown on the card and in every share (optional)
+     type: e.g. 'MTB / Gravel' (optional) · distance is optional
      track: alqudra | meydan | mushrif | kite | hatta  (used for the ride forecast)
      changes: one-off changes for a single date, e.g. { '2026-11-21': { time: '06:00' } }
               or { '2026-12-25': { cancelled: true } } */
@@ -67,6 +68,18 @@ window.SITE = {
       changes: {
         '2026-11-21': { time: '06:00' },   // this Saturday starts at 6:00 AM
       },
+    },
+    {
+      name: 'Mushrif MTB Ride',
+      date: '2026-11-25',          // one-off: Wednesday 25 Nov
+      time: '06:30',
+      type: 'MTB / Gravel',
+      place: 'Mushrif MTB Track',
+      start: 'Entrance to MTB Park',
+      track: 'mushrif',
+      pace: '20 km/h avg',
+      join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
+      location: 'https://www.google.com/maps/search/?api=1&query=Mushrif+National+Park+Mountain+Bike+Trail+Dubai',
     },
     // { name: 'Recovery Ride', date: '2026-12-02', time: '06:00', distance: '40 km', place: 'Meydan',
     //   track: 'meydan', pace: '28–30 km/h avg', join: 'https://chat.whatsapp.com/…', location: 'https://maps.app.goo.gl/…' },
