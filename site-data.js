@@ -61,19 +61,6 @@ window.SITE = {
               or { '2026-12-25': { cancelled: true } } */
   rides: [
     {
-      name: 'TCD Ride',
-      weekly: 'Sat',
-      time: '06:00',               // every Saturday 6:00 AM
-      type: 'Road',
-      distance: '86 km',
-      place: 'Al Qudra',
-      start: 'BOTS',             // meeting / start point
-      track: 'alqudra',
-      pace: '33–35 km/h avg',
-      join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
-      location: 'https://maps.app.goo.gl/ntyxGBSEaKip7akR8',
-    },
-    {
       name: 'Mushrif MTB Ride',
       weekly: 'Wed',               // every Wednesday
       time: '06:30',
@@ -86,7 +73,7 @@ window.SITE = {
       location: 'https://www.google.com/maps/search/?api=1&query=Mushrif+National+Park+Mountain+Bike+Trail+Dubai',
     },
     {
-      name: 'Social Ride',
+      name: 'TCD Ride',
       weekly: 'Tue',               // every Tuesday, for four months
       until: '2027-03-23',         // last ride: Tue 23 Mar 2027
       time: '07:00',
