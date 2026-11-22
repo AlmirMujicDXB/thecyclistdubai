@@ -139,19 +139,19 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .evt-go{flex:none;font-size:12px;font-weight:800;background:#fff;color:#0b1f4b;padding:7px 11px;border-radius:10px}
 .evt-code{font-family:"JetBrains Mono",monospace;font-weight:800;letter-spacing:.3px;text-transform:none}
 .evt-tag .code{background:#fffffff0;border-color:#fff;color:#111}
-.evt.y .evt-tag .code{background:#ffffffd9;border-color:#ffffff;color:#111}
+.evt.y .evt-tag .code{background:#fffffff2;border-color:#fff;color:#7c2d12}
 /* yellow event card (L'Étape Dubai colours: neon yellow + black) */
-.evt.y{color:#111;background:radial-gradient(70% 140% at 100% 0%,#ffffffb3 0%,transparent 60%),linear-gradient(110deg,#ca8a04 0%,#facc15 55%,#f4fa5a 100%);box-shadow:0 8px 22px #a1620745}
-.evt.y:hover{box-shadow:0 12px 28px #a1620766}
-.evt.y .evt-route path{stroke:#000;stroke-opacity:.16}.evt.y .evt-route circle{fill:#00000033}
-.evt.y .evt-date{background:#111}.evt.y .evt-date b{color:#f4fa5a}.evt.y .evt-date span{color:#fff}
-.evt.y .evt-tag span{background:#0000001a;border-color:#00000033;color:#111}
-.evt.y .evt-tag .star{background:#111;border-color:#111;color:#f4fa5a}
+.evt.y{color:#3b1d06;background:radial-gradient(70% 140% at 100% 0%,#ffffffc0 0%,transparent 60%),linear-gradient(110deg,#f59e0b 0%,#facc15 50%,#f4fa5a 100%);box-shadow:0 8px 22px #d9770640}
+.evt.y:hover{box-shadow:0 12px 28px #d9770666}
+.evt.y .evt-route path{stroke:#9a3412;stroke-opacity:.22}.evt.y .evt-route circle{fill:#9a341238}
+.evt.y .evt-date{background:#fff;box-shadow:0 3px 10px #b4530926}.evt.y .evt-date b{color:#c2410c}.evt.y .evt-date span{color:#d97706}
+.evt.y .evt-tag span{background:#ffffff59;border-color:#ffffff99;color:#7c2d12}
+.evt.y .evt-tag .star{background:linear-gradient(110deg,#f97316,#ea580c);border-color:#ea580c;color:#fff;box-shadow:0 2px 6px #c2410c40}
 .evt-tag span span{background:none!important;border:0!important;padding:0;color:inherit!important}
-.evt.y .evt-meta{color:#292524}
-.evt.y .evt-cd{border-left-color:#00000033}.evt.y .evt-cd b{color:#111}.evt.y .evt-cd span{color:#44403c}
-.evt.y .evt-go{background:#111;color:#f4fa5a}
-.evt.y .cshare{background:#0000001a;border-color:#00000033;color:#111}
+.evt.y .evt-meta{color:#5c2d0c}.evt.y .evt-meta b{color:#3b1d06}
+.evt.y .evt-cd{border-left-color:#9a341233}.evt.y .evt-cd b{color:#c2410c}.evt.y .evt-cd span{color:#7c2d12}
+.evt.y .evt-go{background:linear-gradient(110deg,#f97316,#c2410c);color:#fff;box-shadow:0 4px 12px #c2410c55}
+.evt.y .cshare{background:#ffffff66;border-color:#ffffffaa;color:#9a3412}
 .grid+.sponsors{margin-top:14px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .panel.band::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#a3e635,#22c55e,#0ea5e9)}
@@ -442,7 +442,7 @@ footer a:hover{color:var(--text)}
   .evt-title{white-space:normal}
   .evt-date{width:44px;height:46px}
   .evt-cd b{font-size:19px}
-  .evt.y .evt-cd{background:#0000001a;border-color:#00000033}
+  .evt.y .evt-cd{background:#ffffff59;border-color:#ffffff99}
   .evt-tag:has(.code) .st-l{display:none}
   .mapinfo{padding:11px 12px 13px}
   .fac{gap:6px}
@@ -1213,24 +1213,24 @@ function rideText(r){const f=rideForecast(r);
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\nUse code *${x.code}* for *${x.discount}*\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
 /* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */
-const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#ca8a04','#facc15','#f4fa5a','#ffffff','#111111']};
+const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#f59e0b','#facc15','#f4fa5a','#ffffff','#ea580c']};
 function wrapLines(c,t,max){const w=t.split(' ');const out=[];let line='';w.forEach(x=>{const tt=line?line+' '+x:x;if(c.measureText(tt).width>max&&line){out.push(line);line=x}else line=tt});if(line)out.push(line);return out}
 function drawCard({theme,dow,day,mon,tags,title,lines}){
-  const S2=1080,c0=document.createElement('canvas');c0.width=S2;c0.height=S2;const c=c0.getContext('2d'),T3=THEMES[theme],dk=theme==='yellow',ink=dk?'#111':'#fff';
+  const S2=1080,c0=document.createElement('canvas');c0.width=S2;c0.height=S2;const c=c0.getContext('2d'),T3=THEMES[theme],dk=theme==='yellow',ink=dk?'#3b1d06':'#fff';
   const g=c.createLinearGradient(0,0,S2,S2);g.addColorStop(0,T3[0]);g.addColorStop(.55,T3[1]);g.addColorStop(1,T3[2]);c.fillStyle=g;c.fillRect(0,0,S2,S2);
   const rg=c.createRadialGradient(S2,0,0,S2,0,700);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S2,S2);
-  c.strokeStyle=dk?'rgba(0,0,0,.16)':'rgba(255,255,255,.18)';c.lineWidth=8;c.setLineDash([4,22]);c.lineCap='round';c.beginPath();c.moveTo(-20,860);c.bezierCurveTo(260,620,520,900,760,700);c.bezierCurveTo(900,590,1000,620,1100,560);c.stroke();c.setLineDash([]);
-  [[-20,860],[760,700],[1100,560]].forEach(([x,y])=>{c.fillStyle=dk?'rgba(0,0,0,.22)':'rgba(255,255,255,.35)';c.beginPath();c.arc(x,y,14,0,7);c.fill()});
+  c.strokeStyle=dk?'rgba(154,52,18,.22)':'rgba(255,255,255,.18)';c.lineWidth=8;c.setLineDash([4,22]);c.lineCap='round';c.beginPath();c.moveTo(-20,860);c.bezierCurveTo(260,620,520,900,760,700);c.bezierCurveTo(900,590,1000,620,1100,560);c.stroke();c.setLineDash([]);
+  [[-20,860],[760,700],[1100,560]].forEach(([x,y])=>{c.fillStyle=dk?'rgba(154,52,18,.25)':'rgba(255,255,255,.35)';c.beginPath();c.arc(x,y,14,0,7);c.fill()});
   // date tile
-  c.fillStyle=dk?'#111':'#fff';rr(c,80,90,220,240,34);c.fill();c.textAlign='center';
-  c.fillStyle=dk?'#fff':'#dc2626';c.font='800 34px Sora,sans-serif';c.fillText(dow,190,150);
-  c.fillStyle=dk?'#f4fa5a':T3[0];c.font='800 104px Sora,sans-serif';c.fillText(day,190,258);c.fillStyle=dk?'#d6d3d1':'#64748b';c.font='800 32px Sora,sans-serif';c.fillText(mon,190,305);c.textAlign='left';
+  c.fillStyle='#fff';rr(c,80,90,220,240,34);c.fill();c.textAlign='center';
+  c.fillStyle=dk?'#ea580c':'#dc2626';c.font='800 34px Sora,sans-serif';c.fillText(dow,190,150);
+  c.fillStyle=dk?'#c2410c':T3[0];c.font='800 104px Sora,sans-serif';c.fillText(day,190,258);c.fillStyle=dk?'#d97706':'#64748b';c.font='800 32px Sora,sans-serif';c.fillText(mon,190,305);c.textAlign='left';
   // tags
   let tx=340,ty=130;c.font='800 28px Sora,sans-serif';tags.forEach((t,k)=>{const w=c.measureText(t).width+36;if(tx+w>1010){tx=340;ty+=62}
-    c.fillStyle=k===0?T3[4]:dk?'rgba(0,0,0,.12)':'rgba(255,255,255,.16)';rr(c,tx,ty-38,w,52,12);c.fill();c.fillStyle=k===0?(dk?'#f4fa5a':T3[0]):ink;c.fillText(t,tx+18,ty-2);tx+=w+14});
+    c.fillStyle=k===0?T3[4]:dk?'rgba(255,255,255,.4)':'rgba(255,255,255,.16)';rr(c,tx,ty-38,w,52,12);c.fill();c.fillStyle=k===0?(dk?'#fff':T3[0]):dk?'#7c2d12':ink;c.fillText(t,tx+18,ty-2);tx+=w+14});
   // title
   c.fillStyle=ink;c.font='800 72px Sora,sans-serif';let y=420;wrapLines(c,title,920).slice(0,3).forEach(l=>{c.fillText(l,80,y);y+=86});
-  y+=20;c.font='600 40px Sora,sans-serif';lines.filter(Boolean).forEach(l=>{wrapLines(c,l,920).slice(0,2).forEach(x=>{c.fillStyle=dk?'rgba(17,17,17,.9)':'rgba(255,255,255,.92)';c.fillText(x,80,y);y+=58});y+=6});
+  y+=20;c.font='600 40px Sora,sans-serif';lines.filter(Boolean).forEach(l=>{wrapLines(c,l,920).slice(0,2).forEach(x=>{c.fillStyle=dk?'rgba(59,29,6,.92)':'rgba(255,255,255,.92)';c.fillText(x,80,y);y+=58});y+=6});
   // brand bar
   const bg=c.createLinearGradient(0,0,S2,0);if(theme==='strava'){bg.addColorStop(0,'#2a0c00');bg.addColorStop(.5,'#4a1500');bg.addColorStop(1,'#7a2400')}else{bg.addColorStop(0,'#052e16');bg.addColorStop(.5,'#14532d');bg.addColorStop(1,'#16a34a')}c.fillStyle=bg;c.fillRect(0,S2-110,S2,110);
   c.fillStyle='#fff';c.font='800 44px Sora,sans-serif';c.fillText('TheCyclist',60,S2-42);const w2=c.measureText('TheCyclist').width;c.fillStyle=theme==='strava'?'#ffd2b8':'#bef264';c.fillText('Dubai',60+w2,S2-42);
