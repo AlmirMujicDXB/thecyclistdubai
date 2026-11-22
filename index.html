@@ -17,11 +17,11 @@
   --bg:#f5f8fb; --panel:#fff; --panel2:#f1f5f9; --line:#e2e8f0; --text:#0f172a; --muted:#4b5a6e;
   --accent:#65a30d; --accent-soft:#f7fee7; --hot:#ea580c; --cool:#0284c7; --good:#16a34a; --warn:#d97706; --bad:#dc2626;
   --shadow:0 1px 2px #0f172a0a,0 6px 20px #0f172a0d; --r:18px;
-  /* THEME: header + selected buttons, inspired by the UAE Tour WHITE jersey: white, greys, black, a touch of blue */
-  --th-dark:#111827; --th-mid:#374151; --th-bright:#2563eb; --th-teal:#2563eb; --th-lime:#93c5fd; --th-ink:#111827;
-  --th-soft:#f3f4f6; --th-soft2:#e5e7eb; --th-line:#d1d5db; --th-glow:#0f172a26;
-  --th-grad:linear-gradient(110deg,#0b0f17 0%,#1f2937 55%,#374151 100%);
-  --th-hdr:linear-gradient(110deg,#ffffff 0%,#f8fafc 55%,#f1f5f9 100%);
+  /* THEME: header + selected buttons, inspired by the UAE Tour WHITE jersey: white dominant, greys and blue (no black) */
+  --th-dark:#1e40af; --th-mid:#2563eb; --th-bright:#3b82f6; --th-teal:#2563eb; --th-lime:#93c5fd; --th-ink:#334155;
+  --th-soft:#eff6ff; --th-soft2:#dbeafe; --th-line:#bfdbfe; --th-glow:#2563eb33;
+  --th-grad:linear-gradient(110deg,#1d4ed8 0%,#2563eb 55%,#3b82f6 100%);
+  --th-hdr:linear-gradient(110deg,#ffffff 0%,#f8fafc 55%,#eff6ff 100%);
   /* RIDES: same green as the header (dark forest → green → bright green, lime accents) */
   --rd-dark:#052e16; --rd-mid:#14532d; --rd-bright:#16a34a; --rd-glow:#bef264; --rd-cream:#bef264; --rd-peach:#bef264;
 }
@@ -34,21 +34,21 @@ button{font:inherit;color:inherit;cursor:pointer}
 a{color:inherit}
 
 /* ---------- header ---------- */
-header{display:grid;grid-template-columns:1fr auto auto;align-items:center;column-gap:12px;row-gap:4px;margin:2px 0 10px;padding:8px 10px 8px 16px;height:70px;box-sizing:border-box;border-radius:16px;color:#111827;position:relative;overflow:hidden;
-  background:radial-gradient(45% 160% at 100% 0%,#2563eb0f 0%,transparent 70%),linear-gradient(110deg,#ffffff 0%,#fbfcfd 55%,#f1f5f9 100%);border:1px solid #e5e7eb;box-shadow:0 10px 26px #0f172a14}
-header::after{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 66 C60 54 110 62 170 70 C230 60 300 48 380 62 C440 52 520 44 600 56 L600 80 Z' fill='%230f172a' fill-opacity='.045'/%3E%3Cpath d='M0 80 L0 74 C90 66 160 72 250 76 C330 68 420 64 520 70 C560 68 585 70 600 72 L600 80 Z' fill='%230f172a' fill-opacity='.04'/%3E%3Cpath d='M20 50 C120 14 200 64 300 34 S480 8 580 24' fill='none' stroke='%2364748b' stroke-opacity='.4' stroke-width='3' stroke-dasharray='2 7' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+header{display:grid;grid-template-columns:1fr auto auto;align-items:center;column-gap:12px;row-gap:4px;margin:2px 0 10px;padding:8px 10px 8px 16px;height:70px;box-sizing:border-box;border-radius:16px;color:#334155;position:relative;overflow:hidden;
+  background:radial-gradient(45% 160% at 100% 0%,#3b82f61f 0%,transparent 70%),linear-gradient(110deg,#ffffff 0%,#fafcff 55%,#eef4ff 100%);border:1px solid #dbe4f0;box-shadow:0 10px 26px #2563eb1a}
+header::after{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 66 C60 54 110 62 170 70 C230 60 300 48 380 62 C440 52 520 44 600 56 L600 80 Z' fill='%232563eb' fill-opacity='.05'/%3E%3Cpath d='M0 80 L0 74 C90 66 160 72 250 76 C330 68 420 64 520 70 C560 68 585 70 600 72 L600 80 Z' fill='%2364748b' fill-opacity='.045'/%3E%3Cpath d='M20 50 C120 14 200 64 300 34 S480 8 580 24' fill='none' stroke='%233b82f6' stroke-opacity='.4' stroke-width='3' stroke-dasharray='2 7' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
 /* UAE flag stripe along the bottom */
-header::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(#111827,#374151) left top/5px 100% no-repeat,linear-gradient(90deg,#111827 0%,#6b7280 55%,#93c5fd 85%,#2563eb 100%) left bottom/100% 3px no-repeat}
+header::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(#60a5fa,#2563eb) left top/5px 100% no-repeat,linear-gradient(90deg,#cbd5e1 0%,#93c5fd 50%,#2563eb 100%) left bottom/100% 3px no-repeat}
 header .ut-tabs,header .uaet{z-index:3}
 .brand{grid-column:1;grid-row:1}
 .hbtns{grid-column:3;grid-row:1/3}
 /* ---------- UAE Tour live counter ---------- */
 .uaet{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:292px;padding:5px 10px 6px;border-radius:12px;cursor:pointer;color:#fff;text-decoration:none;overflow:hidden;
-  color:#111827;background:linear-gradient(118deg,transparent 0 83%,#11182714 83% 85.5%,transparent 85.5% 87.5%,#2563eb2e 87.5% 89%,transparent 89%),linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);border:1px solid #d1d5db;box-shadow:inset 0 1px 0 #fff,0 6px 16px #0f172a1a;transition:transform .2s,box-shadow .2s}
-.uaet:hover{transform:translateY(-1px);border-color:#9ca3af;box-shadow:inset 0 1px 0 #fff,0 10px 24px #0f172a29}
+  color:#334155;background:linear-gradient(118deg,transparent 0 83%,#94a3b833 83% 85.5%,transparent 85.5% 87.5%,#3b82f640 87.5% 89%,transparent 89%),linear-gradient(180deg,#ffffff 0%,#f5f9ff 100%);border:1px solid #bfdbfe;box-shadow:inset 0 1px 0 #fff,0 6px 16px #2563eb1f;transition:transform .2s,box-shadow .2s}
+.uaet:hover{transform:translateY(-1px);border-color:#93c5fd;box-shadow:inset 0 1px 0 #fff,0 10px 24px #2563eb33}
 /* 5-second auto-rotation: progress bar + slide-in */
-.ut-prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:#e5e7eb}
-.ut-prog i{display:block;height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#1f2937,#2563eb)}
+.ut-prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:#dbeafe}
+.ut-prog i{display:block;height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#93c5fd,#2563eb)}
 .ut-prog i.run{animation:utProg 5s linear forwards}
 .uaet.hold .ut-prog i{animation-play-state:paused}
 @keyframes utProg{to{transform:scaleX(1)}}
@@ -58,21 +58,21 @@ header .ut-tabs,header .uaet{z-index:3}
 .ut-top,.ut-bot{display:flex;align-items:center;gap:8px;white-space:nowrap}
 .ut-logo{font-weight:900;font-size:11px;letter-spacing:1.6px;display:inline-flex;align-items:center;gap:4px}
 .ut-logo b{color:#2563eb}
-.ut-logo i{width:7px;height:7px;border-radius:50%;background:#111827;box-shadow:0 0 0 0 #2563ebaa;font-style:normal}
+.ut-logo i{width:7px;height:7px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 0 #2563ebaa;font-style:normal}
 .uaet.utlive .ut-logo i{background:#2563eb;animation:utPulse 1.4s infinite}
 @keyframes utPulse{0%{box-shadow:0 0 0 0 #2563ebcc}100%{box-shadow:0 0 0 8px #2563eb00}}
-.ut-tabs{margin-left:auto;display:inline-flex;background:#f1f5f9;border:1px solid #e5e7eb;border-radius:8px;padding:2px}
-.ut-tabs button{border:0;background:none;color:#6b7280;font-size:10px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:6px;line-height:1.25}
-.ut-tabs button.on{background:#111827;color:#fff;box-shadow:0 1px 4px #0003}
-.ut-tabs button:not(.on):hover{color:#111827;background:#e5e7eb}
+.ut-tabs{margin-left:auto;display:inline-flex;background:#eff6ff;border:1px solid #dbeafe;border-radius:8px;padding:2px}
+.ut-tabs button{border:0;background:none;color:#64748b;font-size:10px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:6px;line-height:1.25}
+.ut-tabs button.on{background:linear-gradient(110deg,#3b82f6,#2563eb);color:#fff;box-shadow:0 1px 4px #2563eb55}
+.ut-tabs button:not(.on):hover{color:#1e40af;background:#dbeafe}
 .ut-cd{display:inline-flex;align-items:baseline;gap:5px;font-family:"JetBrains Mono",monospace}
 .ut-cd>span{display:inline-flex;align-items:baseline;gap:1px}
-.ut-cd b{display:inline-block;min-width:2ch;text-align:right;font-size:18px;font-weight:800;line-height:1;color:#111827}
+.ut-cd b{display:inline-block;min-width:2ch;text-align:right;font-size:18px;font-weight:800;line-height:1;color:#334155}
 .ut-cd b.tk{animation:utTick .35s ease-out}
 @keyframes utTick{from{transform:translateY(-35%);opacity:.2}to{transform:none;opacity:1}}
 .ut-cd i{font-style:normal;font-size:10px;font-weight:700;color:#2563eb}
 .ut-cd .ut-live{font-family:Sora,sans-serif;font-size:13px;font-weight:800;letter-spacing:.2px}
-.ut-sub{font-size:10px;color:#6b7280}
+.ut-sub{font-size:10px;color:#64748b}
 .ut-j{margin-left:auto;display:inline-flex;gap:3px}
 .ut-j svg{width:16px;height:16px;filter:grayscale(1) drop-shadow(0 1px 1px #0003);opacity:.45;transition:transform .15s,opacity .15s,filter .15s}
 .ut-j svg.wj{filter:drop-shadow(0 1px 1.5px #0f172a55);opacity:1}
@@ -82,17 +82,17 @@ header .ut-tabs,header .uaet{z-index:3}
 header>*{position:relative;z-index:1}
 .brand{flex:1;min-width:0}
 .brand h1{font-size:19px;margin:0;letter-spacing:-.5px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand h1 span{background:linear-gradient(90deg,#4b5563,#2563eb);-webkit-background-clip:text;background-clip:text;color:transparent}
-header .wx-tag{background:#111827;border-color:#111827;color:#fff}
-header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;font-size:12px;color:#4b5563;white-space:nowrap;justify-self:start}
+.brand h1 span{background:linear-gradient(90deg,#3b82f6,#1d4ed8);-webkit-background-clip:text;background-clip:text;color:transparent}
+header .wx-tag{background:linear-gradient(110deg,#3b82f6,#2563eb);border-color:#2563eb;color:#fff}
+header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;font-size:12px;color:#64748b;white-space:nowrap;justify-self:start}
 .wx-tag{font-weight:800;letter-spacing:1.4px;text-transform:uppercase;font-size:10px;color:#fff;background:#ffffff26;border:1px solid #ffffff40;padding:2px 7px;border-radius:6px}
 .clk{display:inline-flex;align-items:center;gap:5px;overflow:hidden;text-overflow:ellipsis}
 .clk i{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px #34d39955;flex:none}
-.clk b{font-family:"JetBrains Mono",monospace;color:#111827;font-weight:700}
+.clk b{font-family:"JetBrains Mono",monospace;color:#334155;font-weight:700}
 .clk i{background:#2563eb!important;box-shadow:0 0 0 3px #2563eb30!important}
-.ig{flex:none;position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--th-ink);font-size:12.5px;font-weight:800;padding:4px 12px 4px 4px;border-radius:12px;background:#fff;border:1px solid #e5e7eb;box-shadow:0 4px 12px #0f172a14;transition:.15s}
+.ig{flex:none;position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--th-ink);font-size:12.5px;font-weight:800;padding:4px 12px 4px 4px;border-radius:12px;background:#fff;border:1px solid #dbe4f0;box-shadow:0 4px 12px #2563eb17;transition:.15s}
 .ig .igi{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285aeb 90%)}
-.ig:hover{transform:translateY(-1px);box-shadow:0 6px 16px #0f172a26;border-color:#d1d5db}
+.ig:hover{transform:translateY(-1px);box-shadow:0 6px 16px #2563eb2e;border-color:#bfdbfe}
 .hbtns{display:flex;gap:8px;flex:none;position:relative;z-index:1}
 .ig.wa{color:#166534}
 .ig.wa .igi{background:#25d366}
@@ -139,7 +139,7 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .calnow{margin-top:8px;width:100%;border:1px solid var(--th-line);background:var(--th-soft);color:var(--th-teal);border-radius:10px;padding:7px;font-weight:700;font-size:12px;cursor:pointer}
 .fld{position:relative;flex:1;min-width:0;max-width:240px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:7px 12px 7px 8px;cursor:pointer;transition:.15s;box-shadow:0 1px 2px #0f172a0a}
 .fld:hover,.fld:focus-within{border-color:var(--th-teal);box-shadow:0 0 0 3px #2563eb1f}
-.fi{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--th-teal);background:linear-gradient(135deg,#f3f4f6,#eff6ff);flex:none}
+.fi{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--th-teal);background:linear-gradient(135deg,#eff6ff,#dbeafe);flex:none}
 .fv{display:flex;flex-direction:column;min-width:0;flex:1}
 .fv small{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
 .fv b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
