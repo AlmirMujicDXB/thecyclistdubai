@@ -1065,7 +1065,7 @@ function weatherText(){
   if(S.bestTxt)s+=`⭐ Best morning: ${S.bestTxt}\n`;
   s+=`👕 ${kitTip(h).replace(/<[^>]+>/g,'').replace(/^👕\s*/,'')}\n`;
   const rides=upcomingRides();if(rides.length){s+=`\n🚴‍♂️ *${rides.length>1?'Upcoming group rides':'Next group ride'}*\n`+rides.map(r=>`• ${r.name}, ${occLabel(r.occ)} ${fmtTime(r.time)}, ${r.place}${[r.type,r.distance].filter(Boolean).length?`, ${[r.type,r.distance].filter(Boolean).join(' · ')}`:''}${r.start?`, start ${r.start}`:''}${r.pace?`, ${r.pace}`:''}${rideRule(r)?`, ${rideRule(r).replace(/^./,m=>m.toLowerCase())}`:''}\n`+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`  Join: ${r.join}\n`:'')).join('')}
-  const evs=upcomingEvents();if(evs.length)s+='\n📅 *Upcoming events*\n'+evs.map(e=>`• ${e.name}, ${occLabel(e.date)}${e.distance?`, ${e.distance}`:''}\n  ${e.code?'📝 Register: ':''}${e.url}`+(e.code?`\n  🎟️ Code *${e.code}*${e.discount?` for *${e.discount}*`:''}`:'')).join('\n')+'\n';
+  s+=eventPromoText();
   return s+sponsorsText()+footerText();
 }
 const shareText=weatherText;
@@ -1214,13 +1214,14 @@ function renderData(){renderEvents();renderRides()}
 renderData();setInterval(renderData,60e3);
 
 /* ---------- item share texts ---------- */
+/* one format for every event share (text, image, lists). TheCyclistDubai takes part in every event unless weRide:false */
+const evWe=e=>e.weRide!==false,evWhen=e=>`${occLabel(e.date)} · ${e.time?fmtTime(e.time):'start time TBC'}`,evWhere=e=>[e.distance,e.route].filter(Boolean).join(' · '),
+  evCode=e=>e.code?`🎟️ Code *${e.code}*${e.discount?` for *${e.discount}*`:''}`:'';
 function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
-  return `📅 *${e.name}*\n🗓️ ${occLabel(e.date)} · ${e.time?fmtTime(e.time):'start time TBC'}\n`+
-    (e.distance||e.route?`🚴 ${[e.distance,e.route].filter(Boolean).join(' · ')}\n`:'')+(e.note?`🏅 ${e.note}\n`:'')+
-    (days>0?`⏳ ${days} days to go\n`:'')+(e.weRide?`💪 TheCyclistDubai is riding it. Join us!\n`:'')+(e.code?`🎟️ Use code *${e.code}*${e.discount?` for *${e.discount}*`:''}\n`:'')+`${e.code?'📝 Register:':'🔗'} ${e.url}`}
-/* every upcoming event (link + code) is promoted in every ride share */
+  return [`📅 *${e.name}*`,`★ ${e.tag||'Recommended'}`,`🗓️ ${evWhen(e)}`,evWhere(e)&&`🚴 ${evWhere(e)}`,e.note&&`🏅 ${e.note}`,days>0&&`⏳ ${days} days to go`,
+    evWe(e)&&`💪 TheCyclistDubai is taking part. Join us on the start line!`,evCode(e),`📝 Register: ${e.url}`].filter(Boolean).join('\n')}
 function eventPromoText(){const ev=upcomingEvents();if(!ev.length)return'';
-  return '\n📅 *Upcoming events*\n'+ev.map(e=>`• *${e.name}*, ${occLabel(e.date)}${e.distance?`, ${e.distance}`:''}\n  ${e.code?'📝 Register: ':'🔗 '}${e.url}`+(e.code?`\n  🎟️ Code *${e.code}*${e.discount?` for *${e.discount}*`:''}`:'')).join('\n')+'\n'}
+  return '\n📅 *Upcoming events* · TheCyclistDubai is taking part 💪\n'+ev.map(e=>[`• *${e.name}*, ${evWhen(e)}${evWhere(e)?`, ${evWhere(e)}`:''}`,`  📝 Register: ${e.url}`,evCode(e)&&`  ${evCode(e)}`].filter(Boolean).join('\n')).join('\n')+'\n'}
 function rideText(r){const f=rideForecast(r);
   return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.start?`Start: ${r.start} · `:''}${r.place}\n`+(rideKind(r)?`${rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(rideRule(r)?`⛑️💡 ${rideRule(r)}\n`:'')+
     (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+eventPromoText()+footerText()}
@@ -1236,7 +1237,7 @@ function drawCard({theme,dow,day,mon,tags,title,lines}){
   const S2=1080,c0=document.createElement('canvas');c0.width=S2;c0.height=S2;const c=c0.getContext('2d'),T3=THEMES[theme],dk=LIGHT[theme],ink=dk?dk.ink:'#fff';
   const g=c.createLinearGradient(0,0,S2,S2);g.addColorStop(0,T3[0]);g.addColorStop(.55,T3[1]);g.addColorStop(1,T3[2]);c.fillStyle=g;c.fillRect(0,0,S2,S2);
   const rg=c.createRadialGradient(S2,0,0,S2,0,700);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S2,S2);
-  if(theme==='lime'){c.save();c.beginPath();c.moveTo(790,740);c.lineTo(1080,740);c.lineTo(1080,970);c.lineTo(600,970);c.closePath();c.clip();[[560,70,'rgba(181,204,74,.75)'],[660,34,'rgba(0,72,42,.9)'],[720,90,'rgba(196,210,76,.85)'],[838,26,'rgba(12,75,62,.75)'],[890,60,'rgba(181,204,74,.6)'],[980,40,'rgba(0,72,42,.85)']].forEach(([x,w,col])=>{c.fillStyle=col;c.beginPath();c.moveTo(x,970);c.lineTo(x+w,970);c.lineTo(x+w+190,740);c.lineTo(x+190,740);c.closePath();c.fill()});c.restore()}
+  if(theme==='lime'){c.save();[[760,60,'rgba(181,204,74,.75)'],[836,30,'rgba(0,72,42,.9)'],[882,84,'rgba(196,210,76,.85)'],[982,24,'rgba(12,75,62,.75)'],[1022,58,'rgba(181,204,74,.6)']].forEach(([x,w,col])=>{c.fillStyle=col;c.beginPath();c.moveTo(x,970);c.lineTo(x+w,970);c.lineTo(x+w+300,600);c.lineTo(x+300,600);c.closePath();c.fill()});c.restore()}
   c.strokeStyle=dk?dk.route:'rgba(255,255,255,.18)';c.lineWidth=8;c.setLineDash([4,22]);c.lineCap='round';c.beginPath();c.moveTo(-20,860);c.bezierCurveTo(260,620,520,900,760,700);c.bezierCurveTo(900,590,1000,620,1100,560);c.stroke();c.setLineDash([]);
   [[-20,860],[760,700],[1100,560]].forEach(([x,y])=>{c.fillStyle=dk?dk.dot:'rgba(255,255,255,.35)';c.beginPath();c.arc(x,y,14,0,7);c.fill()});
   // date tile
@@ -1263,7 +1264,7 @@ function shareNow(file,text,title){
 }
 function shareEvent(e){if(!e)return;const l=parseLocal(e.date+'T00:00');
   const cv=drawCard({theme:THEMES[e.theme]?e.theme:'blue',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ '+(e.tag||'Recommended'),'Upcoming event'],title:e.name,
-    lines:[`🕖 ${l.day} ${e.time?fmtTime(e.time):'· start time TBC'}`,[e.distance,e.route].filter(Boolean).join(' · ')&&('🚴 '+[e.distance,e.route].filter(Boolean).join(' · ')),e.note&&('🏅 '+e.note),e.weRide&&'💪 TheCyclistDubai is riding it',e.code&&`🎟️ Code ${e.code}${e.discount?' · '+e.discount:''}`,e.code&&('📝 Register: '+e.url.replace(/^https?:\/\//,''))]});
+    lines:[`🕖 ${l.day} ${e.time?fmtTime(e.time):'· start time TBC'}`,evWhere(e)&&('🚴 '+evWhere(e)),e.note&&('🏅 '+e.note),evWe(e)&&'💪 TheCyclistDubai is taking part',e.code&&`🎟️ Code ${e.code}${e.discount?' · '+e.discount:''}`,'📝 Register: '+e.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
   shareNow(canvasFile(cv,'thecyclistdubai-event.png'),eventText(e),e.name)}
 function shareRide(r){if(!r)return;const l=parseLocal(r.occ+'T00:00'),f=rideForecast(r);
   const cv=drawCard({theme:'green',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ Group ride',rideKind(r),r.pace?'⚡ '+r.pace:''].filter(Boolean),title:`${r.name} · ${fmtTime(r.time)}`,
