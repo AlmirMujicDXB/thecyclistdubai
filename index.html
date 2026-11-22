@@ -61,15 +61,13 @@ header .uaet{z-index:3}
 .ut-cd{display:inline-flex;align-items:baseline;gap:5px;font-family:"JetBrains Mono",monospace}
 .ut-cd>span{display:inline-flex;align-items:baseline;gap:1px}
 .ut-cd b{display:inline-block;min-width:2ch;text-align:right;font-size:18px;font-weight:800;line-height:1;color:#13233f;font-variant-numeric:tabular-nums}
-.ut-cd b.tk{animation:utTick .35s ease-out}
-@keyframes utTick{from{transform:translateY(-35%);opacity:.2}to{transform:none;opacity:1}}
 .ut-cd i{font-style:normal;font-size:10px;font-weight:700;color:#5b8a72}
 .ut-cd .ut-live{font-family:Sora,sans-serif;font-size:13px;font-weight:800;letter-spacing:.2px}
 .ut-sub{font-size:10px;color:#5e6f66}
 .ut-j{margin-left:auto;display:inline-flex;gap:3px}
 .ut-j svg{width:16px;height:16px;filter:drop-shadow(0 1px 1px #0006);transition:transform .15s}
 .ut-j svg:hover{transform:translateY(-2px) scale(1.15)}
-@media (prefers-reduced-motion:reduce){.ut-in.in,.ut-in.out,.ut-cd b.tk,.uaet.utlive .ut-logo i{animation:none}}
+@media (prefers-reduced-motion:reduce){.ut-in.in,.ut-in.out,.uaet.utlive .ut-logo i{animation:none}}
 header>*{position:relative;z-index:1}
 .brand{flex:1;min-width:0}
 .brand h1{font-size:19px;margin:0;letter-spacing:-.6px;font-style:italic;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -795,7 +793,7 @@ function utRender(){const el=$('uaet');if(!el)return;const rs=utRaces(),now=Date
   let d=Math.max(0,r.t0-now)/1e3;const v={d:Math.floor(d/86400),h:Math.floor(d%86400/3600),m:Math.floor(d%3600/60),s:Math.floor(d%60)};
   if(!cd.querySelector('[data-k]'))cd.innerHTML=['d','h','m','s'].map(k=>`<span><b data-k="${k}"></b><i>${k}</i></span>`).join('');
   for(const k in v){const b=cd.querySelector(`[data-k="${k}"]`),t=k==='d'?String(v[k]):String(v[k]).padStart(2,'0');
-    if(b.textContent!==t){b.textContent=t;if(UT.prev[k]!=null){b.classList.remove('tk');void b.offsetWidth;b.classList.add('tk')}UT.prev[k]=t}}
+    if(b.textContent!==t)b.textContent=t;}
   sub.textContent=`to ${l0.date} ${l0.mon}${r.start!==r.end?`–${l1.date} ${l1.mon}`:''}`}
 /* switch race every 5 s (pauses while hovered); tapping a tab shows it and restarts the 5 s */
 /* one race at a time: Men first, then slides to Women, every 5 s (pauses while hovered) */
