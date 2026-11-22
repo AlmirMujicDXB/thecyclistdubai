@@ -34,17 +34,27 @@ button{font:inherit;color:inherit;cursor:pointer}
 a{color:inherit}
 
 /* ---------- header ---------- */
-header{display:grid;grid-template-columns:1fr auto auto;align-items:center;column-gap:12px;row-gap:4px;margin:2px 0 10px;padding:8px 10px 8px 16px;height:70px;box-sizing:border-box;border-radius:16px;color:#fff;position:relative;overflow:hidden;
-  background:var(--th-hdr);box-shadow:0 10px 28px var(--th-glow)}
-header::after{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 66 C60 54 110 62 170 70 C230 60 300 48 380 62 C440 52 520 44 600 56 L600 80 Z' fill='%23000' fill-opacity='.14'/%3E%3Cpath d='M0 80 L0 74 C90 66 160 72 250 76 C330 68 420 64 520 70 C560 68 585 70 600 72 L600 80 Z' fill='%23000' fill-opacity='.12'/%3E%3Cpath d='M20 50 C120 14 200 64 300 34 S480 8 580 24' fill='none' stroke='%23ffffff' stroke-opacity='.18' stroke-width='3' stroke-dasharray='2 7' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+header{display:grid;grid-template-columns:1fr auto auto;align-items:center;column-gap:12px;row-gap:4px;margin:2px 0 10px;padding:8px 10px 8px 16px;height:70px;box-sizing:border-box;border-radius:16px;color:#1f0a0e;position:relative;overflow:hidden;
+  background:radial-gradient(45% 160% at 100% 0%,#e0122d14 0%,transparent 70%),linear-gradient(110deg,#ffffff 0%,#fffafa 55%,#fff1f2 100%);border:1px solid #f6d5da;box-shadow:0 10px 26px #c8102e1f}
+header::after{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 66 C60 54 110 62 170 70 C230 60 300 48 380 62 C440 52 520 44 600 56 L600 80 Z' fill='%23c8102e' fill-opacity='.07'/%3E%3Cpath d='M0 80 L0 74 C90 66 160 72 250 76 C330 68 420 64 520 70 C560 68 585 70 600 72 L600 80 Z' fill='%23c8102e' fill-opacity='.06'/%3E%3Cpath d='M20 50 C120 14 200 64 300 34 S480 8 580 24' fill='none' stroke='%23c8102e' stroke-opacity='.28' stroke-width='3' stroke-dasharray='2 7' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
 /* UAE flag stripe along the bottom */
-header::before{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;z-index:2;pointer-events:none;background:linear-gradient(90deg,#00843d 0 33.3%,#fff 33.3% 66.6%,#111 66.6%)}
+header::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(#e0122d,#c8102e) left top/6px 100% no-repeat,linear-gradient(90deg,#00843d 0 33.3%,#fff 33.3% 66.6%,#111 66.6%) left bottom/100% 4px no-repeat}
+header .ut-tabs,header .uaet{z-index:3}
 .brand{grid-column:1;grid-row:1}
 .hbtns{grid-column:3;grid-row:1/3}
 /* ---------- UAE Tour live counter ---------- */
-.uaet{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:292px;padding:5px 10px 6px;border-radius:12px;cursor:pointer;color:#fff;text-decoration:none;
-  background:linear-gradient(135deg,#ffffff24,#ffffff0d);border:1px solid #ffffff38;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 #ffffff26,0 6px 16px #3d041040;transition:.2s}
-.uaet:hover{background:linear-gradient(135deg,#ffffff33,#ffffff14);transform:translateY(-1px);box-shadow:inset 0 1px 0 #ffffff33,0 10px 22px #3d041066}
+.uaet{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:292px;padding:5px 10px 6px;border-radius:12px;cursor:pointer;color:#fff;text-decoration:none;overflow:hidden;
+  background:radial-gradient(60% 160% at 100% 0%,#f5d08a40 0%,transparent 60%),linear-gradient(110deg,#5a0716 0%,#a50e24 50%,#e4142f 100%);border:1px solid #c8102e;box-shadow:inset 0 1px 0 #ffffff33,0 6px 16px #c8102e45;transition:transform .2s,box-shadow .2s}
+.uaet:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 #ffffff40,0 10px 24px #c8102e66}
+/* 5-second auto-rotation: progress bar + slide-in */
+.ut-prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:#00000026}
+.ut-prog i{display:block;height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#f5d08a,#fff3d6)}
+.ut-prog i.run{animation:utProg 5s linear forwards}
+.uaet.hold .ut-prog i{animation-play-state:paused}
+@keyframes utProg{to{transform:scaleX(1)}}
+.ut-bot.sw{animation:utSlide .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes utSlide{from{transform:translateY(55%);opacity:0;filter:blur(2px)}to{transform:none;opacity:1;filter:none}}
+.ut-tabs button{transition:background .25s,color .25s}
 .ut-top,.ut-bot{display:flex;align-items:center;gap:8px;white-space:nowrap}
 .ut-logo{font-weight:900;font-size:11px;letter-spacing:1.6px;display:inline-flex;align-items:center;gap:4px}
 .ut-logo b{color:var(--th-lime)}
@@ -66,20 +76,21 @@ header::before{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;z
 .ut-j{margin-left:auto;display:inline-flex;gap:3px}
 .ut-j svg{width:16px;height:16px;filter:drop-shadow(0 1px 1.5px #0006);transition:transform .15s}
 .ut-j svg:hover{transform:translateY(-2px) scale(1.15)}
-@media (prefers-reduced-motion:reduce){.ut-cd b.tk,.uaet.utlive .ut-logo i{animation:none}}
+@media (prefers-reduced-motion:reduce){.ut-bot.sw,.ut-cd b.tk,.uaet.utlive .ut-logo i{animation:none}}
 header>*{position:relative;z-index:1}
 .brand{flex:1;min-width:0}
 .brand h1{font-size:19px;margin:0;letter-spacing:-.5px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand h1 span{background:linear-gradient(90deg,#fff3d6,var(--th-lime) 60%,#e9b44c);-webkit-background-clip:text;background-clip:text;color:transparent}
-header .wx-tag{background:#ffffff1f;border-color:#ffffff33}
-header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;font-size:12px;color:#ffe4e6;white-space:nowrap;justify-self:start}
+.brand h1 span{background:linear-gradient(90deg,#e0122d,#a50e24);-webkit-background-clip:text;background-clip:text;color:transparent}
+header .wx-tag{background:linear-gradient(110deg,#e0122d,#a50e24);border-color:#c8102e;color:#fff}
+header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;font-size:12px;color:#7a2a36;white-space:nowrap;justify-self:start}
 .wx-tag{font-weight:800;letter-spacing:1.4px;text-transform:uppercase;font-size:10px;color:#fff;background:#ffffff26;border:1px solid #ffffff40;padding:2px 7px;border-radius:6px}
 .clk{display:inline-flex;align-items:center;gap:5px;overflow:hidden;text-overflow:ellipsis}
 .clk i{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px #34d39955;flex:none}
-.clk b{font-family:"JetBrains Mono",monospace;color:#fff;font-weight:700}
-.ig{flex:none;position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--th-ink);font-size:12.5px;font-weight:800;padding:4px 12px 4px 4px;border-radius:12px;background:#fff;border:1px solid #fff;box-shadow:0 4px 12px #0b1f4b40;transition:.15s}
+.clk b{font-family:"JetBrains Mono",monospace;color:#1f0a0e;font-weight:700}
+.clk i{background:#00843d!important;box-shadow:0 0 0 3px #00843d30!important}
+.ig{flex:none;position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--th-ink);font-size:12.5px;font-weight:800;padding:4px 12px 4px 4px;border-radius:12px;background:#fff;border:1px solid #f1d9dd;box-shadow:0 4px 12px #c8102e1f;transition:.15s}
 .ig .igi{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285aeb 90%)}
-.ig:hover{transform:translateY(-1px);box-shadow:0 6px 16px #0b1f4b66}
+.ig:hover{transform:translateY(-1px);box-shadow:0 6px 16px #c8102e40;border-color:#fecdd3}
 .hbtns{display:flex;gap:8px;flex:none;position:relative;z-index:1}
 .ig.wa{color:#166534}
 .ig.wa .igi{background:#25d366}
@@ -572,6 +583,7 @@ footer a:hover{color:var(--text)}
         <svg viewBox="0 0 24 24" aria-label="White jersey: best young rider"><title>White jersey · best young rider</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#fff" stroke="#fecdd3" stroke-width="1.4" stroke-linejoin="round"/></svg>
         <svg viewBox="0 0 24 24" aria-label="Black jersey: intermediate sprints"><title>Black jersey · intermediate sprints</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#111" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
       </span></div>
+    <span class="ut-prog" aria-hidden="true"><i></i></span>
   </div>
   <div class="tag"><span class="wx-tag">Ride Weather</span><span class="clk"><i></i><b id="clk">--:--</b> <span id="clkd">Dubai</span></span></div>
 </header>
@@ -790,11 +802,18 @@ function utRender(){const el=$('uaet');if(!el)return;const rs=utRaces(),now=Date
   for(const k in v){const b=cd.querySelector(`[data-k="${k}"]`),t=k==='d'?String(v[k]):String(v[k]).padStart(2,'0');
     if(b.textContent!==t){b.textContent=t;if(UT.prev[k]!=null){b.classList.remove('tk');void b.offsetWidth;b.classList.add('tk')}UT.prev[k]=t}}
   sub.textContent=`to ${l0.date} ${l0.mon}${r.start!==r.end?`–${l1.date} ${l1.mon}`:''}`}
+/* switch race every 5 s (pauses while hovered); tapping a tab shows it and restarts the 5 s */
+function utSwap(i){UT.pick=i;UT.prev={};$('utCd').innerHTML='';utRender();const b=document.querySelector('#uaet .ut-bot');b.classList.remove('sw');void b.offsetWidth;b.classList.add('sw')}
+function utCycle(){clearTimeout(UT.t);const n=utRaces().length,bar=document.querySelector('#uaet .ut-prog i');if(n<2){bar.parentNode.style.display='none';return}
+  bar.classList.remove('run');void bar.offsetWidth;bar.classList.add('run');
+  UT.t=setTimeout(()=>{if(UT.hold){UT.resume=true;return}utSwap((UT.pick+1)%n);utCycle()},5000)}
 function utInit(){const el=$('uaet');if(!el)return;
-  $('utTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;e.stopPropagation();UT.pick=+b.dataset.i;UT.prev={};$('utCd').innerHTML='';utRender()});
+  $('utTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;e.stopPropagation();utSwap(+b.dataset.i);utCycle()});
+  el.addEventListener('mouseenter',()=>{UT.hold=true;el.classList.add('hold')});
+  el.addEventListener('mouseleave',()=>{UT.hold=false;el.classList.remove('hold');if(UT.resume){UT.resume=false;utSwap((UT.pick+1)%utRaces().length);utCycle()}});
   const go=e=>{if(e.target.closest('.ut-tabs'))return;window.open((SITE.uaeTour||{}).url||'https://www.theuaetour.com/','_blank','noopener')};
   el.addEventListener('click',go);el.addEventListener('keydown',e=>{if(e.key==='Enter')go(e)});
-  utRender();setInterval(utRender,1000)}
+  utRender();setInterval(utRender,1000);utCycle()}
 function tickClock(){const p=dubaiNow();$('clk').textContent=`${p.hour}:${p.minute}`;
   const d=new Date(`${p.year}-${p.month}-${p.day}T00:00Z`);$('clkd').textContent=`${DAYS[d.getUTCDay()]} ${+p.day} ${MONTHS[d.getUTCMonth()]}`}
 setInterval(tickClock,5000);tickClock();
