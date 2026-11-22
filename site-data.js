@@ -28,7 +28,9 @@ window.SITE = {
   ],
 
   /* ---------- EVENTS ----------
-     Shown under the map (blue cards), newest first. */
+     Shown under the map, soonest first. theme: 'yellow' for a yellow card (default blue).
+     code + discount: discount code shown on the card and in shares.
+     inRideShares: true also adds the register link + code to every group ride share. */
   events: [
     {
       name: 'AD Ports Group Gran Fondo Abu Dhabi 2026',
@@ -40,6 +42,20 @@ window.SITE = {
       url: 'https://abudhabigranfondo.ae/',
       tag: 'Highly recommended',
       weRide: true,              // adds "We're riding it 🚴"
+    },
+    {
+      name: "L'Étape Dubai by Tour de France",
+      date: '2027-03-21',          // race day (Family Day is Sat 20 Mar)
+      time: '06:30',
+      distance: 'Epic 100.5 km · Classic 62 km',
+      note: 'Family Day Sat 20 Mar',
+      url: 'https://haku.ly/e1265eb830',   // registration link
+      tag: 'Highly recommended',
+      theme: 'yellow',             // yellow card + yellow share image
+      code: 'THECYCLISTDUBAI15',   // discount code (shown on the card and in shares)
+      discount: '15% OFF',
+      inRideShares: true,          // also add the register link + code to every ride share
+      button: 'Register',
     },
     // { name: 'Event name', date: '2027-01-30', time: '06:00', distance: '100 km', route: 'Start → Finish',
     //   note: 'Short highlight', url: 'https://…', tag: 'Upcoming event', weRide: false },
