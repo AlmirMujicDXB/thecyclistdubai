@@ -28,7 +28,7 @@ window.SITE = {
   ],
 
   /* ---------- EVENTS ----------
-     Shown under the map, soonest first. theme: 'yellow' for a yellow card (default blue).
+     Shown under the map, soonest first. theme: 'yellow' (L'Étape) or 'lime' (Spinneys green) for a coloured card (default blue). Leave out time if not announced (shows 'time TBC').
      code + discount: discount code shown on the card and in shares.
      Every upcoming event (link + code) is added to every group ride share automatically. */
   events: [
@@ -55,6 +55,16 @@ window.SITE = {
       code: 'THECYCLISTDUBAI15',   // discount code (shown on the card and in shares)
       discount: '15% OFF',
       button: 'Register',
+    },
+    {
+      name: 'Spinneys Dubai 92 Cycle Challenge',
+      date: '2027-02-07',          // 17th edition, main event (start time not announced yet)
+      distance: '92 km',
+      route: 'Expo City Dubai',
+      note: '17th edition',
+      url: 'https://cyclechallenge.ae/',
+      tag: 'Highly recommended',
+      theme: 'lime',               // Spinneys green & lime card
     },
     // { name: 'Event name', date: '2027-01-30', time: '06:00', distance: '100 km', route: 'Start → Finish',
     //   note: 'Short highlight', url: 'https://…', tag: 'Upcoming event', weRide: false },

@@ -152,6 +152,18 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .evt.y .evt-meta{color:#5c2d0c}.evt.y .evt-meta b{color:#3b1d06}
 .evt.y .evt-cd{border-left-color:#9a341233}.evt.y .evt-cd b{color:#c2410c}.evt.y .evt-cd span{color:#7c2d12}
 .evt.y .evt-go{background:linear-gradient(110deg,#f97316,#c2410c);color:#fff;box-shadow:0 4px 12px #c2410c55}
+.evt.lm{color:#00482a;box-shadow:0 8px 22px #00482a30;background:
+  linear-gradient(118deg,transparent 0 80%,#b5cc4a 80% 83.5%,transparent 83.5% 85%,#00482a 85% 87%,transparent 87% 88.5%,#c4d24c 88.5% 92.5%,transparent 92.5% 94%,#0c4b3e 94% 95.2%,transparent 95.2%),
+  linear-gradient(110deg,#f2f2dc 0%,#e9f1d2 50%,#d6e38a 100%)}
+.evt.lm:hover{box-shadow:0 12px 28px #00482a45}
+.evt.lm .evt-route path{stroke:#00482a;stroke-opacity:.2}.evt.lm .evt-route circle{fill:#00482a33}
+.evt.lm .evt-date{background:#fff;box-shadow:0 3px 10px #00482a22}.evt.lm .evt-date b{color:#00482a}.evt.lm .evt-date span{color:#6b8a12}
+.evt.lm .evt-tag span{background:#00482a14;border-color:#00482a33;color:#00482a}
+.evt.lm .evt-tag .star{background:linear-gradient(110deg,#00482a,#0c4b3e);border-color:#00482a;color:#e9f5a8}
+.evt.lm .evt-meta{color:#22543d}.evt.lm .evt-meta b{color:#00482a}
+.evt.lm .evt-cd{border-left-color:#00482a33}.evt.lm .evt-cd b{color:#00482a}.evt.lm .evt-cd span{color:#4d6b12}
+.evt.lm .evt-go{background:linear-gradient(110deg,#00482a,#0c6b45);color:#e9f5a8;box-shadow:0 4px 12px #00482a40}
+.evt.lm .cshare{background:#ffffffcc;border-color:#00482a33;color:#00482a}
 .evt.y .cshare{background:#ffffff66;border-color:#ffffffaa;color:#9a3412}
 .grid+.sponsors{margin-top:14px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
@@ -444,6 +456,7 @@ footer a:hover{color:var(--text)}
   .evt-date{width:44px;height:46px}
   .evt-cd b{font-size:19px}
   .evt.y .evt-cd{background:#ffffff59;border-color:#ffffff99}
+  .evt.lm .evt-cd{background:#ffffffb3;border-color:#00482a26}
   .evt-tag:has(.code) .st-l{display:none}
   .mapinfo{padding:11px 12px 13px}
   .fac{gap:6px}
@@ -1162,13 +1175,13 @@ function esc(t){return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt
 function renderEvents(){
   const evs=upcomingEvents();
   $('evts').innerHTML=(evs.length?'<h3>Events</h3>':'')+evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
-    return `<a class="evt${e.theme==='yellow'?' y':''}" href="${esc(e.url)}" target="_blank" rel="noopener">
+    return `<a class="evt${e.theme==='yellow'?' y':e.theme==='lime'?' lm':''}" href="${esc(e.url)}" target="_blank" rel="noopener">
     <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="20" cy="58" r="5" fill="#ffffff55"/><circle cx="580" cy="30" r="5" fill="#ffffff55"/></svg>
     <div class="evt-date"><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
     <div class="evt-main">
       <div class="evt-tag"><span class="star">★<span class="st-l"> ${esc(e.tag||'Recommended')}</span></span>${e.code?`<span class="code">🎟️ Code <span class="evt-code">${esc(e.code)}</span>${e.discount?` · ${esc(e.discount)}`:''}</span>`:'<span class="up">Upcoming event</span>'}</div>
       <div class="evt-title">${esc(e.name)}</div>
-      <div class="evt-meta">${l.day} ${fmtTime(e.time||'07:00')}${e.distance?` · <b>${esc(e.distance)}</b>`:''}${e.route?` ${esc(e.route)}`:''}${e.note?`<span class="evt-uci"> · ${esc(e.note)}</span>`:''}${e.weRide?'<span class="evt-us"> · We\'re riding it 🚴</span>':''}</div>
+      <div class="evt-meta">${l.day} ${e.time?fmtTime(e.time):'· time TBC'}${e.distance?` · <b>${esc(e.distance)}</b>`:''}${e.route?` ${esc(e.route)}`:''}${e.note?`<span class="evt-uci"> · ${esc(e.note)}</span>`:''}${e.weRide?'<span class="evt-us"> · We\'re riding it 🚴</span>':''}</div>
     </div>
     <div class="evt-cd"><b>${days<=0?'Today':days}</b><span>${days<=0?'race day':'days to go'}</span></div>
     <button class="cshare" data-ev="${i}" aria-label="Share event" title="Share event">${SHARE_ICO}</button>
@@ -1202,7 +1215,7 @@ renderData();setInterval(renderData,60e3);
 
 /* ---------- item share texts ---------- */
 function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
-  return `📅 *${e.name}*\n🗓️ ${occLabel(e.date)} · ${fmtTime(e.time||'07:00')}\n`+
+  return `📅 *${e.name}*\n🗓️ ${occLabel(e.date)} · ${e.time?fmtTime(e.time):'start time TBC'}\n`+
     (e.distance||e.route?`🚴 ${[e.distance,e.route].filter(Boolean).join(' · ')}\n`:'')+(e.note?`🏅 ${e.note}\n`:'')+
     (days>0?`⏳ ${days} days to go\n`:'')+(e.weRide?`💪 TheCyclistDubai is riding it. Join us!\n`:'')+(e.code?`🎟️ Use code *${e.code}*${e.discount?` for *${e.discount}*`:''}\n`:'')+`${e.code?'📝 Register:':'🔗'} ${e.url}`}
 /* every upcoming event (link + code) is promoted in every ride share */
@@ -1214,24 +1227,28 @@ function rideText(r){const f=rideForecast(r);
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\nUse code *${x.code}* for *${x.discount}*\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
 /* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */
-const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#f59e0b','#facc15','#f4fa5a','#ffffff','#ea580c']};
+const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#f59e0b','#facc15','#f4fa5a','#ffffff','#ea580c'],lime:['#f2f2dc','#e4efcf','#c4d24c','#ffffff','#00482a']};
+/* light card themes: dark text colours */
+const LIGHT={yellow:{ink:'#3b1d06',line:'rgba(59,29,6,.92)',route:'rgba(154,52,18,.22)',dot:'rgba(154,52,18,.25)',dow:'#ea580c',day:'#c2410c',mon:'#d97706',t1:'#fff',chip:'rgba(255,255,255,.4)',chipT:'#7c2d12'},
+  lime:{ink:'#00482a',line:'rgba(0,72,42,.92)',route:'rgba(0,72,42,.2)',dot:'rgba(0,72,42,.22)',dow:'#6b8a12',day:'#00482a',mon:'#6b8a12',t1:'#e9f5a8',chip:'rgba(0,72,42,.1)',chipT:'#00482a'}};
 function wrapLines(c,t,max){const w=t.split(' ');const out=[];let line='';w.forEach(x=>{const tt=line?line+' '+x:x;if(c.measureText(tt).width>max&&line){out.push(line);line=x}else line=tt});if(line)out.push(line);return out}
 function drawCard({theme,dow,day,mon,tags,title,lines}){
-  const S2=1080,c0=document.createElement('canvas');c0.width=S2;c0.height=S2;const c=c0.getContext('2d'),T3=THEMES[theme],dk=theme==='yellow',ink=dk?'#3b1d06':'#fff';
+  const S2=1080,c0=document.createElement('canvas');c0.width=S2;c0.height=S2;const c=c0.getContext('2d'),T3=THEMES[theme],dk=LIGHT[theme],ink=dk?dk.ink:'#fff';
   const g=c.createLinearGradient(0,0,S2,S2);g.addColorStop(0,T3[0]);g.addColorStop(.55,T3[1]);g.addColorStop(1,T3[2]);c.fillStyle=g;c.fillRect(0,0,S2,S2);
   const rg=c.createRadialGradient(S2,0,0,S2,0,700);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S2,S2);
-  c.strokeStyle=dk?'rgba(154,52,18,.22)':'rgba(255,255,255,.18)';c.lineWidth=8;c.setLineDash([4,22]);c.lineCap='round';c.beginPath();c.moveTo(-20,860);c.bezierCurveTo(260,620,520,900,760,700);c.bezierCurveTo(900,590,1000,620,1100,560);c.stroke();c.setLineDash([]);
-  [[-20,860],[760,700],[1100,560]].forEach(([x,y])=>{c.fillStyle=dk?'rgba(154,52,18,.25)':'rgba(255,255,255,.35)';c.beginPath();c.arc(x,y,14,0,7);c.fill()});
+  if(theme==='lime'){c.save();c.beginPath();c.moveTo(790,740);c.lineTo(1080,740);c.lineTo(1080,970);c.lineTo(600,970);c.closePath();c.clip();[[560,70,'rgba(181,204,74,.75)'],[660,34,'rgba(0,72,42,.9)'],[720,90,'rgba(196,210,76,.85)'],[838,26,'rgba(12,75,62,.75)'],[890,60,'rgba(181,204,74,.6)'],[980,40,'rgba(0,72,42,.85)']].forEach(([x,w,col])=>{c.fillStyle=col;c.beginPath();c.moveTo(x,970);c.lineTo(x+w,970);c.lineTo(x+w+190,740);c.lineTo(x+190,740);c.closePath();c.fill()});c.restore()}
+  c.strokeStyle=dk?dk.route:'rgba(255,255,255,.18)';c.lineWidth=8;c.setLineDash([4,22]);c.lineCap='round';c.beginPath();c.moveTo(-20,860);c.bezierCurveTo(260,620,520,900,760,700);c.bezierCurveTo(900,590,1000,620,1100,560);c.stroke();c.setLineDash([]);
+  [[-20,860],[760,700],[1100,560]].forEach(([x,y])=>{c.fillStyle=dk?dk.dot:'rgba(255,255,255,.35)';c.beginPath();c.arc(x,y,14,0,7);c.fill()});
   // date tile
   c.fillStyle='#fff';rr(c,80,90,220,240,34);c.fill();c.textAlign='center';
-  c.fillStyle=dk?'#ea580c':'#dc2626';c.font='800 34px Sora,sans-serif';c.fillText(dow,190,150);
-  c.fillStyle=dk?'#c2410c':T3[0];c.font='800 104px Sora,sans-serif';c.fillText(day,190,258);c.fillStyle=dk?'#d97706':'#64748b';c.font='800 32px Sora,sans-serif';c.fillText(mon,190,305);c.textAlign='left';
+  c.fillStyle=dk?dk.dow:'#dc2626';c.font='800 34px Sora,sans-serif';c.fillText(dow,190,150);
+  c.fillStyle=dk?dk.day:T3[0];c.font='800 104px Sora,sans-serif';c.fillText(day,190,258);c.fillStyle=dk?dk.mon:'#64748b';c.font='800 32px Sora,sans-serif';c.fillText(mon,190,305);c.textAlign='left';
   // tags
   let tx=340,ty=130;c.font='800 28px Sora,sans-serif';tags.forEach((t,k)=>{const w=c.measureText(t).width+36;if(tx+w>1010){tx=340;ty+=62}
-    c.fillStyle=k===0?T3[4]:dk?'rgba(255,255,255,.4)':'rgba(255,255,255,.16)';rr(c,tx,ty-38,w,52,12);c.fill();c.fillStyle=k===0?(dk?'#fff':T3[0]):dk?'#7c2d12':ink;c.fillText(t,tx+18,ty-2);tx+=w+14});
+    c.fillStyle=k===0?T3[4]:dk?dk.chip:'rgba(255,255,255,.16)';rr(c,tx,ty-38,w,52,12);c.fill();c.fillStyle=k===0?(dk?dk.t1:T3[0]):dk?dk.chipT:ink;c.fillText(t,tx+18,ty-2);tx+=w+14});
   // title
   c.fillStyle=ink;c.font='800 72px Sora,sans-serif';let y=420;wrapLines(c,title,920).slice(0,3).forEach(l=>{c.fillText(l,80,y);y+=86});
-  y+=20;c.font='600 40px Sora,sans-serif';lines.filter(Boolean).forEach(l=>{wrapLines(c,l,920).slice(0,2).forEach(x=>{c.fillStyle=dk?'rgba(59,29,6,.92)':'rgba(255,255,255,.92)';c.fillText(x,80,y);y+=58});y+=6});
+  y+=20;c.font='600 40px Sora,sans-serif';lines.filter(Boolean).forEach(l=>{wrapLines(c,l,920).slice(0,2).forEach(x=>{c.fillStyle=dk?dk.line:'rgba(255,255,255,.92)';c.fillText(x,80,y);y+=58});y+=6});
   // brand bar
   const bg=c.createLinearGradient(0,0,S2,0);if(theme==='strava'){bg.addColorStop(0,'#2a0c00');bg.addColorStop(.5,'#4a1500');bg.addColorStop(1,'#7a2400')}else{bg.addColorStop(0,'#052e16');bg.addColorStop(.5,'#14532d');bg.addColorStop(1,'#16a34a')}c.fillStyle=bg;c.fillRect(0,S2-110,S2,110);
   c.fillStyle='#fff';c.font='800 44px Sora,sans-serif';c.fillText('TheCyclist',60,S2-42);const w2=c.measureText('TheCyclist').width;c.fillStyle=theme==='strava'?'#ffd2b8':'#bef264';c.fillText('Dubai',60+w2,S2-42);
@@ -1245,8 +1262,8 @@ function shareNow(file,text,title){
   openShareModal(text,file,file&&file.name);
 }
 function shareEvent(e){if(!e)return;const l=parseLocal(e.date+'T00:00');
-  const cv=drawCard({theme:e.theme==='yellow'?'yellow':'blue',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ '+(e.tag||'Recommended'),'Upcoming event'],title:e.name,
-    lines:[`🕖 ${l.day} ${fmtTime(e.time||'07:00')}`,[e.distance,e.route].filter(Boolean).join(' · ')&&('🚴 '+[e.distance,e.route].filter(Boolean).join(' · ')),e.note&&('🏅 '+e.note),e.weRide&&'💪 TheCyclistDubai is riding it',e.code&&`🎟️ Code ${e.code}${e.discount?' · '+e.discount:''}`,e.code&&('📝 Register: '+e.url.replace(/^https?:\/\//,''))]});
+  const cv=drawCard({theme:THEMES[e.theme]?e.theme:'blue',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ '+(e.tag||'Recommended'),'Upcoming event'],title:e.name,
+    lines:[`🕖 ${l.day} ${e.time?fmtTime(e.time):'· start time TBC'}`,[e.distance,e.route].filter(Boolean).join(' · ')&&('🚴 '+[e.distance,e.route].filter(Boolean).join(' · ')),e.note&&('🏅 '+e.note),e.weRide&&'💪 TheCyclistDubai is riding it',e.code&&`🎟️ Code ${e.code}${e.discount?' · '+e.discount:''}`,e.code&&('📝 Register: '+e.url.replace(/^https?:\/\//,''))]});
   shareNow(canvasFile(cv,'thecyclistdubai-event.png'),eventText(e),e.name)}
 function shareRide(r){if(!r)return;const l=parseLocal(r.occ+'T00:00'),f=rideForecast(r);
   const cv=drawCard({theme:'green',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ Group ride',rideKind(r),r.pace?'⚡ '+r.pace:''].filter(Boolean),title:`${r.name} · ${fmtTime(r.time)}`,
@@ -1267,7 +1284,7 @@ function openSheet(){
   const row=(id,bg,ic,title,sub,act='Share')=>`<button class="srow" data-s="${id}"><span class="si" style="background:${bg}">${ic}</span><span class="st"><b>${esc(title)}</b><small>${esc(sub)}</small></span><span class="sa">${act}</span></button>`;
   let H='<div class="sgrp">Weather</div>'+row('w','linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)','🌤️',`${T().short} weather`,h?`${$('mWhen').textContent} · ${Math.round(h.t)}°C · ${spd(h.w)} ${uLbl()} ${card(h.dir)} · score ${h.score}`:'Map image + full forecast');
   if(rs.length)H+='<div class="sgrp">Group rides</div>'+rs.map((r,i)=>row('r'+i,'linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)','🚴‍♂️',`${r.name} · ${occLabel(r.occ)}`,`${fmtTime(r.time)} · ${r.place} · ${[r.type,r.distance].filter(Boolean).join(' · ')}${r.start?' · Start '+r.start:''}${r.pace?' · '+r.pace:''}${rideRule(r)?' · '+rideRule(r):''}`)).join('');
-  if(evs.length)H+='<div class="sgrp">Events</div>'+evs.map((e,i)=>row('e'+i,e.theme==='yellow'?'linear-gradient(135deg,#ca8a04,#facc15 55%,#f4fa5a)':'linear-gradient(135deg,#0b1f4b,#1d4ed8)','📅',e.name,`${occLabel(e.date)} · ${[e.distance,e.route].filter(Boolean).join(' · ')}${e.code?` · Code ${e.code}`:''}`)).join('');
+  if(evs.length)H+='<div class="sgrp">Events</div>'+evs.map((e,i)=>row('e'+i,e.theme==='yellow'?'linear-gradient(135deg,#ca8a04,#facc15 55%,#f4fa5a)':e.theme==='lime'?'linear-gradient(135deg,#00482a,#0c4b3e 50%,#b5cc4a)':'linear-gradient(135deg,#0b1f4b,#1d4ed8)','📅',e.name,`${occLabel(e.date)} · ${[e.distance,e.route].filter(Boolean).join(' · ')}${e.code?` · Code ${e.code}`:''}`)).join('');
   if(sp.length)H+='<div class="sgrp">Sponsor codes</div>'+sp.map((x,i)=>row('p'+i,'linear-gradient(135deg,#111,#3f3f46)','🎁',`${x.name}: ${x.discount}`,`Code ${x.code} · ${x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')}`)).join('');
   $('sList').innerHTML=H;$('sheet').style.display='flex';
   $('sList').querySelectorAll('.srow').forEach(b=>b.onclick=()=>{const id=b.dataset.s,k=+id.slice(1);$('sheet').style.display='none';
