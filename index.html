@@ -140,18 +140,21 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .evt-go{flex:none;font-size:12px;font-weight:800;background:#fff;color:#0b1f4b;padding:7px 11px;border-radius:10px}
 .evt-code{font-family:"JetBrains Mono",monospace;font-weight:800;letter-spacing:.3px;text-transform:none}
 .evt-tag .code{background:#fffffff0;border-color:#fff;color:#111}
-.evt.y .evt-tag .code{background:#fffffff2;border-color:#fff;color:#7c2d12}
+.evt.y .evt-tag .code{background:#fffffff2;border-color:#fff;color:#1f1a00}
 /* yellow event card (L'Étape Dubai colours: neon yellow + black) */
-.evt.y{color:#3b1d06;background:radial-gradient(70% 140% at 100% 0%,#ffffffc0 0%,transparent 60%),linear-gradient(110deg,#f59e0b 0%,#facc15 50%,#f4fa5a 100%);box-shadow:0 8px 22px #d9770640}
-.evt.y:hover{box-shadow:0 12px 28px #d9770666}
-.evt.y .evt-route path{stroke:#9a3412;stroke-opacity:.22}.evt.y .evt-route circle{fill:#9a341238}
-.evt.y .evt-date{background:#fff;box-shadow:0 3px 10px #b4530926}.evt.y .evt-date b{color:#c2410c}.evt.y .evt-date span{color:#d97706}
-.evt.y .evt-tag span{background:#ffffff59;border-color:#ffffff99;color:#7c2d12}
-.evt.y .evt-tag .star{background:linear-gradient(110deg,#f97316,#ea580c);border-color:#ea580c;color:#fff;box-shadow:0 2px 6px #c2410c40}
+.evt.y{color:#1f1a00;background:radial-gradient(70% 140% at 100% 0%,#ffffffb3 0%,transparent 60%),linear-gradient(110deg,#ffcf00 0%,#ffe100 50%,#fff16a 100%);box-shadow:0 8px 22px #c9a20040}
+/* Tour de France: maillot jaune + King of the Mountains polka dots */
+.evt.y::after{content:"";position:absolute;inset:0 0 0 auto;width:34%;pointer-events:none;background:radial-gradient(circle,#e2001a 0 2.4px,transparent 2.9px) 0 0/12px 12px;opacity:.5;-webkit-mask-image:linear-gradient(90deg,transparent,#000 70%);mask-image:linear-gradient(90deg,transparent,#000 70%)}
+.evt.y>*:not(.evt-route){position:relative;z-index:1}
+.evt.y:hover{box-shadow:0 12px 28px #c9a20066}
+.evt.y .evt-route path{stroke:#7a6200;stroke-opacity:.25}.evt.y .evt-route circle{fill:#e2001a40}
+.evt.y .evt-date{background:#fff;box-shadow:0 3px 10px #8a6d0026}.evt.y .evt-date b{color:#e2001a}.evt.y .evt-date span{color:#7a6200}
+.evt.y .evt-tag span{background:#ffffff73;border-color:#ffffffb3;color:#3d3300}
+.evt.y .evt-tag .star{background:linear-gradient(110deg,#ef1c2e,#d0001a);border-color:#d0001a;color:#fff;box-shadow:0 2px 6px #d0001a40}
 .evt-tag span span{background:none!important;border:0!important;padding:0;color:inherit!important}
-.evt.y .evt-meta{color:#5c2d0c}.evt.y .evt-meta b{color:#3b1d06}
-.evt.y .evt-cd{border-left-color:#9a341233}.evt.y .evt-cd b{color:#c2410c}.evt.y .evt-cd span{color:#7c2d12}
-.evt.y .evt-go{background:linear-gradient(110deg,#f97316,#c2410c);color:#fff;box-shadow:0 4px 12px #c2410c55}
+.evt.y .evt-meta{color:#3d3300}.evt.y .evt-meta b{color:#1f1a00}
+.evt.y .evt-cd{border-left-color:#7a620033}.evt.y .evt-cd b{color:#d0001a}.evt.y .evt-cd span{color:#5c4a00}
+.evt.y .evt-go{background:linear-gradient(110deg,#ef1c2e,#c00018);color:#fff;box-shadow:0 4px 12px #c0001855}
 .evt.lm{color:#00482a;box-shadow:0 8px 22px #00482a30;background:
   linear-gradient(118deg,transparent 0 80%,#b5cc4a 80% 83.5%,transparent 83.5% 85%,#00482a 85% 87%,transparent 87% 88.5%,#c4d24c 88.5% 92.5%,transparent 92.5% 94%,#0c4b3e 94% 95.2%,transparent 95.2%),
   linear-gradient(110deg,#f2f2dc 0%,#e9f1d2 50%,#d6e38a 100%)}
@@ -164,7 +167,7 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .evt.lm .evt-cd{border-left-color:#00482a33}.evt.lm .evt-cd b{color:#00482a}.evt.lm .evt-cd span{color:#4d6b12}
 .evt.lm .evt-go{background:linear-gradient(110deg,#00482a,#0c6b45);color:#e9f5a8;box-shadow:0 4px 12px #00482a40}
 .evt.lm .cshare{background:#ffffffcc;border-color:#00482a33;color:#00482a}
-.evt.y .cshare{background:#ffffff66;border-color:#ffffffaa;color:#9a3412}
+.evt.y .cshare{background:#ffffffb3;border-color:#ffffff;color:#d0001a}
 .grid+.sponsors{margin-top:14px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .panel.band::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#a3e635,#22c55e,#0ea5e9)}
@@ -455,7 +458,7 @@ footer a:hover{color:var(--text)}
   .evt-title{white-space:normal}
   .evt-date{width:44px;height:46px}
   .evt-cd b{font-size:19px}
-  .evt.y .evt-cd{background:#ffffff59;border-color:#ffffff99}
+  .evt.y .evt-cd{background:#ffffffb3;border-color:#ffffff}
   .evt.lm .evt-cd{background:#ffffffb3;border-color:#00482a26}
   .evt-tag:has(.code) .st-l{display:none}
   .mapinfo{padding:11px 12px 13px}
@@ -1228,15 +1231,16 @@ function rideText(r){const f=rideForecast(r);
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\nUse code *${x.code}* for *${x.discount}*\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
 /* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */
-const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#f59e0b','#facc15','#f4fa5a','#ffffff','#ea580c'],lime:['#f2f2dc','#e4efcf','#c4d24c','#ffffff','#00482a']};
+const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#ffcf00','#ffe100','#fff16a','#ffffff','#d0001a'],lime:['#f2f2dc','#e4efcf','#c4d24c','#ffffff','#00482a']};
 /* light card themes: dark text colours */
-const LIGHT={yellow:{ink:'#3b1d06',line:'rgba(59,29,6,.92)',route:'rgba(154,52,18,.22)',dot:'rgba(154,52,18,.25)',dow:'#ea580c',day:'#c2410c',mon:'#d97706',t1:'#fff',chip:'rgba(255,255,255,.4)',chipT:'#7c2d12'},
+const LIGHT={yellow:{ink:'#1f1a00',line:'rgba(31,26,0,.9)',route:'rgba(122,98,0,.25)',dot:'rgba(226,0,26,.3)',dow:'#e2001a',day:'#e2001a',mon:'#7a6200',t1:'#fff',chip:'rgba(255,255,255,.55)',chipT:'#3d3300'},
   lime:{ink:'#00482a',line:'rgba(0,72,42,.92)',route:'rgba(0,72,42,.2)',dot:'rgba(0,72,42,.22)',dow:'#6b8a12',day:'#00482a',mon:'#6b8a12',t1:'#e9f5a8',chip:'rgba(0,72,42,.1)',chipT:'#00482a'}};
 function wrapLines(c,t,max){const w=t.split(' ');const out=[];let line='';w.forEach(x=>{const tt=line?line+' '+x:x;if(c.measureText(tt).width>max&&line){out.push(line);line=x}else line=tt});if(line)out.push(line);return out}
 function drawCard({theme,dow,day,mon,tags,title,lines}){
   const S2=1080,c0=document.createElement('canvas');c0.width=S2;c0.height=S2;const c=c0.getContext('2d'),T3=THEMES[theme],dk=LIGHT[theme],ink=dk?dk.ink:'#fff';
   const g=c.createLinearGradient(0,0,S2,S2);g.addColorStop(0,T3[0]);g.addColorStop(.55,T3[1]);g.addColorStop(1,T3[2]);c.fillStyle=g;c.fillRect(0,0,S2,S2);
   const rg=c.createRadialGradient(S2,0,0,S2,0,700);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S2,S2);
+  if(theme==='yellow'){c.save();const g=c.createLinearGradient(360,0,1080,0);g.addColorStop(0,'rgba(226,0,26,0)');g.addColorStop(.75,'rgba(226,0,26,.95)');c.fillStyle=g;for(let r=0,y=186;y<=322;y+=34,r++)for(let x=360+(r%2?17:0);x<1070;x+=34){c.beginPath();c.arc(x,y,8,0,7);c.fill()}c.restore()}
   if(theme==='lime'){c.save();[[760,60,'rgba(181,204,74,.75)'],[836,30,'rgba(0,72,42,.9)'],[882,84,'rgba(196,210,76,.85)'],[982,24,'rgba(12,75,62,.75)'],[1022,58,'rgba(181,204,74,.6)']].forEach(([x,w,col])=>{c.fillStyle=col;c.beginPath();c.moveTo(x,970);c.lineTo(x+w,970);c.lineTo(x+w+300,600);c.lineTo(x+300,600);c.closePath();c.fill()});c.restore()}
   c.strokeStyle=dk?dk.route:'rgba(255,255,255,.18)';c.lineWidth=8;c.setLineDash([4,22]);c.lineCap='round';c.beginPath();c.moveTo(-20,860);c.bezierCurveTo(260,620,520,900,760,700);c.bezierCurveTo(900,590,1000,620,1100,560);c.stroke();c.setLineDash([]);
   [[-20,860],[760,700],[1100,560]].forEach(([x,y])=>{c.fillStyle=dk?dk.dot:'rgba(255,255,255,.35)';c.beginPath();c.arc(x,y,14,0,7);c.fill()});
@@ -1285,7 +1289,7 @@ function openSheet(){
   const row=(id,bg,ic,title,sub,act='Share')=>`<button class="srow" data-s="${id}"><span class="si" style="background:${bg}">${ic}</span><span class="st"><b>${esc(title)}</b><small>${esc(sub)}</small></span><span class="sa">${act}</span></button>`;
   let H='<div class="sgrp">Weather</div>'+row('w','linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)','🌤️',`${T().short} weather`,h?`${$('mWhen').textContent} · ${Math.round(h.t)}°C · ${spd(h.w)} ${uLbl()} ${card(h.dir)} · score ${h.score}`:'Map image + full forecast');
   if(rs.length)H+='<div class="sgrp">Group rides</div>'+rs.map((r,i)=>row('r'+i,'linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)','🚴‍♂️',`${r.name} · ${occLabel(r.occ)}`,`${fmtTime(r.time)} · ${r.place} · ${[r.type,r.distance].filter(Boolean).join(' · ')}${r.start?' · Start '+r.start:''}${r.pace?' · '+r.pace:''}${rideRule(r)?' · '+rideRule(r):''}`)).join('');
-  if(evs.length)H+='<div class="sgrp">Events</div>'+evs.map((e,i)=>row('e'+i,e.theme==='yellow'?'linear-gradient(135deg,#ca8a04,#facc15 55%,#f4fa5a)':e.theme==='lime'?'linear-gradient(135deg,#00482a,#0c4b3e 50%,#b5cc4a)':'linear-gradient(135deg,#0b1f4b,#1d4ed8)','📅',e.name,`${occLabel(e.date)} · ${[e.distance,e.route].filter(Boolean).join(' · ')}${e.code?` · Code ${e.code}`:''}`)).join('');
+  if(evs.length)H+='<div class="sgrp">Events</div>'+evs.map((e,i)=>row('e'+i,e.theme==='yellow'?'linear-gradient(135deg,#d0001a,#ffcf00 45%,#fff16a)':e.theme==='lime'?'linear-gradient(135deg,#00482a,#0c4b3e 50%,#b5cc4a)':'linear-gradient(135deg,#0b1f4b,#1d4ed8)','📅',e.name,`${occLabel(e.date)} · ${[e.distance,e.route].filter(Boolean).join(' · ')}${e.code?` · Code ${e.code}`:''}`)).join('');
   if(sp.length)H+='<div class="sgrp">Sponsor codes</div>'+sp.map((x,i)=>row('p'+i,'linear-gradient(135deg,#111,#3f3f46)','🎁',`${x.name}: ${x.discount}`,`Code ${x.code} · ${x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')}`)).join('');
   $('sList').innerHTML=H;$('sheet').style.display='flex';
   $('sList').querySelectorAll('.srow').forEach(b=>b.onclick=()=>{const id=b.dataset.s,k=+id.slice(1);$('sheet').style.display='none';
