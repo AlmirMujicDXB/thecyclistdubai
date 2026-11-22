@@ -84,6 +84,16 @@ window.SITE = {
      track: alqudra | meydan | mushrif | kite | hatta  (used for the ride forecast)
      changes: one-off changes for a single date, e.g. { '2026-11-21': { time: '06:00' } }
               or { '2026-12-25': { cancelled: true } } */
+  /* UAE Tour live counter in the header. It counts down to the selected race, shows "LIVE · Stage X/N" while
+     it runs and "Finished" afterwards. Add next year's races here when the dates are announced. */
+  uaeTour: {
+    url: 'https://www.theuaetour.com/',
+    races: [
+      { name: 'Women', start: '2027-02-03', end: '2027-02-06', stages: 4 },
+      { name: 'Men',   start: '2027-02-15', end: '2027-02-21', stages: 7 },
+    ],
+  },
+
   rides: [
     {
       name: 'Mushrif MTB Ride',
