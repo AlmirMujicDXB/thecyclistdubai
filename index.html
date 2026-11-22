@@ -17,10 +17,10 @@
   --bg:#f5f8fb; --panel:#fff; --panel2:#f1f5f9; --line:#e2e8f0; --text:#0f172a; --muted:#4b5a6e;
   --accent:#65a30d; --accent-soft:#f7fee7; --hot:#ea580c; --cool:#0284c7; --good:#16a34a; --warn:#d97706; --bad:#dc2626;
   --shadow:0 1px 2px #0f172a0a,0 6px 20px #0f172a0d; --r:18px;
-  /* THEME: velodrome: maple-wood boards, red sprinter's line, blue stayers' line, Côte d'Azur band, UCI rainbow stripes */
-  --th-dark:#0b3d91; --th-mid:#1d4ed8; --th-bright:#2563eb; --th-teal:#e11d48; --th-lime:#93c5fd; --th-ink:#13233f;
-  --th-soft:#fbf6ee; --th-soft2:#f3e8d6; --th-line:#e7d6b8; --th-glow:#1d4ed833;
-  --th-grad:linear-gradient(110deg,#0b3d91 0%,#1d4ed8 60%,#2b6cf0 100%);
+  /* THEME: velodrome: maple-wood boards, soft sage accents, red sprinter's line, UCI rainbow stripes */
+  --th-dark:#3f6b55; --th-mid:#5b8a72; --th-bright:#7fa892; --th-teal:#e11d48; --th-lime:#cfe0d5; --th-ink:#13233f;
+  --th-soft:#fbf6ee; --th-soft2:#f3e8d6; --th-line:#e7d6b8; --th-glow:#5b8a7233;
+  --th-grad:linear-gradient(110deg,#4f7a64 0%,#6b9a80 60%,#86b39a 100%);
   --th-hdr:linear-gradient(110deg,#fdf9f2 0%,#f8eedd 60%,#f3e5cb 100%);
   /* RIDES: same green as the header (dark forest → green → bright green, lime accents) */
   --rd-dark:#052e16; --rd-mid:#14532d; --rd-bright:#16a34a; --rd-glow:#bef264; --rd-cream:#bef264; --rd-peach:#bef264;
@@ -36,7 +36,7 @@ a{color:inherit}
 /* ---------- header ---------- */
 header{display:grid;grid-template-columns:1fr auto auto;align-items:center;column-gap:12px;row-gap:4px;margin:2px 0 10px;padding:8px 10px 8px 16px;height:70px;box-sizing:border-box;border-radius:16px;color:#13233f;position:relative;overflow:hidden;
   background:repeating-linear-gradient(177deg,#a8702d12 0 1px,transparent 1px 10px),linear-gradient(110deg,#fdf9f2 0%,#f8eedd 60%,#f2e2c6 100%);border:1px solid #ead9bb;box-shadow:0 10px 26px #8a5a1f1f}
-header::after{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 70 C180 70 360 58 600 30 L600 52 C380 72 200 80 120 80 Z' fill='%2360a5fa' fill-opacity='.18'/%3E%3Cpath d='M0 64 C200 64 380 48 600 16' fill='none' stroke='%2313233f' stroke-opacity='.22' stroke-width='1.2'/%3E%3Cpath d='M0 56 C200 56 390 38 600 4' fill='none' stroke='%23e11d48' stroke-opacity='.5' stroke-width='2'/%3E%3Cpath d='M0 40 C210 40 400 20 600 -14' fill='none' stroke='%231d4ed8' stroke-opacity='.4' stroke-width='2'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+header::after{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 70 C180 70 360 58 600 30 L600 52 C380 72 200 80 120 80 Z' fill='%2386b39a' fill-opacity='.2'/%3E%3Cpath d='M0 64 C200 64 380 48 600 16' fill='none' stroke='%2313233f' stroke-opacity='.22' stroke-width='1.2'/%3E%3Cpath d='M0 56 C200 56 390 38 600 4' fill='none' stroke='%23e11d48' stroke-opacity='.5' stroke-width='2'/%3E%3Cpath d='M0 40 C210 40 400 20 600 -14' fill='none' stroke='%235b8a72' stroke-opacity='.45' stroke-width='2'/%3E%3C/svg%3E") center/100% 100% no-repeat}
 /* UAE flag stripe along the bottom */
 header::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,#0072ce 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) left bottom/100% 4px no-repeat}
 header .uaet{z-index:3}
@@ -44,8 +44,8 @@ header .uaet{z-index:3}
 .hbtns{grid-column:3;grid-row:1/3}
 /* ---------- UAE Tour live counter ---------- */
 .uaet{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:292px;padding:5px 10px 6px;border-radius:12px;cursor:pointer;color:#fff;text-decoration:none;overflow:hidden;
-  color:#fff;background:linear-gradient(118deg,transparent 0 86%,#e11d48 86% 87.6%,transparent 87.6% 89%,#ffffff40 89% 90%,transparent 90%),linear-gradient(110deg,#0b3d91 0%,#1d4ed8 60%,#2b6cf0 100%);border:1px solid #0b3d91;box-shadow:inset 0 1px 0 #ffffff2e,0 8px 18px #1d4ed840;transition:transform .2s,box-shadow .2s}
-.uaet:hover{transform:translateY(-1px);border-color:#e11d48;box-shadow:inset 0 1px 0 #ffffff2e,0 12px 26px #1d4ed855}
+  color:#13233f;background:linear-gradient(118deg,transparent 0 86%,#e11d48b3 86% 87.6%,transparent 87.6% 89%,#86b39a66 89% 90.2%,transparent 90.2%),linear-gradient(110deg,#e3ede6 0%,#edf4ef 60%,#f6faf7 100%);border:1px solid #c7dacd;box-shadow:inset 0 1px 0 #fff,0 6px 16px #3f6b5524;transition:transform .2s,box-shadow .2s}
+.uaet:hover{transform:translateY(-1px);border-color:#a9c7b4;box-shadow:inset 0 1px 0 #fff,0 10px 22px #3f6b5538}
 /* 5-second auto-rotation: progress bar + slide-in */
 .ut-in{display:flex;flex-direction:column;gap:3px;min-width:0}
 .ut-in.out{transform:translateX(-26px);opacity:0;filter:blur(1.5px);transition:transform .22s ease-in,opacity .22s ease-in,filter .22s}
@@ -53,19 +53,19 @@ header .uaet{z-index:3}
 @keyframes utIn{from{transform:translateX(30px);opacity:0;filter:blur(1.5px)}to{transform:none;opacity:1;filter:none}}
 .ut-top,.ut-bot{display:flex;align-items:center;gap:8px;white-space:nowrap}
 .ut-logo{font-weight:900;font-size:11px;letter-spacing:1.6px;display:inline-flex;align-items:center;gap:4px}
-.ut-logo b{color:#bfdbfe}
-.ut-logo i{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 #ffffffaa;font-style:normal}
-.uaet.utlive .ut-logo i{background:#fff;animation:utPulse 1.4s infinite}
-@keyframes utPulse{0%{box-shadow:0 0 0 0 #ffffffcc}100%{box-shadow:0 0 0 8px #ffffff00}}
+.ut-logo b{color:#5b8a72}
+.ut-logo i{width:7px;height:7px;border-radius:50%;background:#5b8a72;box-shadow:0 0 0 0 #5b8a72aa;font-style:normal}
+.uaet.utlive .ut-logo i{background:#e11d48;animation:utPulse 1.4s infinite}
+@keyframes utPulse{0%{box-shadow:0 0 0 0 #e11d48cc}100%{box-shadow:0 0 0 8px #e11d4800}}
 .ut-race{margin-left:auto;font-size:10px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#fff;background:linear-gradient(110deg,#e11d48,#f43f5e);padding:2px 9px;border-radius:6px;box-shadow:0 1px 6px #e11d4866}
 .ut-cd{display:inline-flex;align-items:baseline;gap:5px;font-family:"JetBrains Mono",monospace}
 .ut-cd>span{display:inline-flex;align-items:baseline;gap:1px}
-.ut-cd b{display:inline-block;min-width:2ch;text-align:right;font-size:18px;font-weight:800;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+.ut-cd b{display:inline-block;min-width:2ch;text-align:right;font-size:18px;font-weight:800;line-height:1;color:#13233f;font-variant-numeric:tabular-nums}
 .ut-cd b.tk{animation:utTick .35s ease-out}
 @keyframes utTick{from{transform:translateY(-35%);opacity:.2}to{transform:none;opacity:1}}
-.ut-cd i{font-style:normal;font-size:10px;font-weight:700;color:#bfdbfe}
+.ut-cd i{font-style:normal;font-size:10px;font-weight:700;color:#5b8a72}
 .ut-cd .ut-live{font-family:Sora,sans-serif;font-size:13px;font-weight:800;letter-spacing:.2px}
-.ut-sub{font-size:10px;color:#dbeafe}
+.ut-sub{font-size:10px;color:#5e6f66}
 .ut-j{margin-left:auto;display:inline-flex;gap:3px}
 .ut-j svg{width:16px;height:16px;filter:drop-shadow(0 1px 1px #0006);transition:transform .15s}
 .ut-j svg:hover{transform:translateY(-2px) scale(1.15)}
@@ -73,7 +73,7 @@ header .uaet{z-index:3}
 header>*{position:relative;z-index:1}
 .brand{flex:1;min-width:0}
 .brand h1{font-size:19px;margin:0;letter-spacing:-.6px;font-style:italic;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand h1 span{background:linear-gradient(90deg,#1d4ed8,#0b3d91);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand h1 span{background:linear-gradient(90deg,#6b9a80,#3f6b55);-webkit-background-clip:text;background-clip:text;color:transparent}
 header .wx-tag{background:linear-gradient(110deg,#e11d48,#be123c);border-color:#be123c;color:#fff}
 header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;font-size:12px;color:#6b5a45;white-space:nowrap;justify-self:start}
 .wx-tag{font-weight:800;letter-spacing:1.4px;text-transform:uppercase;font-size:10px;color:#fff;background:#ffffff26;border:1px solid #ffffff40;padding:2px 7px;border-radius:6px}
@@ -463,7 +463,7 @@ footer a:hover{color:var(--text)}
   .hbtns{grid-column:2;grid-row:1}
   .uaet{grid-column:1/-1;grid-row:2;min-width:0;flex-direction:row;align-items:center;gap:8px;padding:5px 8px}
   .ut-in{flex-direction:row;align-items:center;gap:8px;flex:1}
-  .uaet{background:linear-gradient(110deg,#0b3d91 0%,#1d4ed8 60%,#2b6cf0 100%)}
+  .uaet{background:linear-gradient(110deg,#e3ede6 0%,#edf4ef 60%,#f6faf7 100%)}
   header::after{opacity:.6}
   .ut-top{gap:6px}.ut-top .ut-race{margin-left:0}
   .ut-bot{flex:1;min-width:0;gap:6px}
@@ -576,7 +576,7 @@ footer a:hover{color:var(--text)}
       <span class="ut-j" aria-label="UAE Tour jerseys">
         <svg viewBox="0 0 24 24" aria-label="Red jersey: overall leader"><title>Red jersey · overall leader (GC)</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#e4142f" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
         <svg viewBox="0 0 24 24" aria-label="Green jersey: points"><title>Green jersey · points (sprinters)</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#00843d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        <svg class="wj" viewBox="0 0 24 24" aria-label="White jersey: best young rider"><title>White jersey · best young rider</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#fff" stroke="#ffffff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <svg class="wj" viewBox="0 0 24 24" aria-label="White jersey: best young rider"><title>White jersey · best young rider</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#fff" stroke="#9aa8a0" stroke-width="1.4" stroke-linejoin="round"/></svg>
         <svg viewBox="0 0 24 24" aria-label="Black jersey: intermediate sprints"><title>Black jersey · intermediate sprints</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#0a0f1a" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
       </span></div></div>
   </div>
