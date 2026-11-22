@@ -116,6 +116,7 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 .grid>.mapcard{grid-column:1;grid-row:1}
 .grid>#evts{grid-column:1;grid-row:2}
 .evts{display:flex;flex-direction:column;gap:8px}
+.evts h3{margin:4px 0 2px}
 
 .evts:empty{display:none}
 .grid>#cond{grid-column:2;grid-row:1/span 2}
@@ -268,7 +269,7 @@ header .tag{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:
 
 /* ---------- sponsors ---------- */
 .sponsors{margin-top:16px}
-.sponsors h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.sponsors h3,.evts h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
 .spgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
 .sp{border-radius:16px;min-height:118px;overflow:hidden}
 .spwrap{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:14px;align-items:start}
@@ -1160,7 +1161,7 @@ const SHARE_ICO='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" str
 function esc(t){return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function renderEvents(){
   const evs=upcomingEvents();
-  $('evts').innerHTML=evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
+  $('evts').innerHTML=(evs.length?'<h3>Events</h3>':'')+evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
     return `<a class="evt${e.theme==='yellow'?' y':''}" href="${esc(e.url)}" target="_blank" rel="noopener">
     <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="20" cy="58" r="5" fill="#ffffff55"/><circle cx="580" cy="30" r="5" fill="#ffffff55"/></svg>
     <div class="evt-date"><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
@@ -1204,9 +1205,9 @@ function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e
   return `📅 *${e.name}*\n🗓️ ${occLabel(e.date)} · ${fmtTime(e.time||'07:00')}\n`+
     (e.distance||e.route?`🚴 ${[e.distance,e.route].filter(Boolean).join(' · ')}\n`:'')+(e.note?`🏅 ${e.note}\n`:'')+
     (days>0?`⏳ ${days} days to go\n`:'')+(e.weRide?`💪 TheCyclistDubai is riding it. Join us!\n`:'')+(e.code?`🎟️ Use code *${e.code}*${e.discount?` for *${e.discount}*`:''}\n`:'')+`${e.code?'📝 Register:':'🔗'} ${e.url}`}
-/* events flagged inRideShares: register link + code added to every ride share */
-function eventPromoText(){const ev=upcomingEvents().filter(e=>e.inRideShares);if(!ev.length)return'';
-  return '\n🏁 *Race with us*\n'+ev.map(e=>`• *${e.name}*, ${occLabel(e.date)}${e.distance?`, ${e.distance}`:''}\n  📝 Register: ${e.url}`+(e.code?`\n  🎟️ Code *${e.code}*${e.discount?` for *${e.discount}*`:''}`:'')).join('\n')+'\n'}
+/* every upcoming event (link + code) is promoted in every ride share */
+function eventPromoText(){const ev=upcomingEvents();if(!ev.length)return'';
+  return '\n📅 *Upcoming events*\n'+ev.map(e=>`• *${e.name}*, ${occLabel(e.date)}${e.distance?`, ${e.distance}`:''}\n  ${e.code?'📝 Register: ':'🔗 '}${e.url}`+(e.code?`\n  🎟️ Code *${e.code}*${e.discount?` for *${e.discount}*`:''}`:'')).join('\n')+'\n'}
 function rideText(r){const f=rideForecast(r);
   return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.start?`Start: ${r.start} · `:''}${r.place}\n`+(rideKind(r)?`${rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(rideRule(r)?`⛑️💡 ${rideRule(r)}\n`:'')+
     (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+eventPromoText()+footerText()}

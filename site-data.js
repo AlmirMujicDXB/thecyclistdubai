@@ -30,7 +30,7 @@ window.SITE = {
   /* ---------- EVENTS ----------
      Shown under the map, soonest first. theme: 'yellow' for a yellow card (default blue).
      code + discount: discount code shown on the card and in shares.
-     inRideShares: true also adds the register link + code to every group ride share. */
+     Every upcoming event (link + code) is added to every group ride share automatically. */
   events: [
     {
       name: 'AD Ports Group Gran Fondo Abu Dhabi 2026',
@@ -54,7 +54,6 @@ window.SITE = {
       theme: 'yellow',             // yellow card + yellow share image
       code: 'THECYCLISTDUBAI15',   // discount code (shown on the card and in shares)
       discount: '15% OFF',
-      inRideShares: true,          // also add the register link + code to every ride share
       button: 'Register',
     },
     // { name: 'Event name', date: '2027-01-30', time: '06:00', distance: '100 km', route: 'Start → Finish',
