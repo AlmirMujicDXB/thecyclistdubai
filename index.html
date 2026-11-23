@@ -1370,7 +1370,7 @@ const SHARE_ICO='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" str
 function esc(t){return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function renderEvents(){
   const evs=upcomingEvents();
-  $('evts').innerHTML=(evs.length?'<h3>Events<span class="car-dots" id="evDots" aria-hidden="true"></span></h3>':'')+'<div class="car-view"><div class="car-track">'+evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
+  $('evts').innerHTML=(evs.length?'<h3>Events</h3>':'')+evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
     return `<a class="evt${e.theme==='yellow'?' y':e.theme==='lime'?' lm':''}" href="${esc(e.url)}" target="_blank" rel="noopener">
     <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="20" cy="58" r="5" fill="#ffffff55"/><circle cx="580" cy="30" r="5" fill="#ffffff55"/></svg>
     <div class="evt-date"><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
@@ -1382,7 +1382,7 @@ function renderEvents(){
     <div class="evt-cd"><b>${days<=0?'Today':days}</b><span>${days<=0?'race day':'days to go'}</span></div>
     <button class="cshare" data-ev="${i}" aria-label="Share event" title="Share event">${SHARE_ICO}</button>
     <span class="evt-go">${esc(e.button||'Details')} ↗</span>
-  </a>`}).join('')+'</div></div>';carSync('evts');
+  </a>`}).join('');
   $('evts').querySelectorAll('[data-ev]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareEvent(upcomingEvents()[+b.dataset.ev])});
 }
 function renderRides(){
@@ -1407,7 +1407,7 @@ function renderRides(){
   $('rides').querySelectorAll('[data-rd]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareRide(upcomingRides()[+b.dataset.rd])});
 }
 /* ---------- one-card carousels for Events and Group rides: auto every 5 s, manual by sliding ---------- */
-const CAR={evts:{i:0,dots:'evDots',delay:0},rides:{i:0,dots:'rdDots',delay:2500}};
+const CAR={rides:{i:0,dots:'rdDots',delay:0}};
 function carTrack(id){return $(id).querySelector('.car-track')}
 function carGo(id,i,user,instant){const c=CAR[id],tr=carTrack(id);if(!tr)return;const n=tr.children.length;if(!n)return;c.i=((i%n)+n)%n;
   if(instant)tr.style.transition='none';tr.style.transform=`translateX(calc(${-100*c.i}% - ${40*c.i}px))`;if(instant){void tr.offsetWidth;tr.style.transition=''}
