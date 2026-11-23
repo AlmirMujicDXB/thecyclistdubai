@@ -16,6 +16,8 @@ TRACKS = {
 # Tracks where only the largest connected network is kept (drops separate cycle paths
 # inside the bounding box, e.g. Expo City / Dubai South paths near Al Qudra).
 MAIN_ONLY = {"alqudra"}
+# Cut tracks north of this latitude (Al Qudra starts at BOTS, 24.9989 N; the path north of it towards E311 is not shown).
+CLIP_NORTH = {"alqudra": 25.0}
 MIRRORS = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
@@ -45,6 +47,23 @@ def fetch(q):
                 print(f"  {m}: {ex}", file=sys.stderr)
         time.sleep(20 * (attempt + 1))
     return None
+
+
+def clip_north(lines, lat_max):
+    """Split ways at lat_max and keep only the parts south of it."""
+    out = []
+    for w in lines:
+        part = []
+        for p in w:
+            if p[0] <= lat_max:
+                part.append(p)
+            else:
+                if len(part) > 1:
+                    out.append(part)
+                part = []
+        if len(part) > 1:
+            out.append(part)
+    return out
 
 
 def main_network(lines, tol=40.0):
@@ -85,6 +104,8 @@ def main():
         if not lines:
             print("  no ways found, keeping existing file")
             continue
+        if tid in CLIP_NORTH:
+            lines = clip_north(lines, CLIP_NORTH[tid])
         if tid in MAIN_ONLY:
             before = len(lines)
             lines = main_network(lines)
