@@ -144,14 +144,15 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .hr.on.night{background:var(--text)}
 
 /* ---------- layout ---------- */
-.grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
 .grid>.mapcard{grid-column:1;grid-row:1}
-.grid>#evts{grid-column:1;grid-row:2}
+.grid>#cond{grid-column:1;grid-row:2}
+.grid>#evts{grid-column:1;grid-row:3}
 .evts{display:flex;flex-direction:column;gap:8px}
 .evts h3{margin:4px 0 2px}
 
 .evts:empty{display:none}
-.grid>#cond{grid-column:2;grid-row:1/span 2}
+
 .evt{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 14px 8px 8px;border-radius:16px;text-decoration:none;color:#fff;
   background:radial-gradient(70% 140% at 100% 0%,#38bdf833 0%,transparent 60%),linear-gradient(110deg,#0b1f4b 0%,#123a8a 55%,#1d4ed8 100%);box-shadow:0 8px 22px #0b1f4b40;transition:.2s}
 .evt:hover{transform:translateY(-1px);box-shadow:0 12px 28px #0b1f4b55}
@@ -201,6 +202,44 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .evt.lm .cshare{background:#ffffffcc;border-color:#00482a33;color:#00482a}
 .evt.y .cshare{background:#ffffffb3;border-color:#ffffff;color:#d0001a}
 .grid+.sponsors{margin-top:14px}
+/* ---------- conditions card: same size as the event cards, 5–6 sliding slides ---------- */
+#cond.cx{height:70px;padding:0;box-sizing:border-box;border-radius:16px}
+.cx-view{position:absolute;left:0;top:4px;bottom:0;right:190px;overflow:hidden;touch-action:pan-y}
+.cx-track{display:flex;height:100%;transition:transform .6s cubic-bezier(.22,.8,.2,1);will-change:transform}
+.cx-s{flex:0 0 100%;min-width:0;height:100%;box-sizing:border-box;display:flex;align-items:center;gap:14px;padding:0 14px 0 14px}
+.cx-s[hidden]{display:none}
+.cx-nav{position:absolute;right:0;top:4px;bottom:0;width:190px;box-sizing:border-box;padding:0 14px;border-left:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:6px}
+.cx-when{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.cx-when .val{font:700 12.5px "JetBrains Mono",monospace;color:var(--ink)}
+.cx-sel{display:flex;align-items:center;gap:8px}
+.cx-t{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.cx-dots{display:flex;gap:4px}
+.cx-dots button{width:7px;height:7px;border-radius:4px;border:0;padding:0;background:#cbd5e1;cursor:pointer;transition:width .3s,background .3s}
+.cx-dots button.on{width:18px;background:#16a34a}
+.cx-score .ring{width:46px;height:46px}
+.cx-main{min-width:0;flex:1}
+.cx-h{font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cx-d{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cx-sky{flex:none;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;background:var(--panel2);padding:6px 12px;border-radius:10px}
+.cx-sky #wxIcon{font-size:18px}
+.cx-tiles{gap:0}
+.cx-st{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;padding:0 12px;border-left:1px solid var(--line)}
+.cx-st:first-child{border-left:0;padding-left:0}
+.cx-st small{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.cx-st b{font:700 15px "JetBrains Mono",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.cx-st b.sm{font-size:13px;letter-spacing:-.3px}
+.cx-st .arr{display:inline-block;color:var(--accent);margin-right:6px;transition:transform .7s}
+.cx-wind .units{margin:0 0 0 12px;flex:none}
+.cx-track-wind .wsplit{flex:1;min-width:0;margin:0;background:none;padding:0}
+.cx-track-wind .ws-bar{margin:5px 0}
+.cx-track-wind .ws-l{justify-content:flex-start;gap:16px}
+.cx-track-wind .wdesc{flex:0 1 38%;margin:0;font-size:12px;line-height:1.4;background:var(--panel2);padding:7px 11px;border-radius:10px}
+.cx-plan{gap:10px}
+.cx-plan .best,.cx-plan .tip{flex:1;min-width:0;margin:0;height:46px;box-sizing:border-box;display:flex;align-items:center;font-size:12.5px;line-height:1.35;padding:6px 12px;border-radius:12px}
+.cx-plan .best{flex:1.5}
+.cx-kite .tip.kite{display:flex}
+@media (prefers-reduced-motion:reduce){.cx-track{transition:none}}
+
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .panel.band::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#a3e635,#22c55e,#0ea5e9)}
 .panel h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
@@ -319,7 +358,7 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .sponsors h3,.evts h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
 .spgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
 .sp{border-radius:16px;min-height:118px;overflow:hidden}
-.spwrap{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:14px;align-items:start}
+.spwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
 .spstack{display:flex;flex-direction:column;gap:8px}
 .rides{display:flex;flex-direction:column;gap:8px}
 .spb{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;text-decoration:none}
@@ -439,6 +478,25 @@ footer a:hover{color:var(--text)}
 @media (max-width:1000px){
   .grid{grid-template-columns:1fr}
   .grid>.mapcard,.grid>#evts,.grid>#cond{grid-column:1;grid-row:auto}
+  #cond.cx{height:126px;border-radius:14px}
+  .cx-view{right:0;bottom:24px}
+  .cx-nav{left:0;width:auto;top:auto;bottom:0;height:26px;border-left:0;border-top:1px solid var(--line);flex-direction:row;justify-content:space-between;align-items:center;padding:0 12px}
+  .cx-when .val{font-size:11.5px}.cx-when .live{font-size:10px}
+  .cx-s{padding:0 12px;gap:10px}
+  .cx-score{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;row-gap:5px;align-content:center}
+  .cx-score .ring{width:56px;height:56px;grid-row:1/3}
+  .cx-h{font-size:14px}.cx-d{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:11.5px;line-height:1.3}
+  .cx-sky{grid-column:2;justify-self:start;font-size:12px;padding:3px 9px}.cx-sky #wxIcon{font-size:15px}
+  .cx-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-content:center;row-gap:9px}
+  .cx-st{border-left:0;padding:0}.cx-st b{font-size:14px}
+  .cx-wind .units{grid-column:2/4;margin:0;justify-self:start;align-self:end}
+  .cx-track-wind{flex-direction:column;align-items:stretch;justify-content:center;gap:6px}
+  .cx-track-wind .wsplit{flex:none}
+  .cx-track-wind .ws-l{justify-content:space-between;gap:6px;font-size:11.5px}
+  .cx-track-wind .wdesc{flex:none;font-size:11px;padding:4px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cx-plan{flex-direction:column;align-items:stretch;justify-content:center;gap:6px}
+  .cx-plan .best,.cx-plan .tip{height:auto;flex:none;font-size:11.5px;padding:5px 9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .cx-kite .tip.kite{display:-webkit-box;-webkit-line-clamp:4}
   .spgrid{grid-template-columns:1fr 1fr 1fr}
   .sp.lameda{grid-column:1/-1}
   .spwrap{grid-template-columns:1fr}
@@ -644,50 +702,58 @@ footer a:hover{color:var(--text)}
     </div>
   </div>
 
+  <!-- conditions: one card, sliding -->
+  <div class="panel band cx" id="cond" aria-roledescription="carousel" aria-label="Riding conditions">
+    <div class="cx-view" id="cxView"><div class="cx-track" id="cxTrack">
+      <section class="cx-s cx-score" data-t="Ride score">
+        <svg class="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#e2e8f0" stroke-width="7"/><circle id="ringArc" cx="32" cy="32" r="27" fill="none" stroke="#65a30d" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 170" transform="rotate(-90 32 32)"/><text id="ringTxt" x="32" y="37" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a" font-family="JetBrains Mono">--</text></svg>
+        <div class="cx-main"><div class="cx-h" id="scoreT">Ride score</div><div class="cx-d" id="scoreD"></div></div>
+        <div class="cx-sky"><span id="wxIcon">⏳</span><span id="wxDesc">Loading forecast…</span></div>
+      </section>
+      <section class="cx-s cx-tiles" data-t="Conditions">
+        <div class="cx-st"><small>Temp</small><b id="temp">--</b></div>
+        <div class="cx-st"><small>Feels</small><b id="feels">--</b></div>
+        <div class="cx-st"><small>Humidity</small><b id="hum">--</b></div>
+        <div class="cx-st"><small>UV</small><b id="uv">--</b></div>
+        <div class="cx-st"><small>Rain</small><b id="rain">--</b></div>
+        <div class="cx-st"><small>Sun</small><b class="sm"><span id="sunr">--</span>–<span id="suns">--</span></b></div>
+      </section>
+      <section class="cx-s cx-tiles cx-wind" data-t="Wind">
+        <div class="cx-st"><small>Wind</small><b><span class="arr" id="wArr">➤</span><span id="wspd">--</span></b></div>
+        <div class="cx-st"><small>Gusts</small><b id="gust">--</b></div>
+        <div class="cx-st"><small>From</small><b id="wdir">--</b></div>
+        <div class="cx-st"><small>Riding</small><b id="xw">--</b></div>
+        <div class="units" id="units" data-noshot><button data-u="kmh">km/h</button><button data-u="kn">kn</button><button data-u="ms">m/s</button></div>
+      </section>
+      <section class="cx-s cx-track-wind" data-t="Track wind">
+        <div class="wsplit" id="wsplit">
+          <div class="ws-h">Wind on the track <small id="wsDir"></small></div>
+          <div class="ws-bar"><span id="wsHb" style="background:#dc2626"></span><span id="wsTb" style="background:#16a34a"></span><span id="wsCb" style="background:#eab308"></span></div>
+          <div class="ws-l">
+            <span><i style="background:#dc2626"></i>Headwind <b id="wsH">--</b></span>
+            <span><i style="background:#16a34a"></i>Tailwind <b id="wsT">--</b></span>
+            <span><i style="background:#eab308"></i>Crosswind <b id="wsC">--</b></span>
+          </div>
+        </div>
+        <div class="wdesc" id="wdesc"></div>
+      </section>
+      <section class="cx-s cx-plan" data-t="Ride plan">
+        <div class="best" id="best">⏳ Finding the best riding window…</div>
+        <div class="tip kit" id="kit"></div>
+      </section>
+      <section class="cx-s cx-plan cx-kite" data-t="Kitesurf" hidden>
+        <div class="tip kite" id="kite"></div>
+      </section>
+    </div></div>
+    <div class="cx-nav">
+      <div class="cx-when"><span class="val" id="whenVal">—</span><span id="liveTag" class="live"><i></i>LIVE</span></div>
+      <div class="cx-sel"><span class="cx-t" id="cxT">Ride score</span><span class="cx-dots" id="cxDots" role="tablist"></span></div>
+    </div>
+  </div>
+
   <!-- events (from site-data.js) -->
   <div class="evts" id="evts"></div>
 
-  <!-- details -->
-  <div class="panel band" id="cond">
-    <div class="when">
-      <span class="val" id="whenVal">—</span>
-      <span id="liveTag" class="live"><i></i>LIVE</span>
-    </div>
-
-    <div class="score">
-      <svg class="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#e2e8f0" stroke-width="7"/><circle id="ringArc" cx="32" cy="32" r="27" fill="none" stroke="#65a30d" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 170" transform="rotate(-90 32 32)"/><text id="ringTxt" x="32" y="37" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a" font-family="JetBrains Mono">--</text></svg>
-      <div>
-        <div class="t1" id="scoreT">Ride score</div>
-        <div class="t2" id="scoreD"></div>
-      </div>
-    </div>
-
-    <div class="sky"><span id="wxIcon">⏳</span><span id="wxDesc">Loading forecast…</span>
-      <div class="units" id="units" data-noshot><button data-u="kmh">km/h</button><button data-u="kn">kn</button><button data-u="ms">m/s</button></div>
-    </div>
-
-    <table class="wt">
-      <tr><th>Temp</th><td id="temp">--</td><th>Feels</th><td id="feels">--</td></tr>
-      <tr><th>Wind</th><td><span class="arr" id="wArr">➤</span><span id="wspd">--</span></td><th>Gusts</th><td id="gust">--</td></tr>
-      <tr><th>From</th><td id="wdir">--</td><th>Riding</th><td id="xw">--</td></tr>
-      <tr><th>Humidity</th><td id="hum">--</td><th>UV</th><td id="uv">--</td></tr>
-      <tr><th>Rain</th><td id="rain">--</td><th>Sun</th><td class="sm"><span id="sunr">--</span>–<span id="suns">--</span></td></tr>
-    </table>
-    <div class="wsplit" id="wsplit">
-      <div class="ws-h">Wind on the track <small id="wsDir"></small></div>
-      <div class="ws-bar"><span id="wsHb" style="background:#dc2626"></span><span id="wsTb" style="background:#16a34a"></span><span id="wsCb" style="background:#eab308"></span></div>
-      <div class="ws-l">
-        <span><i style="background:#dc2626"></i>Headwind <b id="wsH">--</b></span>
-        <span><i style="background:#16a34a"></i>Tailwind <b id="wsT">--</b></span>
-        <span><i style="background:#eab308"></i>Crosswind <b id="wsC">--</b></span>
-      </div>
-    </div>
-    <div class="wdesc" id="wdesc"></div>
-
-    <div class="best" id="best">⏳ Finding the best riding window…</div>
-    <div class="tip kit" id="kit"></div>
-    <div class="tip kite" id="kite"></div>
-  </div>
 </div>
 
 <section class="sponsors">
@@ -984,18 +1050,40 @@ function renderCond(){
   const [lab,col,bg]=scoreInfo(h.score);
   $('ringArc').setAttribute('stroke-dasharray',`${h.score/100*169.6} 170`);$('ringArc').setAttribute('stroke',col);$('ringTxt').textContent=h.score;
   $('scoreT').innerHTML=`Ride score: <span style="color:${col}">${lab}</span>`;$('scoreD').textContent=scoreReason(h);
-  $('kit').innerHTML=kitTip(h);
+  $('kit').innerHTML='<span>'+kitTip(h)+'</span>';
   const kb=$('kite');
   if(T().kite){const kn=h.w/1.852;kb.style.display='block';
-    kb.innerHTML=kn<10?`🪁 <b>Kitesurf:</b> ${kn.toFixed(0)} kn, too light for most kites.`:kn<=25?`🪁 <b>Kitesurf:</b> ${kn.toFixed(0)} kn from ${c}, rideable! ${(h.dir>=225||h.dir<=30)?'Onshore/side-on (good).':'Offshore component, take care.'}`:`🪁 <b>Kitesurf:</b> ${kn.toFixed(0)} kn, strong, experts only.`}
+    kb.innerHTML='<span>'+(kn<10?`🪁 <b>Kitesurf:</b> ${kn.toFixed(0)} kn, too light for most kites.`:kn<=25?`🪁 <b>Kitesurf:</b> ${kn.toFixed(0)} kn from ${c}, rideable! ${(h.dir>=225||h.dir<=30)?'Onshore/side-on (good).':'Offshore component, take care.'}`:`🪁 <b>Kitesurf:</b> ${kn.toFixed(0)} kn, strong, experts only.`)+'</span>'}
   else kb.style.display='none';
   // map hero
   $('mName').textContent=T().name;$('mWhen').textContent=whenTxt;
   $('mTemp').textContent=Math.round(h.t)+'°';$('mIcon').textContent=ic;
   $('mArrow').style.transform=`rotate(${h.dir+180}deg)`;$('mWind').textContent=`${spd(h.w)} ${uLbl()}`;$('mDir').textContent=`${c}`;
   $('mScore').textContent=`${lab} · ${h.score}`;$('mScore').style.color=col;$('mScore').style.background=bg;
-  colorTrack(h.dir);setParticles(h.dir,h.w);prepShot();
+  colorTrack(h.dir);setParticles(h.dir,h.w);prepShot();cxSync();
 }
+
+/* ================= conditions slider ================= */
+const CX={i:0,hold:false,t:null};
+function cxSlides(){return [...document.querySelectorAll('#cxTrack .cx-s')].filter(x=>!x.hidden)}
+function cxGo(i,user){const sl=cxSlides(),n=sl.length;if(!n)return;CX.i=(i+n)%n;
+  const all=[...document.querySelectorAll('#cxTrack .cx-s')];const k=all.indexOf(sl[CX.i]);
+  $('cxTrack').style.transform=`translateX(${-100*sl.slice(0,CX.i).length}%)`;
+  $('cxT').textContent=sl[CX.i].dataset.t;
+  [...$('cxDots').children].forEach((b,j)=>{b.classList.toggle('on',j===CX.i);b.setAttribute('aria-selected',j===CX.i)});
+  if(user)cxTimer()}
+function cxSync(){const ks=document.querySelector('#cxTrack .cx-kite');ks.hidden=!T().kite;
+  const sl=cxSlides();if($('cxDots').children.length!==sl.length){$('cxDots').innerHTML=sl.map((x,j)=>`<button type="button" role="tab" aria-label="${esc(x.dataset.t)}"></button>`).join('');
+    [...$('cxDots').children].forEach((b,j)=>b.onclick=()=>cxGo(j,true))}
+  if(CX.i>=sl.length)CX.i=0;cxGo(CX.i)}
+function cxTimer(){clearTimeout(CX.t);CX.t=setTimeout(()=>{if(!CX.hold)cxGo(CX.i+1);cxTimer()},6000)}
+(function(){const c=$('cond');c.addEventListener('mouseenter',()=>CX.hold=true);c.addEventListener('mouseleave',()=>CX.hold=false);
+  let x0=null,y0=null;const v=$('cxView');
+  v.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+  v.addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))cxGo(CX.i+(dx<0?1:-1),true)},{passive:true});
+  // keep the units buttons from triggering a swipe
+  cxTimer()})();
 
 /* ================= best window ================= */
 function renderBest(){
