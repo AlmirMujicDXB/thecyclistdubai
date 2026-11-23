@@ -852,6 +852,19 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 /* map: one finger scrolls the page on touch screens, two fingers move/zoom the map */
 .mhint{position:absolute;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;pointer-events:none;background:#13233f73;color:#fff;font-weight:800;font-size:15px;text-align:center;padding:20px;opacity:0;transition:opacity .25s}
 .mhint.on{opacity:1}
+
+/* ride results */
+.simres{margin-top:10px;padding:10px;border-radius:12px;background:linear-gradient(110deg,#fdf9f2,#f6ecdb);border:1px solid #ead9bb}
+.simres>.k{font-size:11.5px;font-weight:800;color:#13233f;margin:0 2px 8px}
+.resg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.resg>div{background:#fff;border:1px solid #efe2c9;border-radius:10px;padding:7px 8px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.resg span{font-size:10.5px;font-weight:700;color:#5b8a72}
+.resg b{font-size:18px;font-weight:800;color:#13233f;font-variant-numeric:tabular-nums;white-space:nowrap}
+.resg b small{font-size:11px;font-weight:700;color:#4b5a6e}
+.resg>div>small{font-size:10.5px;color:#64748b;line-height:1.25}
+.resg>div:first-child{background:linear-gradient(110deg,#4f7a64,#6b9a80 60%,#86b39a);border-color:#e11d48}
+.resg>div:first-child span,.resg>div:first-child b,.resg>div:first-child small{color:#fff}
+@media (max-width:900px){.resg{grid-template-columns:repeat(2,1fr)}.resg>div:first-child{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -924,8 +937,9 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
             </div>
             <div class="simc2">
               <div id="simPanel"></div>
+              <div class="simres" id="simRes"></div>
               <div class="facts" id="simFacts"></div>
-              <p class="simnote">80 kg rider + 8 kg road bike, 28 mm slicks (Crr 0.0036), 97.5% drivetrain, wind at rider height ≈ 75% of forecast. ×20 = 1 min of riding in 3 s.</p>
+              <p class="simnote">80 kg rider + 8 kg road bike, 28 mm slicks (Crr 0.0036), 97.5% drivetrain, wind at rider height ≈ 75% of forecast. Calories assume 24% muscle efficiency; drink ≈ 0.5–1 L per hour depending on heat. ×20 = 1 min of riding in 3 s.</p>
             </div>
           </div>
         </div>
@@ -1582,6 +1596,28 @@ function drawMini(){ if(!P||!P.length)return; MINI.p=P;
   $('simMiniP').setAttribute('d',str);}
 function miniDot(ll,cls){ if(MINI.p!==P)drawMini(); if(!MINI.f)return; const x=MINI.f(ll),dt=$('simMiniD'); if(!dt)return;
   dt.setAttribute('cx',x[0].toFixed(1)); dt.setAttribute('cy',x[1].toFixed(1)); if(dt.getAttribute('class')!==cls)dt.setAttribute('class',cls||'');}
+// whole-ride prediction for the speed or power that is set (forecast wind if loaded)
+let RESC={key:'',r:null};
+function rideResults(){
+  const key=[SIM.mode,SIM.pw,SIM.v,MODE,LOOPV,DIR,PH.cda,WX?WX._date:'',PF0,cum.length].join('|'); if(RESC.key===key)return RESC.r;
+  let t=0,E=0,Tsum=0; const step=Math.max(1,Math.floor(P.length/400));
+  for(let i=step;i<P.length;i+=step){const len=cum[i]-cum[i-step]; if(len<=0)continue; const e=envAt(i,[P[i][0],P[i][1]],t);
+    let v,Pw; if(SIM.mode==='power'){Pw=SIM.pw; v=solveV(Pw,e.th,e.hw,e.rho);} else {v=SIM.v; Pw=Math.max(0,(0.5*e.rho*PH.cda*(v+e.hw)*Math.abs(v+e.hw)*v+PH.crr*PH.m*PH.g*Math.cos(e.th)*v+PH.m*PH.g*Math.sin(e.th)*v)/PH.eff);}
+    const dt=len/v; t+=dt; E+=Pw*dt; Tsum+=e.T*dt;}
+  const km=cum[cum.length-1]/1000, h=t/3600, kJ=E/1000, T=t?Tsum/t:25;
+  const r={km,h,v:km/h,P:E/t,kJ,kcal:kJ/(4.184*0.24),T,litres:h*(T<25?0.5:T<32?0.75:1.0)};
+  RESC={key,r}; return r;
+}
+function simResults(){const el=$('simRes'); if(!el)return; const r=rideResults();
+  const fin=(WX&&PF0!=null)?hm(PF0+r.h):null, bottles=Math.max(1,Math.ceil(r.litres/0.75));
+  el.innerHTML=`<div class="k">🏁 Ride results · ${r.km.toFixed(1)} km${SIM.mode==='power'?` at ${SIM.pw} W`:` at ${(SIM.v*3.6).toFixed(1)} km/h`}${WX&&PF0!=null?' · with forecast wind':' · still air'}</div>
+   <div class="resg">
+    <div><span>Finish time</span><b>${hhmm(r.h)}</b>${fin?`<small>cross the line ≈ ${fin}</small>`:'<small>load wind for clock time</small>'}</div>
+    <div><span>Average speed</span><b>${r.v.toFixed(1)} <small>km/h</small></b><small>${SIM.mode==='power'?'at the power you set':'speed you set'}</small></div>
+    <div><span>Average power</span><b>${Math.round(r.P)} <small>W</small></b><small>${(r.P/80).toFixed(2)} W/kg</small></div>
+    <div><span>Calories</span><b>${Math.round(r.kcal/10)*10} <small>kcal</small></b><small>${Math.round(r.kJ)} kJ of work</small></div>
+    <div><span>Drink</span><b>${bottles} <small>× 750 ml</small></b><small>≈ ${r.litres.toFixed(1)} L at ${Math.round(r.T)}°C</small></div>
+   </div>`;}
 function simPanel(ph,a1,i){
   const el=$('simPanel'); if(!el)return;
   if(SIM.mode==='power'){
@@ -1598,7 +1634,6 @@ function simPanel(ph,a1,i){
      <div class="psplit">${parts.map(p=>`<div style="width:${p[1]/ps*100}%;background:${p[2]}"></div>`).join('')}</div>
      <div class="barleg">${parts.map(p=>`<span><span class="dot" style="background:${p[2]}"></span>${p[0]} ${Math.round(p[1])} W</span>`).join('')}${ph.Pg<-1?`<span>downhill gives you ${Math.round(-ph.Pg)} W</span>`:''}</div>
      <div class="simrow x"><span>${wtxt}</span></div>
-     <div class="simrow"><span>🏁 At <b>${SIM.pw} W</b>: <b>${hhmm(lapH)}</b> for ${totKm.toFixed(1)} km · average <b>${(totKm/lapH).toFixed(1)} km/h</b>${(WX&&PF0!=null)?` · finish ≈ <b>${hm(PF0+lapH)}</b>`:''}</span></div>
      <div class="simrow x"></div>`;
     simFacts(km,totKm,clock,ph);
     return;
@@ -1640,7 +1675,7 @@ function frame(now){
       const lb=document.getElementById('riderLbl');
       if(lb){const wl=ph.Wd==null?'still air':ph.hw>0.5?`<span class="wc" style="color:#dc2626">head ${wu(ph.hw)}</span>`:ph.hw<-0.5?`<span class="wc" style="color:#16a34a">tail ${wu(-ph.hw)}</span>`:'<span class="wc" style="color:#d97706">cross</span>';
         lb.innerHTML=SIM.mode==='power'?`${(a1*3.6).toFixed(1)} km/h<small>1-min avg · ${SIM.pw} W · ${wl}</small>`:`${Math.round(a1)} W<small>1-min avg · ${(SIM.v*3.6).toFixed(0)} km/h · ${wl}</small>`;}
-      SIM.a1=a1; miniDot(rp.ll,ph.cls); simPanel(ph,a1,rp.i);}
+      SIM.a1=a1; miniDot(rp.ll,ph.cls); simPanel(ph,a1,rp.i); simResults();}
   }
   if(!ctx||!WX||PF0==null||!FIELD||!map.hasLayer(windAnim)){if(ctx&&cvs.width){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cvs.width,cvs.height);ctx.setTransform(DPR,0,0,DPR,0,0);}return;}
   const w=cvs.width/DPR,h=cvs.height/DPR;
