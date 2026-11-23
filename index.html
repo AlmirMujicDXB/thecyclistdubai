@@ -288,10 +288,16 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .dirlink:active{background:#1765cc}
 .dirlink:hover{background:#1b66c9;box-shadow:0 1px 3px #3c40434d,0 4px 8px 3px #3c404326}
 .fac{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
-.fac div{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px}
+.fac>*{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px}
 .fac span{font-size:18px;line-height:1.2}
 .fac b{font-size:11.5px;white-space:nowrap}
 .fac small{font-size:10px;color:var(--good);font-weight:700}
+/* bike rental = button to Wolfi's, yellow outline */
+.fac a.fac-rent{text-decoration:none;color:inherit;background:#fffdf0;border:2px solid #facc15;box-shadow:0 0 0 3px #fde04733;cursor:pointer;transition:transform .15s,box-shadow .15s;padding:7px 6px}
+.fac a.fac-rent:hover{transform:translateY(-2px);box-shadow:0 0 0 3px #fde04766,0 6px 14px #ca8a0433}
+.fac a.fac-rent small{display:flex;align-items:center;justify-content:center;height:14px;color:#a16207}
+.wlogo{height:13px;width:auto;max-width:72px;object-fit:contain;display:block}
+a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px solid #facc15}
 
 /* ---------- details ---------- */
 .when{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -710,7 +716,7 @@ footer a:hover{color:var(--text)}
         <div><span>🚿</span><b>Showers</b><small>Free</small></div>
         <div><span>🚻</span><b>Toilets</b><small>Free</small></div>
         <div><span>☕</span><b>Coffee</b><small>On site</small></div>
-        <div><span>🚲</span><b>Bike rental</b><small>On site</small></div>
+        <a class="fac-rent" id="rentBtn" href="https://wolfis.ae/pages/rental-bikes" target="_blank" rel="noopener" title="Rent a bike at Wolfi's" data-noshot><span>🚲</span><b>Bike rental ↗</b><small><img class="wlogo" id="rentLogo" src="https://wolfis.ae/cdn/shop/files/WOLFIS_HOMEPAGE_TOP_LOGO_24_YEARS.png?v=1787554065&amp;width=420" alt="Wolfi's" loading="lazy" onerror="this.replaceWith(document.createTextNode('Wolfi\'s'))"></small></a>
       </div>
     </div>
   </div>
@@ -1165,7 +1171,7 @@ async function loadTrack(tr){
 }
 async function drawTrack(){
   const tr=T();trackLayer.clearLayers();segs=[];arrowLayer.clearLayers();paintDirLabel();if(startMarker)map.removeLayer(startMarker);
-  startMarker=L.marker([tr.lat,tr.lng],{icon:startIcon}).addTo(map).bindPopup(`<b>${tr.name}</b><br>${tr.info}<br>🚿 Free showers · 🚻 Toilets · ☕ Coffee · 🚲 Bike rental`);
+  startMarker=L.marker([tr.lat,tr.lng],{icon:startIcon}).addTo(map).bindPopup(`<b>${tr.name}</b><br>${tr.info}<br>🚿 Free showers · 🚻 Toilets · ☕ Coffee · <a class="rentlink" href="${esc(rentUrl())}" target="_blank" rel="noopener">🚲 Bike rental (Wolfi's) ↗</a>`);
   map.setView([tr.lat,tr.lng],tr.zoom);
   $('mapInfo').innerHTML=tr.info;$('miName').textContent=tr.name;$('dirLink').href=`https://www.google.com/maps/dir/?api=1&destination=${tr.lat},${tr.lng}`;
   $('maploading').style.display='block';const lines=await loadTrack(tr);$('maploading').style.display='none';
@@ -1434,7 +1440,9 @@ function carInit(id){const c=CAR[id],box=$(id);c.init=true;
   // a slide must not open the card's link
   box.addEventListener('click',e=>{if(c.moved){e.preventDefault();e.stopPropagation();c.moved=false}},true);
   carTimer(id,true)}
-function renderData(){renderEvents();renderRides()}
+function rentUrl(){try{return (SITE.links||{}).bikeRental||'https://wolfis.ae/pages/rental-bikes'}catch(e){return 'https://wolfis.ae/pages/rental-bikes'}}
+function renderRent(){const a=$('rentBtn');if(a)a.href=rentUrl();const l=$('rentLogo'),u=(SITE.links||{}).bikeRentalLogo;if(l&&u&&l.getAttribute('src')!==u)l.src=u}
+function renderData(){renderEvents();renderRides();renderRent()}
 renderData();setInterval(renderData,60e3);
 
 /* ---------- item share texts ---------- */
