@@ -362,6 +362,18 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .spwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
 .spstack{display:flex;flex-direction:column;gap:8px}
 .rides{display:flex;flex-direction:column;gap:8px}
+/* one-card carousels (Events, Group rides) */
+.car-view{position:relative;min-width:0;contain:inline-size;clip-path:inset(-10px -26px -28px -26px);touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.car-view.drag{cursor:grabbing}.car-view.drag .car-track{transition:none}
+.car-track{display:flex;gap:40px;transition:transform .6s cubic-bezier(.22,.8,.2,1);will-change:transform}
+.car-track>*{flex:0 0 100%;min-width:0;box-sizing:border-box}
+.grid>*,.spwrap>*,.spstack,.rides,.evts{min-width:0}
+.car-view a,.car-view img{-webkit-user-drag:none}
+.evts h3,.sponsors h3{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+.car-dots{display:inline-flex;gap:4px}
+.car-dots i{display:block;width:7px;height:7px;border-radius:4px;background:#cbd5e1;transition:width .3s,background .3s}
+.car-dots i.on{width:18px;background:#16a34a}
+@media (prefers-reduced-motion:reduce){.car-track{transition:none}}
 .spb{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;text-decoration:none}
 .spb-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .spb>*:not(.spb-route){position:relative}
@@ -758,7 +770,7 @@ footer a:hover{color:var(--text)}
 </div>
 
 <section class="sponsors">
-  <h3>Group rides</h3>
+  <h3>Group rides<span class="car-dots" id="rdDots" aria-hidden="true"></span></h3>
   <div class="spwrap">
     <div class="spstack">
       <div class="rides" id="rides"></div>
@@ -1358,7 +1370,7 @@ const SHARE_ICO='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" str
 function esc(t){return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function renderEvents(){
   const evs=upcomingEvents();
-  $('evts').innerHTML=(evs.length?'<h3>Events</h3>':'')+evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
+  $('evts').innerHTML=(evs.length?'<h3>Events<span class="car-dots" id="evDots" aria-hidden="true"></span></h3>':'')+'<div class="car-view"><div class="car-track">'+evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
     return `<a class="evt${e.theme==='yellow'?' y':e.theme==='lime'?' lm':''}" href="${esc(e.url)}" target="_blank" rel="noopener">
     <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="20" cy="58" r="5" fill="#ffffff55"/><circle cx="580" cy="30" r="5" fill="#ffffff55"/></svg>
     <div class="evt-date"><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
@@ -1370,12 +1382,12 @@ function renderEvents(){
     <div class="evt-cd"><b>${days<=0?'Today':days}</b><span>${days<=0?'race day':'days to go'}</span></div>
     <button class="cshare" data-ev="${i}" aria-label="Share event" title="Share event">${SHARE_ICO}</button>
     <span class="evt-go">${esc(e.button||'Details')} ↗</span>
-  </a>`}).join('');
+  </a>`}).join('')+'</div></div>';carSync('evts');
   $('evts').querySelectorAll('[data-ev]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareEvent(upcomingEvents()[+b.dataset.ev])});
 }
 function renderRides(){
   const rs=upcomingRides();
-  $('rides').innerHTML=rs.map((r,i)=>{const l=parseLocal(r.occ+'T00:00'),rd=relDay(r.occ+'T00:00'),f=rideForecast(r);
+  $('rides').innerHTML='<div class="car-view"><div class="car-track">'+rs.map((r,i)=>{const l=parseLocal(r.occ+'T00:00'),rd=relDay(r.occ+'T00:00'),f=rideForecast(r);
     const st=(r.start?`📍 Start: <b>${esc(r.start)}</b> · `:'')+(r.pace?`<span class="m-pace">⚡ ${esc(r.pace.replace(/\s*avg$/,''))} · </span>`:'');
     const fx=st+(f?`<span class="m-fl">${r.time}–${String(+r.time.slice(0,2)+3).padStart(2,'0')}:${r.time.slice(3)}: </span><b>${f.tr}</b> · ${spd(f.w)} ${uLbl()} ${f.dir} · <b>${f.lab} ${f.sc}</b>`:`${l.day} ${fmtTime(r.time)} · forecast available closer to the day`);
     return `<div class="ride">
@@ -1391,9 +1403,37 @@ function renderRides(){
         ${r.location?`<a class="rloc" href="${esc(r.location)}" target="_blank" rel="noopener">Location ↗</a>`:''}
         <button class="cshare" data-rd="${i}" aria-label="Share ride" title="Share ride">${SHARE_ICO}</button>
       </div>
-    </div>`}).join('');
+    </div>`}).join('')+'</div></div>';carSync('rides');
   $('rides').querySelectorAll('[data-rd]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareRide(upcomingRides()[+b.dataset.rd])});
 }
+/* ---------- one-card carousels for Events and Group rides: auto every 5 s, manual by sliding ---------- */
+const CAR={evts:{i:0,dots:'evDots',delay:0},rides:{i:0,dots:'rdDots',delay:2500}};
+function carTrack(id){return $(id).querySelector('.car-track')}
+function carGo(id,i,user,instant){const c=CAR[id],tr=carTrack(id);if(!tr)return;const n=tr.children.length;if(!n)return;c.i=((i%n)+n)%n;
+  if(instant)tr.style.transition='none';tr.style.transform=`translateX(calc(${-100*c.i}% - ${40*c.i}px))`;if(instant){void tr.offsetWidth;tr.style.transition=''}
+  const d=$(c.dots);if(d)[...d.children].forEach((b,j)=>b.classList.toggle('on',j===c.i));if(user)carTimer(id)}
+function carTimer(id,first){const c=CAR[id];clearTimeout(c.t);c.t=setTimeout(()=>{const tr=carTrack(id);if(!c.hold&&tr&&tr.children.length>1)carGo(id,c.i+1);carTimer(id)},5000+(first?c.delay:0))}
+function carSync(id){const c=CAR[id],tr=carTrack(id);if(!tr)return;const n=tr.children.length,d=$(c.dots);
+  if(d)d.innerHTML=n>1?'<i></i>'.repeat(n):'';if(c.i>=n)c.i=0;carGo(id,c.i,false,true);if(!c.init)carInit(id)}
+function carInit(id){const c=CAR[id],box=$(id);c.init=true;
+  box.addEventListener('mouseenter',()=>c.hold=true);box.addEventListener('mouseleave',()=>c.hold=false);
+  box.addEventListener('dragstart',e=>e.preventDefault());
+  const move=dx=>{const tr=carTrack(id);if(tr)tr.style.transform=`translateX(calc(${-100*c.i}% - ${40*c.i-dx}px))`};
+  const finish=(dx,dy)=>{const v=box.querySelector('.car-view');v&&v.classList.remove('drag');
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))carGo(id,c.i+(dx<0?1:-1),true);else carGo(id,c.i)};
+  // finger
+  let x0=null,y0=null;
+  box.addEventListener('touchstart',e=>{if(!e.target.closest('.car-view'))return;x0=e.touches[0].clientX;y0=e.touches[0].clientY;c.moved=false;box.querySelector('.car-view').classList.add('drag')},{passive:true});
+  box.addEventListener('touchmove',e=>{if(x0==null)return;const dx=e.touches[0].clientX-x0,dy=e.touches[0].clientY-y0;if(Math.abs(dx)>Math.abs(dy)){move(dx);if(Math.abs(dx)>6)c.moved=true}},{passive:true});
+  box.addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;finish(dx,dy)},{passive:true});
+  // mouse
+  let mx=null,my=0;
+  box.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0||!e.target.closest('.car-view')||e.target.closest('button'))return;mx=e.clientX;my=e.clientY;c.moved=false;box.querySelector('.car-view').classList.add('drag')});
+  window.addEventListener('pointermove',e=>{if(mx==null)return;const dx=e.clientX-mx;if(Math.abs(dx)>6)c.moved=true;if(c.moved)move(dx)});
+  window.addEventListener('pointerup',e=>{if(mx==null)return;const dx=e.clientX-mx,dy=e.clientY-my;mx=null;finish(dx,dy)});
+  // a slide must not open the card's link
+  box.addEventListener('click',e=>{if(c.moved){e.preventDefault();e.stopPropagation();c.moved=false}},true);
+  carTimer(id,true)}
 function renderData(){renderEvents();renderRides()}
 renderData();setInterval(renderData,60e3);
 
