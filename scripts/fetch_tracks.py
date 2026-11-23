@@ -13,6 +13,9 @@ TRACKS = {
     "kite":    ([25.140, 55.178, 25.176, 55.215], ['way["highway"="cycleway"]']),
     "hatta":   ([24.755, 56.060, 24.860, 56.195], ['way["mtb:scale"]', 'way["highway"~"path|track|cycleway"]["bicycle"~"designated|yes"]', 'way["highway"~"path|track"]["mtb"="yes"]']),
 }
+# Tracks where only the largest connected network is kept (drops separate cycle paths
+# inside the bounding box, e.g. Expo City / Dubai South paths near Al Qudra).
+MAIN_ONLY = {"alqudra"}
 MIRRORS = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
@@ -44,6 +47,30 @@ def fetch(q):
     return None
 
 
+def main_network(lines, tol=40.0):
+    """Keep the ways that form the largest connected network (by length)."""
+    import math
+    k = math.cos(math.radians(25))
+    def d(a, b):
+        return math.hypot((a[0] - b[0]) * 111000, (a[1] - b[1]) * 111000 * k)
+    n = len(lines); par = list(range(n))
+    def find(x):
+        while par[x] != x:
+            par[x] = par[par[x]]; x = par[x]
+        return x
+    for i in range(n):
+        for j in range(i + 1, n):
+            A, B = lines[i], lines[j]
+            if any(d(e, q) < tol for e in (A[0], A[-1]) for q in B) or any(d(e, q) < tol for e in (B[0], B[-1]) for q in A):
+                par[find(i)] = find(j)
+    groups = {}
+    for i in range(n):
+        groups.setdefault(find(i), []).append(i)
+    length = lambda w: sum(d(w[t - 1], w[t]) for t in range(1, len(w)))
+    best = max(groups.values(), key=lambda ids: sum(length(lines[i]) for i in ids))
+    return [lines[i] for i in sorted(best)]
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     ok = 0
@@ -58,6 +85,10 @@ def main():
         if not lines:
             print("  no ways found, keeping existing file")
             continue
+        if tid in MAIN_ONLY:
+            before = len(lines)
+            lines = main_network(lines)
+            print(f"  kept main network: {len(lines)} of {before} ways")
         with open(os.path.join(OUT, f"{tid}.json"), "w") as f:
             json.dump({"source": "OpenStreetMap contributors (ODbL)", "lines": lines}, f, separators=(",", ":"))
         print(f"  {len(lines)} ways")
