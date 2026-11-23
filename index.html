@@ -202,6 +202,20 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .evt.lm .cshare{background:#ffffffcc;border-color:#00482a33;color:#00482a}
 .evt.y .cshare{background:#ffffffb3;border-color:#ffffff;color:#d0001a}
 .grid+.sponsors{margin-top:14px}
+/* simulator card: white→light blue, UCI rainbow stripe on top, simulator blue (#0057b8) */
+.evt.sm{color:#13233f;background:linear-gradient(90deg,#0057b8 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) top/100% 4px no-repeat,radial-gradient(60% 150% at 100% 0%,#0057b81a 0%,transparent 65%),linear-gradient(110deg,#ffffff 0%,#f5f8fd 55%,#e8f0fb 100%);box-shadow:inset 0 0 0 1px #dbe6f5,0 8px 22px #0057b81f}
+.evt.sm:hover{box-shadow:inset 0 0 0 1px #c9dbf3,0 12px 28px #0057b833}
+.evt.sm .sm-map{background:#fff;border:1px solid #dbe6f5;box-shadow:0 3px 10px #0057b81f;padding:0}
+.evt.sm .sm-map svg{width:100%;height:100%;display:block}
+.sm-trk{fill:none;stroke:#0057b8;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.sm-start{fill:#16a34a;stroke:#fff;stroke-width:1.2}
+.sm-dot{fill:#e4002b;stroke:#fff;stroke-width:1.4}
+.evt.sm .evt-tag span{background:#e8f0fb;border-color:#c9dbf3;color:#0057b8}
+.evt.sm .evt-tag .star{background:linear-gradient(110deg,#0057b8,#2f80e0);border-color:#0057b8;color:#fff}
+.evt.sm .evt-meta{color:#475569}.evt.sm .evt-meta b{color:#13233f}
+.evt.sm .evt-cd{border-left-color:#c9dbf3}.evt.sm .evt-cd b{color:#0057b8}.evt.sm .evt-cd span{color:#5b6b82}
+.evt.sm .evt-go{background:linear-gradient(110deg,#0057b8,#2f80e0);color:#fff;box-shadow:0 4px 12px #0057b84d}
+@media (prefers-reduced-motion:reduce){.sm-dot{display:none}}
 /* ---------- conditions card: same size as the event cards, 5–6 sliding slides ---------- */
 #cond.cx{height:70px;padding:0;box-sizing:border-box;border-radius:16px}
 .cx-view{position:absolute;left:0;top:4px;bottom:0;right:190px;cursor:grab;user-select:none;overflow:hidden;touch-action:pan-y}
@@ -579,6 +593,7 @@ footer a:hover{color:var(--text)}
   .evt-date{width:44px;height:46px}
   .evt-cd b{font-size:19px}
   .evt.y .evt-cd{background:#ffffffb3;border-color:#ffffff}
+  .evt.sm .evt-cd{background:#ffffffcc;border-color:#c9dbf3}
   .evt.lm .evt-cd{background:#ffffffb3;border-color:#00482a26}
   .evt-tag:has(.code) .st-l{display:none}
   .mapinfo{padding:11px 12px 13px}
@@ -774,6 +789,22 @@ footer a:hover{color:var(--text)}
   <div class="evts" id="evts"></div>
 
 </div>
+
+<!-- Al Qudra Cycling Simulator (separate page) -->
+<section class="sponsors simsec">
+  <h3>Simulator</h3>
+  <a class="evt sm" href="al-qudra-simulator.html" title="Open the Al Qudra Cycling Simulator">
+    <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#0057b8" stroke-opacity=".16" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/></svg>
+    <div class="evt-date sm-map" aria-hidden="true"><svg viewBox="0 0 60 60"><path class="sm-trk" d="M33.7 6.1 L33.8 6.3 L34.0 6.1 L34.0 6.2 L34.6 6.7 L35.4 7.4 L36.5 8.1 L37.4 8.9 L38.2 9.7 L38.7 10.5 L39.1 10.5 L39.1 11.0 L39.7 12.1 L40.1 13.3 L40.4 14.6 L40.7 15.7 L40.6 16.3 L40.4 17.2 L40.4 18.5 L40.4 19.8 L40.3 21.0 L40.3 22.4 L40.3 23.7 L40.2 25.1 L40.2 26.1 L40.2 26.9 L40.1 28.0 L40.1 29.6 L40.1 31.0 L40.0 32.5 L40.1 33.7 L40.6 34.7 L41.0 35.0 L41.3 35.0 L41.2 35.2 L42.0 34.9 L43.3 34.5 L43.6 34.7 L43.8 36.0 L44.0 37.4 L44.2 38.9 L44.3 39.8 L44.4 41.0 L44.6 42.3 L44.9 43.6 L45.2 44.8 L45.7 45.9 L46.0 46.8 L45.2 47.8 L45.1 48.8 L44.9 50.0 L44.8 50.8 L44.0 50.9 L42.9 51.0 L41.8 51.6 L41.4 52.2 L41.9 53.2 L41.3 53.5 L40.3 53.9 L39.7 54.0 L38.5 54.0 L36.9 54.0 L35.4 54.0 L33.9 54.0 L32.5 54.0 L31.3 53.7 L30.0 52.9 L29.0 52.5 L28.0 51.6 L27.2 51.5 L25.8 51.6 L24.3 51.7 L22.7 51.8 L21.2 52.0 L19.6 52.1 L18.1 52.2 L17.1 51.9 L16.2 51.2 L15.6 50.2 L15.2 49.0 L14.6 47.8 L14.0 46.7 L14.2 46.1 L15.6 45.5 L17.0 44.9 L18.4 44.2 L19.9 43.6 L21.3 42.9 L21.7 42.8 L22.9 42.2 L24.0 41.7 L24.8 41.4 L26.2 40.8 L27.5 40.3 L28.8 39.8 L29.5 39.6 L30.2 39.2 L31.7 38.7 L33.1 38.2 L34.6 37.9 L35.1 37.8 L36.1 37.5 L37.2 37.2 L38.6 36.5 L39.9 35.7 L40.7 35.6 L41.1 35.6 L41.2 35.2 L41.2 35.0 L40.9 35.0 L40.4 34.3 L40.0 33.3 L40.0 32.0 L40.1 30.6 L40.1 29.1 L40.2 27.6 L40.2 26.5 L40.2 25.8 L40.2 24.6 L40.3 23.3 L40.3 22.0 L40.3 20.7 L40.4 19.4 L40.4 18.1 L40.5 16.8 L40.7 16.1 L40.5 15.4 L40.3 14.1 L40.0 13.0 L39.5 11.7 L39.0 10.8 L39.0 10.5 L38.5 10.1 L38.0 9.5 L37.2 8.7 L36.2 7.9 L35.2 7.2 L34.2 6.4 L34.0 6.1 L34.0 6.2 L33.8 6.3 L33.7 6.1"/><circle class="sm-start" cx="33.7" cy="6.1" r="2.6"/><circle class="sm-dot" r="3.4"><animateMotion dur="12s" repeatCount="indefinite" path="M33.7 6.1 L33.8 6.3 L34.0 6.1 L34.0 6.2 L34.6 6.7 L35.4 7.4 L36.5 8.1 L37.4 8.9 L38.2 9.7 L38.7 10.5 L39.1 10.5 L39.1 11.0 L39.7 12.1 L40.1 13.3 L40.4 14.6 L40.7 15.7 L40.6 16.3 L40.4 17.2 L40.4 18.5 L40.4 19.8 L40.3 21.0 L40.3 22.4 L40.3 23.7 L40.2 25.1 L40.2 26.1 L40.2 26.9 L40.1 28.0 L40.1 29.6 L40.1 31.0 L40.0 32.5 L40.1 33.7 L40.6 34.7 L41.0 35.0 L41.3 35.0 L41.2 35.2 L42.0 34.9 L43.3 34.5 L43.6 34.7 L43.8 36.0 L44.0 37.4 L44.2 38.9 L44.3 39.8 L44.4 41.0 L44.6 42.3 L44.9 43.6 L45.2 44.8 L45.7 45.9 L46.0 46.8 L45.2 47.8 L45.1 48.8 L44.9 50.0 L44.8 50.8 L44.0 50.9 L42.9 51.0 L41.8 51.6 L41.4 52.2 L41.9 53.2 L41.3 53.5 L40.3 53.9 L39.7 54.0 L38.5 54.0 L36.9 54.0 L35.4 54.0 L33.9 54.0 L32.5 54.0 L31.3 53.7 L30.0 52.9 L29.0 52.5 L28.0 51.6 L27.2 51.5 L25.8 51.6 L24.3 51.7 L22.7 51.8 L21.2 52.0 L19.6 52.1 L18.1 52.2 L17.1 51.9 L16.2 51.2 L15.6 50.2 L15.2 49.0 L14.6 47.8 L14.0 46.7 L14.2 46.1 L15.6 45.5 L17.0 44.9 L18.4 44.2 L19.9 43.6 L21.3 42.9 L21.7 42.8 L22.9 42.2 L24.0 41.7 L24.8 41.4 L26.2 40.8 L27.5 40.3 L28.8 39.8 L29.5 39.6 L30.2 39.2 L31.7 38.7 L33.1 38.2 L34.6 37.9 L35.1 37.8 L36.1 37.5 L37.2 37.2 L38.6 36.5 L39.9 35.7 L40.7 35.6 L41.1 35.6 L41.2 35.2 L41.2 35.0 L40.9 35.0 L40.4 34.3 L40.0 33.3 L40.0 32.0 L40.1 30.6 L40.1 29.1 L40.2 27.6 L40.2 26.5 L40.2 25.8 L40.2 24.6 L40.3 23.3 L40.3 22.0 L40.3 20.7 L40.4 19.4 L40.4 18.1 L40.5 16.8 L40.7 16.1 L40.5 15.4 L40.3 14.1 L40.0 13.0 L39.5 11.7 L39.0 10.8 L39.0 10.5 L38.5 10.1 L38.0 9.5 L37.2 8.7 L36.2 7.9 L35.2 7.2 L34.2 6.4 L34.0 6.1 L34.0 6.2 L33.8 6.3 L33.7 6.1"/></circle></svg></div>
+    <div class="evt-main">
+      <div class="evt-tag"><span class="star">🚴<span class="st-l"> Ride simulator</span></span><span class="up">Solar 88 km · Jurassic 84.5 km</span></div>
+      <div class="evt-title">Al Qudra Cycling Simulator</div>
+      <div class="evt-meta">Live wind on the route · <b>power &amp; speed</b><span class="evt-uci"> · ride time, water &amp; kit · elevation · GPX</span></div>
+    </div>
+    <div class="evt-cd"><b>88</b><span>km · stick + loop</span></div>
+    <span class="evt-go">Open simulator ↗</span>
+  </a>
+</section>
 
 <section class="sponsors">
   <h3>Group rides<span class="car-dots" id="rdDots" aria-hidden="true"></span></h3>
