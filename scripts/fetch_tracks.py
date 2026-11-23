@@ -18,6 +18,8 @@ TRACKS = {
 MAIN_ONLY = {"alqudra"}
 # Cut tracks north of this latitude (Al Qudra starts at the BOTS start pin, 24.9989 N; nothing north of it is shown).
 CLIP_NORTH = {"alqudra": 24.9988}
+# Cut tracks south of this latitude (Meydan: the path south of the start pin towards Nad Al Sheba is not part of the park).
+CLIP_SOUTH = {"meydan": 25.1489}
 MIRRORS = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
@@ -49,13 +51,13 @@ def fetch(q):
     return None
 
 
-def clip_north(lines, lat_max):
-    """Split ways at lat_max and keep only the parts south of it."""
+def clip_north(lines, lat_max, lat_min=-90.0):
+    """Split ways and keep only the parts between lat_min and lat_max."""
     out = []
     for w in lines:
         part = []
         for p in w:
-            if p[0] <= lat_max:
+            if lat_min <= p[0] <= lat_max:
                 part.append(p)
             else:
                 if len(part) > 1:
@@ -104,8 +106,8 @@ def main():
         if not lines:
             print("  no ways found, keeping existing file")
             continue
-        if tid in CLIP_NORTH:
-            lines = clip_north(lines, CLIP_NORTH[tid])
+        if tid in CLIP_NORTH or tid in CLIP_SOUTH:
+            lines = clip_north(lines, CLIP_NORTH.get(tid, 90.0), CLIP_SOUTH.get(tid, -90.0))
         if tid in MAIN_ONLY:
             before = len(lines)
             lines = main_network(lines)
