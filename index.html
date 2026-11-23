@@ -1290,8 +1290,11 @@ function toast(m,ms=3200){const t=$('toast');t.textContent=m;t.classList.add('sh
 /* ================= share texts (built from site-data.js) ================= */
 const SITE=window.SITE||{links:{},sponsors:[],events:[],rides:[]};
 function siteUrl(){return /^https?:/.test(location.protocol)?location.origin+location.pathname:'https://thecyclistdubai.com/'}
-function sponsorsText(){const sp=SITE.sponsors||[];if(!sp.length)return'';
-  return '\n🎁 *Sponsor discounts*\n'+sp.map(x=>`• *${x.name}*${x.what?` (${x.what})`:''}: use code *${x.code}* for *${x.discount}*\n  ${x.url}`).join('\n')+'\n'}
+const spDeal=(x,b='*')=>x.discount?`use code ${b}${x.code}${b} for ${b}${x.discount}${b}`:`use ${x.kind||'code'} ${b}${x.code}${b}`;
+const spShort=x=>x.discount||(x.kind?x.kind.replace(/^./,m=>m.toUpperCase()):'Code')+' '+x.code;
+// sponsors in a share; a sponsor that is also an upcoming event is skipped (the event list in the same message already has its link + code)
+function sponsorsText(){const evU=new Set(upcomingEvents().map(e=>(e.url||'').replace(/\/$/,'')));const sp=(SITE.sponsors||[]).filter(x=>!evU.has((x.url||'').replace(/\/$/,'')));if(!sp.length)return'';
+  return '\n🎁 *Sponsor discounts*\n'+sp.map(x=>`• *${x.name}*${x.what?` (${x.what})`:''}: ${spDeal(x)}\n  ${x.url}`).join('\n')+'\n'}
 const sameLink=(a,b)=>!!a&&!!b&&a.split('?')[0].replace(/\/$/,'')===b.split('?')[0].replace(/\/$/,'');
 function footerText(){return `\n📲 Live ride weather & forecast: ${siteUrl()}`+(SITE.links.whatsappGroup?`\n👥 Join our WhatsApp group: ${SITE.links.whatsappGroup}`:'')}
 function weatherText(){
@@ -1498,7 +1501,7 @@ function eventPromoText(){const ev=upcomingEvents();if(!ev.length)return'';
 function rideText(r){const f=rideForecast(r);
   return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.start?`Start: ${r.start} · `:''}${r.place}\n`+(rideKind(r)?`${rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(rideRule(r)?`⛑️💡 ${rideRule(r)}\n`:'')+
     (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+eventPromoText()+footerText()}
-function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\nUse code *${x.code}* for *${x.discount}*\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
+function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\n${spDeal(x).replace(/^./,m=>m.toUpperCase())}\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
 /* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */
 const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#ffcf00','#ffe100','#fff16a','#ffffff','#d0001a'],lime:['#f2f2dc','#e4efcf','#c4d24c','#ffffff','#00482a']};
@@ -1545,7 +1548,7 @@ function shareRide(r){if(!r)return;const l=parseLocal(r.occ+'T00:00'),f=rideFore
     lines:[r.start&&`📍 Start: ${r.start}`,`🗺️ ${r.place}`,f&&`🌤️ ${f.tr} · ${spd(f.w)} ${uLbl()} ${f.dir} · score ${f.sc}`,rideRule(r)&&`⛑️💡 ${rideRule(r)}`,'👥 Join via the WhatsApp group']});
   shareNow(canvasFile(cv,'thecyclistdubai-ride.png'),rideText(r),r.name)}
 function shareSponsor(x){
-  const n=dubaiNow(),cv=drawCard({theme:'orange',dow:'CODE',day:x.code.length<=4?x.code:'%',mon:x.discount.toUpperCase(),tags:['🎁 Sponsor discount'],title:`${x.name}: ${x.discount} with code ${x.code}`,
+  const n=dubaiNow(),cv=drawCard({theme:'orange',dow:'CODE',day:x.code.length<=4?x.code:'%',mon:(x.discount||x.code).toUpperCase(),tags:['🎁 Sponsor discount'],title:x.discount?`${x.name}: ${x.discount} with code ${x.code}`:`${x.name}: ${x.kind||'code'} ${x.code}`,
     lines:[x.what&&('🛍️ '+x.what.replace(/^./,m=>m.toUpperCase())),'🛒 '+x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
   shareNow(canvasFile(cv,'thecyclistdubai-'+x.name.toLowerCase()+'.png'),sponsorText(x),x.name)}
 function shareWeather(){const text=weatherText(),k=shotKey();
@@ -1560,7 +1563,7 @@ function openSheet(){
   let H='<div class="sgrp">Weather</div>'+row('w','linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)','🌤️',`${T().short} weather`,h?`${$('mWhen').textContent} · ${Math.round(h.t)}°C · ${spd(h.w)} ${uLbl()} ${card(h.dir)} · score ${h.score}`:'Map image + full forecast');
   if(rs.length)H+='<div class="sgrp">Group rides</div>'+rs.map((r,i)=>row('r'+i,'linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)','🚴‍♂️',`${r.name} · ${occLabel(r.occ)}`,`${fmtTime(r.time)} · ${r.place} · ${[r.type,r.distance].filter(Boolean).join(' · ')}${r.start?' · Start '+r.start:''}${r.pace?' · '+r.pace:''}${rideRule(r)?' · '+rideRule(r):''}`)).join('');
   if(evs.length)H+='<div class="sgrp">Events</div>'+evs.map((e,i)=>row('e'+i,e.theme==='yellow'?'linear-gradient(135deg,#d0001a,#ffcf00 45%,#fff16a)':e.theme==='lime'?'linear-gradient(135deg,#00482a,#0c4b3e 50%,#b5cc4a)':'linear-gradient(135deg,#0b1f4b,#1d4ed8)','📅',e.name,`${occLabel(e.date)} · ${[e.distance,e.route].filter(Boolean).join(' · ')}${e.code?` · Code ${e.code}`:''}`)).join('');
-  if(sp.length)H+='<div class="sgrp">Sponsor codes</div>'+sp.map((x,i)=>row('p'+i,'linear-gradient(135deg,#111,#3f3f46)','🎁',`${x.name}: ${x.discount}`,`Code ${x.code} · ${x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')}`)).join('');
+  if(sp.length)H+='<div class="sgrp">Sponsor codes</div>'+sp.map((x,i)=>row('p'+i,'linear-gradient(135deg,#111,#3f3f46)','🎁',`${x.name}: ${spShort(x)}`,`Code ${x.code} · ${x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')}`)).join('');
   $('sList').innerHTML=H;$('sheet').style.display='flex';
   $('sList').querySelectorAll('.srow').forEach(b=>b.onclick=()=>{const id=b.dataset.s,k=+id.slice(1);$('sheet').style.display='none';
     if(id==='w')shareWeather();else if(id[0]==='r')shareRide(rs[k]);else if(id[0]==='e')shareEvent(evs[k]);else shareSponsor(sp[k])});

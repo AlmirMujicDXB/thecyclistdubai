@@ -22,11 +22,24 @@ window.SITE = {
     {
       name: 'Lameda',
       what: 'premium cycling apparel',
-      url: 'https://lameda.cc/',
+      url: 'https://www.lameda.cc/DXB',
+      code: 'DXB25',              // coupon code (add discount: '25% OFF' etc. if you want the % shown)
+    },
+    {
+      name: 'Tukus Wheels',
+      what: 'carbon wheelsets',
+      url: 'https://www.tukuswheels.com/?ref=DXB',
       code: 'DXB',
+      kind: 'referral code',      // shown as "use referral code DXB"
+    },
+    {
+      name: "L'Étape Dubai by Tour de France",
+      what: 'race entry',
+      url: 'https://haku.ly/e1265eb830',
+      code: 'THECYCLISTDUBAI15',
       discount: '15% OFF',
     },
-    // { name: 'Brand', what: 'what they sell', url: 'https://…', code: 'CODE', discount: '10% OFF' },
+    // { name: 'Brand', what: 'what they sell', url: 'https://…', code: 'CODE', discount: '10% OFF' },  // discount optional; kind: 'referral code' optional
   ],
 
   /* ---------- EVENTS ----------
