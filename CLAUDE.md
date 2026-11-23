@@ -7,7 +7,7 @@ Live site: https://thecyclistdubai.com/ (GitHub Pages from `main`, workflow `.gi
 - `site-data.js`: sponsors, events and group rides. Edit content here, not in `index.html`.
 - `tracks/*.json`: track geometry from OpenStreetMap, refreshed weekly by `.github/workflows/tracks.yml` (`scripts/fetch_tracks.py`).
 - `disclaimer.html`: data sources and disclaimer. `quiz.html`: group ride etiquette quiz.
-- `al-qudra-simulator.html`: Al Qudra Stick & Loop (Solar / Jurassic) ride simulator from the owner (route, wind, power, ride time, kit, GPX); only change made: a "← TheCyclistDubai" link in its top bar.
+- `al-qudra-simulator.html`: Al Qudra Stick & Loop (Solar / Jurassic) ride simulator from the owner (route, wind, power, ride time, kit, GPX); changes made: a "← TheCyclistDubai" link (phone: "← Home"); its header is a card like the homepage header (velodrome wood, sage selected buttons, rainbow stripe, 70px desktop / 126px phone); NO Sources link/page; on touch screens the map moves only with two fingers (one finger scrolls the page, hint "Use two fingers to move the map").
 
 ## Rules (from the site owner)
 - **When any detail in a card/window changes (time, date, distance, place, pace, links, codes, names), every share output must show the same new detail**: the card on the page, the Share menu row, the share image (`drawCard` / map image), the share message text (`rideText`, `eventText`, `weatherText`, `sponsorText`) and the "next group ride" / "upcoming events" lines inside the weather message. Check all of them before pushing.
