@@ -865,6 +865,13 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .resg>div:first-child{background:linear-gradient(110deg,#4f7a64,#6b9a80 60%,#86b39a);border-color:#e11d48}
 .resg>div:first-child span,.resg>div:first-child b,.resg>div:first-child small{color:#fff}
 @media (max-width:900px){.resg{grid-template-columns:repeat(2,1fr)}.resg>div:first-child{grid-column:1/-1}}
+
+/* start popup: time first, then date; scrolls inside the map instead of being cut off */
+.spop{overflow-y:auto!important;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+.spop .slab{font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#5b8a72;margin:8px 2px 2px}
+.spop .chips{display:flex;flex-wrap:wrap}
+.spop .chips button.on{background:linear-gradient(110deg,#4f7a64,#6b9a80 60%,#86b39a);color:#fff;border-color:#e11d48}
+.spop .sin{margin-top:6px}
 </style>
 </head>
 <body>
@@ -1075,9 +1082,11 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   <button class="spill" id="sPill" aria-label="Choose start date and time"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><b id="sPillD">–</b><span class="tm" id="sPillT">06:00</span><span class="wx" id="sPillW"></span><span class="ld"></span><span class="cv">▼</span></button>
   <div class="spop" id="sPop">
     <div class="sq"><button id="qNow">Now</button><button id="qToday" title="Today 06:00">Today</button><button id="qTmr" title="Tomorrow 06:00">Tomorrow</button></div>
-    <div class="cal" id="cal"></div>
+    <div class="slab">🕒 Start time</div>
     <div class="chips" id="tchips"></div>
-    <div class="sin"><input type="date" id="wxDate" aria-label="Start date"><input type="time" id="wxTime" value="06:00" step="900" aria-label="Start time"></div>
+    <div class="sin"><input type="time" id="wxTime" value="06:00" step="900" aria-label="Start time"><input type="date" id="wxDate" aria-label="Start date"></div>
+    <div class="slab">📅 Date</div>
+    <div class="cal" id="cal"></div>
     <input type="hidden" id="wxSpeed" value="28"><button id="wxGo" style="display:none">Get forecast</button>
     <div class="wxmsg" id="wxMsg"></div>
   </div>
@@ -1712,7 +1721,7 @@ $('qNow').onclick=()=>{$('startW').classList.remove('open');const d=new Date();d
 $('qToday').onclick=()=>{$('startW').classList.remove('open');$('wxDate').value=iso(new Date());$('wxTime').value='06:00';goWx();};
 $('qTmr').onclick=()=>{$('startW').classList.remove('open');$('wxDate').value=iso(new Date(Date.now()+86400000));$('wxTime').value='06:00';goWx();};
 $('wxSpeed').onchange=()=>{$('plSpeed').value=$('wxSpeed').value;updRide();renderPlan();if(WX)renderWx();};
-$('wxTime').onchange=()=>{if(WX)goWx();};
+$('wxTime').onchange=()=>{drawChips();updPill();if(WX)goWx();};
 $('wxDate').onchange=()=>{if(WX)goWx();};
 document.querySelectorAll('#unitSeg button').forEach(b=>b.onclick=()=>{UNIT=b.dataset.u;document.querySelectorAll('#unitSeg button').forEach(x=>x.classList.toggle('on',x===b));if(WX)renderWx();});
 
@@ -1844,7 +1853,7 @@ $('simReset').onclick=()=>{SIM.s=0;SIM.t=0;SIM.buf=[];};
 
 // ---------- start date/time widget on the map ----------
 (function(){const w=$('startW'); map.getContainer().appendChild(w); L.DomEvent.disableClickPropagation(w); L.DomEvent.disableScrollPropagation(w);
-  $('sPill').onclick=e=>{e.stopPropagation();w.classList.toggle('open');if(w.classList.contains('open'))drawCal();};
+  $('sPill').onclick=e=>{e.stopPropagation();w.classList.toggle('open');if(w.classList.contains('open')){drawCal();drawChips();const mh=(w.parentElement&&w.parentElement.clientHeight)||0;$('sPop').style.maxHeight=mh>120?(mh-56)+'px':'';$('sPop').scrollTop=0;}};
   document.addEventListener('click',e=>{if(!w.contains(e.target))w.classList.remove('open');});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')w.classList.remove('open');});})();
 function updPill(){
