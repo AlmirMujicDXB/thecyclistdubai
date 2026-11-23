@@ -30,7 +30,8 @@ window.SITE = {
       what: 'carbon wheelsets',
       url: 'https://www.tukuswheels.com/?ref=DXB',
       code: 'DXB',
-      kind: 'referral code',      // shown as "use referral code DXB"
+      kind: 'referral code',      // shown as "use referral code DXB for 10% OFF"
+      discount: '10% OFF',
     },
     {
       name: "L'Étape Dubai by Tour de France",

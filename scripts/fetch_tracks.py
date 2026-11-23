@@ -16,8 +16,8 @@ TRACKS = {
 # Tracks where only the largest connected network is kept (drops separate cycle paths
 # inside the bounding box, e.g. Expo City / Dubai South paths near Al Qudra).
 MAIN_ONLY = {"alqudra"}
-# Cut tracks north of this latitude (Al Qudra starts at BOTS, 24.9989 N; the path north of it towards E311 is not shown).
-CLIP_NORTH = {"alqudra": 25.0}
+# Cut tracks north of this latitude (Al Qudra starts at the BOTS start pin, 24.9989 N; nothing north of it is shown).
+CLIP_NORTH = {"alqudra": 24.9988}
 MIRRORS = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",

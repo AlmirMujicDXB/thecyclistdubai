@@ -1207,7 +1207,7 @@ async function loadTrack(tr){
   for(const m of['https://overpass-api.de/api/interpreter','https://overpass.private.coffee/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter','https://overpass.kumi.systems/api/interpreter']){
     try{const r=await fetch(m,{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}});if(!r.ok)continue;
       const j=await r.json();const lines=j.elements.filter(x=>x.geometry&&x.geometry.length>1).map(x=>({pts:x.geometry.map(p=>[p.lat,p.lon])}));
-      if(!lines.length)continue;if(tr.id==='alqudra')lines=mainNetwork(clipNorth(lines,25.0));S.geo[tr.id]=lines;try{localStorage.setItem('rw_geo2_'+tr.id,JSON.stringify({ts:Date.now(),lines}))}catch(e){}return lines}catch(e){}}
+      if(!lines.length)continue;if(tr.id==='alqudra')lines=mainNetwork(clipNorth(lines,24.9988));S.geo[tr.id]=lines;try{localStorage.setItem('rw_geo2_'+tr.id,JSON.stringify({ts:Date.now(),lines}))}catch(e){}return lines}catch(e){}}
   return null;
 }
 async function drawTrack(){
@@ -1290,7 +1290,7 @@ function toast(m,ms=3200){const t=$('toast');t.textContent=m;t.classList.add('sh
 /* ================= share texts (built from site-data.js) ================= */
 const SITE=window.SITE||{links:{},sponsors:[],events:[],rides:[]};
 function siteUrl(){return /^https?:/.test(location.protocol)?location.origin+location.pathname:'https://thecyclistdubai.com/'}
-const spDeal=(x,b='*')=>x.discount?`use code ${b}${x.code}${b} for ${b}${x.discount}${b}`:`use ${x.kind||'code'} ${b}${x.code}${b}`;
+const spDeal=(x,b='*')=>`use ${x.kind||'code'} ${b}${x.code}${b}`+(x.discount?` for ${b}${x.discount}${b}`:'');
 const spShort=x=>x.discount||(x.kind?x.kind.replace(/^./,m=>m.toUpperCase()):'Code')+' '+x.code;
 // sponsors in a share; a sponsor that is also an upcoming event is skipped (the event list in the same message already has its link + code)
 function sponsorsText(){const evU=new Set(upcomingEvents().map(e=>(e.url||'').replace(/\/$/,'')));const sp=(SITE.sponsors||[]).filter(x=>!evU.has((x.url||'').replace(/\/$/,'')));if(!sp.length)return'';
@@ -1548,7 +1548,7 @@ function shareRide(r){if(!r)return;const l=parseLocal(r.occ+'T00:00'),f=rideFore
     lines:[r.start&&`📍 Start: ${r.start}`,`🗺️ ${r.place}`,f&&`🌤️ ${f.tr} · ${spd(f.w)} ${uLbl()} ${f.dir} · score ${f.sc}`,rideRule(r)&&`⛑️💡 ${rideRule(r)}`,'👥 Join via the WhatsApp group']});
   shareNow(canvasFile(cv,'thecyclistdubai-ride.png'),rideText(r),r.name)}
 function shareSponsor(x){
-  const n=dubaiNow(),cv=drawCard({theme:'orange',dow:'CODE',day:x.code.length<=4?x.code:'%',mon:(x.discount||x.code).toUpperCase(),tags:['🎁 Sponsor discount'],title:x.discount?`${x.name}: ${x.discount} with code ${x.code}`:`${x.name}: ${x.kind||'code'} ${x.code}`,
+  const n=dubaiNow(),cv=drawCard({theme:'orange',dow:'CODE',day:x.code.length<=4?x.code:'%',mon:(x.discount||x.code).toUpperCase(),tags:['🎁 Sponsor discount'],title:x.discount?`${x.name}: ${x.discount} with ${x.kind||'code'} ${x.code}`:`${x.name}: ${x.kind||'code'} ${x.code}`,
     lines:[x.what&&('🛍️ '+x.what.replace(/^./,m=>m.toUpperCase())),'🛒 '+x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
   shareNow(canvasFile(cv,'thecyclistdubai-'+x.name.toLowerCase()+'.png'),sponsorText(x),x.name)}
 function shareWeather(){const text=weatherText(),k=shotKey();
