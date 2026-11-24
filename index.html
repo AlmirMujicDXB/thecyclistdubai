@@ -464,7 +464,6 @@ a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px 
 .ride-btns .rshare:hover{background:#fff;transform:translateY(-1px)}
 .ride-btns .rshare svg{width:15px;height:15px}
 /* ride card layout (owner: spread the content, no empty corner under the date) */
-.ride-date .rd-time{display:none}
 .ride-facts{flex:none;display:flex;gap:8px}
 .ride-facts div{min-width:86px;padding:5px 10px;border-radius:10px;background:#ffffff1a;border:1px solid #ffffff2e;line-height:1.2}
 .ride-facts small{display:block;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--rd-meta,#dcfce7);opacity:.85}
@@ -655,13 +654,12 @@ footer a:hover{color:var(--text)}
   .ride-btns{width:100%;padding-left:54px}
   .ride-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .ride-btns .rloc,.ride-btns .rshare{width:100%;height:36px}
-  .ride{display:grid;grid-template-columns:58px minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;column-gap:12px;row-gap:8px;height:126px;padding:8px 10px 8px 8px;align-items:center}
-  .ride .ride-date{grid-column:1;grid-row:1/3;align-self:stretch;width:58px;height:auto;justify-content:center;gap:1px;border-radius:12px}
-  .ride .ride-date b{font-size:24px;margin:1px 0}
-  .ride .ride-date .rd-time{display:block;margin-top:7px;padding-top:6px;border-top:1px dashed #0000001f;width:44px;text-align:center;font:800 12.5px Sora,sans-serif;font-style:normal;color:var(--rd-dark);letter-spacing:-.2px}
-  .ride .ride-date .rd-time small{display:block;font-size:8.5px;letter-spacing:1px;color:var(--rd-accent,#15803d);margin-top:1px}
+  .ride{display:grid;grid-template-columns:54px minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;column-gap:12px;row-gap:9px;height:126px;padding:9px 10px;align-items:center}
+  .ride .ride-date{grid-column:1;grid-row:1;width:54px;height:58px;border-radius:12px;align-self:center}
+  .ride .ride-date b{font-size:22px;margin:1px 0}
   .ride .ride-body{grid-column:2;grid-row:1;align-self:center;min-width:0}
-  .ride .ride-btns{grid-column:2;grid-row:2;width:auto;padding-left:0;margin-top:0}
+  .ride .ride-btns{grid-column:1/-1;grid-row:2;width:auto;padding-left:0;margin-top:0}
+  .ride .m-nf{display:none}
   .lmart{min-height:0}
   .lmart .fb{font-size:15px;letter-spacing:3px}
   .lmdesc{display:none}
@@ -1481,10 +1479,10 @@ function renderRides(){
   const rs=upcomingRides();
   $('rides').innerHTML='<div class="car-view"><div class="car-track">'+rs.map((r,i)=>{const l=parseLocal(r.occ+'T00:00'),rd=relDay(r.occ+'T00:00'),f=rideForecast(r);
     const st=(r.route?`📍 <b>${esc(r.route)}</b> · `:r.start?`📍 Start: <b>${esc(r.start)}</b> · `:'')+(r.pace?`<span class="m-pace">⚡ ${esc(r.pace.replace(/\s*avg$/,''))} · </span>`:'');
-    const fx=st+(f?`<span class="m-fl">${r.time}–${String(+r.time.slice(0,2)+3).padStart(2,'0')}:${r.time.slice(3)}: </span><b>${f.tr}</b> · ${spd(f.w)} ${uLbl()} ${f.dir} · <b>${f.lab} ${f.sc}</b>`:`${l.day} ${fmtTime(r.time)} · forecast available closer to the day`);
+    const fx=st+(f?`🌤️ <b>${f.tr}</b> · ${spd(f.w)} ${uLbl()} ${f.dir} · <b>${f.lab} ${f.sc}</b>`:`<span class="m-nf">🌤️ Forecast closer to the day</span>`); // the start time is shown once, in the title
     return `<div class="ride${r.theme&&r.theme!=='green'?' th-'+esc(r.theme):''}${r.page?' haspage':''}"${r.page?` data-page="${esc(r.page)}" title="Open the ${esc(r.name)} page"`:''}>
       <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
-      <div class="ride-date"><span>${rd==='Today'?'TODAY':l.day.toUpperCase()}</span><b>${l.date}</b><span>${l.mon.toUpperCase()}</span><i class="rd-time">${fmtTime(r.time).replace(/ ?([AP]M)$/i,'<small>$1</small>')}</i></div>
+      <div class="ride-date"><span>${rd==='Today'?'TODAY':l.day.toUpperCase()}</span><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
       <div class="ride-body">
         <div class="ride-tag">${rideRule(r)?`<span class="mand" title="${esc(rideRule(r))}">⛑️💡 <span class="mand-l">${esc(rideRule(r))}</span><span class="mand-s">Mandatory</span></span>`:'<span class="star">★ Recommended</span>'}${rideKind(r)?`<span class="typ">${esc(rideKind(r))}</span>`:''}${r.pace?`<span class="pace">⚡ ${esc(r.pace)}</span>`:''}</div>
         <div class="ride-title">${esc(r.name)} · <span>${fmtTime(r.time)}</span> · ${esc(r.place)}</div>
