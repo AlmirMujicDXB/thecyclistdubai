@@ -28,18 +28,18 @@ document.getElementById('app').innerHTML=`
   <div class="hrow">
     <div class="dtile"><span id="hDow">---</span><b id="hDay">--</b><span id="hMon">---</span></div>
     <div class="hmain">
-      <div class="tags"><span class="tag l">⛑️💡 ${esc(SITE.rideRule||'Lights & helmet mandatory')}</span><span class="tag">🔁 Every ${esc(DAYN[RIDE.weekly]||'week')}</span><span class="tag">${CFG.mtb?'🚵':'🚴'} ${esc(RIDE.type||'Road')}</span><span class="tag" id="tPace">⚡ ${esc(RIDE.pace||'')}</span></div>
+      <div class="tags"><span class="tag l"><span class="tl">⛑️💡 ${esc(SITE.rideRule||'Lights & helmet mandatory')}</span><span class="ts">⛑️💡 Mandatory</span></span><span class="tag">${CFG.mtb?'🚵':'🚴'} ${esc(RIDE.type||'Road')}</span></div>
       <h1>${esc(RIDE.name)} · <span id="hTime">--</span> · ${esc(RIDE.place||'')}</h1>
-      <div class="hsub">📍 Start ${esc(START)} · 🛣️ ${esc(RIDE.route||CFG.routeText||RIDE.place||'')} · <span id="hNext">next ride</span></div>
+      <div class="hsub"><span>📍 ${esc(RIDE.route||('Start '+START))}</span><span>🔁 Every ${esc(DAYN[RIDE.weekly]||'week')}</span><span id="hNext"></span></div>
     </div>
   </div>
   <div class="stats">
     <div class="stat"><small>Distance</small><b id="sDist">--</b><span class="stx" id="sDistN"></span></div>
-    <div class="stat"><small>Climbing</small><b id="sGain">--</b></div>
-    <div class="stat"><small>${NET?'Trails':'Turnaround'}</small><b id="sTurn">--</b></div>
-    <div class="stat"><small>Group pace</small><b id="sPace">--</b></div>
+    <div class="stat"><small>Climb</small><b id="sGain">--</b></div>
+    <div class="stat"><small>${NET?'Trails':'Turn at'}</small><b id="sTurn">--</b></div>
+    <div class="stat"><small>Pace</small><b id="sPace">--</b></div>
     <div class="stat"><small>Ride time</small><b id="sTime">--</b><span class="stx" id="sTimeN"></span></div>
-    <div class="stat"><small>Back at ${NET?'the start':esc(START)}</small><b id="sBack">--</b></div>
+    <div class="stat"><small>Back at</small><b id="sBack">--</b></div>
   </div>
   <div class="hbtns">
     ${RIDE.strava?`<a class="btn strava" href="${esc(RIDE.strava)}" target="_blank" rel="noopener"><svg class="slogo" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>Join ride on Strava ↗</a>`:''}
@@ -239,10 +239,10 @@ const groupPace=()=>parseFloat(RIDE.pace)||30;
 function renderAll(){
   const p=dateParts(ST.date),sm=startMins(),has=hasWx(),pace=groupPace();
   $('hDow').textContent=p.dow;$('hDay').textContent=p.day;$('hMon').textContent=p.mon;
-  $('hTime').textContent=clock(sm);$('hNext').textContent=(ST.date===DATES[0]?'next ride ':'')+relLabel(ST.date);
+  $('hTime').textContent=clock(sm);const rl=relLabel(ST.date);$('hNext').textContent=/^(Today|Tomorrow)/.test(rl)?'📅 '+rl.split(' ')[0]:'';$('hNext').style.display=$('hNext').textContent?'':'none';
   $('sPace').textContent=pace+' km/h';
   if(NET){$('sDist').textContent=RIDE.distance||`${routeKm()} km`;$('sDistN').textContent=RIDE.distance?'':'set in the planner';$('sGain').textContent=CFG.gainText||'Rolling';$('sTurn').textContent=`${(NETLEN/1000).toFixed(1)} km`}
-  else{$('sDist').textContent=(CUM[CUM.length-1]/1000).toFixed(1)+' km';$('sGain').textContent=Math.round(GAIN)+' m';$('sTurn').textContent='km '+(CUM[TURN]/1000).toFixed(1)}
+  else{$('sDist').textContent=(CUM[CUM.length-1]/1000).toFixed(1)+' km';$('sGain').textContent=Math.round(GAIN)+' m';$('sTurn').textContent=`${CFG.turnShort||'km'} · ${(CUM[TURN]/1000).toFixed(1)}`}
   renderChips();
   $('fcNote').textContent=has?'Forecast loaded for this ride':ST.wx?'Forecast not out yet for this date (16 days ahead): planner uses still air':'Forecast unavailable right now: planner uses still air';
   const g=sim('speed',pace,has),fin=sm+g.t/60+STOP;

@@ -162,3 +162,28 @@ body.th-orange{--bd:#fbe2cc;--bd2:#fdf0e4;--p0:#7c2d12;--p1:#c2410c;--p2:#c2410c
 .btn.strava:hover{background:#e34402}
 .btn.strava .slogo{width:17px;height:17px;flex:none}
 @media (max-width:420px){.hbtns .btn{font-size:12.5px;padding:0 8px;gap:5px}.btn.strava .slogo{width:15px;height:15px}}
+
+/* hero = the ride card, organised (owner: like the homepage cards) */
+.hero .tags{flex-wrap:nowrap;overflow:hidden}
+.hero .tag .ts{display:none}
+.hero h1{white-space:normal}
+.hsub{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px}
+.hsub span{white-space:nowrap}
+.stat{display:flex;flex-direction:column;justify-content:center;min-height:58px}
+.stat b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat .stx{white-space:nowrap}
+@media (max-width:900px){
+  .hero{padding:14px}
+  .hrow{gap:12px;align-items:center}
+  .hero .tag .tl{display:none}.hero .tag .ts{display:inline}
+  .hero h1{font-size:19px;line-height:1.2}
+  .hsub{font-size:12.5px;gap:2px 12px}
+  .stats{grid-template-columns:repeat(3,1fr);gap:7px}
+  .stat{min-height:54px;padding:7px 9px}
+  .stat small{font-size:9.5px}
+  .stat b{font-size:16px}
+  .hbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .hbtns .btn{width:100%}
+  .hbtns .btn:first-child{grid-column:1/-1}
+  .hbtns .btn:nth-child(even):last-child{grid-column:1/-1}
+}
