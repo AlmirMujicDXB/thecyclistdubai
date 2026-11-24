@@ -18,7 +18,7 @@ a{color:inherit}
 .brand span{color:var(--sage)}
 .top .sp{flex:1}
 .top .hl{display:flex;flex-direction:column;gap:3px;min-width:0}
-.top .clock{padding-left:39px}
+.top .clock{padding-left:6px}
 .top .clock{font:700 13px 'JetBrains Mono',monospace;color:var(--mut);display:flex;align-items:center;gap:6px}
 .top .clock i{width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block}
 
