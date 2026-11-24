@@ -129,7 +129,8 @@ window.SITE = {
       weekly: 'Thu',               // every Thursday
       time: '06:45',
       type: 'Road',
-      distance: 'BOTS → Mosque',
+      distance: '63 km',           // BOTS → Mosque 31.5 km, back 31.5 km
+      route: 'BOTS → Mosque & back',     // mosque by Bab Al Shams
       place: 'Al Qudra',
       start: 'BOTS',
       track: 'alqudra',
