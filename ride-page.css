@@ -17,6 +17,8 @@ a{color:inherit}
 .brand{font-weight:800;font-style:italic;font-size:19px;letter-spacing:-.5px;text-decoration:none}
 .brand span{color:var(--sage)}
 .top .sp{flex:1}
+.top .hl{display:flex;flex-direction:column;gap:3px;min-width:0}
+.top .tcd-home{margin-left:auto}
 .top .clock{font:700 13px 'JetBrains Mono',monospace;color:var(--mut);display:flex;align-items:center;gap:6px}
 .top .clock i{width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block}
 
@@ -134,8 +136,9 @@ td .da{display:inline-block;color:var(--p1);font-weight:900}
 .foot a{font-weight:700}
 
 @media (max-width:900px){
-  .top{height:126px;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;row-gap:8px;padding:10px 10px 14px 12px;border-radius:14px;align-content:center}
-  .top .sp{display:none}.top .clock{grid-column:1/-1}
+  .top{height:126px;padding:10px 10px 14px 14px;border-radius:14px}
+  .top .hl{gap:8px}
+  .top .brand{font-size:21px}
   .stats{grid-template-columns:repeat(3,1fr)}
   .wgrid,.res{grid-template-columns:repeat(2,1fr)}
   .res>div:first-child{grid-column:1/-1}

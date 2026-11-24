@@ -827,9 +827,19 @@
             }
         }
     </style>
+<link rel="stylesheet" href="home-btn.css">
+<style>
+.tcd-bar{display:flex;align-items:center;gap:12px;height:64px;padding:8px 10px 10px 16px;margin:0 0 14px;border-radius:16px;border:1px solid #ead9bb;box-shadow:0 10px 26px #8a5a1f1f;background:linear-gradient(90deg,#0072ce 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) left bottom/100% 4px no-repeat,
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 70 C180 70 360 58 600 30 L600 52 C380 72 200 80 120 80 Z' fill='%2386b39a' fill-opacity='.2'/%3E%3Cpath d='M0 64 C200 64 380 48 600 16' fill='none' stroke='%2313233f' stroke-opacity='.22' stroke-width='1.2'/%3E%3Cpath d='M0 56 C200 56 390 38 600 4' fill='none' stroke='%23e11d48' stroke-opacity='.5' stroke-width='2'/%3E%3Cpath d='M0 40 C210 40 400 20 600 -14' fill='none' stroke='%235b8a72' stroke-opacity='.45' stroke-width='2'/%3E%3C/svg%3E") center/100% 100% no-repeat,
+  repeating-linear-gradient(177deg,#a8702d12 0 1px,transparent 1px 10px),linear-gradient(110deg,#fdf9f2 0%,#f8eedd 60%,#f2e2c6 100%)}
+.tcd-bar .tb-brand{font:800 italic 19px Sora,system-ui,sans-serif;letter-spacing:-.5px;color:#13233f;text-decoration:none}
+.tcd-bar .tb-brand span{color:#6b9a80}
+.tcd-bar .tcd-home{margin-left:auto}
+</style>
 </head>
 <body>
     <div class="quiz-wrapper" id="app">
+        <header class="tcd-bar"><a class="tb-brand" href="./">TheCyclist<span>Dubai</span></a><a class="tcd-home" href="./" aria-label="Back to TheCyclistDubai"><i>←</i><span class="hb-l"><small>Back to</small><b>TheCyclist<em>Dubai</em></b></span><span class="hb-s">Home</span></a></header>
         <header class="quiz-header">
             <div class="header-brand">
                 <div class="logo-icon">🚴</div>

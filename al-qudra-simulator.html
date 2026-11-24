@@ -840,7 +840,7 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .topbar .brand{grid-column:1;grid-row:1;margin:0;min-width:0}
   .topbar .brand span{display:block}
   .topbar .sp{display:none}
-  .topbar .linkbtn.home{grid-column:2;grid-row:1}
+  .topbar .tcd-home{grid-column:2;grid-row:1;justify-self:end}
   .topbar .rpick{grid-column:1;grid-row:2;min-width:0;order:0}
   .topbar #dirSw{grid-column:2;grid-row:2;order:0;display:inline-flex;flex:none}
   .topbar #dirSw button{flex:none;min-height:40px;min-width:44px;font-size:18px;padding:4px 10px}
@@ -848,7 +848,7 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .topbar .rbtn{min-height:46px;padding:5px 10px 5px 9px}
   .topbar .rbtn .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
-@media (max-width:480px){.topbar .linkbtn.home span{display:none}.topbar .linkbtn.home{font-size:13px}.topbar .linkbtn.home::after{content:"Home";font-weight:800}}
+
 /* map: one finger scrolls the page on touch screens, two fingers move/zoom the map */
 .mhint{position:absolute;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;pointer-events:none;background:#13233f73;color:#fff;font-weight:800;font-size:15px;text-align:center;padding:20px;opacity:0;transition:opacity .25s}
 .mhint.on{opacity:1}
@@ -873,6 +873,7 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .spop .chips button.on{background:linear-gradient(110deg,#4f7a64,#6b9a80 60%,#86b39a);color:#fff;border-color:#e11d48}
 .spop .sin{margin-top:6px}
 </style>
+<link rel="stylesheet" href="home-btn.css">
 </head>
 <body>
 <div class="app">
@@ -918,7 +919,7 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       </div>
       <div class="seg2" id="dirSw"><button data-d="cw" class="on" title="Clockwise">↻<span> Clockwise</span></button><button data-d="ccw" title="Anticlockwise">↺<span> Anticlockwise</span></button></div>
       <div class="sp"></div>
-      <a class="linkbtn home" href="./">←<span> TheCyclist<em>Dubai</em></span></a>
+      <a class="tcd-home" href="./" aria-label="Back to TheCyclistDubai"><i>←</i><span class="hb-l"><small>Back to</small><b>TheCyclist<em>Dubai</em></b></span><span class="hb-s">Home</span></a>
     </div>
   </header>
   <div class="main">
