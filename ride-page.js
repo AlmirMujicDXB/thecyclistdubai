@@ -43,6 +43,7 @@ document.getElementById('app').innerHTML=`
   </div>
   <div class="hbtns">
     ${RIDE.strava?`<a class="btn strava" href="${esc(RIDE.strava)}" target="_blank" rel="noopener"><svg class="slogo" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>Join ride on Strava ↗</a>`:''}
+    <button class="btn share" id="bShare" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Share ride</button>
     <a class="btn ${RIDE.strava?'w wa':'join'}" href="${esc(WA)}" target="_blank" rel="noopener">TCD WhatsApp group ↗</a>
     ${RIDE.location?`<a class="btn w" href="${esc(RIDE.location)}" target="_blank" rel="noopener">Location ↗</a>`:''}
     ${CFG.gpx?`<a class="btn gpx" href="${esc(CFG.gpx)}" download="${esc(CFG.gpxName||CFG.gpx)}">⬇ Download GPX</a>`:''}
@@ -106,6 +107,7 @@ document.getElementById('app').innerHTML=`
     <div><h3 style="margin:0 0 8px;font-size:13.5px">Fuel &amp; hydration</h3><ul class="list" id="fuel"></ul></div>
   </div>
 </section>
+<div class="rtoast" id="rToast"></div>
 <div class="foot">Forecast: Open-Meteo · Map: © OpenStreetMap contributors, CyclOSM, Esri · Estimates use standard bike physics and are a guide only. <a href="disclaimer.html">Disclaimer</a> · <a href="./">← Back to TheCyclistDubai</a></div>`;
 
 const $=id=>document.getElementById(id);
@@ -341,6 +343,24 @@ function renderKit(g){const sm=startMins(),em=sm+g.t/60+STOP,w=wxAt(sm),we=wxAt(
   if(!NET)add(F,TURN_ICON,`${STOP?STOP+'-min break':'Turnaround'} at ${TURN_NAME}`,`km ${(CUM[TURN]/1000).toFixed(1)}${STOP?`, ≈ ${clock(sm+g.out.t/60)}`:''}: regroup, eat something and drink before the way back.`);
   add(F,'🥤','After the ride',`Within 30 min: carbs + 20–30 g protein (chocolate milk, a sandwich, a smoothie${CFG.cafe?` at ${CFG.cafe}`:''}).`);
   $('kit').innerHTML=K.join('');$('fuel').innerHTML=F.join('')}
+
+/* ---------- share (same message + image as the ride's card on the homepage; share-core.js) ---------- */
+function toast(m){const t=$('rToast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200)}
+function shareForecast(r){if(!ST.wx)return null;const sh=+r.time.slice(0,2),hs=[];
+  for(let h=sh;h<=sh+3;h++){const k=`${r.occ}T${pad(h)}:00`,x=ST.wx.H[k];if(x)hs.push(x)}
+  if(!hs.length)return null;
+  const lo=Math.round(Math.min(...hs.map(h=>h.temperature_2m))),hi=Math.round(Math.max(...hs.map(h=>h.temperature_2m))),w=hs.reduce((a,h)=>a+h.wind_speed_10m,0)/hs.length,
+    sc=Math.round(hs.reduce((a,h)=>a+score(h),0)/hs.length),dir=card(hs[Math.floor(hs.length/2)].wind_direction_10m),lab=TCDS.scoreLabel(sc),tr=lo===hi?`${lo}°C`:`${lo}–${hi}°C`;
+  return{tr,w,dir,sc,lab,txt:`${tr}, wind ${Math.round(w)} km/h ${dir}, ride score ${sc} (${lab})`}}
+async function shareRide(){if(!window.TCDS){toast('Sharing is not available right now');return}
+  const ov=(RIDE.changes&&RIDE.changes[ST.date])||{},r={...RIDE,...ov,occ:ST.date,time:ov.time||RIDE.time};
+  const f=shareForecast(r),text=TCDS.rideText(r,f),file=TCDS.canvasFile(TCDS.rideCard(r,f,w=>`${Math.round(w)} km/h`),'thecyclistdubai-ride.png');
+  try{navigator.clipboard.writeText(text).catch(()=>{})}catch(e){}
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text,title:r.name});toast('Shared ✔ Text also copied, paste it if WhatsApp drops it');return}
+    if(navigator.share){await navigator.share({text,title:r.name});return}}
+  catch(e){if(e.name==='AbortError')return}
+  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');toast('Opening WhatsApp · text copied')}
+$('bShare').onclick=shareRide;
 
 /* ---------- wire up ---------- */
 document.querySelectorAll('#legSeg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#legSeg button').forEach(x=>x.classList.toggle('on',x===b));ST.leg=b.dataset.l;drawRoute(sim('speed',groupPace(),hasWx()))});

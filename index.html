@@ -884,7 +884,7 @@ footer a:hover{color:var(--text)}
   </div>
 </div>
 
-<script>/* always load the latest rides/events/sponsors (GitHub caches files for 10 min) */document.write('<script src="site-data.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
+<script>/* always load the latest rides/events/sponsors (GitHub caches files for 10 min) */document.write('<script src="site-data.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="share-core.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
 <script>
 /* ================= tracks ================= */
 const TRACKS = [
@@ -1541,51 +1541,15 @@ function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e
     evWe(e)&&`💪 TheCyclistDubai is taking part. Join us on the start line!`,evCode(e),`📝 Register: ${e.url}`].filter(Boolean).join('\n')}
 function eventPromoText(){const ev=upcomingEvents();if(!ev.length)return'';
   return '\n📅 *Upcoming events* · TheCyclistDubai is taking part 💪\n'+ev.map(e=>[`• *${e.name}*, ${evWhen(e)}${evWhere(e)?`, ${evWhere(e)}`:''}`,`  📝 Register: ${e.url}`,evCode(e)&&`  ${evCode(e)}`].filter(Boolean).join('\n')).join('\n')+'\n'}
-// Ride shares go out with an image: WhatsApp keeps only 1,024 characters of text with a photo,
-// so the promotions in ride shares use this compact format (all sponsors + all events, one line each).
-function sponsorsShort(){const evU=new Set(upcomingEvents().map(e=>(e.url||'').replace(/\/$/,'')));const sp=(SITE.sponsors||[]).filter(x=>!evU.has((x.url||'').replace(/\/$/,'')));if(!sp.length)return'';
-  return '\n🎁 *Sponsor codes*\n'+sp.map(x=>`• *${x.name}*: ${x.kind||'code'} *${x.code}*${x.discount?` ${x.discount}`:''} ${x.url}`).join('\n')+'\n'}
-function eventsShort(){const ev=upcomingEvents();if(!ev.length)return'';
-  return '\n📅 *Events* · we ride 💪\n'+ev.map(e=>`• *${e.short||e.name}* ${occLabel(e.date).replace(/^(Today|Tomorrow) /,'')}${e.distance?` · ${e.distance}`:''}${e.code?` · code *${e.code}*${e.discount?` ${e.discount}`:''}`:''} ${e.url}`).join('\n')+'\n'}
-function rideText(r){const f=rideForecast(r);
-  const t=`🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.start?`Start: ${r.start} · `:''}${r.place}\n`+(r.route?`🛣️ ${r.route}\n`:'')+(rideKind(r)?`${rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(rideRule(r)?`⛑️💡 ${rideRule(r)}\n`:'')+
-    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+(r.page?`📊 Ride page (map, wind, GPX): ${siteUrl().replace(/[^/]*$/,'')}${r.page}\n`:'')+sponsorsShort()+eventsShort()+footerText();
-  return t.length>1010?t.replace('📲 Live ride weather & forecast: ','📲 ').replace('👥 Join our WhatsApp group: ','👥 ').replace(/\n🌤️ Forecast: [^\n]*/,''):t}
+// Ride share message, compact sponsor/event lines and share images live in share-core.js (shared with the ride pages)
+const sponsorsShort=()=>TCDS.sponsorsShort(),eventsShort=()=>TCDS.eventsShort();
+function rideText(r){return TCDS.rideText(r,rideForecast(r))}
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\n${spDeal(x).replace(/^./,m=>m.toUpperCase())}\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
 /* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */
-const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#ffcf00','#ffe100','#fff16a','#ffffff','#d0001a'],lime:['#f2f2dc','#e4efcf','#c4d24c','#ffffff','#00482a'],purple:['#2e1065','#5b21b6','#a855f7','#e9d5ff','#f5d0fe'],rorange:['#7c2d12','#c2410c','#fb923c','#fed7aa','#fde68a']};
-const RIDE_TH={green:'green',purple:'purple',orange:'rorange'};
+const THEMES=TCDS.THEMES,RIDE_TH=TCDS.RIDE_TH,LIGHT=TCDS.LIGHT,wrapLines=TCDS.wrapLines,drawCard=TCDS.drawCard;
 const RIDE_ROW={green:'linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)',purple:'linear-gradient(110deg,#2e1065,#5b21b6 50%,#a855f7)',orange:'linear-gradient(110deg,#7c2d12,#c2410c 50%,#fb923c)'};
-/* light card themes: dark text colours */
-const LIGHT={yellow:{ink:'#1f1a00',line:'rgba(31,26,0,.9)',route:'rgba(122,98,0,.25)',dot:'rgba(226,0,26,.3)',dow:'#e2001a',day:'#e2001a',mon:'#7a6200',t1:'#fff',chip:'rgba(255,255,255,.55)',chipT:'#3d3300'},
-  lime:{ink:'#00482a',line:'rgba(0,72,42,.92)',route:'rgba(0,72,42,.2)',dot:'rgba(0,72,42,.22)',dow:'#6b8a12',day:'#00482a',mon:'#6b8a12',t1:'#e9f5a8',chip:'rgba(0,72,42,.1)',chipT:'#00482a'}};
-function wrapLines(c,t,max){const w=t.split(' ');const out=[];let line='';w.forEach(x=>{const tt=line?line+' '+x:x;if(c.measureText(tt).width>max&&line){out.push(line);line=x}else line=tt});if(line)out.push(line);return out}
-function drawCard({theme,dow,day,mon,tags,title,lines}){
-  const S2=1080,c0=document.createElement('canvas');c0.width=S2;c0.height=S2;const c=c0.getContext('2d'),T3=THEMES[theme],dk=LIGHT[theme],ink=dk?dk.ink:'#fff';
-  const g=c.createLinearGradient(0,0,S2,S2);g.addColorStop(0,T3[0]);g.addColorStop(.55,T3[1]);g.addColorStop(1,T3[2]);c.fillStyle=g;c.fillRect(0,0,S2,S2);
-  const rg=c.createRadialGradient(S2,0,0,S2,0,700);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S2,S2);
-  if(theme==='yellow'){c.save();const g=c.createLinearGradient(360,0,1080,0);g.addColorStop(0,'rgba(226,0,26,0)');g.addColorStop(.75,'rgba(226,0,26,.95)');c.fillStyle=g;for(let r=0,y=186;y<=322;y+=34,r++)for(let x=360+(r%2?17:0);x<1070;x+=34){c.beginPath();c.arc(x,y,8,0,7);c.fill()}c.restore()}
-  if(theme==='lime'){c.save();[[760,60,'rgba(181,204,74,.75)'],[836,30,'rgba(0,72,42,.9)'],[882,84,'rgba(196,210,76,.85)'],[982,24,'rgba(12,75,62,.75)'],[1022,58,'rgba(181,204,74,.6)']].forEach(([x,w,col])=>{c.fillStyle=col;c.beginPath();c.moveTo(x,970);c.lineTo(x+w,970);c.lineTo(x+w+300,600);c.lineTo(x+300,600);c.closePath();c.fill()});c.restore()}
-  c.strokeStyle=dk?dk.route:'rgba(255,255,255,.18)';c.lineWidth=8;c.setLineDash([4,22]);c.lineCap='round';c.beginPath();c.moveTo(-20,860);c.bezierCurveTo(260,620,520,900,760,700);c.bezierCurveTo(900,590,1000,620,1100,560);c.stroke();c.setLineDash([]);
-  [[-20,860],[760,700],[1100,560]].forEach(([x,y])=>{c.fillStyle=dk?dk.dot:'rgba(255,255,255,.35)';c.beginPath();c.arc(x,y,14,0,7);c.fill()});
-  // date tile
-  c.fillStyle='#fff';rr(c,80,90,220,240,34);c.fill();c.textAlign='center';
-  c.fillStyle=dk?dk.dow:'#dc2626';c.font='800 34px Sora,sans-serif';c.fillText(dow,190,150);
-  c.fillStyle=dk?dk.day:T3[0];c.font='800 104px Sora,sans-serif';c.fillText(day,190,258);c.fillStyle=dk?dk.mon:'#64748b';c.font='800 32px Sora,sans-serif';c.fillText(mon,190,305);c.textAlign='left';
-  // tags
-  let tx=340,ty=130;c.font='800 28px Sora,sans-serif';tags.forEach((t,k)=>{const w=c.measureText(t).width+36;if(tx+w>1010){tx=340;ty+=62}
-    c.fillStyle=k===0?T3[4]:dk?dk.chip:'rgba(255,255,255,.16)';rr(c,tx,ty-38,w,52,12);c.fill();c.fillStyle=k===0?(dk?dk.t1:T3[0]):dk?dk.chipT:ink;c.fillText(t,tx+18,ty-2);tx+=w+14});
-  // title
-  c.fillStyle=ink;c.font='800 72px Sora,sans-serif';let y=420;wrapLines(c,title,920).slice(0,3).forEach(l=>{c.fillText(l,80,y);y+=86});
-  y+=20;c.font='600 40px Sora,sans-serif';lines.filter(Boolean).forEach(l=>{wrapLines(c,l,920).slice(0,2).forEach(x=>{c.fillStyle=dk?dk.line:'rgba(255,255,255,.92)';c.fillText(x,80,y);y+=58});y+=6});
-  // brand bar
-  const bg=c.createLinearGradient(0,0,S2,0);if(theme==='strava'){bg.addColorStop(0,'#2a0c00');bg.addColorStop(.5,'#4a1500');bg.addColorStop(1,'#7a2400')}else if(theme==='purple'||theme==='rorange'){bg.addColorStop(0,T3[0]);bg.addColorStop(.5,T3[1]);bg.addColorStop(1,T3[2])}else{bg.addColorStop(0,'#052e16');bg.addColorStop(.5,'#14532d');bg.addColorStop(1,'#16a34a')}c.fillStyle=bg;c.fillRect(0,S2-110,S2,110);
-  c.fillStyle='#fff';c.font='800 44px Sora,sans-serif';c.fillText('TheCyclist',60,S2-42);const w2=c.measureText('TheCyclist').width;c.fillStyle=theme==='strava'?'#ffd2b8':(theme==='purple'||theme==='rorange')?T3[3]:'#bef264';c.fillText('Dubai',60+w2,S2-42);
-  c.fillStyle='#dcfce7';c.font='600 28px Sora,sans-serif';const rt=siteUrl().replace(/^https?:\/\//,'').replace(/\/$/,'');c.fillText(rt,S2-60-c.measureText(rt).width,S2-46);
-  return c0;
-}
-function canvasFile(cv,name){const d=cv.toDataURL('image/png'),b=atob(d.split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new File([u],name,{type:'image/png'})}
+const canvasFile=TCDS.canvasFile;
 function shareNow(file,text,title){
   copyText(text);
   try{if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],text,title}).then(()=>toast('Shared ✔ Text also copied, paste it if WhatsApp drops it')).catch(e=>{if(e.name!=='AbortError')openShareModal(text,file,file.name)});return}}catch(e){}
@@ -1595,10 +1559,8 @@ function shareEvent(e){if(!e)return;const l=parseLocal(e.date+'T00:00');
   const cv=drawCard({theme:THEMES[e.theme]?e.theme:'blue',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ '+(e.tag||'Recommended'),'Upcoming event'],title:e.name,
     lines:[`🕖 ${l.day} ${e.time?fmtTime(e.time):'· start time TBC'}`,evWhere(e)&&('🚴 '+evWhere(e)),e.note&&('🏅 '+e.note),evWe(e)&&'💪 TheCyclistDubai is taking part',e.code&&`🎟️ Code ${e.code}${e.discount?' · '+e.discount:''}`,'📝 Register: '+e.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
   shareNow(canvasFile(cv,'thecyclistdubai-event.png'),eventText(e),e.name)}
-function shareRide(r){if(!r)return;const l=parseLocal(r.occ+'T00:00'),f=rideForecast(r);
-  const cv=drawCard({theme:RIDE_TH[r.theme]||'green',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ Group ride',rideKind(r),r.pace?'⚡ '+r.pace:''].filter(Boolean),title:`${r.name} · ${fmtTime(r.time)}`,
-    lines:[r.start&&`📍 Start: ${r.start}`,r.route&&`🛣️ ${r.route}`,`🗺️ ${r.place}`,f&&`🌤️ ${f.tr} · ${spd(f.w)} ${uLbl()} ${f.dir} · score ${f.sc}`,rideRule(r)&&`⛑️💡 ${rideRule(r)}`,'👥 Join via the WhatsApp group']});
-  shareNow(canvasFile(cv,'thecyclistdubai-ride.png'),rideText(r),r.name)}
+function shareRide(r){if(!r)return;const f=rideForecast(r);
+  shareNow(canvasFile(TCDS.rideCard(r,f,w=>`${spd(w)} ${uLbl()}`),'thecyclistdubai-ride.png'),rideText(r),r.name)}
 function shareSponsor(x){
   const n=dubaiNow(),cv=drawCard({theme:'orange',dow:'CODE',day:x.code.length<=4?x.code:'%',mon:(x.discount||x.code).toUpperCase(),tags:['🎁 Sponsor discount'],title:x.discount?`${x.name}: ${x.discount} with ${x.kind||'code'} ${x.code}`:`${x.name}: ${x.kind||'code'} ${x.code}`,
     lines:[x.what&&('🛍️ '+x.what.replace(/^./,m=>m.toUpperCase())),'🛒 '+x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});

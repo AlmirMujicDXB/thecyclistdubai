@@ -187,3 +187,8 @@ body.th-orange{--bd:#fbe2cc;--bd2:#fdf0e4;--p0:#7c2d12;--p1:#c2410c;--p2:#c2410c
   .hbtns .btn:first-child{grid-column:1/-1}
   .hbtns .btn:nth-child(even):last-child{grid-column:1/-1}
 }
+/* Share ride (same share as the homepage card) */
+.btn.share{background:#fff;color:var(--p1);box-shadow:0 6px 16px #0002}
+.btn.share svg{width:16px;height:16px;flex:none}
+.rtoast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#13233f;color:#fff;font-weight:700;font-size:13px;padding:10px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:2000;max-width:90vw;text-align:center}
+.rtoast.on{opacity:1;transform:translate(-50%,0)}
