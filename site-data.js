@@ -153,7 +153,8 @@ window.SITE = {
       until: '2027-03-23',         // last ride: Tue 23 Mar 2027
       time: '06:45',
       type: 'Road',
-      distance: '36 km',
+      distance: '38.1 km',         // owner's GPX tcd-ride.gpx: BOTS → ZADS & back, turnaround km 18.9, 118 m climbing
+      route: 'BOTS → ZADS & back',
       place: 'Al Qudra',
       start: 'BOTS',
       track: 'alqudra',
