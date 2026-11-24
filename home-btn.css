@@ -1,20 +1,17 @@
-/* "Back to TheCyclistDubai" button: one design on every page (velodrome look of the homepage header).
-   Sits at the right end of each page's header; phones show "Home". */
-.tcd-home{flex:none;display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 14px 0 6px;border-radius:12px;
-  background:#fff;border:1px solid #ead9bb;box-shadow:0 4px 12px #8a5a1f1c;text-decoration:none;color:#13233f;
-  font-family:Sora,system-ui,sans-serif;white-space:nowrap;transition:transform .15s,box-shadow .15s}
-.tcd-home:hover{transform:translateY(-1px);box-shadow:0 8px 18px #8a5a1f26}
-.tcd-home:focus-visible{outline:2px solid #e11d48;outline-offset:2px}
-.tcd-home i{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:16px;color:#fff;
-  background:linear-gradient(135deg,#4f7a64,#6b9a80 60%,#86b39a);box-shadow:inset 0 0 0 1px #e11d4859}
-.tcd-home .hb-l{display:flex;flex-direction:column;line-height:1.12}
-.tcd-home small{font-size:9.5px;font-weight:700;color:#6b7a8c;letter-spacing:.5px;text-transform:uppercase}
-.tcd-home b{font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.3px}
-.tcd-home b em{color:#5b8a72}
-.tcd-home .hb-s{display:none;font-weight:800;font-size:13.5px}
-@media (max-width:600px){
-  .tcd-home{height:40px;gap:8px;padding:0 12px 0 5px}
-  .tcd-home i{width:30px;height:30px}
-  .tcd-home .hb-l{display:none}
-  .tcd-home .hb-s{display:inline}
-}
+/* TheCyclistDubai logo = the way back to the homepage, on every page except the homepage.
+   A small sage arrow tile before the logo shows it is a link; on hover the tile nudges left
+   and a "Homepage" hint appears. */
+.tcd-logo{position:relative;display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#13233f;
+  padding:5px 10px 5px 5px;margin-left:-5px;border-radius:12px;font-family:Sora,system-ui,sans-serif;white-space:nowrap;
+  transition:background .2s,box-shadow .2s;flex:none}
+.tcd-logo i{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-style:normal;font-size:14px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,#4f7a64,#6b9a80 60%,#86b39a);box-shadow:inset 0 0 0 1px #e11d4859,0 3px 8px #3f6b5533;transition:transform .2s}
+.tcd-logo b{font-weight:800;font-style:italic;font-size:19px;letter-spacing:-.5px;line-height:1}
+.tcd-logo b span{color:#6b9a80}
+.tcd-logo em{position:absolute;left:100%;top:50%;margin:-9px 0 0 6px;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  color:#3f6b55;background:#fff;border:1px solid #ead9bb;border-radius:6px;padding:1px 6px;opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .2s;pointer-events:none;z-index:5}
+.tcd-logo:hover,.tcd-logo:focus-visible{background:#ffffffb3;box-shadow:0 2px 10px #8a5a1f1f}
+.tcd-logo:hover i,.tcd-logo:focus-visible i{transform:translateX(-3px)}
+.tcd-logo:hover em,.tcd-logo:focus-visible em{opacity:1;transform:none}
+.tcd-logo:focus-visible{outline:2px solid #e11d48;outline-offset:2px}
+@media (max-width:600px){.tcd-logo b{font-size:20px}.tcd-logo i{width:28px;height:28px}}

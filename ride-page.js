@@ -21,9 +21,7 @@ const opt=a=>a.map(o=>`<option value="${o[1]}"${o[2]?' selected':''}>${esc(o[0])
 /* ---------- markup (identical on every ride page) ---------- */
 document.getElementById('app').innerHTML=`
 <header class="top">
-  <div class="hl"><a class="brand" href="./">TheCyclist<span>Dubai</span></a><div class="clock"><i></i><span id="clk">--:--</span> Dubai</div></div>
-  <div class="sp"></div>
-  <a class="tcd-home" href="./" aria-label="Back to TheCyclistDubai"><i>←</i><span class="hb-l"><small>Back to</small><b>TheCyclist<em>Dubai</em></b></span><span class="hb-s">Home</span></a>
+  <div class="hl"><a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a><div class="clock"><i></i><span id="clk">--:--</span> Dubai</div></div>
 </header>
 <section class="hero">
   <svg class="deco" viewBox="0 0 600 200" preserveAspectRatio="none" aria-hidden="true"><path d="M-10 150 C120 190 220 90 330 130 S520 180 610 70" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/></svg>

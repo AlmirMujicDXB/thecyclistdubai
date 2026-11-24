@@ -822,6 +822,7 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   background:linear-gradient(90deg,#0072ce 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) left bottom/100% 4px no-repeat,
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 70 C180 70 360 58 600 30 L600 52 C380 72 200 80 120 80 Z' fill='%2386b39a' fill-opacity='.2'/%3E%3Cpath d='M0 64 C200 64 380 48 600 16' fill='none' stroke='%2313233f' stroke-opacity='.22' stroke-width='1.2'/%3E%3Cpath d='M0 56 C200 56 390 38 600 4' fill='none' stroke='%23e11d48' stroke-opacity='.5' stroke-width='2'/%3E%3Cpath d='M0 40 C210 40 400 20 600 -14' fill='none' stroke='%235b8a72' stroke-opacity='.45' stroke-width='2'/%3E%3C/svg%3E") center/100% 100% no-repeat,
     repeating-linear-gradient(177deg,#a8702d12 0 1px,transparent 1px 10px),linear-gradient(110deg,#fdf9f2 0%,#f8eedd 60%,#f2e2c6 100%)}
+.topbar .tsep{width:1px;height:34px;background:#ead9bb;flex:none}
 .topbar .brand b{font-size:19px;font-weight:800;font-style:italic;letter-spacing:-.5px;color:#13233f}
 .topbar .brand span{color:#6b9a80;font-weight:700}
 .topbar .logo{width:40px;height:40px;border-radius:11px;box-shadow:0 4px 12px #8a5a1f26}
@@ -840,7 +841,11 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .topbar .brand{grid-column:1;grid-row:1;margin:0;min-width:0}
   .topbar .brand span{display:block}
   .topbar .sp{display:none}
-  .topbar .tcd-home{grid-column:2;grid-row:1;justify-self:end}
+  .topbar .tcd-logo{grid-column:1;grid-row:1;justify-self:start}
+  .topbar .tsep{display:none}
+  .topbar .brand{grid-column:2!important;grid-row:1;justify-self:end;text-align:right}
+  .topbar .brand .logo{width:32px;height:32px}
+  .topbar .brand span{display:none!important}
   .topbar .rpick{grid-column:1;grid-row:2;min-width:0;order:0}
   .topbar #dirSw{grid-column:2;grid-row:2;order:0;display:inline-flex;flex:none}
   .topbar #dirSw button{flex:none;min-height:40px;min-width:44px;font-size:18px;padding:4px 10px}
@@ -879,6 +884,7 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 <div class="app">
   <header class="top">
     <div class="topbar">
+      <a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a><span class="tsep" aria-hidden="true"></span>
       <div class="brand"><div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Al Qudra palm and bike logo">
 <defs>
 <linearGradient id="lgS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a4fae"/><stop offset=".62" stop-color="#2f80e0"/><stop offset=".63" stop-color="#f2c14e"/><stop offset="1" stop-color="#e3a43a"/></linearGradient>
@@ -919,7 +925,6 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       </div>
       <div class="seg2" id="dirSw"><button data-d="cw" class="on" title="Clockwise">↻<span> Clockwise</span></button><button data-d="ccw" title="Anticlockwise">↺<span> Anticlockwise</span></button></div>
       <div class="sp"></div>
-      <a class="tcd-home" href="./" aria-label="Back to TheCyclistDubai"><i>←</i><span class="hb-l"><small>Back to</small><b>TheCyclist<em>Dubai</em></b></span><span class="hb-s">Home</span></a>
     </div>
   </header>
   <div class="main">
