@@ -1506,9 +1506,16 @@ function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e
     evWe(e)&&`💪 TheCyclistDubai is taking part. Join us on the start line!`,evCode(e),`📝 Register: ${e.url}`].filter(Boolean).join('\n')}
 function eventPromoText(){const ev=upcomingEvents();if(!ev.length)return'';
   return '\n📅 *Upcoming events* · TheCyclistDubai is taking part 💪\n'+ev.map(e=>[`• *${e.name}*, ${evWhen(e)}${evWhere(e)?`, ${evWhere(e)}`:''}`,`  📝 Register: ${e.url}`,evCode(e)&&`  ${evCode(e)}`].filter(Boolean).join('\n')).join('\n')+'\n'}
+// Ride shares go out with an image: WhatsApp keeps only 1,024 characters of text with a photo,
+// so the promotions in ride shares use this compact format (all sponsors + all events, one line each).
+function sponsorsShort(){const evU=new Set(upcomingEvents().map(e=>(e.url||'').replace(/\/$/,'')));const sp=(SITE.sponsors||[]).filter(x=>!evU.has((x.url||'').replace(/\/$/,'')));if(!sp.length)return'';
+  return '\n🎁 *Sponsor codes*\n'+sp.map(x=>`• *${x.name}*: ${x.kind||'code'} *${x.code}*${x.discount?` ${x.discount}`:''} ${x.url}`).join('\n')+'\n'}
+function eventsShort(){const ev=upcomingEvents();if(!ev.length)return'';
+  return '\n📅 *Events* · we ride 💪\n'+ev.map(e=>`• *${e.short||e.name}* ${occLabel(e.date).replace(/^(Today|Tomorrow) /,'')}${e.distance?` · ${e.distance}`:''}${e.code?` · code *${e.code}*${e.discount?` ${e.discount}`:''}`:''} ${e.url}`).join('\n')+'\n'}
 function rideText(r){const f=rideForecast(r);
-  return `🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.start?`Start: ${r.start} · `:''}${r.place}\n`+(r.route?`🛣️ ${r.route}\n`:'')+(rideKind(r)?`${rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(rideRule(r)?`⛑️💡 ${rideRule(r)}\n`:'')+
-    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsText()+eventPromoText()+footerText()}
+  const t=`🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.start?`Start: ${r.start} · `:''}${r.place}\n`+(r.route?`🛣️ ${r.route}\n`:'')+(rideKind(r)?`${rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(rideRule(r)?`⛑️💡 ${rideRule(r)}\n`:'')+
+    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsShort()+eventsShort()+footerText();
+  return t.length>1010?t.replace('📲 Live ride weather & forecast: ','📲 ').replace('👥 Join our WhatsApp group: ','👥 ').replace(/\n🌤️ Forecast: [^\n]*/,''):t}
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\n${spDeal(x).replace(/^./,m=>m.toUpperCase())}\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
 /* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */

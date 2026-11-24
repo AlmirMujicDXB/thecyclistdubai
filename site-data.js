@@ -35,6 +35,7 @@ window.SITE = {
     },
     {
       name: "L'Étape Dubai by Tour de France",
+      short: "L'Étape Dubai",           // short name used in ride shares (WhatsApp limit)
       what: 'race entry',
       url: 'https://haku.ly/e1265eb830',
       code: 'THECYCLISTDUBAI15',
@@ -50,6 +51,7 @@ window.SITE = {
   events: [
     {
       name: 'AD Ports Group Gran Fondo Abu Dhabi 2026',
+      short: 'Gran Fondo Abu Dhabi',           // short name used in ride shares (WhatsApp limit)
       date: '2026-12-20',
       time: '07:00',
       distance: '150 km',
@@ -61,6 +63,7 @@ window.SITE = {
     },
     {
       name: "L'Étape Dubai by Tour de France",
+      short: "L'Étape Dubai",           // short name used in ride shares (WhatsApp limit)
       date: '2027-03-21',          // race day (Family Day is Sat 20 Mar)
       time: '06:30',
       distance: 'Epic 100.5 km · Classic 62 km',
@@ -74,6 +77,7 @@ window.SITE = {
     },
     {
       name: 'Spinneys Dubai 92 Cycle Challenge',
+      short: 'Spinneys Dubai 92',           // short name used in ride shares (WhatsApp limit)
       date: '2027-02-07',          // 17th edition, main event (start time not announced yet)
       distance: '92 km',
       route: 'Expo City Dubai',
