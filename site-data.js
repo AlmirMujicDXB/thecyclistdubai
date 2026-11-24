@@ -126,6 +126,7 @@ window.SITE = {
       pace: '20 km/h avg',
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
       location: 'https://www.google.com/maps/search/?api=1&query=Mushrif+National+Park+Mountain+Bike+Trail+Dubai',
+      page: 'mushrif-ride.html',   // ride page (the card's Details button)
       theme: 'orange',             // orange ride card + share image
     },
     {
@@ -159,6 +160,7 @@ window.SITE = {
       pace: '30 km/h avg',
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
       location: 'https://maps.app.goo.gl/ntyxGBSEaKip7akR8',
+      page: 'tcd-ride.html',       // ride page (the card's Details button); route = tcd-ride.gpx
     },
     // theme: 'purple' | 'orange' (default green)
     // { name: 'Recovery Ride', date: '2026-12-02', time: '06:00', distance: '40 km', place: 'Meydan',

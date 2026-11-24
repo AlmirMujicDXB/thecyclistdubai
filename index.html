@@ -1459,7 +1459,7 @@ function renderRides(){
         <div class="ride-meta">${fx}</div>
       </div>
       <div class="ride-btns">
-        ${r.join?`<a class="rjoin" href="${esc(r.join)}" target="_blank" rel="noopener">Join ride</a>`:''}
+        
         ${r.page?`<a class="rloc" href="${esc(r.page)}">Details ›</a>`:r.location?`<a class="rloc" href="${esc(r.location)}" target="_blank" rel="noopener">Location ↗</a>`:''}
         <button class="cshare" data-rd="${i}" aria-label="Share ride" title="Share ride">${SHARE_ICO}</button>
       </div>
