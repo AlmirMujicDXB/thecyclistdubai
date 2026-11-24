@@ -376,6 +376,7 @@ a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px 
 
 /* ---------- sponsors ---------- */
 .sponsors{margin-top:16px}
+.sponsors.rtop{margin:0 0 12px}
 .sponsors h3,.evts h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
 .spgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
 .sp{border-radius:16px;min-height:118px;overflow:hidden}
@@ -422,26 +423,29 @@ a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px 
 .spcta a{display:inline-block;text-decoration:none;font-size:12.5px;font-weight:800;color:#fff;background:var(--th-grad);padding:8px 13px;border-radius:10px}
 .rides:empty{display:none}
 .ride{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;color:#fff;
-  background:radial-gradient(70% 140% at 100% 0%,#bef26440 0%,transparent 60%),linear-gradient(110deg,var(--rd-dark) 0%,var(--rd-mid) 50%,var(--rd-bright) 100%);box-shadow:0 8px 22px #052e1640}
+  background:radial-gradient(70% 140% at 100% 0%,var(--rd-halo,#bef26440) 0%,transparent 60%),linear-gradient(110deg,var(--rd-dark) 0%,var(--rd-mid) 50%,var(--rd-bright) 100%);box-shadow:0 8px 22px var(--rd-shadow,#052e1640)}
+/* ride colour themes (site-data.js theme:) */
+.ride.th-purple{--rd-dark:#2e1065;--rd-mid:#5b21b6;--rd-bright:#a855f7;--rd-cream:#e9d5ff;--rd-peach:#f5d0fe;--rd-ink:#3b0764;--rd-meta:#f3e8ff;--rd-halo:#e879f94d;--rd-shadow:#3b076440;--rd-accent:#7e22ce}
+.ride.th-orange{--rd-dark:#7c2d12;--rd-mid:#c2410c;--rd-bright:#fb923c;--rd-cream:#fed7aa;--rd-peach:#fde68a;--rd-ink:#431407;--rd-meta:#ffedd5;--rd-halo:#fde68a4d;--rd-shadow:#7c2d1240;--rd-accent:#c2410c}
 .ride-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .ride>*:not(.ride-route){position:relative}
 .ride-date{flex:none;width:48px;height:48px;border-radius:12px;background:#fff;color:var(--rd-dark);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.ride-date span{font:800 8.5px Sora;letter-spacing:1.2px;color:#15803d}
+.ride-date span{font:800 8.5px Sora;letter-spacing:1.2px;color:var(--rd-accent,#15803d)}
 .ride-date span:first-child{color:#dc2626;margin-bottom:1px}
 .ride-date b{font:800 19px Sora}
 .ride-body{flex:1;min-width:0}
 .ride-tag{display:flex;gap:6px;flex-wrap:nowrap;overflow:hidden;margin-bottom:3px}
 .ride-tag:has(.chg) .up{display:none}
 .ride-tag span{font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#ffffff1f;border:1px solid #ffffff33;white-space:nowrap}
-.ride-tag .mand{background:var(--rd-cream);border-color:var(--rd-cream);color:#1a2e05;text-transform:none;letter-spacing:.2px;font-size:10px}
+.ride-tag .mand{background:var(--rd-cream);border-color:var(--rd-cream);color:var(--rd-ink,#1a2e05);text-transform:none;letter-spacing:.2px;font-size:10px}
 .ride-tag .mand-s,.ride .m-pace{display:none}
 .ride-tag .typ{background:#ffffff26;border-color:#ffffff4d;text-transform:none;letter-spacing:.2px;font-size:10px}
 .ride-tag .chg{background:#fbbf24;border-color:#fbbf24;color:#3b2a00}
-.ride-tag .star{background:var(--rd-cream);border-color:var(--rd-cream);color:#1a2e05}
+.ride-tag .star{background:var(--rd-cream);border-color:var(--rd-cream);color:var(--rd-ink,#1a2e05)}
 .ride-title{font-weight:800;font-size:14.5px;line-height:1.25;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ride-title span{color:var(--rd-peach)}
-.ride-tag .pace{background:var(--rd-dark);border-color:#bef26466;color:var(--rd-peach);text-transform:none;letter-spacing:.2px;font-size:10px}
-.ride-meta{font-size:11.5px;color:#dcfce7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ride-tag .pace{background:var(--rd-dark);border-color:color-mix(in srgb,var(--rd-cream) 40%,transparent);color:var(--rd-peach);text-transform:none;letter-spacing:.2px;font-size:10px}
+.ride-meta{font-size:11.5px;color:var(--rd-meta,#dcfce7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ride-btns{flex:none;display:flex;gap:6px;align-items:center}
 .ride-btns a{text-decoration:none;font-size:12px;font-weight:800;padding:7px 11px;border-radius:10px;white-space:nowrap}
 .rjoin{background:#25d366;color:#fff;box-shadow:0 4px 12px #25d36655}
@@ -644,6 +648,15 @@ footer a:hover{color:var(--text)}
 <body>
 <div class="wrap" id="capture">
 
+<section class="sponsors rtop">
+  <h3>Group rides<span class="car-dots" id="rdDots" aria-hidden="true"></span></h3>
+  <div class="spwrap">
+    <div class="spstack">
+      <div class="rides" id="rides"></div>
+    </div>
+  </div>
+</section>
+
 <header>
   <div class="brand">
     <h1>TheCyclist<span>Dubai</span></h1>
@@ -806,14 +819,7 @@ footer a:hover{color:var(--text)}
   </a>
 </section>
 
-<section class="sponsors">
-  <h3>Group rides<span class="car-dots" id="rdDots" aria-hidden="true"></span></h3>
-  <div class="spwrap">
-    <div class="spstack">
-      <div class="rides" id="rides"></div>
-    </div>
-  </div>
-</section>
+
 
 <footer data-noshot>
   <a href="disclaimer.html">Disclaimer & data sources</a>
@@ -1440,7 +1446,7 @@ function renderRides(){
   $('rides').innerHTML='<div class="car-view"><div class="car-track">'+rs.map((r,i)=>{const l=parseLocal(r.occ+'T00:00'),rd=relDay(r.occ+'T00:00'),f=rideForecast(r);
     const st=(r.start?`📍 Start: <b>${esc(r.start)}</b> · `:'')+(r.pace?`<span class="m-pace">⚡ ${esc(r.pace.replace(/\s*avg$/,''))} · </span>`:'');
     const fx=st+(f?`<span class="m-fl">${r.time}–${String(+r.time.slice(0,2)+3).padStart(2,'0')}:${r.time.slice(3)}: </span><b>${f.tr}</b> · ${spd(f.w)} ${uLbl()} ${f.dir} · <b>${f.lab} ${f.sc}</b>`:`${l.day} ${fmtTime(r.time)} · forecast available closer to the day`);
-    return `<div class="ride">
+    return `<div class="ride${r.theme&&r.theme!=='green'?' th-'+esc(r.theme):''}">
       <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
       <div class="ride-date"><span>${rd==='Today'?'TODAY':l.day.toUpperCase()}</span><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
       <div class="ride-body">
@@ -1504,7 +1510,9 @@ function rideText(r){const f=rideForecast(r);
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\n${spDeal(x).replace(/^./,m=>m.toUpperCase())}\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 
 /* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */
-const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#ffcf00','#ffe100','#fff16a','#ffffff','#d0001a'],lime:['#f2f2dc','#e4efcf','#c4d24c','#ffffff','#00482a']};
+const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#ffcf00','#ffe100','#fff16a','#ffffff','#d0001a'],lime:['#f2f2dc','#e4efcf','#c4d24c','#ffffff','#00482a'],purple:['#2e1065','#5b21b6','#a855f7','#e9d5ff','#f5d0fe'],rorange:['#7c2d12','#c2410c','#fb923c','#fed7aa','#fde68a']};
+const RIDE_TH={green:'green',purple:'purple',orange:'rorange'};
+const RIDE_ROW={green:'linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)',purple:'linear-gradient(110deg,#2e1065,#5b21b6 50%,#a855f7)',orange:'linear-gradient(110deg,#7c2d12,#c2410c 50%,#fb923c)'};
 /* light card themes: dark text colours */
 const LIGHT={yellow:{ink:'#1f1a00',line:'rgba(31,26,0,.9)',route:'rgba(122,98,0,.25)',dot:'rgba(226,0,26,.3)',dow:'#e2001a',day:'#e2001a',mon:'#7a6200',t1:'#fff',chip:'rgba(255,255,255,.55)',chipT:'#3d3300'},
   lime:{ink:'#00482a',line:'rgba(0,72,42,.92)',route:'rgba(0,72,42,.2)',dot:'rgba(0,72,42,.22)',dow:'#6b8a12',day:'#00482a',mon:'#6b8a12',t1:'#e9f5a8',chip:'rgba(0,72,42,.1)',chipT:'#00482a'}};
@@ -1528,8 +1536,8 @@ function drawCard({theme,dow,day,mon,tags,title,lines}){
   c.fillStyle=ink;c.font='800 72px Sora,sans-serif';let y=420;wrapLines(c,title,920).slice(0,3).forEach(l=>{c.fillText(l,80,y);y+=86});
   y+=20;c.font='600 40px Sora,sans-serif';lines.filter(Boolean).forEach(l=>{wrapLines(c,l,920).slice(0,2).forEach(x=>{c.fillStyle=dk?dk.line:'rgba(255,255,255,.92)';c.fillText(x,80,y);y+=58});y+=6});
   // brand bar
-  const bg=c.createLinearGradient(0,0,S2,0);if(theme==='strava'){bg.addColorStop(0,'#2a0c00');bg.addColorStop(.5,'#4a1500');bg.addColorStop(1,'#7a2400')}else{bg.addColorStop(0,'#052e16');bg.addColorStop(.5,'#14532d');bg.addColorStop(1,'#16a34a')}c.fillStyle=bg;c.fillRect(0,S2-110,S2,110);
-  c.fillStyle='#fff';c.font='800 44px Sora,sans-serif';c.fillText('TheCyclist',60,S2-42);const w2=c.measureText('TheCyclist').width;c.fillStyle=theme==='strava'?'#ffd2b8':'#bef264';c.fillText('Dubai',60+w2,S2-42);
+  const bg=c.createLinearGradient(0,0,S2,0);if(theme==='strava'){bg.addColorStop(0,'#2a0c00');bg.addColorStop(.5,'#4a1500');bg.addColorStop(1,'#7a2400')}else if(theme==='purple'||theme==='rorange'){bg.addColorStop(0,T3[0]);bg.addColorStop(.5,T3[1]);bg.addColorStop(1,T3[2])}else{bg.addColorStop(0,'#052e16');bg.addColorStop(.5,'#14532d');bg.addColorStop(1,'#16a34a')}c.fillStyle=bg;c.fillRect(0,S2-110,S2,110);
+  c.fillStyle='#fff';c.font='800 44px Sora,sans-serif';c.fillText('TheCyclist',60,S2-42);const w2=c.measureText('TheCyclist').width;c.fillStyle=theme==='strava'?'#ffd2b8':(theme==='purple'||theme==='rorange')?T3[3]:'#bef264';c.fillText('Dubai',60+w2,S2-42);
   c.fillStyle='#dcfce7';c.font='600 28px Sora,sans-serif';const rt=siteUrl().replace(/^https?:\/\//,'').replace(/\/$/,'');c.fillText(rt,S2-60-c.measureText(rt).width,S2-46);
   return c0;
 }
@@ -1544,7 +1552,7 @@ function shareEvent(e){if(!e)return;const l=parseLocal(e.date+'T00:00');
     lines:[`🕖 ${l.day} ${e.time?fmtTime(e.time):'· start time TBC'}`,evWhere(e)&&('🚴 '+evWhere(e)),e.note&&('🏅 '+e.note),evWe(e)&&'💪 TheCyclistDubai is taking part',e.code&&`🎟️ Code ${e.code}${e.discount?' · '+e.discount:''}`,'📝 Register: '+e.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
   shareNow(canvasFile(cv,'thecyclistdubai-event.png'),eventText(e),e.name)}
 function shareRide(r){if(!r)return;const l=parseLocal(r.occ+'T00:00'),f=rideForecast(r);
-  const cv=drawCard({theme:'green',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ Group ride',rideKind(r),r.pace?'⚡ '+r.pace:''].filter(Boolean),title:`${r.name} · ${fmtTime(r.time)}`,
+  const cv=drawCard({theme:RIDE_TH[r.theme]||'green',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ Group ride',rideKind(r),r.pace?'⚡ '+r.pace:''].filter(Boolean),title:`${r.name} · ${fmtTime(r.time)}`,
     lines:[r.start&&`📍 Start: ${r.start}`,`🗺️ ${r.place}`,f&&`🌤️ ${f.tr} · ${spd(f.w)} ${uLbl()} ${f.dir} · score ${f.sc}`,rideRule(r)&&`⛑️💡 ${rideRule(r)}`,'👥 Join via the WhatsApp group']});
   shareNow(canvasFile(cv,'thecyclistdubai-ride.png'),rideText(r),r.name)}
 function shareSponsor(x){
@@ -1561,7 +1569,7 @@ function openSheet(){
   getShot();const h=S.wx?cur(TI()):null,evs=upcomingEvents(),rs=upcomingRides(),sp=SITE.sponsors||[];
   const row=(id,bg,ic,title,sub,act='Share')=>`<button class="srow" data-s="${id}"><span class="si" style="background:${bg}">${ic}</span><span class="st"><b>${esc(title)}</b><small>${esc(sub)}</small></span><span class="sa">${act}</span></button>`;
   let H='<div class="sgrp">Weather</div>'+row('w','linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)','🌤️',`${T().short} weather`,h?`${$('mWhen').textContent} · ${Math.round(h.t)}°C · ${spd(h.w)} ${uLbl()} ${card(h.dir)} · score ${h.score}`:'Map image + full forecast');
-  if(rs.length)H+='<div class="sgrp">Group rides</div>'+rs.map((r,i)=>row('r'+i,'linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)','🚴‍♂️',`${r.name} · ${occLabel(r.occ)}`,`${fmtTime(r.time)} · ${r.place} · ${[r.type,r.distance].filter(Boolean).join(' · ')}${r.start?' · Start '+r.start:''}${r.pace?' · '+r.pace:''}${rideRule(r)?' · '+rideRule(r):''}`)).join('');
+  if(rs.length)H+='<div class="sgrp">Group rides</div>'+rs.map((r,i)=>row('r'+i,RIDE_ROW[r.theme]||RIDE_ROW.green,'🚴‍♂️',`${r.name} · ${occLabel(r.occ)}`,`${fmtTime(r.time)} · ${r.place} · ${[r.type,r.distance].filter(Boolean).join(' · ')}${r.start?' · Start '+r.start:''}${r.pace?' · '+r.pace:''}${rideRule(r)?' · '+rideRule(r):''}`)).join('');
   if(evs.length)H+='<div class="sgrp">Events</div>'+evs.map((e,i)=>row('e'+i,e.theme==='yellow'?'linear-gradient(135deg,#d0001a,#ffcf00 45%,#fff16a)':e.theme==='lime'?'linear-gradient(135deg,#00482a,#0c4b3e 50%,#b5cc4a)':'linear-gradient(135deg,#0b1f4b,#1d4ed8)','📅',e.name,`${occLabel(e.date)} · ${[e.distance,e.route].filter(Boolean).join(' · ')}${e.code?` · Code ${e.code}`:''}`)).join('');
   if(sp.length)H+='<div class="sgrp">Sponsor codes</div>'+sp.map((x,i)=>row('p'+i,'linear-gradient(135deg,#111,#3f3f46)','🎁',`${x.name}: ${spShort(x)}`,`Code ${x.code} · ${x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')}`)).join('');
   $('sList').innerHTML=H;$('sheet').style.display='flex';

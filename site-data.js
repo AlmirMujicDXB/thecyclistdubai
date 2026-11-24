@@ -122,6 +122,21 @@ window.SITE = {
       pace: '20 km/h avg',
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
       location: 'https://www.google.com/maps/search/?api=1&query=Mushrif+National+Park+Mountain+Bike+Trail+Dubai',
+      theme: 'orange',             // orange ride card + share image
+    },
+    {
+      name: 'Purple Ride',
+      weekly: 'Thu',               // every Thursday
+      time: '06:45',
+      type: 'Road',
+      distance: 'BOTS → Mosque',
+      place: 'Al Qudra',
+      start: 'BOTS',
+      track: 'alqudra',
+      pace: '32 km/h avg',
+      join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
+      location: 'https://maps.app.goo.gl/ntyxGBSEaKip7akR8',
+      theme: 'purple',             // purple ride card + share image
     },
     {
       name: 'TCD Ride',
@@ -137,6 +152,7 @@ window.SITE = {
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
       location: 'https://maps.app.goo.gl/ntyxGBSEaKip7akR8',
     },
+    // theme: 'purple' | 'orange' (default green)
     // { name: 'Recovery Ride', date: '2026-12-02', time: '06:00', distance: '40 km', place: 'Meydan',
     //   track: 'meydan', pace: '28–30 km/h avg', join: 'https://chat.whatsapp.com/…', location: 'https://maps.app.goo.gl/…' },
   ],
