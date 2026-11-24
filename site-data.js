@@ -127,7 +127,7 @@ window.SITE = {
       name: 'TCD Ride',
       weekly: 'Tue',               // every Tuesday, for four months
       until: '2027-03-23',         // last ride: Tue 23 Mar 2027
-      time: '07:00',
+      time: '06:45',
       type: 'Road',
       distance: '36 km',
       place: 'Al Qudra',
