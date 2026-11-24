@@ -455,6 +455,11 @@ a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px 
 .cshare{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid #ffffff55;background:#ffffff1f;color:#fff;display:grid;place-items:center;cursor:pointer;position:relative}
 .cshare:hover{background:#ffffff33}
 .ride-btns .cshare{height:32px}
+/* ride cards: small Details, big Share (owner asked) */
+.ride-btns .rloc{font-size:11px;padding:5px 9px;border-radius:9px;opacity:.95}
+.ride-btns .rshare{width:auto;height:40px;padding:0 16px;gap:7px;display:inline-flex;align-items:center;justify-content:center;font:800 13.5px Sora,sans-serif;background:#fff;color:var(--rd-dark);border:0;box-shadow:0 6px 16px #0003}
+.ride-btns .rshare:hover{background:#fff;transform:translateY(-1px)}
+.ride-btns .rshare svg{width:18px;height:18px}
 #sheet{display:none;position:fixed;inset:0;background:#0f172a88;z-index:9997;align-items:flex-end;justify-content:center}
 #sheet .sbox{background:#fff;width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));max-height:86vh;overflow:auto;box-shadow:0 -10px 40px #0f172a33}
 @media(min-width:681px){#sheet{align-items:center}#sheet .sbox{border-radius:20px}}
@@ -636,7 +641,8 @@ footer a:hover{color:var(--text)}
   .ride-meta{white-space:normal;font-size:11px;line-height:1.35}
   .ride-date{width:44px;height:46px}
   .ride-btns{width:100%;padding-left:54px}
-  .ride-btns a{flex:1;text-align:center}
+  .ride-btns a{flex:none;text-align:center}
+  .ride-btns .rshare{flex:1;height:38px}
   .lmart{min-height:0}
   .lmart .fb{font-size:15px;letter-spacing:3px}
   .lmdesc{display:none}
@@ -1461,7 +1467,7 @@ function renderRides(){
       <div class="ride-btns">
         
         ${r.page?`<a class="rloc" href="${esc(r.page)}">Details ›</a>`:r.location?`<a class="rloc" href="${esc(r.location)}" target="_blank" rel="noopener">Location ↗</a>`:''}
-        <button class="cshare" data-rd="${i}" aria-label="Share ride" title="Share ride">${SHARE_ICO}</button>
+        <button class="cshare rshare" data-rd="${i}" aria-label="Share ride" title="Share ride">${SHARE_ICO}<span>Share</span></button>
       </div>
     </div>`}).join('')+'</div></div>';carSync('rides');
   $('rides').querySelectorAll('[data-rd]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareRide(upcomingRides()[+b.dataset.rd])});
