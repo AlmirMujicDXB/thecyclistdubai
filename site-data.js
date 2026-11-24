@@ -135,7 +135,9 @@ window.SITE = {
       type: 'Road',
       distance: '58.5 km',         // from the owner's GPX (purple-ride.gpx): 29.25 km each way, 145 m climbing
       route: 'BOTS → Mosque & back',     // mosque by Bab Al Shams
-      page: 'purple-ride.html',    // ride page: map, wind, forecast, planner, GPX download (the card links to it)
+      page: 'purple-ride.html',
+      stopMin: 15,                 // 15-minute break at the Mosque turnaround (in the ride page schedule)
+      strava: 'https://www.strava.com/clubs/1886885/group_events/3560231387685719248/occurrences/FQIWoLOg07HlvehiHBTUHxQWFDQUDBQ8FAAAHBaA4YHbwmgAAA==',  // Join ride on the ride page    // ride page: map, wind, forecast, planner, GPX download (the card links to it)
       place: 'Al Qudra',
       start: 'BOTS',
       track: 'alqudra',

@@ -54,6 +54,7 @@ a{color:inherit}
 .stat{background:#ffffff1f;border:1px solid #ffffff33;border-radius:12px;padding:8px 10px}
 .stat small{display:block;font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#e9d5ff}
 .stat b{font-size:18px}
+.stat .stx{display:block;font-size:10.5px;color:#e9d5ff;font-weight:700}
 .hbtns{position:relative;display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:42px;padding:0 16px;border-radius:12px;font-weight:800;text-decoration:none;border:0;cursor:pointer;font-family:inherit;font-size:13.5px}
 .btn.join{background:#22c55e;color:#fff;box-shadow:0 6px 16px #16a34a55}
@@ -188,11 +189,11 @@ td .da{display:inline-block;color:var(--p1);font-weight:900}
     <div class="stat"><small>Climbing</small><b id="sGain">145 m</b></div>
     <div class="stat"><small>Turnaround</small><b id="sTurn">km 29.3</b></div>
     <div class="stat"><small>Group pace</small><b id="sPace">32 km/h</b></div>
-    <div class="stat"><small>Ride time</small><b id="sTime">1:50</b></div>
+    <div class="stat"><small>Ride time</small><b id="sTime">2:05</b><span class="stx" id="sTimeN"></span></div>
     <div class="stat"><small>Back at BOTS</small><b id="sBack">8:35</b></div>
   </div>
   <div class="hbtns">
-    <a class="btn join" id="bJoin" href="#" target="_blank" rel="noopener">Join ride</a>
+    <a class="btn join" id="bJoin" href="#" target="_blank" rel="noopener">Join ride on Strava ↗</a>
     <a class="btn w" id="bLoc" href="#" target="_blank" rel="noopener">Location ↗</a>
     <a class="btn gpx" href="purple-ride.gpx" download="Purple-Ride-BOTS-Mosque-and-back.gpx">⬇ Download GPX</a>
     <a class="btn w" id="bStrava" href="https://www.strava.com/routes/3560216414670927544" target="_blank" rel="noopener">Strava route ↗</a>
@@ -320,6 +321,7 @@ function wxAt(mins){if(!ST.wx)return null;const h0=Math.floor(mins/60),f=mins/60
   // wind direction: interpolate as vector
   const u=v=>[Math.sin(v.wind_direction_10m*rad)*v.wind_speed_10m,Math.cos(v.wind_direction_10m*rad)*v.wind_speed_10m];
   const ua=u(A),ub=u(B),ux=ua[0]+(ub[0]-ua[0])*f,uy=ua[1]+(ub[1]-ua[1])*f;o.wind_direction_10m=(Math.atan2(ux,uy)/rad+360)%360;o.wind_speed_10m=Math.hypot(ux,uy);return o}
+const STOP=+RIDE.stopMin||0; // break at the Mosque, minutes
 const startMins=()=>{const [h,m]=ST.start.split(':').map(Number);return h*60+m};
 
 /* ---------- physics (same model as the Al Qudra simulator) ---------- */
@@ -332,7 +334,7 @@ const powAt=(v,e,r)=>Math.max(0,(0.5*e.rho*r.cda*(v+e.hw)*Math.abs(v+e.hw)*v+CRR
 function vAt(P,e,r){let lo=.5,hi=30;for(let k=0;k<40;k++){const m=(lo+hi)/2;if(powAt(m,e,r)>P)hi=m;else lo=m}return(lo+hi)/2}
 // simulate the whole route; mode 'speed' (km/h) or 'power' (W); wind=false → still air
 function sim(mode,val,wind=true,r=rider()){let t=0,E=0,T={out:{t:0,E:0,len:0,k:{head:0,tail:0,cross:0}},back:{t:0,E:0,len:0,k:{head:0,tail:0,cross:0}}};const t0=startMins(),kinds=[];
-  for(const s of SEG){const e=wind?env(s,t0+t/60):Object.assign(env(s,t0+t/60),{hw:0});let v,P;
+  for(const s of SEG){const clk=t0+t/60+(s.leg==='back'?STOP:0);const e=wind?env(s,clk):Object.assign(env(s,clk),{hw:0});let v,P;
     if(mode==='speed'){v=val/3.6;P=powAt(v,e,r)}else{P=val;v=vAt(P,e,r)}
     const dt=s.len/v;t+=dt;E+=P*dt;const L=T[s.leg];L.t+=dt;L.E+=P*dt;L.len+=s.len;L.k[e.kind]+=s.len;kinds.push(e.kind)}
   const km=CUM[CUM.length-1]/1000;return{t,E,km,v:km/(t/3600),P:E/t,out:T.out,back:T.back,kinds,r}}
@@ -394,8 +396,8 @@ function renderAll(){
   const has=ST.wx&&wxAt(sm);
   $('fcNote').textContent=has?'Forecast loaded for this ride':ST.wx?'Forecast not out yet for this date (Open-Meteo gives 16 days): planner uses still air':'Forecast unavailable right now: planner uses still air';
   // group pace result
-  const g=sim('speed',pace,!!has);const fin=sm+g.t/60;
-  $('sTime').textContent=hm(g.t/60);$('sBack').textContent=fmt12(Math.floor(fin/60),Math.round(fin%60)).replace(/ (AM|PM)/,m=>m.toLowerCase());
+  const g=sim('speed',pace,!!has);const fin=sm+g.t/60+STOP;
+  $('sTime').textContent=hm(g.t/60+STOP);$('sTimeN').textContent=STOP?`incl. ${STOP} min stop`:'';$('sBack').textContent=fmt12(Math.floor(fin/60),Math.round(fin%60)).replace(/ (AM|PM)/,m=>m.toLowerCase());
   const when=`· ${relLabel(ST.date)} ${fmt12(Math.floor(sm/60),sm%60)}`;$('mapWhen').textContent=when;$('wxWhen').textContent=when;$('kitWhen').textContent=when;
   drawRoute(g);
   // wind badge
@@ -410,7 +412,7 @@ function renderAll(){
   else{$('spWind').textContent='--';$('spWindN').textContent='Wind shows when the forecast is out.'}
   renderWx(g);renderPlan();renderKit(g);
 }
-function renderWx(g){const sm=startMins(),em=sm+g.t/60,w=wxAt(sm),wm=wxAt((sm+em)/2),we=wxAt(em);
+function renderWx(g){const sm=startMins(),em=sm+g.t/60+STOP,w=wxAt(sm),wm=wxAt((sm+em)/2),we=wxAt(em);
   if(!w){$('vRing').textContent='--';$('vRing').style.background='#eee';$('vTitle').textContent='Forecast comes closer to the day';$('vText').textContent='Open-Meteo forecasts 16 days ahead. Pick an earlier Thursday or check back later.';$('wGrid').innerHTML='';$('wTbl').innerHTML='';return}
   const sc=score(wm||w),col=sc>=80?'#16a34a':sc>=60?'#65a30d':sc>=40?'#eab308':'#dc2626';
   $('vRing').textContent=sc;$('vRing').style.background=`conic-gradient(${col} ${sc*3.6}deg,#eee6fa 0)`;$('vRing').style.boxShadow='inset 0 0 0 7px #fff';
@@ -439,8 +441,8 @@ function renderWx(g){const sm=startMins(),em=sm+g.t/60,w=wxAt(sm),wm=wxAt((sm+em
 
 function renderPlan(){const has=ST.wx&&wxAt(startMins()),r=rider(),sm=startMins();
   const res=ST.mode==='speed'?sim('speed',+$('inSpeed').value||32,!!has,r):sim('power',+$('inPower').value||200,!!has,r);
-  const fin=sm+res.t/60,kcal=res.E/1000/(4.184*.24)*1;
-  $('res').innerHTML=`<div><small>Finish time</small><b>${hm(res.t/60)}</b><span>back at BOTS ≈ ${fmt12(Math.floor(fin/60),Math.round(fin%60))}</span></div>
+  const fin=sm+res.t/60+STOP,kcal=res.E/1000/(4.184*.24)*1;
+  $('res').innerHTML=`<div><small>Back at BOTS</small><b>${fmt12(Math.floor(fin/60),Math.round(fin%60))}</b><span>${hm(res.t/60)} riding${STOP?` + ${STOP} min stop at the Mosque`:''}</span></div>
     <div><small>Average speed</small><b>${res.v.toFixed(1)} <small style="display:inline">km/h</small></b><span>${ST.mode==='power'?'from the power you set':'speed you set'}</span></div>
     <div><small>Average power</small><b>${Math.round(res.P)} W</b><span>${(res.P/r.mr).toFixed(2)} W/kg</span></div>
     <div><small>Way out / back</small><b>${Math.round(res.out.E/res.out.t)} / ${Math.round(res.back.E/res.back.t)} W</b><span>${ST.mode==='power'?`${(res.out.len/res.out.t*3.6).toFixed(1)} / ${(res.back.len/res.back.t*3.6).toFixed(1)} km/h`:hm(res.out.t/60)+' / '+hm(res.back.t/60)}</span></div>
@@ -448,9 +450,9 @@ function renderPlan(){const has=ST.wx&&wxAt(startMins()),r=rider(),sm=startMins(
     <div><small>Wind cost</small><b>${has?`${(()=>{const s=ST.mode==='speed'?sim('speed',+$('inSpeed').value||32,false,r):sim('power',+$('inPower').value||200,false,r);return ST.mode==='speed'?`${res.P-s.P>=0?'+':''}${Math.round(res.P-s.P)} W`:`${res.t-s.t>=0?'+':''}${Math.round((res.t-s.t)/60)} min`})()}`:'--'}</b><span>vs. still air</span></div>`;
   // speed vs time table
   const pace=parseFloat(RIDE.pace)||32;let rows='';
-  for(let v=26;v<=38;v+=1){const s=sim('speed',v,!!has,r),f=sm+s.t/60;
+  for(let v=26;v<=38;v+=1){const s=sim('speed',v,!!has,r),f=sm+s.t/60+STOP;
     rows+=`<tr class="${v===Math.round(pace)?'on':''}"><td><b>${v} km/h</b>${v===Math.round(pace)?' · group':''}</td><td>${hm(s.t/60)}</td><td>${fmt12(Math.floor(f/60),Math.round(f%60))}</td><td>${Math.round(s.P)} W</td><td>${(s.P/r.mr).toFixed(1)}</td><td>${Math.round(s.E/1000/(4.184*.24)/10)*10}</td></tr>`}
-  $('tSpd').innerHTML=`<thead><tr><th>Avg speed</th><th>Time</th><th>Back at</th><th>Power</th><th>W/kg</th><th>kcal</th></tr></thead><tbody>${rows}</tbody>`;
+  $('tSpd').innerHTML=`<thead><tr><th>Avg speed</th><th>Riding</th><th>Back at${STOP?` (+${STOP} min stop)`:''}</th><th>Power</th><th>W/kg</th><th>kcal</th></tr></thead><tbody>${rows}</tbody>`;
   drawChart(r,!!has,res)}
 function drawChart(r,has,res){const svg=$('chPow'),W=svg.clientWidth||520,H=240,pl=44,pr=12,pt=12,pb=32;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   const Ps=[];for(let P=100;P<=360;P+=20)Ps.push(P);
@@ -466,7 +468,7 @@ function drawChart(r,has,res){const svg=$('chPow'),W=svg.clientWidth||520,H=240,
   g+=`<text x="${pl}" y="${pt+2}" font-size="10.5" fill="#5b6b80" dy="8">km/h</text><g font-size="11" font-weight="700"><rect x="${pl+40}" y="${pt}" width="12" height="3" fill="#7c3aed" rx="1.5"/><text x="${pl+56}" y="${pt+5}" fill="#13233f">${has?'with forecast wind':'still air (no forecast yet)'}</text>${has?`<rect x="${pl+200}" y="${pt}" width="12" height="3" fill="#94a3b8" rx="1.5"/><text x="${pl+216}" y="${pt+5}" fill="#13233f">still air</text>`:''}</g>`;
   svg.innerHTML=g}
 
-function renderKit(g){const sm=startMins(),em=sm+g.t/60,w=wxAt(sm),we=wxAt(em);const K=[],F=[];
+function renderKit(g){const sm=startMins(),em=sm+g.t/60+STOP,w=wxAt(sm),we=wxAt(em);const K=[],F=[];
   const fs=w?w.apparent_temperature:24,fe=we?we.apparent_temperature:fs,ws=w?w.wind_speed_10m:10,uv=w?Math.max(w.uv_index,we?we.uv_index:0):5,rain=w?w.precipitation_probability:0,hum=w?w.relative_humidity_2m:60;
   const day=ST.wx&&ST.wx.D[ST.date],sr=day&&day.sunrise?day.sunrise.slice(11,16):null;
   const add=(L,i,b,s)=>L.push(`<li><i>${i}</i><div><b>${b}</b><span>${s}</span></div></li>`);
@@ -489,7 +491,7 @@ function renderKit(g){const sm=startMins(),em=sm+g.t/60,w=wxAt(sm),we=wxAt(em);c
   add(F,'🍌',`${carbs} g carbs per hour · ≈ ${Math.round(carbs*h/5)*5} g in total`,`${hm(h*60)} at the group pace, ≈ ${Math.round(kcal/10)*10} kcal burned. Bars, gels or chews: start eating after 30–40 min.`);
   add(F,'💧',`${bottles} × 750 ml bottle${bottles>1?'s':''} (≈ ${L.toFixed(1)} L)`,`≈ ${flH.toFixed(2)} L per hour at ${Math.round(T)}°C${hum>70?` and ${Math.round(hum)}% humidity`:''}. Sip every 10–15 min.`);
   add(F,'🧂',T>=27||hum>=70?'Electrolytes in every bottle':'Electrolytes in one bottle',T>=27||hum>=70?'500–800 mg sodium per litre: humid, sweaty morning.':'300–500 mg sodium per litre is enough.');
-  add(F,'🕌','Turnaround at the Mosque',`km ${(CUM[TURN]/1000).toFixed(1)}: regroup, eat, and drink before the way back.`);
+  add(F,'🕌',`${STOP?STOP+'-min break':'Turnaround'} at the Mosque`,`km ${(CUM[TURN]/1000).toFixed(1)}${STOP?`, ≈ ${(()=>{const o=sm+g.out.t/60;return fmt12(Math.floor(o/60),Math.round(o%60))})()}`:''}: regroup, eat something and refill before the way back.`);
   add(F,'🥤','After the ride','Within 30 min: carbs + 20–30 g protein (chocolate milk, a sandwich, a smoothie at BOTS).');
   $('kit').innerHTML=K.join('');$('fuel').innerHTML=F.join('')}
 
@@ -499,7 +501,7 @@ document.querySelectorAll('#modeSeg button').forEach(b=>b.onclick=()=>{document.
   $('fSpeed').style.display=ST.mode==='speed'?'':'none';$('fPower').style.display=ST.mode==='power'?'':'none';renderPlan()});
 ['inSpeed','inPower','inRider','inBike','inPos','inDraft'].forEach(id=>$(id).addEventListener('input',()=>{if(SEG.length)renderPlan()}));
 $('tStart').addEventListener('change',()=>{if(/^\d\d:\d\d$/.test($('tStart').value)){ST.start=$('tStart').value;renderAll()}});
-$('bJoin').href=RIDE.join||LINKS.whatsappGroup||'#';$('bLoc').href=RIDE.location||'#';
+$('bJoin').href=RIDE.strava||RIDE.join||LINKS.whatsappGroup||'#';$('bLoc').href=RIDE.location||'#';
 (function tick(){const n=dubaiNow();$('clk').textContent=`${pad(n.getUTCHours())}:${pad(n.getUTCMinutes())}`;setTimeout(tick,15000)})();
 window.addEventListener('resize',()=>{if(SEG.length)drawChart(rider(),!!(ST.wx&&wxAt(startMins())),null)});
 
