@@ -425,6 +425,8 @@ a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px 
 .ride{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;color:#fff;
   background:radial-gradient(70% 140% at 100% 0%,var(--rd-halo,#bef26440) 0%,transparent 60%),linear-gradient(110deg,var(--rd-dark) 0%,var(--rd-mid) 50%,var(--rd-bright) 100%);box-shadow:0 8px 22px var(--rd-shadow,#052e1640)}
 /* ride colour themes (site-data.js theme:) */
+.ride.haspage{cursor:pointer}
+.ride.haspage .ride-title::after{content:' ›';opacity:.7}
 .ride.th-purple{--rd-dark:#2e1065;--rd-mid:#5b21b6;--rd-bright:#a855f7;--rd-cream:#e9d5ff;--rd-peach:#f5d0fe;--rd-ink:#3b0764;--rd-meta:#f3e8ff;--rd-halo:#e879f94d;--rd-shadow:#3b076440;--rd-accent:#7e22ce}
 .ride.th-orange{--rd-dark:#7c2d12;--rd-mid:#c2410c;--rd-bright:#fb923c;--rd-cream:#fed7aa;--rd-peach:#fde68a;--rd-ink:#431407;--rd-meta:#ffedd5;--rd-halo:#fde68a4d;--rd-shadow:#7c2d1240;--rd-accent:#c2410c}
 .ride-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -1448,7 +1450,7 @@ function renderRides(){
   $('rides').innerHTML='<div class="car-view"><div class="car-track">'+rs.map((r,i)=>{const l=parseLocal(r.occ+'T00:00'),rd=relDay(r.occ+'T00:00'),f=rideForecast(r);
     const st=(r.route?`📍 <b>${esc(r.route)}</b> · `:r.start?`📍 Start: <b>${esc(r.start)}</b> · `:'')+(r.pace?`<span class="m-pace">⚡ ${esc(r.pace.replace(/\s*avg$/,''))} · </span>`:'');
     const fx=st+(f?`<span class="m-fl">${r.time}–${String(+r.time.slice(0,2)+3).padStart(2,'0')}:${r.time.slice(3)}: </span><b>${f.tr}</b> · ${spd(f.w)} ${uLbl()} ${f.dir} · <b>${f.lab} ${f.sc}</b>`:`${l.day} ${fmtTime(r.time)} · forecast available closer to the day`);
-    return `<div class="ride${r.theme&&r.theme!=='green'?' th-'+esc(r.theme):''}">
+    return `<div class="ride${r.theme&&r.theme!=='green'?' th-'+esc(r.theme):''}${r.page?' haspage':''}"${r.page?` data-page="${esc(r.page)}" title="Open the ${esc(r.name)} page"`:''}>
       <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
       <div class="ride-date"><span>${rd==='Today'?'TODAY':l.day.toUpperCase()}</span><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
       <div class="ride-body">
@@ -1463,6 +1465,8 @@ function renderRides(){
       </div>
     </div>`}).join('')+'</div></div>';carSync('rides');
   $('rides').querySelectorAll('[data-rd]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareRide(upcomingRides()[+b.dataset.rd])});
+  // cards with their own page open it (a swipe never does: the carousel swallows that click)
+  $('rides').querySelectorAll('.ride[data-page]').forEach(c=>c.addEventListener('click',e=>{if(e.target.closest('a,button'))return;location.href=c.dataset.page}));
 }
 /* ---------- one-card carousels for Events and Group rides: auto every 5 s, manual by sliding ---------- */
 const CAR={rides:{i:0,dots:'rdDots',delay:0}};
@@ -1514,7 +1518,7 @@ function eventsShort(){const ev=upcomingEvents();if(!ev.length)return'';
   return '\n📅 *Events* · we ride 💪\n'+ev.map(e=>`• *${e.short||e.name}* ${occLabel(e.date).replace(/^(Today|Tomorrow) /,'')}${e.distance?` · ${e.distance}`:''}${e.code?` · code *${e.code}*${e.discount?` ${e.discount}`:''}`:''} ${e.url}`).join('\n')+'\n'}
 function rideText(r){const f=rideForecast(r);
   const t=`🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.start?`Start: ${r.start} · `:''}${r.place}\n`+(r.route?`🛣️ ${r.route}\n`:'')+(rideKind(r)?`${rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(rideRule(r)?`⛑️💡 ${rideRule(r)}\n`:'')+
-    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+sponsorsShort()+eventsShort()+footerText();
+    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`✅ Join: ${r.join}\n`:'')+(r.location?`🗺️ Location: ${r.location}\n`:'')+(r.page?`📊 Ride page (map, wind, GPX): ${siteUrl().replace(/[^/]*$/,'')}${r.page}\n`:'')+sponsorsShort()+eventsShort()+footerText();
   return t.length>1010?t.replace('📲 Live ride weather & forecast: ','📲 ').replace('👥 Join our WhatsApp group: ','👥 ').replace(/\n🌤️ Forecast: [^\n]*/,''):t}
 function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\n${spDeal(x).replace(/^./,m=>m.toUpperCase())}\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
 

@@ -133,8 +133,9 @@ window.SITE = {
       weekly: 'Thu',               // every Thursday
       time: '06:45',
       type: 'Road',
-      distance: '63 km',           // BOTS → Mosque 31.5 km, back 31.5 km
+      distance: '58.5 km',         // from the owner's GPX (purple-ride.gpx): 29.25 km each way, 145 m climbing
       route: 'BOTS → Mosque & back',     // mosque by Bab Al Shams
+      page: 'purple-ride.html',    // ride page: map, wind, forecast, planner, GPX download (the card links to it)
       place: 'Al Qudra',
       start: 'BOTS',
       track: 'alqudra',
