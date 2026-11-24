@@ -44,7 +44,7 @@ document.getElementById('app').innerHTML=`
     <div class="stat"><small>Back at ${NET?'the start':esc(START)}</small><b id="sBack">--</b></div>
   </div>
   <div class="hbtns">
-    ${RIDE.strava?`<a class="btn join" href="${esc(RIDE.strava)}" target="_blank" rel="noopener">Join ride on Strava ↗</a>`:''}
+    ${RIDE.strava?`<a class="btn strava" href="${esc(RIDE.strava)}" target="_blank" rel="noopener"><svg class="slogo" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>Join ride on Strava ↗</a>`:''}
     <a class="btn ${RIDE.strava?'w wa':'join'}" href="${esc(WA)}" target="_blank" rel="noopener">TCD WhatsApp group ↗</a>
     ${RIDE.location?`<a class="btn w" href="${esc(RIDE.location)}" target="_blank" rel="noopener">Location ↗</a>`:''}
     ${CFG.gpx?`<a class="btn gpx" href="${esc(CFG.gpx)}" download="${esc(CFG.gpxName||CFG.gpx)}">⬇ Download GPX</a>`:''}

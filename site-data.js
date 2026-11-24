@@ -160,6 +160,7 @@ window.SITE = {
       pace: '30 km/h avg',
       join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
       location: 'https://maps.app.goo.gl/ntyxGBSEaKip7akR8',
+      strava: 'https://www.strava.com/clubs/1886885/group_events/3560241772478523600/occurrences/FQIWoKO3se7BwuhiHBTUHxQYFAIUDBRaFAAAHBbA_-33xWgAAA==',  // Join ride on Strava (ride page)
       page: 'tcd-ride.html',       // ride page (the card's Details button); route = tcd-ride.gpx
     },
     // theme: 'purple' | 'orange' (default green)

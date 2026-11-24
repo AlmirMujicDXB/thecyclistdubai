@@ -157,3 +157,8 @@ body.th-orange{--bd:#fbe2cc;--bd2:#fdf0e4;--p0:#7c2d12;--p1:#c2410c;--p2:#c2410c
 .btn.wa{background:#fff;color:#128c7e}
 .stat .stx{display:block;font-size:10.5px;color:var(--p4);font-weight:700}
 .hide{display:none!important}
+/* Join ride on Strava: Strava orange + logo, on every ride page */
+.btn.strava{background:#fc4c02;color:#fff;box-shadow:0 6px 16px #fc4c0255}
+.btn.strava:hover{background:#e34402}
+.btn.strava .slogo{width:17px;height:17px;flex:none}
+@media (max-width:420px){.hbtns .btn{font-size:12.5px;padding:0 8px;gap:5px}.btn.strava .slogo{width:15px;height:15px}}
