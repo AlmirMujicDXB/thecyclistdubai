@@ -935,7 +935,7 @@ function utRender(){const el=$('uaet');if(!el)return;const rs=utRaces(),now=Date
 function utSwap(i){const w=$('utIn');w.classList.remove('in');w.classList.add('out');
   setTimeout(()=>{UT.pick=i;UT.prev={};$('utCd').innerHTML='';utRender();w.classList.remove('out');void w.offsetWidth;w.classList.add('in')},230)}
 function utCycle(){clearTimeout(UT.t);const n=utRaces().length;if(n<2)return;
-  UT.t=setTimeout(()=>{if(UT.hold){UT.resume=true;return}utSwap((UT.pick+1)%n);utCycle()},5000)}
+  UT.t=setTimeout(()=>{if(UT.hold){UT.resume=true;return}utSwap((UT.pick+1)%n);utCycle()},10000)}
 function utInit(){const el=$('uaet');if(!el)return;
   el.addEventListener('mouseenter',()=>{UT.hold=true;el.classList.add('hold')});
   el.addEventListener('mouseleave',()=>{UT.hold=false;el.classList.remove('hold');if(UT.resume){UT.resume=false;utSwap((UT.pick+1)%utRaces().length);utCycle()}});
