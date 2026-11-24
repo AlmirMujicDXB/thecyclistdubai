@@ -116,20 +116,6 @@ window.SITE = {
 
   rides: [
     {
-      name: 'Mushrif MTB Ride',
-      weekly: 'Wed',               // every Wednesday
-      time: '06:30',
-      type: 'MTB / Gravel',
-      place: 'Mushrif MTB Track',
-      start: 'Entrance to MTB Park',
-      track: 'mushrif',
-      pace: '20 km/h avg',
-      join: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
-      location: 'https://www.google.com/maps/search/?api=1&query=Mushrif+National+Park+Mountain+Bike+Trail+Dubai',
-      page: 'mushrif-ride.html',   // ride page (the card's Details button)
-      theme: 'orange',             // orange ride card + share image
-    },
-    {
       name: 'Purple Ride',
       weekly: 'Thu',               // every Thursday
       time: '06:45',
