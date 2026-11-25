@@ -1,0 +1,72 @@
+/* RSVP block on the ride pages.
+   Green tokens match the TCD ride / ride-page theme (not the purple page's
+   own colours): the card stays green on every ride page.
+   Fonts: Sora for text, JetBrains Mono for the rider count. */
+.rsvp{--rsvp-ink:#13233f;--rsvp-mut:#5b6b80;--rsvp-green:#16a34a;--rsvp-green-d:#15803d;--rsvp-green-deep:#14532d;--rsvp-mint:#dcfce7;--rsvp-wash:#f4fbf6;--rsvp-line:#d9f2e1;--rsvp-card:#ffffff;
+  position:relative;margin-top:14px;padding:18px 18px 14px;border-radius:20px;border:1px solid var(--rsvp-line);
+  background:linear-gradient(180deg,#f7fdf9 0%,#fff 42%);box-shadow:0 10px 28px #14532d12;color:var(--rsvp-ink);font-family:Sora,system-ui,sans-serif}
+.rsvp *{box-sizing:border-box}
+.rsvp-h h2{display:flex;align-items:center;gap:8px;margin:0;font-size:20px;font-weight:800;letter-spacing:-.2px;color:var(--rsvp-green-d)}
+.rsvp-bike{width:20px;height:20px;flex:none}
+.rsvp-lead{margin:8px 0 0;max-width:78ch;font-size:13.5px;line-height:1.5;font-weight:500;color:#3d4d63}
+.rsvp-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:12px 14px;align-items:end;margin-top:14px}
+.rsvp-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rsvp-lab{font-size:11px;font-weight:800;letter-spacing:.55px;text-transform:uppercase;color:#6b7c90}
+.rsvp-lab .req{color:#e11d48;font-style:normal}
+.rsvp-lab .opt{text-transform:none;letter-spacing:0;font-weight:600;font-style:normal;color:#98a4b3;margin-left:4px}
+.rsvp input{width:100%;font:600 15px Sora,system-ui,sans-serif;color:var(--rsvp-ink);background:#fff;border:1px solid #d5e0ea;border-radius:12px;padding:12px 13px;min-width:0}
+.rsvp input::placeholder{color:#b0b8c4;font-weight:500}
+.rsvp input:focus{outline:2px solid var(--rsvp-green);outline-offset:1px;border-color:var(--rsvp-green)}
+.rsvp-go{height:48px;padding:0 18px;border:0;border-radius:12px;cursor:pointer;white-space:nowrap;
+  background:#22c55e;color:#fff;font:800 14.5px Sora,system-ui,sans-serif;box-shadow:0 6px 16px #16a34a55}
+.rsvp-go:hover{background:var(--rsvp-green)}
+.rsvp-go:focus-visible{outline:2px solid var(--rsvp-green-deep);outline-offset:2px}
+.rsvp-go:disabled{opacity:.7;cursor:wait}
+.rsvp-msg{grid-column:1/-1;margin:0;font-size:13px;font-weight:700;line-height:1.4;color:#9a3412;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:8px 11px}
+.rsvp-form[hidden],.rsvp-ok[hidden],.rsvp-msg[hidden],.rsvp-pill[hidden]{display:none !important}
+.rsvp-form.shake{animation:rsvp-shake .4s}
+@keyframes rsvp-shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.rsvp-ok{display:flex;gap:12px;align-items:flex-start;margin-top:14px;background:#fff;border:1px solid #bbf7d0;border-radius:14px;padding:13px 14px}
+.rsvp-ok i{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--rsvp-mint);color:var(--rsvp-green-d);font-style:normal;font-weight:800}
+.rsvp-ok b{display:block;font-size:15.5px;color:var(--rsvp-green-deep)}
+.rsvp-ok span{display:block;margin-top:2px;font-size:13px;font-weight:500;color:#3f6b55;line-height:1.4}
+.rsvp-who{margin-top:18px}
+.rsvp-who-top{display:grid;grid-template-columns:1fr auto;grid-template-areas:"title pills" "count pills";align-items:center;column-gap:12px;row-gap:2px}
+.rsvp-who h3{grid-area:title;margin:0;font-size:18px;font-weight:800;letter-spacing:-.2px}
+.rsvp-count{grid-area:count;margin:0;display:flex;align-items:baseline;gap:8px}
+.rsvp-count b{font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:700;font-size:42px;line-height:1;letter-spacing:-1px;color:var(--rsvp-green);font-variant-numeric:tabular-nums}
+.rsvp-count span{font-size:15px;font-weight:600;color:var(--rsvp-mut)}
+.rsvp-pills{grid-area:pills;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;align-items:center}
+.rsvp-pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;font-weight:800;letter-spacing:.35px;line-height:1}
+.rsvp-pill.ex{background:#fef3c7;color:#b45309;border:1px solid #fde68a;font-size:10.5px;padding:5px 8px}
+.rsvp-pill.live{background:#111827;color:#fff;font-size:12px;font-weight:700;letter-spacing:0;padding:5px 10px 5px 8px}
+.rsvp-pill.live i{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 0 #4ade8088;animation:rsvp-pulse 1.6s ease-out infinite}
+.rsvp-pill.live.off{background:#3f3f46}
+.rsvp-pill.live.off i{display:none;animation:none}
+@keyframes rsvp-pulse{70%{box-shadow:0 0 0 6px #4ade8000}100%{box-shadow:0 0 0 0 #4ade8000}}
+.rsvp-priv{margin:6px 0 0;font-size:12.5px;font-weight:500;color:#7b8798}
+.rsvp-grid{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rsvp-person{display:flex;align-items:center;gap:12px;background:var(--rsvp-card);border:1px solid #e5f3ea;border-radius:14px;padding:10px 12px;min-width:0}
+.rsvp-av{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#e7f8ee;color:var(--rsvp-green-d);font-size:12.5px;font-weight:800;letter-spacing:.2px}
+.rsvp-id{min-width:0}
+.rsvp-id strong{display:block;font-size:14.5px;font-weight:800;color:var(--rsvp-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rsvp-lvl{display:inline-block;margin-top:3px;padding:2px 7px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:.45px;text-transform:uppercase}
+.rsvp-lvl.intermediate,.rsvp-lvl.going{background:#dcfce7;color:#15803d}
+.rsvp-lvl.advanced,.rsvp-lvl.declined{background:#fce7f3;color:#db2777}
+.rsvp-lvl.beginner,.rsvp-lvl.maybe{background:#dbeafe;color:#2563eb}
+.rsvp-foot{margin:12px 0 0;font-size:12px;font-weight:500;color:#8b97a8}
+.rsvp-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:700px){
+  .rsvp{padding:14px 12px 12px;border-radius:16px}
+  .rsvp-h h2{font-size:17px}
+  .rsvp-lead{font-size:13px}
+  .rsvp-form{grid-template-columns:1fr;gap:10px}
+  .rsvp-go{width:100%;height:48px}
+  .rsvp-who-top{grid-template-areas:"title pills" "count count";align-items:center;row-gap:4px}
+  .rsvp-count b{font-size:34px}
+  .rsvp-count span{font-size:14px}
+  .rsvp-pill.ex{font-size:9.5px;padding:4px 7px}
+  .rsvp-pill.live{font-size:11px;padding:4px 8px 4px 7px}
+  .rsvp-grid{grid-template-columns:1fr;gap:8px}
+  .rsvp-who h3{font-size:16px}
+}
