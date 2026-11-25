@@ -93,7 +93,7 @@ function selectSlide(i){if(i===curSlide)return;curSlide=i;
   preset=i<PRE.length?variant(PRE[i]):null;
   if(preset){$('fTrack').value='alqudra';lastTrack='alqudra';$('fStart').value=preset.start;$('fRoute').value=preset.dir?`${preset.name} · ${DIRN[preset.dir].toLowerCase()}`:preset.name;$('fDist').value=preset.km;$('fType').value='Road';
     if(nameAuto)$('fName').value=`${preset.short} Ride`;
-    $('autoNote').innerHTML=`✨ Auto-filled from <b>${preset.name}</b>${preset.dir?` (${DIRN[preset.dir].toLowerCase()})`:''}: Al Qudra · start ${preset.start} · ${preset.km} km · ${preset.gain} m climb. Just set the date &amp; time (edit anything below if you like).`}
+    $('autoNote').innerHTML=`✨ Auto-filled from <b>${preset.name}</b>${preset.dir?` (${DIRN[preset.dir].toLowerCase()})`:''}: Al Qudra · start ${preset.start} · ${preset.km} km · ${preset.gain} m climb. Just set the date &amp; time under the routes (edit anything below if you like).`}
   else $('autoNote').innerHTML='';
   loadWx().then(update)}
 let scT;view.addEventListener('scroll',()=>{clearTimeout(scT);scT=setTimeout(()=>selectSlide(Math.round(view.scrollLeft/Math.max(1,view.clientWidth))),110)},{passive:true});
@@ -118,6 +118,18 @@ function drawMap(r,wi){if(!map)return;try{lay.clearLayers();
     L.marker(ll[0],{icon:pinI('#16a34a','🚴')}).bindTooltip(`Start & finish: ${preset.start}`).addTo(lay);
     if(fitFor!==preset.id){map.fitBounds(L.latLngBounds(ll),{padding:[28,28]});fitFor=preset.id}}
   else{const t=TR();L.marker([t.lat,t.lon],{icon:pinI('#fc4c02','🚴')}).bindTooltip(t.name).addTo(lay);if(fitFor!=='c-'+t.id){map.setView([t.lat,t.lon],t.id==='alqudra'?11:13);fitFor='c-'+t.id}}}catch(e){}}
+
+/* ---------- wind particles over the map (as on the homepage / ride pages) ---------- */
+const wcv=$('wind'),wcx=wcv.getContext('2d');let WPT=[],wvx=0,wvy=0,wpA=.5;
+function sizeW(){const r=wcv.getBoundingClientRect();wcv.width=r.width*devicePixelRatio;wcv.height=r.height*devicePixelRatio;wcx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+try{new ResizeObserver(sizeW).observe(wcv)}catch(e){sizeW()}
+function setParticles(dir,k){if(dir==null){WPT.length=0;return}const to=(dir+180)*rad,sp=.4+k/9;wvx=Math.sin(to)*sp;wvy=-Math.cos(to)*sp;wpA=Math.min(.75,.25+k/50);
+  const n=Math.round(60+k*7),w=wcv.clientWidth,h=wcv.clientHeight;while(WPT.length<n)WPT.push({x:Math.random()*w,y:Math.random()*h,a:Math.random()*80});WPT.length=n}
+(function step(){const w=wcv.clientWidth,h=wcv.clientHeight;wcx.clearRect(0,0,w,h);wcx.lineCap='round';
+  for(const p of WPT){const ox=p.x,oy=p.y;p.x+=wvx*(.85+Math.random()*.3);p.y+=wvy*(.85+Math.random()*.3);p.a++;
+    if(p.x<0||p.x>w||p.y<0||p.y>h||p.a>90){p.x=Math.random()*w;p.y=Math.random()*h;p.a=0;continue}
+    const life=Math.sin(p.a/90*Math.PI);wcx.strokeStyle=`rgba(36,36,40,${wpA*life*.7})`;wcx.lineWidth=1.4;wcx.beginPath();wcx.moveTo(ox-wvx*6,oy-wvy*6);wcx.lineTo(p.x,p.y);wcx.stroke()}
+  requestAnimationFrame(step)})();
 
 /* ---------- weather ---------- */
 const WX={};
@@ -150,9 +162,10 @@ function stats(r,f,wi){const km=parseFloat($('fDist').value)||0,mins=km/paceKmh(
   $('rStats').innerHTML=preset?box('Distance',`${preset.km} km`)+box('Climb',`${preset.gain} m`)+box('Ride time',fmtDur(mins))+box('Back at',backT)+box('Headwind',wi?`${wi.head}%`:'--','h')+box('Tailwind',wi?`${wi.tail}%`:'--','t')
     :box('Distance',km?`${km} km`:'--')+box('Pace',`${paceKmh()} km/h`)+box('Ride time',km?fmtDur(mins):'--')+box('Back at',backT)+box('Temp',f?f.tr:'--')+box('Wind',f?`${Math.round(f.w)} km/h ${f.dir}`:'--');
   const w=wi?wi.start:f?f.hs[0]:null;
-  if(w){$('wArr').style.transform=`rotate(${w.wind_direction_10m}deg)`;$('wSpd').textContent=`${Math.round(w.wind_speed_10m)} km/h ${card(w.wind_direction_10m)}`;$('wTxt').textContent=`Wind at ${TCDS.fmtTime(r.time)} · gusts ${Math.round(w.wind_gusts_10m)}`}
-  else{$('wArr').style.transform='';$('wSpd').textContent='--';$('wTxt').textContent=WX[TR().id]===null?'Forecast unavailable':'Forecast closer to the day'}
-  $('legend').style.display=preset&&wi?'':'none'}
+  if(w){$('wArr').style.transform=`rotate(${w.wind_direction_10m}deg)`;$('wSpd').textContent=`${Math.round(w.wind_speed_10m)} km/h ${card(w.wind_direction_10m)}`;$('wTxt').textContent=`Wind at ${TCDS.fmtTime(r.time)} · gusts ${Math.round(w.wind_gusts_10m)}`;setParticles(w.wind_direction_10m,w.wind_speed_10m)}
+  else{$('wArr').style.transform='';$('wSpd').textContent='--';$('wTxt').textContent=WX[TR().id]===null?'Forecast unavailable':'Forecast closer to the day';setParticles(null)}
+  $('legend').style.display=preset&&wi?'':'none';
+  $('whenTxt').textContent=`${TCDS.occLabel(r.occ)} · ${TCDS.fmtTime(r.time)}${km?` → back ${backT}`:''}`}
 
 /* ---------- ride + message ---------- */
 function ride(){const t=TR(),dist=parseFloat($('fDist').value);

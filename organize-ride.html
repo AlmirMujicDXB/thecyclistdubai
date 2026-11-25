@@ -102,7 +102,15 @@ body.th-strava{background:#f7f7fa}
 .autonote:empty{display:none}
 @media (max-width:900px){.rslide{grid-template-columns:1fr;padding:12px 14px 6px;gap:10px}.rshape{height:150px}.rc-arr{top:88px;width:36px;height:36px;font-size:22px}.rc-arr.l{left:22px}.rc-arr.r{right:22px}
   .rfacts{grid-template-columns:repeat(2,1fr)}.rstats{grid-template-columns:repeat(3,1fr)}.rinfo h3{font-size:18px}.rinfo p{font-size:12.5px}}
-@media (max-width:480px){</style>
+@media (max-width:480px){.rstats b{font-size:13.5px}}
+.whenbar{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--bd);background:#fff8f4}
+.whenbar .wl{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#fc4c02}
+.whenbar label{display:inline-flex;align-items:center;gap:5px;font-size:14px;background:#fff;border:1px solid #ffc9ad;border-radius:10px;padding:2px 4px 2px 8px}
+.whenbar input{border:0;background:transparent;font:700 13px Sora,system-ui,sans-serif;color:#242428;padding:5px 2px;min-width:0;width:auto}
+.whenbar input:focus{outline:none}.whenbar label:focus-within{border-color:#fc4c02;box-shadow:0 0 0 2px #fc4c0233}
+.whenbar .wt{font-size:12px;font-weight:700;color:#6d6d78}
+@media (max-width:480px){.whenbar{gap:6px;padding:9px 8px}.whenbar .wl{display:none}.whenbar label{padding:1px 2px 1px 6px;font-size:13px}.whenbar input{font-size:12.5px}.whenbar .wt{flex-basis:100%;text-align:center}}
+</style>
 </head>
 <body class="th-strava">
 <div class="wrap">
@@ -131,8 +139,9 @@ body.th-strava{background:#f7f7fa}
     <button class="rc-arr r" id="rcNext" type="button" aria-label="Next route">›</button>
   </div>
   <div class="rc-dots" id="rcDots"></div>
+  <div class="whenbar"><span class="wl">When?</span><label>📅<input type="date" id="fDate" aria-label="Ride date"></label><label>⏰<input type="time" id="fTime" value="06:30" step="300" aria-label="Start time"></label><span class="wt" id="whenTxt"></span></div>
   <div class="rmap">
-    <div class="mapbox"><div id="map"></div><div class="mhint" id="mhint">Use two fingers to move the map</div>
+    <div class="mapbox"><div id="map"></div><canvas id="wind"></canvas><div class="mhint" id="mhint">Use two fingers to move the map</div>
       <div class="mapui"><div class="wbadge"><div class="warr" id="wArr">↓</div><div><b id="wSpd">--</b><small id="wTxt">Wind at start</small></div></div>
         <div class="legend" id="legend"><span><i style="background:#dc2626"></i>Headwind</span><span><i style="background:#16a34a"></i>Tailwind</span><span><i style="background:#eab308"></i>Crosswind</span></div></div>
     </div>
@@ -145,8 +154,6 @@ body.th-strava{background:#f7f7fa}
     <div class="sech"><h2>📝 Your ride</h2></div>
     <div class="secb">
       <div class="form">
-        <label class="when">📅 Date<input type="date" id="fDate"></label>
-        <label class="when">⏰ Start time<input type="time" id="fTime" value="06:30" step="300"></label>
         <div class="full autonote" id="autoNote"></div>
         <label class="full">Ride name<input id="fName" maxlength="40" placeholder="Saturday Coffee Ride"></label>
         <label>Track<select id="fTrack"></select></label>
