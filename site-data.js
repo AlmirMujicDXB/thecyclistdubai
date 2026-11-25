@@ -156,4 +156,15 @@ window.SITE = {
     // { name: 'Recovery Ride', date: '2026-12-02', time: '06:00', distance: '40 km', place: 'Meydan',
     //   track: 'meydan', pace: '28–30 km/h avg', join: 'https://chat.whatsapp.com/…', location: 'https://maps.app.goo.gl/…' },
   ],
+
+  /* Photo gallery. Add a photo by dropping a file in images/gallery/ and a line here.
+     ride: 'tcd' | 'purple' | 'all'. preview:true marks stand-in pictures, not real ride photos. */
+  gallery: [
+    { ride: 'tcd', title: 'TCD Ride · morning', src: 'images/gallery/tcd-1.svg', preview: true },
+    { ride: 'tcd', title: 'TCD Ride · at BOTS', src: 'images/gallery/tcd-2.svg', preview: true },
+    { ride: 'tcd', title: 'TCD Ride · on the road', src: 'images/gallery/tcd-3.svg', preview: true },
+    { ride: 'purple', title: 'Purple Ride · Thursday', src: 'images/gallery/purple-1.svg', preview: true },
+    { ride: 'purple', title: 'Purple Ride · the mosque road', src: 'images/gallery/purple-2.svg', preview: true },
+    { ride: 'purple', title: 'Purple Ride · the bunch', src: 'images/gallery/purple-3.svg', preview: true },
+  ],
 };

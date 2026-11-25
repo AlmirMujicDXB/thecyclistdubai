@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f5f0ff"/>
+  <path d="M360 160 h80 v220 h-80z" fill="#5b21b6"/>
+  <path d="M340 160 h120 l-60-70z" fill="#a855f7"/>
+  <path d="M0 470 H800 V600 H0Z" fill="#e7dcc8"/>
+  <text x="40" y="80" font-family="Sora,sans-serif" font-size="28" font-weight="800" fill="#5b21b6">PREVIEW</text>
+  <text x="40" y="130" font-family="Sora,sans-serif" font-size="40" font-weight="800" fill="#2e1065">Purple Ride</text>
+  <text x="40" y="174" font-family="Sora,sans-serif" font-size="22" fill="#6d28d9">Placeholder · towards the mosque</text>
+</svg>

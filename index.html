@@ -215,6 +215,22 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .evt.sm .evt-meta{color:#475569}.evt.sm .evt-meta b{color:#13233f}
 .evt.sm .evt-cd{border-left-color:#c9dbf3}.evt.sm .evt-cd b{color:#0057b8}.evt.sm .evt-cd span{color:#5b6b82}
 .evt.sm .evt-go{background:linear-gradient(110deg,#0057b8,#2f80e0);color:#fff;box-shadow:0 4px 12px #0057b84d}
+/* Gallery card: same card family as the simulator, with a strip of photos */
+.galsec .galcard{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;min-height:70px;box-sizing:border-box;padding:8px 12px;border-radius:16px;color:#13233f;background:linear-gradient(110deg,#fff 0%,#f7f3ea 100%);border:1px solid #ead9bb;box-shadow:0 8px 22px #8a5a1f14}
+.galsec .galcard::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#0072ce 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%)}
+.galstrip{flex:1;min-width:0;display:flex;gap:8px;align-items:center;position:relative;z-index:1}
+.galthumb{flex:none;width:54px;height:54px;border-radius:12px;overflow:hidden;border:1px solid #ead9bb;background:#f4efe4;display:block;position:relative}
+.galthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.galthumb em{position:absolute;left:3px;bottom:3px;font-style:normal;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;background:#fff;color:#3f6b55;border-radius:4px;padding:1px 3px}
+.galgo{position:relative;z-index:1;flex:none;font-size:12px;font-weight:800;background:#fff;color:#3f6b55;border:1.5px solid #6b9a80;padding:8px 12px;border-radius:10px;text-decoration:none;white-space:nowrap}
+.galgo:hover{background:#f3faf6}
+.galempty{font-size:13px;font-weight:700;color:#64748b}
+@media (max-width:700px){
+  .galsec .galcard{flex-wrap:wrap;min-height:126px;align-content:center}
+  .galstrip{width:100%}
+  .galthumb{width:48px;height:48px}
+  .galgo{width:100%;text-align:center;box-sizing:border-box}
+}
 @media (prefers-reduced-motion:reduce){.sm-dot{display:none}}
 /* ---------- conditions card: same size as the event cards, 5–6 sliding slides ---------- */
 #cond.cx{height:70px;padding:0;box-sizing:border-box;border-radius:16px}
@@ -847,6 +863,13 @@ footer a:hover{color:var(--text)}
 </div>
 
 <!-- Al Qudra Cycling Simulator (separate page) -->
+<section class="sponsors galsec">
+  <h3>Gallery</h3>
+  <div class="galcard">
+    <div class="galstrip" id="galStrip"></div>
+    <a class="galgo" href="gallery.html">See all photos</a>
+  </div>
+</section>
 <section class="sponsors simsec">
   <h3>Simulator</h3>
   <a class="evt sm" href="al-qudra-simulator.html" title="Open the Al Qudra Cycling Simulator">
@@ -1557,7 +1580,13 @@ function carInit(id){const c=CAR[id],box=$(id);c.init=true;
   carTimer(id,true)}
 function rentUrl(){try{return (SITE.links||{}).bikeRental||'https://wolfis.ae/pages/rental-bikes'}catch(e){return 'https://wolfis.ae/pages/rental-bikes'}}
 function renderRent(){const a=$('rentBtn');if(a)a.href=rentUrl();const l=$('rentLogo'),u=(SITE.links||{}).bikeRentalLogo;if(l&&u&&l.getAttribute('src')!==u)l.src=u}
-function renderData(){renderEvents();renderRides();renderRent()}
+function renderGallery(){
+  const box=document.getElementById('galStrip'); if(!box) return;
+  const photos=((SITE&&SITE.gallery)||[]).slice(0,6);
+  if(!photos.length){ box.innerHTML='<span class="galempty">Photos from our rides coming soon</span>'; return; }
+  box.innerHTML=photos.map(p=>'<a class="galthumb" href="gallery.html" title="'+esc(p.title||'Ride photo')+'"><img alt="Preview placeholder · '+esc(p.title||'ride photo')+'" src="'+esc(p.src)+'" loading="lazy"><em>Preview</em></a>').join('');
+}
+function renderData(){renderEvents();renderRides();renderRent();renderGallery()}
 renderData();setInterval(renderData,60e3);
 
 /* ---------- item share texts ---------- */

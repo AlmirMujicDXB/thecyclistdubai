@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6d7a8"/><stop offset=".55" stop-color="#e7b56a"/><stop offset="1" stop-color="#c4a574"/></linearGradient></defs>
+  <rect width="800" height="600" fill="url(#s)"/>
+  <path d="M0 430 C180 390 320 470 500 420 S720 360 800 400 V600 H0Z" fill="#d7c4a2"/>
+  <path d="M40 470 C200 430 360 500 560 450 S740 420 800 450" fill="none" stroke="#14532d" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="250" cy="250" r="46" fill="#fff6" />
+  <text x="40" y="70" font-family="Sora,sans-serif" font-size="28" font-weight="800" fill="#14532d">PREVIEW</text>
+  <text x="40" y="110" font-family="Sora,sans-serif" font-size="40" font-weight="800" fill="#13233f">TCD Ride</text>
+  <text x="40" y="150" font-family="Sora,sans-serif" font-size="22" fill="#3f6b55">Placeholder · Al Qudra morning</text>
+</svg>
