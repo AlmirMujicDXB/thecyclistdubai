@@ -20,9 +20,7 @@ const TRACKS=[
   {id:'hatta',name:'Hatta MTB Trail Centre',place:'Hatta',start:'Hatta Wadi Hub',lat:24.803,lon:56.126,elev:330},
   {id:'other',name:'Other place in Dubai',place:'Dubai',start:'',lat:25.20,lon:55.27,elev:10},
 ];
-const COLORS=[['giro','repeating-linear-gradient(120deg,#ffffff66 0 3px,transparent 3px 9px),linear-gradient(135deg,#ffe1ee,#f472b6 70%,#e6007e)'],['org','radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 0 0/12px 12px,radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 6px 6px/12px 12px,#fff'],['green','linear-gradient(135deg,#052e16,#16a34a)'],['purple','linear-gradient(135deg,#2e1065,#a855f7)'],['orange','linear-gradient(135deg,#7c2d12,#fb923c)'],['blue','linear-gradient(135deg,#0c2d48,#0ea5e9)']];
-const IMG_TH={giro:'giro',org:'org',green:'green',purple:'purple',orange:'rorange',blue:'sky'};
-const ACCENT={giro:'#e6007e',org:'#e2001a',green:'#16a34a',purple:'#7c3aed',orange:'#ea580c',blue:'#0284c7'};
+const COLORS=[['jaune','#ffe100','Maillot jaune · Tour de France'],['vert','#00a650','Maillot vert · Tour de France'],['pois','radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 0 0/12px 12px,radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 6px 6px/12px 12px,#fff','Maillot à pois · Tour de France'],['blanc','linear-gradient(135deg,#fff,#e9edf2)','Maillot blanc · Tour de France'],['rosa','linear-gradient(135deg,#ffd9e8,#f472b6)','Maglia rosa · Giro d\'Italia'],['roja','linear-gradient(135deg,#9e001d,#ff2d55)','La Roja · La Vuelta']];
 const KCOL={head:'#dc2626',tail:'#16a34a',cross:'#eab308'};
 const hav=(a,b)=>{const p1=a[0]*rad,p2=b[0]*rad,dp=p2-p1,dl=(b[1]-a[1])*rad;return 2*6371e3*Math.asin(Math.sqrt(Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2))};
 const brg=(a,b)=>{const p1=a[0]*rad,p2=b[0]*rad,dl=(b[1]-a[1])*rad;return(Math.atan2(Math.sin(dl)*Math.cos(p2),Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl))/rad+360)%360};
@@ -43,13 +41,13 @@ const paceKmh=()=>{const v=parseFloat($('fPace').value);return v>5&&v<60?v:28};
 
 /* ---------- form ---------- */
 $('fTrack').innerHTML=TRACKS.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-$('fColor').innerHTML=COLORS.map(c=>`<button type="button" data-c="${c[0]}" style="background:${c[1]}" aria-label="${c[0]} card"></button>`).join('');
+$('fColor').innerHTML=COLORS.map(c=>`<button type="button" data-c="${c[0]}" style="background:${c[1]}" title="${c[2]}" aria-label="${c[2]}"></button>`).join('');
 const dubai=()=>new Date(Date.now()+4*3600e3);
 const ymd=d=>`${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`;
 function nextSat(){const d=dubai();let k=(6-d.getUTCDay()+7)%7;if(k===0&&d.getUTCHours()>=6)k=7;return ymd(new Date(d.getTime()+k*864e5))}
 const FIELDS=['fName','fDate','fTime','fTrack','fStart','fRoute','fType','fDist','fPace','fOrg','fJoin','fNotes'];
-let color='giro';
-try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv){FIELDS.forEach(k=>{if(sv[k]!=null)$(k).value=sv[k]});$('fRule').checked=sv.fRule!==false;color=sv.colorPicked&&sv.color?sv.color:color}}catch(e){}
+let color='jaune';
+try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv){FIELDS.forEach(k=>{if(sv[k]!=null)$(k).value=sv[k]});$('fRule').checked=sv.fRule!==false;color=sv.colorPicked&&COLORS.some(x=>x[0]===sv.color)?sv.color:color}}catch(e){}
 if(!$('fName').value)$('fName').value='Saturday Coffee Ride';
 if(!$('fDate').value||$('fDate').value<ymd(dubai()))$('fDate').value=nextSat();
 $('fDate').min=ymd(dubai());
@@ -68,12 +66,12 @@ $('fDate').addEventListener('change',update);$('fTime').addEventListener('change
 let preset=null,nameAuto=true,curSlide=-1,fitFor=null;
 try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv&&sv.nameAuto===false)nameAuto=false}catch(e){}
 function shapeSvg(p,W,H){const P=fitter(p.pts,0,0,W,H,18),xy=p.pts.map(P),d='M'+xy.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L'),s=xy[0];
-  const t=p.turn?xy[p.ti]:null,arr=p.dir?arrowsAt(p,[.22,.5,.78]).map(([i,b])=>`<path d="M0 -7L6 5L-6 5Z" transform="translate(${xy[i][0].toFixed(1)} ${xy[i][1].toFixed(1)}) rotate(${b.toFixed(0)})" fill="#3b0a2a" stroke="#fff" stroke-width="1.5"/>`).join(''):'';
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#e6007e" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>`+
+  const t=p.turn?xy[p.ti]:null,arr=p.dir?arrowsAt(p,[.22,.5,.78]).map(([i,b])=>`<path d="M0 -7L6 5L-6 5Z" transform="translate(${xy[i][0].toFixed(1)} ${xy[i][1].toFixed(1)}) rotate(${b.toFixed(0)})" fill="#242428" stroke="#fff" stroke-width="1.5"/>`).join(''):'';
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#fc4c02" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>`+
     arr+(t?`<circle cx="${t[0]}" cy="${t[1]}" r="7" fill="#13233f" stroke="#fff" stroke-width="2.5"/>`:'')+`<circle cx="${s[0]}" cy="${s[1]}" r="8" fill="#16a34a" stroke="#fff" stroke-width="3"/></svg>`}
 function elevSvg(p){const W=400,H=34,e=p.pts.map(q=>q[2]),lo=Math.min(...e)-3,hi=Math.max(...e)+3,L=p.cum[p.cum.length-1];
   const xy=p.pts.map((q,i)=>[(p.cum[i]/L*W).toFixed(1),(H-(q[2]-lo)/(hi-lo)*H).toFixed(1)]);
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="M0 ${H}L${xy.map(q=>q.join(' ')).join('L')}L${W} ${H}Z" fill="#e6007e1f"/><path d="M${xy.map(q=>q.join(' ')).join('L')}" fill="none" stroke="#e6007e" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`}
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="M0 ${H}L${xy.map(q=>q.join(' ')).join('L')}L${W} ${H}Z" fill="#fc4c021f"/><path d="M${xy.map(q=>q.join(' ')).join('L')}" fill="none" stroke="#fc4c02" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`}
 const estTime=km=>fmtDur(km/paceKmh()*60);
 const slideInner=(p,i)=>`<div class="rshape">${shapeSvg(p,300,184)}</div><div class="rinfo">
     <div class="rtags"><span class="k">${p.kind}</span><span>Al Qudra</span><span>Start: ${p.start}</span>${i===0?'<span>TCD Ride route</span>':p.id==='mosque'?'<span>Purple Ride route</span>':''}</div>
@@ -83,7 +81,7 @@ const slideInner=(p,i)=>`<div class="rshape">${shapeSvg(p,300,184)}</div><div cl
 $('rcView').innerHTML=PRE.map((p,i)=>`<div class="rslide" data-i="${i}">${slideInner(variant(p),i)}</div>`).join('')+
   `<div class="rslide custom" data-i="${PRE.length}"><div class="rshape">✏️</div><div class="rinfo"><div class="rtags"><span class="k">Custom</span><span>Any track in Dubai</span></div>
     <h3>Your own route</h3><p>Al Qudra, Meydan, Mushrif, Kite Beach, Hatta or anywhere else: pick the track, start point, route and distance yourself in the form below.</p>
-    <div class="rfacts"><div><small>Tracks</small><b>5 + other</b></div><div><small>Forecast</small><b>16 days</b></div><div><small>Share</small><b>2 images</b></div><div><small>Time</small><b>1 minute</b></div></div></div></div>`;
+    <div class="rfacts"><div><small>Tracks</small><b>5 + other</b></div><div><small>Forecast</small><b>16 days</b></div><div><small>Share</small><b>1 image</b></div><div><small>Time</small><b>1 minute</b></div></div></div></div>`;
 $('rcDots').innerHTML=PRE.concat([0]).map(()=>'<i></i>').join('');
 const NS=PRE.length+1,view=$('rcView');
 view.addEventListener('click',e=>{const b=e.target.closest('.dirseg button');if(!b)return;const sl=b.closest('.rslide'),i=+sl.dataset.i,p=PRE[i];DIRP[p.id]=b.dataset.d;
@@ -114,12 +112,12 @@ const pinI=(bg,t)=>L.divIcon({className:'',html:`<div class="pin" style="backgro
 function drawMap(r,wi){if(!map)return;try{lay.clearLayers();
   if(preset){const ll=preset.pts.map(q=>[q[0],q[1]]);L.polyline(ll,{color:'#fff',weight:10,opacity:.95,interactive:false}).addTo(lay);
     if(wi){let run=[ll[0]],k=wi.kinds[0];for(let i=1;i<ll.length;i++){const kk=wi.kinds[i-1];if(kk!==k){L.polyline(run,{color:KCOL[k],weight:5.5,lineCap:'round'}).addTo(lay);run=[ll[i-1]];k=kk}run.push(ll[i])}L.polyline(run,{color:KCOL[k],weight:5.5,lineCap:'round'}).addTo(lay)}
-    else L.polyline(ll,{color:'#e6007e',weight:5.5,lineCap:'round'}).addTo(lay);
-    if(preset.turn)L.marker(ll[preset.ti],{icon:pinI('#a1005a',preset.turnIcon)}).bindTooltip(`Turnaround: ${preset.turn} · km ${preset.turnKm}`).addTo(lay);
+    else L.polyline(ll,{color:'#fc4c02',weight:5.5,lineCap:'round'}).addTo(lay);
+    if(preset.turn)L.marker(ll[preset.ti],{icon:pinI('#242428',preset.turnIcon)}).bindTooltip(`Turnaround: ${preset.turn} · km ${preset.turnKm}`).addTo(lay);
     if(preset.dir)arrowsAt(preset,[.12,.3,.48,.66,.84]).forEach(([i,b])=>L.marker(ll[i],{interactive:false,icon:L.divIcon({className:'',html:`<div class="darrow" style="transform:rotate(${b}deg)">▲</div>`,iconSize:[22,22],iconAnchor:[11,11]})}).addTo(lay));
     L.marker(ll[0],{icon:pinI('#16a34a','🚴')}).bindTooltip(`Start & finish: ${preset.start}`).addTo(lay);
     if(fitFor!==preset.id){map.fitBounds(L.latLngBounds(ll),{padding:[28,28]});fitFor=preset.id}}
-  else{const t=TR();L.marker([t.lat,t.lon],{icon:pinI('#e6007e','🚴')}).bindTooltip(t.name).addTo(lay);if(fitFor!=='c-'+t.id){map.setView([t.lat,t.lon],t.id==='alqudra'?11:13);fitFor='c-'+t.id}}}catch(e){}}
+  else{const t=TR();L.marker([t.lat,t.lon],{icon:pinI('#fc4c02','🚴')}).bindTooltip(t.name).addTo(lay);if(fitFor!=='c-'+t.id){map.setView([t.lat,t.lon],t.id==='alqudra'?11:13);fitFor='c-'+t.id}}}catch(e){}}
 
 /* ---------- weather ---------- */
 const WX={};
@@ -162,99 +160,98 @@ function ride(){const t=TR(),dist=parseFloat($('fDist').value);
     distance:dist?`${dist} km`:'',pace:$('fPace').value.trim(),start:$('fStart').value.trim(),route:$('fRoute').value.trim(),place:t.id==='other'?($('fStart').value.trim()||'Dubai'):t.place,
     rule:$('fRule').checked?(SITE.rideRule||'Lights & helmet mandatory'):'',org:$('fOrg').value.trim(),join:$('fJoin').value.trim(),notes:$('fNotes').value.trim().replace(/\s+/g,' '),
     joinLine:$('fOrg').value.trim()?`🙋 Organised by ${$('fOrg').value.trim()}`:$('fJoin').value.trim()?'✅ Join: link in the message':'👋 Everyone welcome'}}
-function message(r,f,wi){const ev=TCDS.eventLines(),p=preset;
+function message(r,f,wi){const ev=TCDS.upcomingEvents().map(e=>`• ${e.name}: ${e.url}`),p=preset;
   const build=(nEv,notes,gpx=true)=>`🚴‍♂️ *${r.name}* · group ride\n🗓️ ${TCDS.occLabel(r.occ)} · ${TCDS.fmtTime(r.time)}\n📍 ${r.start&&r.start!==r.place?`Start: ${r.start} · `:''}${r.place}\n`+
     (r.route?`🛣️ ${r.route}${p?` · ${p.gain} m climb`:''}\n`:'')+(TCDS.rideKind(r)?`${TCDS.rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(r.rule?`⛑️💡 ${r.rule}\n`:'')+
     (f?`🌤️ Forecast: ${f.txt}\n`:'')+(wi?`💨 Wind on route: ${wi.head}% headwind · ${wi.tail}% tailwind\n`:'')+(r.org?`🙋 Organised by ${r.org}\n`:'')+(notes&&r.notes?`📝 ${r.notes}\n`:'')+(r.join?`✅ Join: ${r.join}\n`:'')+(p?(p.strava?`🗺️ Strava route: ${p.strava}\n`:'')+(gpx?`⬇️ GPX: ${TCDS.root()}${p.gpx}\n`:''):'')+
     (nEv?`\n📅 *Recommended events*\n${ev.slice(0,nEv).join('\n')}\n`:'')+`\n📲 Ride weather & planner: ${TCDS.root()}\n🧭 Organize your ride: ${TCDS.root()}organize-ride.html`;
   let t=build(ev.length,true);for(let n=ev.length;t.length>1010&&n>0;n--)t=build(n-1,true);if(t.length>1010)t=build(0,false);if(t.length>1010)t=build(0,false,false);return t}
 
-/* ---------- weather card image ---------- */
-function weatherCard(r,f){const S=1080,cv=document.createElement('canvas');cv.width=S;cv.height=S;const c=cv.getContext('2d'),th=IMG_TH[r.theme]||'org',T3=TCDS.THEMES[th],rr=TCDS.rr,L=th==='org'||th==='giro',G=th==='giro';
-  const INK=L?(G?'#3b0a2a':'#13233f'):'#fff',SUB=L?(G?'#6b2a52':'#3b4a60'):'#ffffffcc',ACC=L?(G?'#e6007e':'#e2001a'):T3[3],TILE=L?'rgba(255,255,255,.94)':'#ffffff1f',STRIP=L?'rgba(255,255,255,.94)':'#00000026';
-  const g=c.createLinearGradient(0,0,S,S);g.addColorStop(0,T3[0]);g.addColorStop(.6,T3[1]);g.addColorStop(1,T3[2]);c.fillStyle=g;c.fillRect(0,0,S,S);
-  if(G)TCDS.giroLines(c,S,S,380);else if(L)TCDS.polka(c,S,S,380);else{const rg=c.createRadialGradient(S,0,0,S,0,760);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S,S)}
-  const panel=(x,y,w,h,r,col)=>{rr(c,x,y,w,h,r);c.fillStyle=col;c.fill();if(L){c.strokeStyle=G?'rgba(230,0,126,.35)':'rgba(226,0,26,.35)';c.lineWidth=2;c.stroke()}};
-  const txt=(s,x,y,size,w,col,al='left')=>{c.font=`${w} ${size}px Sora,sans-serif`;c.fillStyle=col;c.textAlign=al;c.fillText(s,x,y)};
-  txt('RIDE FORECAST',80,120,30,800,ACC);
-  const nm=r.name.length>26?r.name.slice(0,25)+'…':r.name;txt(nm,80,196,62,800,INK);
-  const dp=TCDS.dayParts(r.occ);txt(`${dp.day} ${dp.date} ${dp.mon} · ${TCDS.fmtTime(r.time)} · ${r.place}`,80,252,34,600,SUB);
-  if(!f){panel(80,330,920,300,36,TILE);txt('🌤️',140,500,90,400,INK);
-    txt('Forecast available',280,470,50,800,INK);txt('closer to the day',280,530,50,800,INK);txt('(up to 16 days ahead)',280,580,30,600,SUB)}
-  else{
-    // score ring
-    const cx=200,cy=430,R=104,col=f.sc>=80?'#22c55e':f.sc>=65?'#84cc16':f.sc>=50?'#eab308':'#ef4444';
-    if(L){c.fillStyle='#fff';c.beginPath();c.arc(cx,cy,R+24,0,7);c.fill()}c.lineWidth=26;c.strokeStyle=L?'#f1f5f9':'#ffffff26';c.beginPath();c.arc(cx,cy,R,0,7);c.stroke();
-    c.strokeStyle=col;c.lineCap='round';c.beginPath();c.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+f.sc/100*Math.PI*2);c.stroke();
-    txt(String(f.sc),cx,cy+22,84,800,INK,'center');txt(f.lab.toUpperCase(),cx,cy+R+50,28,800,INK,'center');
-    if(L)panel(370,330,630,280,30,TILE);txt(f.tr,400,420,96,800,INK);txt(`feels up to ${f.feels}°C`,404,476,34,600,SUB);
-    // wind arrow
-    const wx0=760,wy0=560;c.save();c.translate(wx0,wy0);c.rotate((f.mid.wind_direction_10m+180)*rad);c.fillStyle=L?ACC:'#fff';c.beginPath();c.moveTo(0,-34);c.lineTo(20,12);c.lineTo(6,6);c.lineTo(6,34);c.lineTo(-6,34);c.lineTo(-6,6);c.lineTo(-20,12);c.closePath();c.fill();c.restore();
-    txt(`${Math.round(f.w)} km/h ${f.dir}`,404,574,44,800,INK);
-    const tiles=[['Gusts',`${f.gust} km/h`],['Humidity',`${f.hum}%`],['Rain',`${f.rain}%`],['UV',`${f.uv.toFixed(0)}`],['Sunrise',f.sunrise?f.sunrise.slice(11,16):'--']];
-    tiles.forEach((t,i)=>{const x=80+i*188,y=640;panel(x,y,172,120,22,TILE);txt(t[0].toUpperCase(),x+20,y+42,22,800,ACC);txt(t[1],x+20,y+94,36,800,INK)});
-    // hourly strip
-    const hs=f.hs.slice(0,5),cw=920/hs.length;panel(80,790,920,150,26,STRIP);
-    hs.forEach((x,i)=>{const X=80+cw*i+cw/2;txt(`${pad(x.hour)}:00`,X,836,26,700,SUB,'center');txt(`${Math.round(x.temperature_2m)}°`,X,884,40,800,INK,'center');
-      c.font='700 24px Sora,sans-serif';const lw=c.measureText(`${Math.round(x.wind_speed_10m)} km/h`).width;c.save();c.translate(X-lw/2-8,918);c.rotate((x.wind_direction_10m+180)*rad);c.fillStyle=L?ACC:'#fff';c.beginPath();c.moveTo(0,-11);c.lineTo(7,5);c.lineTo(0,2);c.lineTo(-7,5);c.closePath();c.fill();c.restore();
-      txt(`${Math.round(x.wind_speed_10m)} km/h`,X+10,926,24,700,SUB,'center')});
-  }
-  if(L){const bg=c.createLinearGradient(0,0,S,0);if(G){bg.addColorStop(0,'#8a0049');bg.addColorStop(.5,'#d4006f');bg.addColorStop(1,'#ff4fa3')}else{bg.addColorStop(0,'#9f0014');bg.addColorStop(.5,'#d0001a');bg.addColorStop(1,'#ff2d45')}c.fillStyle=bg;c.fillRect(0,S-90,S,90)}
-  txt('Open-Meteo forecast for the ride time',80,L?1046:1010,24,600,L?(G?'#ffe1ee':'#ffe4e6'):'#ffffff99');
-  txt('thecyclistdubai.com',S-80,L?1046:1010,26,700,L?'#fff':'#ffffffcc','right');
-  return cv}
-
-/* ---------- route card image (ready routes) ---------- */
-function routeCard(r,f,wi){const p=preset,S=1080,cv=document.createElement('canvas');cv.width=S;cv.height=S;const c=cv.getContext('2d'),th=IMG_TH[r.theme]||'org',T3=TCDS.THEMES[th],rr=TCDS.rr,A=ACCENT[r.theme]||'#e6007e';
-  const txt=(s,x,y,size,w,col,al='left')=>{c.font=`${w} ${size}px Sora,sans-serif`;c.fillStyle=col;c.textAlign=al;c.fillText(s,x,y)};
-  c.fillStyle='#fff';c.fillRect(0,0,S,S);if(th==='org')TCDS.polka(c,S,250,640,.6);else if(th==='giro'){c.fillStyle='#fff3f8';c.fillRect(0,0,S,250);TCDS.giroLines(c,S,250,600)}
-  txt('RIDE ROUTE',80,110,30,800,A);txt(p.name,80,175,56,800,'#13233f');
-  txt(`${p.km} km · ${p.gain} m climb · ${p.dir?DIRN[p.dir].toLowerCase():p.kind} · start ${p.start}`,80,226,30,600,'#3b4a60');
-  // map panel
-  rr(c,80,262,920,456,30);c.fillStyle='#f6f7f9';c.fill();c.strokeStyle=A+'55';c.lineWidth=3;c.stroke();
-  c.save();rr(c,80,262,920,456,30);c.clip();c.fillStyle=A+'14';for(let y=280;y<718;y+=28)for(let x=96+((y/28)%2?14:0);x<1000;x+=28){c.beginPath();c.arc(x,y,2.4,0,7);c.fill()}c.restore();
-  const P=fitter(p.pts,80,262,920,456,50),xy=p.pts.map(P);c.lineJoin=c.lineCap='round';
-  c.strokeStyle='#fff';c.lineWidth=22;c.beginPath();xy.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.stroke();
-  for(let i=1;i<xy.length;i++){c.strokeStyle=wi?KCOL[wi.kinds[i-1]]:A;c.lineWidth=11;c.beginPath();c.moveTo(xy[i-1][0],xy[i-1][1]);c.lineTo(xy[i][0],xy[i][1]);c.stroke()}
-  const dot=(q,col,t)=>{c.fillStyle=col;c.strokeStyle='#fff';c.lineWidth=6;c.beginPath();c.arc(q[0],q[1],20,0,7);c.fill();c.stroke();txt(t,q[0],q[1]+9,24,800,'#fff','center')};
-  if(p.dir)arrowsAt(p,[.2,.45,.7,.88]).forEach(([i,b])=>{const q=xy[i];c.save();c.translate(q[0],q[1]);c.rotate(b*rad);c.fillStyle='#13233f';c.strokeStyle='#fff';c.lineWidth=4;c.beginPath();c.moveTo(0,-17);c.lineTo(13,11);c.lineTo(-13,11);c.closePath();c.stroke();c.fill();c.restore()});
-  if(p.turn)dot(xy[p.ti],'#13233f','T');dot(xy[0],'#16a34a','S');
-  // wind compass + legend
-  const w=wi?wi.start:f?f.mid:null;
-  if(w){rr(c,760,284,218,88,20);c.fillStyle='#ffffffee';c.fill();c.save();c.translate(806,328);c.rotate((w.wind_direction_10m+180)*rad);c.fillStyle=A;c.beginPath();c.moveTo(0,-26);c.lineTo(16,10);c.lineTo(5,5);c.lineTo(5,26);c.lineTo(-5,26);c.lineTo(-5,5);c.lineTo(-16,10);c.closePath();c.fill();c.restore();
-    txt(`${Math.round(w.wind_speed_10m)} km/h`,842,322,28,800,'#13233f');txt(`from ${card(w.wind_direction_10m)}`,842,354,22,700,'#3b4a60')}
-  if(wi){txt('WIND ON ROUTE',80,762,20,800,A);[['head','Headwind',wi.head],['tail','Tailwind',wi.tail],['cross','Crosswind',wi.cross]].forEach(([k,l,v],i)=>{const x=300+i*236;c.fillStyle=KCOL[k];rr(c,x,746,30,14,7);c.fill();txt(`${l} ${v}%`,x+40,762,23,800,'#13233f')})}
-  // elevation profile
-  const e=p.pts.map(q=>q[2]),lo=Math.min(...e),hi=Math.max(...e),L=p.cum[p.cum.length-1],ex=i=>80+p.cum[i]/L*920,ey=v=>940-(v-lo)/((hi-lo)||1)*100;
-  c.fillStyle=A+'22';c.beginPath();c.moveTo(80,940);p.pts.forEach((q,i)=>c.lineTo(ex(i),ey(q[2])));c.lineTo(1000,940);c.closePath();c.fill();
-  c.strokeStyle=A;c.lineWidth=4;c.beginPath();p.pts.forEach((q,i)=>i?c.lineTo(ex(i),ey(q[2])):c.moveTo(ex(i),ey(q[2])));c.stroke();
-  txt('ELEVATION',80,812,20,800,A);txt(`${Math.round(lo)}–${Math.round(hi)} m`,1000,812,22,700,'#3b4a60','right');
+/* ---------- ONE share image (1080×1350): ride card + forecast + route in one picture ---------- */
+// jersey colours: Tour de France (yellow, green, polka dots, white), Giro (maglia rosa), Vuelta (la roja)
+const JERSEY={
+  jaune:{name:'Maillot jaune',bg:['#ffd400','#ffe100','#fff16a'],light:1,ink:'#1f1a00',sub:'#5c4a00',acc:'#8a6d00',bar:['#2b2200','#3d3200','#5a4700'],dubai:'#ffe100'},
+  vert:{name:'Maillot vert',bg:['#00843d','#00a650','#3cc46e'],ink:'#fff',sub:'#ffffffd9',acc:'#d9ffe6',bar:['#004d25','#00622f','#00843d'],dubai:'#b9f5cf'},
+  pois:{name:'Maillot à pois',bg:['#ffffff','#fffafa','#fff1f2'],light:1,ink:'#13233f',sub:'#3b4a60',acc:'#e2001a',bar:['#9f0014','#d0001a','#ff2d45'],dubai:'#ffd6da',pat:'polka'},
+  blanc:{name:'Maillot blanc',bg:['#ffffff','#f6f7f9','#e9edf2'],light:1,ink:'#13233f',sub:'#475569',acc:'#64748b',bar:['#13233f','#24365a','#3a4f78'],dubai:'#cfd8e6'},
+  rosa:{name:'Maglia rosa',bg:['#fff3f8','#ffd9e8','#f9aecd'],light:1,ink:'#3b0a2a',sub:'#6b2a52',acc:'#e6007e',bar:['#8a0049','#d4006f','#ff4fa3'],dubai:'#ffd1e3',pat:'giro'},
+  roja:{name:'La Roja',bg:['#9e001d','#d50032','#ff2d55'],ink:'#fff',sub:'#ffffffd9',acc:'#ffd1da',bar:['#5e0011','#7f0018','#a8001f'],dubai:'#ffc2cc'}};
+function shareCard(r,f,wi){const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d'),J=JERSEY[r.theme]||JERSEY.jaune,rr=TCDS.rr,p=preset;
+  const txt=(s,x,y,size,w,col,al='left',max)=>{c.font=`${w} ${size}px Sora,sans-serif`;c.fillStyle=col;c.textAlign=al;if(max)while(c.measureText(s).width>max&&s.length>4)s=s.slice(0,-2).trimEnd()+'…';c.fillText(s,x,y)};
+  const PANEL=J.light?'rgba(255,255,255,.9)':'rgba(255,255,255,.14)',STROKE=J.light?'rgba(19,35,63,.12)':'rgba(255,255,255,.28)';
+  const panel=(x,y,w,h,rad,fill=PANEL,st=STROKE)=>{rr(c,x,y,w,h,rad);c.fillStyle=fill;c.fill();c.strokeStyle=st;c.lineWidth=2;c.stroke()};
+  // background + jersey pattern
+  const g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,J.bg[0]);g.addColorStop(.55,J.bg[1]);g.addColorStop(1,J.bg[2]);c.fillStyle=g;c.fillRect(0,0,W,H);
+  if(J.pat==='polka')TCDS.polka(c,W,420,560,.85);else if(J.pat==='giro')TCDS.giroLines(c,W,420,520);
+  else{c.save();c.strokeStyle=J.light?'rgba(255,255,255,.55)':'rgba(255,255,255,.08)';c.lineWidth=4;for(let x=380;x<W+400;x+=40){c.beginPath();c.moveTo(x,420);c.lineTo(x+300,0);c.stroke()}c.restore()}
+  // date tile
+  const dp=TCDS.dayParts(r.occ);rr(c,64,64,200,214,30);c.fillStyle='#fff';c.fill();c.strokeStyle=J.light&&J.acc!=='#64748b'?J.acc:'rgba(19,35,63,.15)';c.lineWidth=5;c.stroke();
+  txt(dp.day.toUpperCase(),164,118,32,800,'#e2001a','center');txt(String(dp.date),164,214,94,800,'#13233f','center');txt(dp.mon.toUpperCase(),164,258,30,800,'#64748b','center');
+  // chips
+  let cx=296;c.font='800 26px Sora,sans-serif';['★ Group ride',TCDS.rideKind(r),r.pace?'⚡ '+r.pace:''].filter(Boolean).forEach((t,k)=>{const w=c.measureText(t).width+34;
+    rr(c,cx,70,w,48,12);c.fillStyle=k===0?(J.light?J.ink:'#fff'):(J.light?'rgba(255,255,255,.8)':'rgba(255,255,255,.18)');c.fill();txt(t,cx+17,103,26,800,k===0?(J.light?'#fff':J.bg[1]):J.ink);cx+=w+12});
+  // title
+  c.font='800 62px Sora,sans-serif';const tl=TCDS.wrapLines(c,r.name,720).slice(0,2);tl.forEach((l,i)=>txt(l,296,186+i*68,62,800,J.ink));
+  txt(`${TCDS.fmtTime(r.time)} · ${r.place}`,296,186+tl.length*68+(tl.length>1?-8:0),40,700,J.sub);
+  const info=[r.start&&`📍 Start: ${r.start}`,r.route&&`🛣️ ${r.route}`].filter(Boolean).join('   ');txt(info,64,340,30,700,J.ink,'left',952);
+  // middle: map (ready route) or facts (own route) | weather
+  const km=parseFloat(r.distance)||0,mins=km/paceKmh()*60,[hh,mm]=r.time.split(':').map(Number),back=hh*60+mm+mins,backT=km?TCDS.fmtTime(`${pad(Math.floor(back/60)%24)}:${pad(Math.round(back%60)%60)}`):'--';
+  const MY=380,MH=520;
+  if(p){panel(64,MY,600,MH,28,'#ffffff',STROKE);const P=fitter(p.pts,64,MY,600,MH-70,44),xy=p.pts.map(P);c.lineJoin=c.lineCap='round';
+    c.strokeStyle='#e5e7eb';c.lineWidth=20;c.beginPath();xy.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.stroke();
+    for(let i=1;i<xy.length;i++){c.strokeStyle=wi?KCOL[wi.kinds[i-1]]:'#fc4c02';c.lineWidth=10;c.beginPath();c.moveTo(xy[i-1][0],xy[i-1][1]);c.lineTo(xy[i][0],xy[i][1]);c.stroke()}
+    if(p.dir)arrowsAt(p,[.2,.45,.7,.88]).forEach(([i,b])=>{const q=xy[i];c.save();c.translate(q[0],q[1]);c.rotate(b*rad);c.fillStyle='#13233f';c.strokeStyle='#fff';c.lineWidth=4;c.beginPath();c.moveTo(0,-16);c.lineTo(12,10);c.lineTo(-12,10);c.closePath();c.stroke();c.fill();c.restore()});
+    const dot=(q,col,t)=>{c.fillStyle=col;c.strokeStyle='#fff';c.lineWidth=5;c.beginPath();c.arc(q[0],q[1],18,0,7);c.fill();c.stroke();txt(t,q[0],q[1]+8,22,800,'#fff','center')};
+    if(p.turn)dot(xy[p.ti],'#13233f','T');dot(xy[0],'#16a34a','S');
+    // wind-on-route legend (or ride facts if no forecast yet)
+    const ly=MY+MH-28;if(wi)[['head','Head',wi.head],['tail','Tail',wi.tail],['cross','Cross',wi.cross]].forEach(([k,l,v],i)=>{const x=92+i*186;c.fillStyle=KCOL[k];rr(c,x,ly-16,26,13,6);c.fill();txt(`${l} ${v}%`,x+34,ly-3,22,800,'#13233f')});
+    else txt(p.dir?`${DIRN[p.dir]} · ${p.km} km · ${p.gain} m`:`${p.km} km · ${p.gain} m climb`,92,ly-3,22,800,'#13233f')}
+  else{[['Distance',km?`${km} km`:'--'],['Pace',`${paceKmh()} km/h`],['Ride time',km?fmtDur(mins):'--'],['Back at',backT]].forEach(([l,v],i)=>{const x=64+(i%2)*306,y=MY+Math.floor(i/2)*266;panel(x,y,294,250,26);
+      txt(l.toUpperCase(),x+28,y+64,24,800,J.acc);txt(v,x+28,y+150,54,800,J.ink,'left',250)})}
+  // weather column
+  const WX0=684,WW=332;panel(WX0,MY,WW,MH,28);
+  if(!f){txt('🌤️',WX0+WW/2,MY+200,80,400,J.ink,'center');txt('Forecast',WX0+WW/2,MY+290,40,800,J.ink,'center');txt('closer to the day',WX0+WW/2,MY+338,28,700,J.sub,'center');txt('(16 days ahead)',WX0+WW/2,MY+378,24,600,J.sub,'center')}
+  else{const ccx=WX0+WW/2,ccy=MY+118,R=72,col=f.sc>=80?'#22c55e':f.sc>=65?'#84cc16':f.sc>=50?'#eab308':'#ef4444';
+    c.lineWidth=20;c.strokeStyle=J.light?'#eef0f3':'rgba(255,255,255,.2)';c.beginPath();c.arc(ccx,ccy,R,0,7);c.stroke();c.strokeStyle=col;c.lineCap='round';c.beginPath();c.arc(ccx,ccy,R,-Math.PI/2,-Math.PI/2+f.sc/100*Math.PI*2);c.stroke();
+    txt(String(f.sc),ccx,ccy+20,60,800,J.ink,'center');txt(`${f.lab.toUpperCase()} RIDE`,ccx,ccy+R+44,22,800,J.acc,'center');
+    txt(f.tr,ccx,MY+318,58,800,J.ink,'center');txt(`feels up to ${f.feels}°C`,ccx,MY+352,24,700,J.sub,'center');
+    c.save();c.translate(WX0+64,MY+400);c.rotate((f.mid.wind_direction_10m+180)*rad);c.fillStyle=J.light?J.acc==='#64748b'?'#13233f':J.acc:'#fff';c.beginPath();c.moveTo(0,-22);c.lineTo(14,8);c.lineTo(4,4);c.lineTo(4,22);c.lineTo(-4,22);c.lineTo(-4,4);c.lineTo(-14,8);c.closePath();c.fill();c.restore();
+    txt(`${Math.round(f.w)} km/h ${f.dir}`,WX0+98,MY+412,32,800,J.ink);
+    txt(`Gusts ${f.gust} · Rain ${f.rain}%`,ccx,MY+460,23,700,J.sub,'center');txt(`Humidity ${f.hum}% · UV ${f.uv.toFixed(0)}`,ccx,MY+492,23,700,J.sub,'center')}
+  // hourly strip (forecast) or route facts
+  const SY=MY+MH+20;panel(64,SY,952,140,26);
+  if(f){const hs=f.hs.slice(0,6),cw=952/hs.length;hs.forEach((x,i)=>{const X=64+cw*i+cw/2;txt(TCDS.fmtTime(`${pad(x.hour)}:00`).replace(':00',''),X,SY+40,22,800,J.acc,'center');txt(`${Math.round(x.temperature_2m)}°`,X,SY+86,36,800,J.ink,'center');
+      c.save();c.translate(X-46,SY+113);c.rotate((x.wind_direction_10m+180)*rad);c.fillStyle=J.ink;c.beginPath();c.moveTo(0,-9);c.lineTo(6,5);c.lineTo(0,2);c.lineTo(-6,5);c.closePath();c.fill();c.restore();txt(`${Math.round(x.wind_speed_10m)} km/h`,X+8,SY+121,21,700,J.sub,'center')})}
+  else txt('Hour-by-hour forecast appears up to 16 days before the ride',540,SY+80,24,700,J.sub,'center');
+  // ride facts row (ready route)
+  const FY=SY+160,facts=p?[['Distance',`${p.km} km`],['Climb',`${p.gain} m`],['Ride time',fmtDur(mins)],['Back at',backT]]:[['Type',r.type||'Ride'],['Start',r.start||r.place],['Organiser',r.org||'Open ride'],['Ride score',f?`${f.sc} / 100`:'--']];
+  facts.forEach(([l,v],i)=>{const x=64+i*242;panel(x,FY,226,100,22);txt(l.toUpperCase(),x+22,FY+38,20,800,J.acc);txt(v,x+22,FY+80,30,800,J.ink,'left',190)});
+  // rule + who line
+  txt([r.rule&&`⛑️💡 ${r.rule}`,r.joinLine].filter(Boolean).join('   '),64,FY+150,26,700,J.ink,'left',952);
   // brand bar
-  const bg=c.createLinearGradient(0,0,S,0);if(th==='giro'){bg.addColorStop(0,'#8a0049');bg.addColorStop(.5,'#d4006f');bg.addColorStop(1,'#ff4fa3')}else if(th==='org'){bg.addColorStop(0,'#9f0014');bg.addColorStop(.5,'#d0001a');bg.addColorStop(1,'#ff2d45')}else{bg.addColorStop(0,T3[0]);bg.addColorStop(.5,T3[1]);bg.addColorStop(1,T3[2])}
-  c.fillStyle=bg;c.fillRect(0,S-90,S,90);c.font='800 38px Sora,sans-serif';c.textAlign='left';c.fillStyle='#fff';c.fillText('TheCyclist',60,S-32);const w2=c.measureText('TheCyclist').width;c.fillStyle=th==='org'?'#ffd6da':th==='giro'?'#ffd1e3':T3[3];c.fillText('Dubai',60+w2,S-32);
-  txt('thecyclistdubai.com',S-60,S-34,26,700,'#fff','right');
+  const bg=c.createLinearGradient(0,0,W,0);bg.addColorStop(0,J.bar[0]);bg.addColorStop(.5,J.bar[1]);bg.addColorStop(1,J.bar[2]);c.fillStyle=bg;c.fillRect(0,H-90,W,90);
+  c.font='800 38px Sora,sans-serif';c.textAlign='left';c.fillStyle='#fff';c.fillText('TheCyclist',56,H-32);const w2=c.measureText('TheCyclist').width;c.fillStyle=J.dubai;c.fillText('Dubai',56+w2,H-32);
+  txt('thecyclistdubai.com',W-56,H-34,28,700,'#fff','right');
   return cv}
 
 /* ---------- render + share ---------- */
 let CUR={};
-function draw(target,src){const t=$(target),x=t.getContext('2d');x.clearRect(0,0,1080,1080);x.drawImage(src,0,0)}
 function update(){const r=ride(),f=forecast(r),wi=windInfo(r);
   try{localStorage.setItem('tcd_org',JSON.stringify(Object.assign(Object.fromEntries(FIELDS.map(k=>[k,$(k).value])),{fRule:$('fRule').checked,color,colorPicked,dirPref:DIRP,preset:preset?preset.id:'custom',nameAuto})))}catch(e){}
-  const rc=TCDS.rideCard(Object.assign({},r,{theme:color}),f,w=>`${Math.round(w)} km/h`),wc=weatherCard(r,f),pc=preset?routeCard(r,f,wi):null;
-  draw('cvRide',rc);draw('cvWx',wc);if(pc)draw('cvRoute',pc);$('rcWrap').style.display=pc?'':'none';const text=message(r,f,wi);$('txt').textContent=text;
+  const sc=shareCard(r,f,wi);const t=$('cvShare');t.getContext('2d').drawImage(sc,0,0);const text=message(r,f,wi);$('txt').textContent=text;
   stats(r,f,wi);drawMap(r,wi);
   $('fcNote').textContent=WX[TR().id]===null?'Forecast unavailable right now':f?`Forecast loaded · ride score ${f.sc}`:'Forecast comes closer to the day';
-  CUR={r,f,rc,wc,pc,text}}
+  CUR={r,f,sc,text}}
 function toast(m){const t=$('rToast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200)}
 const fileName=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'ride';
-$('bShare').onclick=async()=>{update();const {r,rc,wc,pc,text}=CUR,base=fileName(r.name);
-  const files=[TCDS.canvasFile(rc,`${base}-ride-card.png`),TCDS.canvasFile(wc,`${base}-weather.png`)].concat(pc?[TCDS.canvasFile(pc,`${base}-route.png`)]:[]);
+$('bShare').onclick=async()=>{update();const {r,sc,text}=CUR,base=fileName(r.name);
+  const files=[TCDS.canvasFile(sc,`${base}.png`)];
   try{navigator.clipboard.writeText(text).catch(()=>{})}catch(e){}
   try{if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files,text,title:r.name});toast('Shared ✔ Text also copied');return}
     if(navigator.share){await navigator.share({text,title:r.name});return}}catch(e){if(e.name==='AbortError')return}
-  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');toast('Opening WhatsApp · download the images to attach them')};
+  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');toast('Opening WhatsApp · download the image to attach it')};
 $('bCopy').onclick=()=>{update();try{navigator.clipboard.writeText(CUR.text).then(()=>toast('Text copied ✔'),()=>toast('Select the text below to copy'))}catch(e){toast('Select the text below to copy')}};
-$('bSave').onclick=()=>{update();const base=fileName(CUR.r.name);const L=[[CUR.rc,'ride-card'],[CUR.wc,'weather']].concat(CUR.pc?[[CUR.pc,'route']]:[]);L.forEach(([cv,n],i)=>setTimeout(()=>{const a=document.createElement('a');a.href=cv.toDataURL('image/jpeg',.93);a.download=`${base}-${n}.jpg`;document.body.appendChild(a);a.click();a.remove()},i*400));toast(`Downloading ${L.length} images`)};
+$('bSave').onclick=()=>{update();const a=document.createElement('a');a.href=CUR.sc.toDataURL('image/jpeg',.93);a.download=`${fileName(CUR.r.name)}.jpg`;document.body.appendChild(a);a.click();a.remove();toast('Downloading the ride image')};
 (function tick(){const n=dubai();$('clk').textContent=`${pad(n.getUTCHours())}:${pad(n.getUTCMinutes())}`;setTimeout(tick,15000)})();
 let startI=0;try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv&&sv.preset){const k=sv.preset==='custom'?PRE.length:PRE.findIndex(p=>p.id===sv.preset);if(k>=0)startI=k}}catch(e){}
 const qp=new URLSearchParams(location.search).get('route');if(qp){const k=PRE.findIndex(p=>p.id===qp);if(k>=0)startI=k}

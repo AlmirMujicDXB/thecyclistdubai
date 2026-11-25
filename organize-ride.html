@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Organize your ride · TheCyclistDubai</title>
 <meta name="description" content="Organize a group ride in Dubai: pick a ready Al Qudra route or your own, set date and time, get the forecast and wind on the route, and share ride, weather and route cards to WhatsApp.">
-<meta name="theme-color" content="#e6007e">
+<meta name="theme-color" content="#fc4c02">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -17,21 +17,23 @@
 <script src="route-presets.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-body.th-giro{--p0:#8a0049;--p1:#b8006a;--p2:#e6007e;--p3:#ff5aa8;--p4:#ffe1ee;--p5:#fff4f9;--glow:#ffffff00;--shadow:#e6007e26;--bd:#f9cfe0;--bd2:#fff6fa;--red:#e6007e}
-body.th-giro{background:linear-gradient(180deg,#fff7fb 0%,#fdeef5 100%)}
-/* Giro d'Italia: maglia rosa pink, white pinstripes, fuchsia accents, plum text */
-.hero.giro{color:#3b0a2a;background:linear-gradient(115deg,#fff7fb 0%,#ffe1ee 40%,#f9a8cb 78%,#f06aa8 100%);border:1px solid #f7bcd5}
-.hero.giro::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(120deg,#ffffffb3 0 3px,transparent 3px 22px);-webkit-mask-image:linear-gradient(100deg,transparent 0,#0000 35%,#0008 65%,#000 95%);mask-image:linear-gradient(100deg,transparent 0,#0000 35%,#0008 65%,#000 95%)}
-.hero.giro>*{position:relative;z-index:1}
-.hero.giro svg.deco{display:none}
-.hero.giro .dtile{border:2px solid #e6007e;box-sizing:border-box}.hero.giro .dtile span,.hero.giro .dtile b{color:#e6007e}
-.hero.giro .tag{background:#fff;border-color:#e6007e66;color:#a1005a}.hero.giro .tag.l{background:#e6007e;border-color:#e6007e;color:#fff}
-.hero.giro h1{color:#3b0a2a}.hero.giro .hsub{color:#6b2a52}
-.hero.giro .steps div{background:#ffffffe6;border-color:#e6007e40;color:#6b2a52}.hero.giro .steps b{color:#e6007e}
-.dirseg{display:inline-flex;margin-top:9px;background:#fff;border:1px solid #f9cfe0;border-radius:11px;padding:3px;gap:3px}
-.dirseg button{border:0;background:transparent;border-radius:8px;padding:7px 12px;font:800 12.5px Sora,sans-serif;color:#a1005a;cursor:pointer}
-.dirseg button.on{background:linear-gradient(110deg,#c2006b,#e6007e 60%,#ff4fa3);color:#fff;box-shadow:0 3px 10px #e6007e40}
-.darrow{width:22px;height:22px;display:grid;place-items:center;color:#3b0a2a;font-size:13px;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+body.th-strava{--p0:#242428;--p1:#e34402;--p2:#fc4c02;--p3:#ff7a3d;--p4:#ffe4d6;--p5:#fff6f1;--glow:#ffffff00;--shadow:#fc4c0226;--bd:#ffd9c4;--bd2:#f7f7fa;--red:#fc4c02;--ink:#242428;--mut:#6d6d78}
+body.th-strava{background:#f7f7fa}
+/* Strava look: orange hero with chevrons, white cards, charcoal text, orange accents */
+.hero.strava{color:#fff;background:linear-gradient(115deg,#e34402 0%,#fc4c02 45%,#ff7a3d 100%);border:0}
+.hero.strava::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(120deg,#ffffff38 0 4px,transparent 4px 26px);-webkit-mask-image:linear-gradient(100deg,transparent 0,#0000 40%,#000a 75%,#000 100%);mask-image:linear-gradient(100deg,transparent 0,#0000 40%,#000a 75%,#000 100%)}
+.hero.strava>*{position:relative;z-index:1}
+.hero.strava svg.deco{display:none}
+.hero.strava .dtile{border:0}.hero.strava .dtile span,.hero.strava .dtile b{color:#fc4c02}
+.hero.strava .tag{background:#ffffff2e;border-color:#ffffff66;color:#fff}.hero.strava .tag.l{background:#fff;border-color:#fff;color:#fc4c02}
+.hero.strava h1{color:#fff}.hero.strava .hsub{color:#fff3ec}
+.hero.strava .steps div{background:#ffffff26;border-color:#ffffff55;color:#fff3ec}.hero.strava .steps b{color:#fff}
+.one canvas{width:100%;max-width:420px;height:auto;display:block;margin:0 auto;border-radius:16px;box-shadow:0 10px 26px #24242833}
+.one small{display:block;text-align:center;font-size:11px;font-weight:700;color:var(--mut);margin-top:6px}
+.dirseg{display:inline-flex;margin-top:9px;background:#fff;border:1px solid #ffd9c4;border-radius:11px;padding:3px;gap:3px}
+.dirseg button{border:0;background:transparent;border-radius:8px;padding:7px 12px;font:800 12.5px Sora,sans-serif;color:#c73c02;cursor:pointer}
+.dirseg button.on{background:linear-gradient(110deg,#e34402,#fc4c02 60%,#ff7a3d);color:#fff;box-shadow:0 3px 10px #fc4c0240}
+.darrow{width:22px;height:22px;display:grid;place-items:center;color:#242428;font-size:13px;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
 .steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
 .steps div{background:#ffffff1f;border:1px solid #ffffff33;border-radius:12px;padding:9px 11px;font-size:12.5px;color:var(--p4)}
 .steps b{display:block;color:#fff;font-size:14.5px}
@@ -48,72 +50,67 @@ body.th-giro{background:linear-gradient(180deg,#fff7fb 0%,#fdeef5 100%)}
 .colors button{width:44px;height:44px;border-radius:12px;border:3px solid #fff;box-shadow:0 0 0 1px var(--bd);cursor:pointer}
 .colors button.on{box-shadow:0 0 0 3px #13233f}
 .tog{display:flex!important;flex-direction:row!important;align-items:center;gap:10px!important;text-transform:none!important;font-size:13.5px!important;color:var(--ink)!important;letter-spacing:0!important;cursor:pointer}
-.tog input{width:20px;height:20px;accent-color:#e6007e}
+.tog input{width:20px;height:20px;accent-color:#fc4c02}
 .prev{position:sticky;top:12px}
-.imgs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.imgs canvas{width:100%;height:auto;border-radius:14px;box-shadow:0 8px 22px #13233f26;display:block}
-.imgs small{display:block;text-align:center;font-size:11px;font-weight:700;color:var(--mut);margin-top:5px}
 .txt{margin-top:12px;white-space:pre-wrap;font:500 12px/1.5 'JetBrains Mono',monospace;background:var(--p5);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;max-height:260px;overflow:auto;color:var(--ink)}
 .acts{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-top:12px}
 .acts .btn{width:100%;padding:0 10px}
-.btn.big{background:linear-gradient(110deg,#a1005a,#e6007e 60%,#ff4fa3);color:#fff;box-shadow:0 6px 16px #e6007e55}
+.btn.big{background:linear-gradient(110deg,#c73c02,#fc4c02 60%,#ff7a3d);color:#fff;box-shadow:0 6px 16px #fc4c0255}
 .btn.out{background:#fff;color:var(--p1);border:1px solid var(--bd)}
 .wxnote{font-size:12px;color:var(--mut);margin-top:8px}
 @media (max-width:900px){.org{grid-template-columns:1fr}.prev{position:static}.steps{grid-template-columns:1fr 1fr 1fr}.steps div{font-size:11px;padding:7px 8px}.steps b{font-size:13px}.acts{grid-template-columns:1fr 1fr}.acts .btn.big{grid-column:1/-1}}
 @media (max-width:480px){.form{grid-template-columns:1fr}}
 
 /* ready routes carousel */
-.rsec .sech{background:linear-gradient(90deg,#fff,#fff4f9)}
+.rsec .sech{background:linear-gradient(90deg,#fff,#fff6f1)}
 .rc{position:relative}
 .rc-view{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
 .rc-view::-webkit-scrollbar{display:none}
 .rslide{flex:0 0 100%;scroll-snap-align:center;box-sizing:border-box;padding:14px 64px;display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:center;min-height:212px}
-.rshape{position:relative;height:184px;border-radius:14px;background:#fff;border:1px solid #f9cfe0;overflow:hidden}
-.rshape::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(120deg,#e6007e12 0 2px,transparent 2px 14px),linear-gradient(135deg,#fff,#fff4f9)}
+.rshape{position:relative;height:184px;border-radius:14px;background:#fff;border:1px solid #ffd9c4;overflow:hidden}
+.rshape::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(120deg,#fc4c0212 0 2px,transparent 2px 14px),linear-gradient(135deg,#fff,#fff6f1)}
 .rshape svg{position:absolute;inset:0;width:100%;height:100%}
 .rinfo .rtags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
-.rinfo .rtags span{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:7px;background:#fff;border:1px solid #e6007e55;color:#a1005a}
-.rinfo .rtags span.k{background:#e6007e;border-color:#e6007e;color:#fff}
+.rinfo .rtags span{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:7px;background:#fff;border:1px solid #fc4c0255;color:#c73c02}
+.rinfo .rtags span.k{background:#fc4c02;border-color:#fc4c02;color:#fff}
 .rinfo h3{margin:0;font-size:21px;letter-spacing:-.3px;color:#13233f}
 .rinfo p{margin:5px 0 10px;color:#3b4a60;font-size:13px;line-height:1.45}
 .rfacts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.rfacts div{background:#fff6fa;border:1px solid #f9cfe0;border-radius:10px;padding:6px 9px}
-.rfacts small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#e6007e}
+.rfacts div{background:#fff8f4;border:1px solid #ffd9c4;border-radius:10px;padding:6px 9px}
+.rfacts small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#fc4c02}
 .rfacts b{font-size:14.5px;color:#13233f;white-space:nowrap}
 .relev{height:34px;margin-top:8px}
 .relev svg{width:100%;height:100%;display:block}
-.rc-arr{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;border:1px solid #f7bcd5;background:#fff;color:#e6007e;font:800 26px/1 Sora,sans-serif;cursor:pointer;box-shadow:0 6px 16px #e6007e26;display:grid;place-items:center;padding:0 0 3px}
-.rc-arr:hover{background:#e6007e;color:#fff}
-.rc-arr:disabled{opacity:.35;cursor:default;background:#fff;color:#e6007e}
+.rc-arr{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;border:1px solid #ffcfb5;background:#fff;color:#fc4c02;font:800 26px/1 Sora,sans-serif;cursor:pointer;box-shadow:0 6px 16px #fc4c0226;display:grid;place-items:center;padding:0 0 3px}
+.rc-arr:hover{background:#fc4c02;color:#fff}
+.rc-arr:disabled{opacity:.35;cursor:default;background:#fff;color:#fc4c02}
 .rc-arr.l{left:12px}.rc-arr.r{right:12px}
 .rc-dots{display:flex;justify-content:center;gap:6px;padding:0 0 12px}
-.rc-dots i{width:7px;height:7px;border-radius:5px;background:#f7c1d8;transition:.25s}
-.rc-dots i.on{width:22px;background:#e6007e}
+.rc-dots i{width:7px;height:7px;border-radius:5px;background:#ffc9ad;transition:.25s}
+.rc-dots i.on{width:22px;background:#fc4c02}
 .rslide.custom .rshape{display:grid;place-items:center;font-size:54px}
-.rmap{border-top:1px solid #f9cfe0}
+.rmap{border-top:1px solid #ffd9c4}
 .rmap .mapbox{height:min(52vh,420px);min-height:300px}
-.rstats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:12px 14px;border-top:1px solid #f9cfe0}
-.rstats div{background:#fff;border:1px solid #f9cfe0;border-radius:10px;padding:7px 10px}
-.rstats small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#e6007e}
+.rstats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:12px 14px;border-top:1px solid #ffd9c4}
+.rstats div{background:#fff;border:1px solid #ffd9c4;border-radius:10px;padding:7px 10px}
+.rstats small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#fc4c02}
 .rstats b{font-size:15px;color:#13233f;white-space:nowrap}
 .rstats .h b{color:#dc2626}.rstats .t b{color:#16a34a}
-.form label.when{color:#e6007e}
-.form label.when input{border-color:#e6007e88;font-size:15px}
-.autonote{font-size:12px;font-weight:700;color:#3b4a60;background:#fff4f9;border:1px dashed #f29cc4;border-radius:10px;padding:8px 10px}
+.form label.when{color:#fc4c02}
+.form label.when input{border-color:#fc4c0288;font-size:15px}
+.autonote{font-size:12px;font-weight:700;color:#3b4a60;background:#fff6f1;border:1px dashed #ffb08a;border-radius:10px;padding:8px 10px}
 .autonote:empty{display:none}
-.imgs{grid-template-columns:1fr 1fr 1fr}
 @media (max-width:900px){.rslide{grid-template-columns:1fr;padding:12px 14px 6px;gap:10px}.rshape{height:150px}.rc-arr{top:88px;width:36px;height:36px;font-size:22px}.rc-arr.l{left:22px}.rc-arr.r{right:22px}
   .rfacts{grid-template-columns:repeat(2,1fr)}.rstats{grid-template-columns:repeat(3,1fr)}.rinfo h3{font-size:18px}.rinfo p{font-size:12.5px}}
-@media (max-width:480px){.imgs{grid-template-columns:1fr 1fr}.rstats b{font-size:13.5px}}
-</style>
+@media (max-width:480px){</style>
 </head>
-<body class="th-giro">
+<body class="th-strava">
 <div class="wrap">
 <header class="top">
   <div class="hl"><a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a><div class="clock"><i></i><span id="clk">--:--</span> Dubai</div></div>
 </header>
 
-<section class="hero giro">
+<section class="hero strava">
   <svg class="deco" viewBox="0 0 600 200" preserveAspectRatio="none" aria-hidden="true"><path d="M-10 150 C120 190 220 90 330 130 S520 180 610 70" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/></svg>
   <div class="hrow">
     <div class="dtile"><span>YOUR</span><b>+</b><span>RIDE</span></div>
@@ -123,7 +120,7 @@ body.th-giro{background:linear-gradient(180deg,#fff7fb 0%,#fdeef5 100%)}
       <div class="hsub"><span style="white-space:normal">Pick a ready route, set the date &amp; time. We add the map, wind &amp; forecast, you share it.</span></div>
     </div>
   </div>
-  <div class="steps"><div><b>1 · Route</b>Pick a ready route</div><div><b>2 · Date &amp; time</b>Forecast added</div><div><b>3 · Share</b>Ride, weather &amp; route cards</div></div>
+  <div class="steps"><div><b>1 · Route</b>Pick a ready route</div><div><b>2 · Date &amp; time</b>Forecast added</div><div><b>3 · Share</b>One image + full details</div></div>
 </section>
 
 <section class="sec rsec">
@@ -170,10 +167,10 @@ body.th-giro{background:linear-gradient(180deg,#fff7fb 0%,#fdeef5 100%)}
   <section class="sec prev">
     <div class="sech"><h2>📤 Preview &amp; share</h2><div class="sp"></div><span class="note" id="fcNote">Loading forecast…</span></div>
     <div class="secb">
-      <div class="imgs"><div><canvas id="cvRide" width="1080" height="1080"></canvas><small>Ride card</small></div><div><canvas id="cvWx" width="1080" height="1080"></canvas><small>Weather card</small></div><div id="rcWrap"><canvas id="cvRoute" width="1080" height="1080"></canvas><small>Route card</small></div></div>
-      <div class="acts"><button class="btn big" id="bShare" type="button">Share ride ↗</button><button class="btn out" id="bCopy" type="button">Copy text</button><button class="btn out" id="bSave" type="button">Download images</button></div>
+      <div class="one"><canvas id="cvShare" width="1080" height="1350"></canvas><small>Share image · 1080×1350 · ride, forecast &amp; route in one</small></div>
+      <div class="acts"><button class="btn big" id="bShare" type="button">Share ride ↗</button><button class="btn out" id="bCopy" type="button">Copy text</button><button class="btn out" id="bSave" type="button">Download image</button></div>
       <div class="txt" id="txt"></div>
-      <div class="wxnote">Forecast: Open-Meteo, up to 16 days ahead. Images are 1080×1080 for WhatsApp, Instagram and Strava. Ready routes: owner's Strava routes with GPX.</div>
+      <div class="wxnote">Forecast: Open-Meteo, up to 16 days ahead. One 1080×1350 image for WhatsApp, Instagram and Strava; everything that does not fit is in the text. Card colours: Tour de France, Giro &amp; Vuelta jerseys.</div>
     </div>
   </section>
 </div>
