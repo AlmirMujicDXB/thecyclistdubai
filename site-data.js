@@ -50,6 +50,7 @@ window.SITE = {
      Every upcoming event (link + code) is added to every group ride share automatically. */
   events: [
     {
+      ref: 'gran-fondo-abu-dhabi-2026',  // stable id for the homepage "I'm going" count
       name: 'AD Ports Group Gran Fondo Abu Dhabi 2026',
       short: 'Gran Fondo Abu Dhabi',           // short name used in ride shares (WhatsApp limit)
       date: '2026-12-20',
@@ -63,6 +64,7 @@ window.SITE = {
     },
     {
       name: "L'Étape Dubai by Tour de France",
+      ref: 'letape-dubai-2027',          // stable id for the homepage "I'm going" count
       short: "L'Étape Dubai",           // short name used in ride shares (WhatsApp limit)
       date: '2027-03-21',          // race day (Family Day is Sat 20 Mar)
       time: '06:30',
@@ -76,6 +78,7 @@ window.SITE = {
       button: 'Register',
     },
     {
+      ref: 'spinneys-dubai-92-2027',     // stable id for the homepage "I'm going" count
       name: 'Spinneys Dubai 92 Cycle Challenge',
       short: 'Spinneys Dubai 92',           // short name used in ride shares (WhatsApp limit)
       date: '2027-02-07',          // 17th edition, main event (start time not announced yet)

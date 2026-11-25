@@ -171,6 +171,14 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .evt-cd b{display:block;font:800 22px "JetBrains Mono",monospace;color:#fbbf24}
 .evt-cd span{font-size:9.5px;color:#bfdbfe;letter-spacing:.5px;text-transform:uppercase}
 .evt-go{flex:none;font-size:12px;font-weight:800;background:#fff;color:#0b1f4b;padding:7px 11px;border-radius:10px}
+.egoing{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:72px;height:40px;padding:3px 8px;border-radius:10px;border:1.5px solid #ffffffcc;background:#ffffff24;color:#fff;cursor:pointer;line-height:1.05;font-family:inherit}
+.egoing b{font-size:11px;font-weight:800}
+.egoing small{font-size:9px;font-weight:700;letter-spacing:.1px;opacity:.92}
+.egoing.on{background:#fff;color:#14532d;border-color:#fff}
+.evt.y .egoing{background:#ffffffd0;border-color:#fff;color:#9f1239}
+.evt.y .egoing.on{background:#d0001a;border-color:#d0001a;color:#fff}
+.evt.lm .egoing{background:#ffffffd6;border-color:#00482a33;color:#00482a}
+.evt.lm .egoing.on{background:#00482a;border-color:#00482a;color:#e9f5a8}
 .evt-code{font-family:"JetBrains Mono",monospace;font-weight:800;letter-spacing:.3px;text-transform:none}
 .evt-tag .code{background:#fffffff0;border-color:#fff;color:#111}
 .evt.y .evt-tag .code{background:#fffffff2;border-color:#fff;color:#1f1a00}
@@ -621,6 +629,9 @@ footer a:hover{color:var(--text)}
   .evt-cd b{font-size:15px;display:inline}
   .evt .evt-go{display:block;order:4;flex:1;text-align:center}
   .evt .cshare{order:5;height:32px}
+  .evt:not(.sm) .egoing{order:3;height:32px;min-width:0;flex:none;flex-direction:row;gap:4px;padding:0 8px}
+  .evt:not(.sm) .evt-go{flex:1 1 calc(100% - 48px)}
+  .evt:not(.sm) .cshare{order:4;flex:none}
   .evt.evt,.ride.ride,.spb.spb{min-height:126px}
   .evt-tag .uci{display:none}
   .evt-title{font-size:13.5px}
@@ -900,7 +911,7 @@ footer a:hover{color:var(--text)}
   </div>
 </div>
 
-<script>/* always load the latest rides/events/sponsors (GitHub caches files for 10 min) */document.write('<script src="site-data.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="route-presets.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="share-core.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
+<script>/* always load the latest rides/events/sponsors (GitHub caches files for 10 min) */document.write('<script src="site-data.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="route-presets.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="share-core.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="js/supabase-config.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
 <script>
 /* ================= tracks ================= */
 const TRACKS = [
@@ -1467,6 +1478,56 @@ function rideForecast(r){
   return {tr,w,dir,sc,lab,txt:`${tr}, wind ${spd(w)} ${uLbl()} ${dir}, ride score ${sc} (${lab})`}}
 const SHARE_ICO='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
 function esc(t){return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+/* Homepage event "I'm going": no name, no email. One device id in localStorage. */
+const EG={counts:{},mine:{}};
+const EG_UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function egLoad(){try{EG.mine=JSON.parse(localStorage.getItem('tcd_event_going')||'{}')||{}}catch(e){EG.mine={}}}
+function egSave(){try{localStorage.setItem('tcd_event_going',JSON.stringify(EG.mine))}catch(e){}}
+function egDevice(){
+  let id='';try{id=localStorage.getItem('tcd_device_id')||''}catch(e){}
+  if(!EG_UUID.test(id)){
+    id=(crypto.randomUUID&&crypto.randomUUID())||'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16)});
+    try{localStorage.setItem('tcd_device_id',id)}catch(e){}
+    EG.mine={};egSave();
+  }
+  return id;
+}
+async function egRpc(name,body){
+  const cfg=window.TCD_SUPABASE;if(!cfg||!cfg.url||!cfg.key)throw new Error('offline');
+  const res=await fetch(cfg.url+'/rest/v1/rpc/'+name,{method:'POST',headers:{apikey:cfg.key,Authorization:'Bearer '+cfg.key,'Content-Type':'application/json'},body:JSON.stringify(body||{})});
+  const text=await res.text();
+  if(!res.ok)throw new Error('rpc');
+  return text?JSON.parse(text):null;
+}
+function paintGoing(btn){
+  const ref=btn.dataset.ref,on=!!EG.mine[ref],n=+EG.counts[ref]||0;
+  btn.classList.toggle('on',on);
+  btn.setAttribute('aria-pressed',on?'true':'false');
+  btn.querySelector('b').textContent=on?'Going':"I'm going";
+  btn.querySelector('small').textContent=n+' going';
+}
+async function refreshGoing(){
+  try{
+    const rows=await egRpc('event_going_counts')||[];
+    const next={};rows.forEach(r=>{if(r&&r.event_ref)next[r.event_ref]=+r.going_count||0});
+    EG.counts=next;
+    document.querySelectorAll('.egoing').forEach(paintGoing);
+  }catch(e){}
+}
+async function toggleGoing(btn){
+  const ref=btn.dataset.ref;if(!ref||btn.dataset.busy)return;
+  const next=!EG.mine[ref];
+  btn.dataset.busy='1';
+  try{
+    await egRpc('event_going_set',{p_event_ref:ref,p_device_id:egDevice(),p_going:next});
+    if(next)EG.mine[ref]=1;else delete EG.mine[ref];
+    egSave();
+    await refreshGoing();
+  }catch(e){toast('Could not update. Try again.');}
+  delete btn.dataset.busy;
+  paintGoing(btn);
+}
+egLoad();
 function renderEvents(){
   const evs=upcomingEvents();
   $('evts').innerHTML=(evs.length?'<h3>Events</h3>':'')+evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
@@ -1480,9 +1541,11 @@ function renderEvents(){
     </div>
     <div class="evt-cd"><b>${days<=0?'Today':days}</b><span>${days<=0?'race day':'days to go'}</span></div>
     <button class="cshare" data-ev="${i}" aria-label="Share event" title="Share event">${SHARE_ICO}</button>
+    ${e.ref?`<button type="button" class="egoing" data-ref="${esc(e.ref)}" aria-pressed="false"><b>I'm going</b><small>0 going</small></button>`:''}
     <span class="evt-go">${esc(e.button||'Details')} ↗</span>
   </a>`}).join('');
   $('evts').querySelectorAll('[data-ev]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareEvent(upcomingEvents()[+b.dataset.ev])});
+  $('evts').querySelectorAll('.egoing').forEach(b=>{paintGoing(b);b.onclick=e=>{e.preventDefault();e.stopPropagation();toggleGoing(b)}});
 }
 // three facts for the card's middle (desktop): start, ride time, back at (from distance, pace and any stop)
 function rideFacts(r){const km=parseFloat(r.distance),pace=parseFloat(r.pace),[h,m]=(r.time||'06:00').split(':').map(Number);
@@ -1558,7 +1621,7 @@ function carInit(id){const c=CAR[id],box=$(id);c.init=true;
 function rentUrl(){try{return (SITE.links||{}).bikeRental||'https://wolfis.ae/pages/rental-bikes'}catch(e){return 'https://wolfis.ae/pages/rental-bikes'}}
 function renderRent(){const a=$('rentBtn');if(a)a.href=rentUrl();const l=$('rentLogo'),u=(SITE.links||{}).bikeRentalLogo;if(l&&u&&l.getAttribute('src')!==u)l.src=u}
 function renderData(){renderEvents();renderRides();renderRent()}
-renderData();setInterval(renderData,60e3);
+renderData();setInterval(renderData,60e3);refreshGoing();setInterval(refreshGoing,20e3);
 
 /* ---------- item share texts ---------- */
 /* one format for every event share (text, image, lists). TheCyclistDubai takes part in every event unless weRide:false */
