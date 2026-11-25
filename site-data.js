@@ -117,6 +117,7 @@ window.SITE = {
   rides: [
     {
       name: 'Purple Ride',
+      preset: 'mosque',   // track shape for the share image (route-presets.js)
       weekly: 'Thu',               // every Thursday
       time: '06:45',
       type: 'Road',
@@ -135,6 +136,7 @@ window.SITE = {
     },
     {
       name: 'TCD Ride',
+      preset: 'zads',   // track shape for the share image (route-presets.js)
       weekly: 'Tue',               // every Tuesday, for four months
       until: '2027-03-23',         // last ride: Tue 23 Mar 2027
       time: '06:45',

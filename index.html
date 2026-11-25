@@ -900,7 +900,7 @@ footer a:hover{color:var(--text)}
   </div>
 </div>
 
-<script>/* always load the latest rides/events/sponsors (GitHub caches files for 10 min) */document.write('<script src="site-data.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="share-core.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
+<script>/* always load the latest rides/events/sponsors (GitHub caches files for 10 min) */document.write('<script src="site-data.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="route-presets.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="share-core.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
 <script>
 /* ================= tracks ================= */
 const TRACKS = [
@@ -1588,7 +1588,7 @@ function shareEvent(e){if(!e)return;const l=parseLocal(e.date+'T00:00');
     lines:[`🕖 ${l.day} ${e.time?fmtTime(e.time):'· start time TBC'}`,evWhere(e)&&('🚴 '+evWhere(e)),e.note&&('🏅 '+e.note),evWe(e)&&'💪 TheCyclistDubai is taking part',e.code&&`🎟️ Code ${e.code}${e.discount?' · '+e.discount:''}`,'📝 Register: '+e.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
   shareNow(canvasFile(cv,'thecyclistdubai-event.png'),eventText(e),e.name)}
 function shareRide(r){if(!r)return;const f=rideForecast(r);
-  shareNow(canvasFile(TCDS.rideCard(r,f,w=>`${spd(w)} ${uLbl()}`),'thecyclistdubai-ride.png'),rideText(r),r.name)}
+  shareNow(canvasFile(TCDS.rideImage(r,f),'thecyclistdubai-ride.png'),rideText(r),r.name)}
 function shareSponsor(x){
   const n=dubaiNow(),cv=drawCard({theme:'orange',dow:'CODE',day:x.code.length<=4?x.code:'%',mon:(x.discount||x.code).toUpperCase(),tags:['🎁 Sponsor discount'],title:x.discount?`${x.name}: ${x.discount} with ${x.kind||'code'} ${x.code}`:`${x.name}: ${x.kind||'code'} ${x.code}`,
     lines:[x.what&&('🛍️ '+x.what.replace(/^./,m=>m.toUpperCase())),'🛒 '+x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
