@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#2e1065"/>
+  <circle cx="140" cy="160" r="36" fill="#fde68a"/>
+  <path d="M60 430 H740" stroke="#c4b5fd" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="180" cy="430" r="28" fill="none" stroke="#e9d5ff" stroke-width="8"/>
+  <circle cx="340" cy="430" r="28" fill="none" stroke="#e9d5ff" stroke-width="8"/>
+  <circle cx="500" cy="430" r="28" fill="none" stroke="#e9d5ff" stroke-width="8"/>
+  <circle cx="660" cy="430" r="28" fill="none" stroke="#e9d5ff" stroke-width="8"/>
+  <text x="40" y="280" font-family="Sora,sans-serif" font-size="28" font-weight="800" fill="#e9d5ff">PREVIEW</text>
+  <text x="40" y="330" font-family="Sora,sans-serif" font-size="40" font-weight="800" fill="#fff">Purple Ride</text>
+  <text x="40" y="372" font-family="Sora,sans-serif" font-size="22" fill="#ddd6fe">Placeholder · the bunch</text>
+</svg>

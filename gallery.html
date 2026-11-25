@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f8fb">
+<title>Gallery · TheCyclistDubai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="home-btn.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Sora,system-ui,sans-serif;color:#13233f;background:radial-gradient(1000px 500px at 85% -10%,#ecfccb 0%,transparent 60%),#f5f8fb;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding:16px 16px 48px}
+.tcd-bar{display:flex;align-items:center;gap:12px;height:64px;padding:8px 10px 10px 16px;margin:0 0 16px;border-radius:16px;border:1px solid #ead9bb;box-shadow:0 10px 26px #8a5a1f1f;background:linear-gradient(90deg,#0072ce 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) left bottom/100% 4px no-repeat,
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 70 C180 70 360 58 600 30 L600 52 C380 72 200 80 120 80 Z' fill='%2386b39a' fill-opacity='.2'/%3E%3Cpath d='M0 64 C200 64 380 48 600 16' fill='none' stroke='%2313233f' stroke-opacity='.22' stroke-width='1.2'/%3E%3Cpath d='M0 56 C200 56 390 38 600 4' fill='none' stroke='%23e11d48' stroke-opacity='.5' stroke-width='2'/%3E%3Cpath d='M0 40 C210 40 400 20 600 -14' fill='none' stroke='%235b8a72' stroke-opacity='.45' stroke-width='2'/%3E%3C/svg%3E") center/100% 100% no-repeat,
+  repeating-linear-gradient(177deg,#a8702d12 0 1px,transparent 1px 10px),linear-gradient(110deg,#fdf9f2 0%,#f8eedd 60%,#f2e2c6 100%)}
+h1{font-size:26px;letter-spacing:-.5px;margin:4px 0 4px}
+.lead{color:#4b5a6e;margin:0 0 14px;font-size:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.chips button{font:800 13px Sora,sans-serif;border:1.5px solid #ead9bb;background:#fff;color:#13233f;border-radius:999px;padding:7px 14px;cursor:pointer}
+.chips button.on{background:linear-gradient(110deg,#4f7a64,#6b9a80 55%,#86b39a);color:#fff;border-color:#e11d48}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tile{position:relative;display:block;padding:0;border:0;background:#f4efe4;border-radius:16px;overflow:hidden;cursor:pointer;aspect-ratio:4/3;box-shadow:0 6px 16px #8a5a1f14}
+.tile img{width:100%;height:100%;object-fit:cover;display:block}
+.tile::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(transparent,#0f172ad9);pointer-events:none}
+.tile .cap{position:absolute;left:8px;right:8px;bottom:8px;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.tile .badge,.lb-badge{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:#3f6b55;border-radius:6px;padding:2px 6px}
+.tile .name{font-size:12px;font-weight:800;color:#fff;text-shadow:0 1px 4px #0008}
+.empty{grid-column:1/-1;background:#fff;border:1px dashed #ead9bb;border-radius:16px;padding:28px 16px;text-align:center;color:#64748b;font-weight:700}
+#lb{position:fixed;inset:0;background:#0f172acc;display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+#lb.open{display:flex}
+.lb-box{max-width:920px;width:100%;display:flex;flex-direction:column;gap:10px}
+.lb-box img{width:100%;max-height:78vh;object-fit:contain;border-radius:16px;background:#111}
+.lb-row{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#fff}
+.lb-row b{font-size:15px}
+.lb-x{border:0;background:#fff;color:#13233f;border-radius:10px;width:36px;height:36px;font-size:16px;font-weight:800;cursor:pointer}
+@media (max-width:700px){
+  .grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tcd-bar"><a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a></header>
+  <h1>Gallery</h1>
+  <p class="lead">Preview only. These tiles are labelled placeholders until real ride photos are added.</p>
+  <div class="chips" id="chips" role="tablist">
+    <button type="button" class="on" data-f="all">All</button>
+    <button type="button" data-f="tcd">TCD</button>
+    <button type="button" data-f="purple">Purple</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Photo">
+  <div class="lb-box">
+    <img id="lbImg" alt="">
+    <div class="lb-row"><span><em class="lb-badge">Preview</em> <b id="lbCap"></b></span><button class="lb-x" id="lbX" type="button" aria-label="Close">✕</button></div>
+  </div>
+</div>
+<script src="site-data.js"></script>
+<script>
+(function(){
+  const photos=(window.SITE&&SITE.gallery)||[];
+  const grid=document.getElementById('grid');
+  const lb=document.getElementById('lb');
+  let filter='all', shown=[];
+  function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function paint(){
+    shown=photos.filter(p=>filter==='all'||p.ride===filter||p.ride==='all');
+    if(!shown.length){
+      grid.innerHTML='<div class="empty">Photos from our rides coming soon</div>';
+      return;
+    }
+    grid.innerHTML=shown.map((p,i)=>'<button type="button" class="tile" data-i="'+i+'"><img alt="Preview placeholder · '+esc(p.title||'ride photo')+'" src="'+esc(p.src)+'" loading="lazy"><span class="cap"><em class="badge">Preview</em><span class="name">'+esc(p.title||'')+'</span></span></button>').join('');
+  }
+  document.getElementById('chips').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    filter=b.dataset.f;
+    document.querySelectorAll('#chips button').forEach(x=>x.classList.toggle('on',x===b));
+    paint();
+  });
+  grid.addEventListener('click',e=>{
+    const t=e.target.closest('.tile'); if(!t) return;
+    const p=shown[+t.dataset.i]; if(!p) return;
+    document.getElementById('lbImg').src=p.src;
+    document.getElementById('lbImg').alt='Preview placeholder · '+(p.title||'ride photo');
+    document.getElementById('lbCap').textContent=p.title||'Ride photo';
+    lb.classList.add('open');
+  });
+  function close(){lb.classList.remove('open');}
+  document.getElementById('lbX').addEventListener('click',close);
+  lb.addEventListener('click',e=>{ if(e.target===lb) close(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
+  paint();
+})();
+</script>
+</body>
+</html>
