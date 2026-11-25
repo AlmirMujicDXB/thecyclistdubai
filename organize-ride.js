@@ -88,7 +88,7 @@ function wheel(el,items,val,pick){const IH=34;el.innerHTML='<div class="pad"></d
   el.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowUp'){e.preventDefault();go(cur-1)}});
   return{set:v=>{const i=items.findIndex(x=>x.v===v);if(i>=0)go(i,false)}}}
 const DAYN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MONN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const dItems=[...Array(45)].map((_,k)=>{const d=new Date(dubai().getTime()+k*864e5),v=ymd(d);return{v,l:k===0?'Today':k===1?`Tomorrow · ${d.getUTCDate()} ${MONN[d.getUTCMonth()]}`:`${DAYN[d.getUTCDay()]} ${d.getUTCDate()} ${MONN[d.getUTCMonth()]}`}});
+const dItems=[...Array(45)].map((_,k)=>{const d=new Date(dubai().getTime()+k*864e5),v=ymd(d);return{v,l:k===0?'Today':k===1?'Tomorrow':`${DAYN[d.getUTCDay()]} ${d.getUTCDate()} ${MONN[d.getUTCMonth()]}`}});
 const tItems=[];for(let m=4*60;m<=20*60;m+=15){const v=`${pad(Math.floor(m/60))}:${pad(m%60)}`;tItems.push({v,l:TCDS.fmtTime(v)})}
 const pItems=[...Array(31)].map((_,k)=>({v:String(15+k),l:`${15+k} km/h`}));
 wheel($('whDate'),dItems,$('fDate').value,v=>{if($('fDate').value!==v){$('fDate').value=v;update()}});
@@ -118,6 +118,7 @@ function goSlide(i,smooth=true){i=Math.max(0,Math.min(NS-1,i));view.style.scroll
 function selectSlide(i){if(i===curSlide)return;curSlide=i;
   document.querySelectorAll('#rcDots i').forEach((d,k)=>d.classList.toggle('on',k===i));$('rcPrev').disabled=i===0;$('rcNext').disabled=i===NS-1;
   $('rcCount').textContent=i<PRE.length?`Route ${i+1} of ${PRE.length} · swipe or use the arrows`:'Custom route';
+  $('rcLab').innerHTML=i<PRE.length?`Route <em>${i+1}</em> of ${PRE.length} · swipe ← →`:`<em>Your own route</em> · swipe ← →`;if(!first0)$('swHint').classList.add('off');
   preset=i<PRE.length?variant(PRE[i]):null;
   if(preset){$('fTrack').value='alqudra';lastTrack='alqudra';$('fStart').value=preset.start;$('fRoute').value=preset.dir?`${preset.name} · ${DIRN[preset.dir].toLowerCase()}`:preset.name;routeAuto=$('fRoute').value;$('fDist').value=preset.km;$('fType').value='Road';
     $('autoNote').innerHTML=`✨ Auto-filled from <b>${preset.name}</b>${preset.dir?` (${DIRN[preset.dir].toLowerCase()})`:''}: Al Qudra · start ${preset.start} · ${preset.km} km · ${preset.gain} m climb. Just set the date &amp; time under the routes (edit anything below if you like).`}
@@ -248,4 +249,5 @@ let startI=0;try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if
 const qp=new URLSearchParams(location.search).get('route');if(qp){const k=PRE.findIndex(p=>p.id===qp);if(k>=0)startI=k}
 fillStarts((STARTS[TR().id]||[])[(JSON.parse(localStorage.getItem('tcd_org')||'{}')||{}).startSel||0]?.n);
 requestAnimationFrame(()=>goSlide(startI,false));
+setTimeout(()=>$('swHint').classList.add('off'),9000);
 })();
