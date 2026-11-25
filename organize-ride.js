@@ -64,7 +64,7 @@ let color='jaune';
 try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv){FIELDS.forEach(k=>{if(sv[k]!=null)$(k).value=sv[k]});$('fRule').checked=sv.fRule!==false;color=sv.colorPicked&&COLORS.some(x=>x[0]===sv.color)?sv.color:color}}catch(e){}
 if(!(parseFloat($('fPace').value)>0))$('fPace').value=28;
 $('fStartSel').addEventListener('change',()=>{const o=startObj();if(o)$('fStart').value=o.n;update()});
-$('fDate').value=ymd(new Date(dubai().getTime()+864e5));$('fTime').value='07:00';if(!(parseFloat($('fPace').value)>0))$('fPace').value=28;
+$('fName').value='';$('fDate').value=ymd(new Date(dubai().getTime()+864e5));$('fTime').value='07:00';if(!(parseFloat($('fPace').value)>0))$('fPace').value=28;
 
 if(!$('fStart').value)$('fStart').value=TRACKS[0].start;
 const TR=()=>TRACKS.find(t=>t.id===$('fTrack').value)||TRACKS[0];
