@@ -162,6 +162,37 @@ body.th-strava{background:#f7f7fa}
 @media (max-width:900px){.rbox{grid-template-columns:1fr}.rbox .mapbox{min-height:260px;height:260px;border-right:0;border-bottom:1px solid var(--bd)}
   .shbox{grid-template-columns:minmax(0,1fr)}.shbox .one canvas{max-width:340px}}
 @media (max-width:480px){.mapbox.illu .legend{display:none}.mapbox.illu .wbadge{padding:5px 8px;gap:7px}.mapbox.illu .warr{width:26px;height:26px;font-size:14px}.mapbox.illu .wbadge b{font-size:13px}.mapbox.illu .wbadge small{font-size:10px}.locrow{flex-direction:column}  .whenbar{display:grid;grid-template-columns:1.3fr 1fr;gap:6px}.whenbar label.pace{grid-column:1/-1;justify-content:center;padding:3px 8px}.whenbar label.pace input{width:44px!important;flex:none}.whenbar label{min-width:0;padding:1px 2px 1px 5px;font-size:12px;gap:3px}.whenbar input{width:100%;font-size:12px}.whenbar label.pace input{width:100%}.whenbar label.pace span{padding-right:3px;font-size:10px}.whenbar .wt{grid-column:1/-1}.whenbar label i{display:none}.whenbar input::-webkit-calendar-picker-indicator{margin:0;padding:0;width:12px}}
+
+/* header v2: compact Strava bar, ride icon tile, title line, big name box */
+.hero.hdr2{padding:14px 16px}
+.h2row{display:flex;align-items:center;gap:14px}
+.h2ico{flex:none;width:54px;height:54px;border-radius:14px;background:#fff;display:grid;place-items:center;box-shadow:0 6px 16px #7c2d1240}
+.h2main{flex:1;min-width:0}
+.h2t{margin:0 0 7px;font-size:13px!important;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#fff!important;line-height:1.2}
+.h2t span{font-weight:700;color:#ffe4d6;text-transform:none;letter-spacing:0}
+.hero.hdr2 .nm{max-width:none}
+@media (max-width:480px){.h2ico{width:44px;height:44px;border-radius:12px}.h2ico svg{width:22px;height:22px}.h2row{gap:10px}}
+/* scroll wheels (date, start, speed) */
+.whenbar.wheels{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:10px;align-items:end;padding:12px 14px}
+.wcol{min-width:0}
+.wlab{font-size:10.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#6d6d78;margin:0 0 5px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wsp .wlab{color:#fc4c02}
+.wheel{--ih:34px;position:relative;height:calc(var(--ih)*3);overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain;border-radius:14px;background:#fff;border:1px solid #ffd9c4;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 30%,#000 70%,transparent 100%);mask-image:linear-gradient(180deg,#0003 0,#000 32%,#000 68%,#0003 100%);cursor:ns-resize;outline:none}
+.wheel::-webkit-scrollbar{display:none}
+.wcol{position:relative}
+.wcol::after{content:"";position:absolute;left:0;right:0;bottom:calc(34px);height:34px;border-radius:10px;border:2px solid #fc4c02;background:#fc4c0212;pointer-events:none}
+.wsp::after{background:#fc4c021f;box-shadow:0 0 0 3px #fc4c021f}
+.wheel .wi{height:var(--ih);display:flex;align-items:center;justify-content:center;scroll-snap-align:center;font:700 14px Sora,system-ui,sans-serif;color:#9a9aa5;white-space:nowrap;transition:color .15s,transform .15s}
+.wheel .wi.on{color:#242428;font-weight:800;transform:scale(1.06)}
+.wsp .wheel .wi.on{color:#fc4c02}
+.wheel .pad{height:var(--ih)}
+.wheel:focus-visible{box-shadow:0 0 0 2px #fc4c02}
+.whenbar.wheels .wt{grid-column:auto;text-align:left;align-self:center;padding-left:6px}
+.whenbar.wheels{grid-template-columns:minmax(0,250px) minmax(0,180px) minmax(0,180px) minmax(0,1fr)}
+.wlab .sm{display:none}
+@media (max-width:760px){.whenbar.wheels{grid-template-columns:1.35fr 1fr 1fr}.whenbar.wheels .wt{grid-column:1/-1;text-align:center;padding-left:0}}
+@media (max-width:480px){.wlab .lg{display:none}.wlab .sm{display:inline}.whenbar.wheels{gap:6px;padding:10px 8px;grid-template-columns:1.4fr 1fr 1fr}.wheel .wi{font-size:13px}.wlab{font-size:9.5px;margin-left:2px}}
 </style>
 </head>
 <body class="th-strava">
@@ -170,14 +201,12 @@ body.th-strava{background:#f7f7fa}
   <div class="hl"><a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a><div class="clock"><i></i><span id="clk">--:--</span> Dubai</div></div>
 </header>
 
-<section class="hero strava compact">
-  <div class="hrow">
-    <div class="dtile"><span>YOUR</span><b>+</b><span>RIDE</span></div>
-    <div class="hmain">
-      <div class="tags"><span class="tag l">🧭 Ride organizer</span><span class="tag">Free · 1 minute</span></div>
-      <h1 class="vh">Organize your ride</h1>
-      <label class="nmlab" for="fName">Name your ride <b>*</b></label>
-      <input id="fName" class="nm" maxlength="40" placeholder="e.g. Saturday Coffee Ride" autocomplete="off" required>
+<section class="hero strava compact hdr2">
+  <div class="h2row">
+    <div class="h2ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><circle cx="6" cy="16" r="4" fill="none" stroke="#fc4c02" stroke-width="2.2"/><circle cx="18" cy="16" r="4" fill="none" stroke="#fc4c02" stroke-width="2.2"/><path d="M6 16l4-8h5l3 8M10 8l3 8M14 5h3" fill="none" stroke="#fc4c02" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="h2main">
+      <h1 class="h2t">Ride organizer <span>· free · 1 minute</span></h1>
+      <input id="fName" class="nm" maxlength="40" placeholder="Name your ride *" autocomplete="off" required aria-label="Name your ride (required)">
     </div>
   </div>
 </section>
@@ -195,7 +224,13 @@ body.th-strava{background:#f7f7fa}
       <div class="rc-nav"><button class="rc-arr" id="rcPrev" type="button" aria-label="Previous route">‹</button><div class="rc-dots" id="rcDots"></div><button class="rc-arr" id="rcNext" type="button" aria-label="Next route">›</button></div>
     </div>
   </div>
-  <div class="whenbar"><label title="Ride date"><i>📅</i><input type="date" id="fDate" aria-label="Ride date"></label><label title="Start time"><i>⏰</i><input type="time" id="fTime" value="06:30" step="300" aria-label="Start time"></label><label title="Your planned average speed for the group" class="pace"><em>Planned avg speed</em><i>⚡</i><input type="number" id="fPace" min="12" max="50" step="1" value="28" aria-label="Planned average speed in km/h"><span>km/h</span></label><span class="wt" id="whenTxt"></span></div>
+  <div class="whenbar wheels">
+    <div class="wcol wd"><div class="wlab">📅 Date</div><div class="wheel" id="whDate" tabindex="0" aria-label="Ride date"></div></div>
+    <div class="wcol wtm"><div class="wlab">⏰ Start</div><div class="wheel" id="whTime" tabindex="0" aria-label="Start time"></div></div>
+    <div class="wcol wsp"><div class="wlab">⚡ <span class="lg">Planned avg speed</span><span class="sm">Avg speed</span></div><div class="wheel" id="whPace" tabindex="0" aria-label="Planned average speed"></div></div>
+    <input type="hidden" id="fDate"><input type="hidden" id="fTime" value="07:00"><input type="hidden" id="fPace" value="28">
+    <span class="wt" id="whenTxt"></span>
+  </div>
   <div class="more" id="more">
     <button type="button" class="more-h" id="moreBtn" aria-expanded="false" aria-controls="moreBody"><span>✏️ Add details manually</span><small id="moreSum">track · start point · route · organiser · join link · notes</small><i class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></i></button>
     <div class="more-b" id="moreBody"><div class="more-in">

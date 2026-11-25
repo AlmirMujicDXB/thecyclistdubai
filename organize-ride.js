@@ -15,9 +15,6 @@ const card=d=>CARD[Math.round(((d%360)+360)%360/22.5)%16];
 const TRACKS=[
   {id:'alqudra',st:[24.99891,55.30695],name:'Al Qudra Cycle Track',place:'Al Qudra',start:'BOTS',lat:24.93,lon:55.33,elev:55},
   {id:'meydan',st:[25.1487,55.2864],name:'Meydan · Nad Al Sheba Cycle Park',place:'Meydan',start:'Nad Al Sheba Cycle Park',lat:25.1487,lon:55.2864,elev:10},
-  {id:'mushrif',st:[25.2190,55.4560],name:'Mushrif National Park',place:'Mushrif Park',start:'MTB Park entrance',lat:25.219,lon:55.456,elev:25},
-  {id:'kite',st:[25.1626,55.2070],name:'Kite Beach · Jumeirah',place:'Kite Beach',start:'Kite Beach',lat:25.1626,lon:55.207,elev:3},
-  {id:'hatta',st:[24.8030,56.1260],name:'Hatta MTB Trail Centre',place:'Hatta',start:'Hatta Wadi Hub',lat:24.803,lon:56.126,elev:330},
   {id:'other',name:'Other place in Dubai',place:'Dubai',start:'',lat:25.20,lon:55.27,elev:10},
 ];
 // start points per track (shared as a Google Maps link): Al Qudra BOTS or ZADS, Meydan DXBike next to Loop Café, Mushrif MTB trail start
@@ -47,7 +44,7 @@ const paceKmh=()=>{const v=parseFloat($('fPace').value);return v>5&&v<60?v:28};
 
 /* ---------- form ---------- */
 $('fTrack').innerHTML=TRACKS.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-const TSHORT={alqudra:'Al Qudra',meydan:'Meydan',mushrif:'Mushrif',kite:'Kite Beach',hatta:'Hatta',other:'Other'};
+const TSHORT={alqudra:'Al Qudra',meydan:'Meydan',other:'Other'};
 $('trkBar').innerHTML=TRACKS.map(t=>`<button type="button" data-t="${t.id}">${TSHORT[t.id]}</button>`).join('');
 let routeAuto='';
 function customDefaults(){const t=TR(),T={alqudra:'Al Qudra',meydan:'Meydan',mushrif:'Mushrif',kite:'Kite Beach',hatta:'Hatta',other:'Dubai'}[t.id];
@@ -67,8 +64,8 @@ let color='jaune';
 try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv){FIELDS.forEach(k=>{if(sv[k]!=null)$(k).value=sv[k]});$('fRule').checked=sv.fRule!==false;color=sv.colorPicked&&COLORS.some(x=>x[0]===sv.color)?sv.color:color}}catch(e){}
 if(!(parseFloat($('fPace').value)>0))$('fPace').value=28;
 $('fStartSel').addEventListener('change',()=>{const o=startObj();if(o)$('fStart').value=o.n;update()});
-if(!$('fDate').value||$('fDate').value<ymd(dubai()))$('fDate').value=nextSat();
-$('fDate').min=ymd(dubai());
+$('fDate').value=ymd(new Date(dubai().getTime()+864e5));$('fTime').value='07:00';if(!(parseFloat($('fPace').value)>0))$('fPace').value=28;
+
 if(!$('fStart').value)$('fStart').value=TRACKS[0].start;
 const TR=()=>TRACKS.find(t=>t.id===$('fTrack').value)||TRACKS[0];
 function setColor(c){color=c;const k=COLORS.find(x=>x[0]===c);$('colName').textContent=k?k[2]:'';document.querySelectorAll('#fColor button').forEach(b=>b.classList.toggle('on',b.dataset.c===c))}
@@ -79,6 +76,24 @@ let lastTrack=$('fTrack').value;
 $('fTrack').addEventListener('change',()=>{const old=TRACKS.find(t=>t.id===lastTrack);if(!$('fStart').value||(old&&$('fStart').value===old.start))$('fStart').value=TR().start;lastTrack=$('fTrack').value;loadWx().then(update)});
 FIELDS.concat(['fRule']).forEach(k=>$(k).addEventListener('input',()=>{clearTimeout(window._u);window._u=setTimeout(update,180)}));
 $('fDate').addEventListener('change',update);$('fTime').addEventListener('change',update);
+
+/* ---------- scroll wheels for date / start time / planned speed (scroll, swipe, mouse wheel, arrow keys, tap) ---------- */
+function wheel(el,items,val,pick){const IH=34;el.innerHTML='<div class="pad"></div>'+items.map((x,i)=>`<div class="wi" data-i="${i}">${x.l}</div>`).join('')+'<div class="pad"></div>';
+  let cur=Math.max(0,items.findIndex(x=>x.v===val));const mark=i=>el.querySelectorAll('.wi').forEach((d,k)=>d.classList.toggle('on',k===i));
+  const go=(i,sm=true)=>{i=Math.max(0,Math.min(items.length-1,i));el.scrollTo({top:i*IH,behavior:sm?'smooth':'auto'})};
+  // position on the start value (re-applied while the page lays out; scroll events are ignored until then)
+  let ready=false,t;const init=()=>{el.scrollTop=cur*IH;mark(cur)};init();requestAnimationFrame(init);setTimeout(init,120);setTimeout(()=>{init();ready=true},400);
+  el.addEventListener('scroll',()=>{if(!ready)return;const i=Math.round(el.scrollTop/IH);if(i!==cur&&items[i]){cur=i;mark(i)}clearTimeout(t);t=setTimeout(()=>{if(items[cur])pick(items[cur].v)},120)},{passive:true});
+  el.addEventListener('click',e=>{const d=e.target.closest('.wi');if(d)go(+d.dataset.i)});
+  el.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowUp'){e.preventDefault();go(cur-1)}});
+  return{set:v=>{const i=items.findIndex(x=>x.v===v);if(i>=0)go(i,false)}}}
+const DAYN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MONN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const dItems=[...Array(45)].map((_,k)=>{const d=new Date(dubai().getTime()+k*864e5),v=ymd(d);return{v,l:k===0?'Today':k===1?`Tomorrow · ${d.getUTCDate()} ${MONN[d.getUTCMonth()]}`:`${DAYN[d.getUTCDay()]} ${d.getUTCDate()} ${MONN[d.getUTCMonth()]}`}});
+const tItems=[];for(let m=4*60;m<=20*60;m+=15){const v=`${pad(Math.floor(m/60))}:${pad(m%60)}`;tItems.push({v,l:TCDS.fmtTime(v)})}
+const pItems=[...Array(31)].map((_,k)=>({v:String(15+k),l:`${15+k} km/h`}));
+wheel($('whDate'),dItems,$('fDate').value,v=>{if($('fDate').value!==v){$('fDate').value=v;update()}});
+wheel($('whTime'),tItems,$('fTime').value,v=>{if($('fTime').value!==v){$('fTime').value=v;update()}});
+wheel($('whPace'),pItems,String(Math.round(paceKmh())),v=>{if($('fPace').value!==v){$('fPace').value=v;document.querySelectorAll('.rslide .et').forEach(b=>b.textContent=estTime(+b.dataset.km));update()}});
 
 /* ---------- ready routes carousel ---------- */
 let preset=null,curSlide=-1,fitFor=null,first0=true;
@@ -93,8 +108,8 @@ const slideInner=(p,i)=>`<div class="rinfo">
     ${p.dir?`<div class="dirseg" role="group" aria-label="Loop direction">${['cw','ccw'].map(d=>`<button type="button" data-d="${d}" class="${d===p.dir?'on':''}">${DIRI[d]} ${DIRN[d]}</button>`).join('')}</div>`:`<div class="relev">${elevSvg(p)}</div>`}</div>`;
 $('rcView').innerHTML=PRE.map((p,i)=>`<div class="rslide" data-i="${i}">${slideInner(variant(p),i)}</div>`).join('')+
   `<div class="rslide custom" data-i="${PRE.length}"><div class="rinfo"><div class="rtags"><span class="k">Custom</span><span>Any track in Dubai</span></div>
-    <h3>✏️ Your own route</h3><p>Pick the track above (Al Qudra full network, Meydan, Mushrif, Kite Beach, Hatta or other), then set start location, route and distance in “Add details manually”.</p>
-    <div class="rfacts"><div><small>Tracks</small><b>5 + other</b></div><div><small>Forecast</small><b>16 days</b></div><div><small>Share</small><b>1 image</b></div><div><small>Time</small><b>1 minute</b></div></div></div></div>`;
+    <h3>✏️ Your own route</h3><p>Pick the track above (Al Qudra full network, Meydan or other), then set start point, route and distance in “Add details manually”.</p>
+    <div class="rfacts"><div><small>Tracks</small><b>2 + other</b></div><div><small>Forecast</small><b>16 days</b></div><div><small>Share</small><b>1 image</b></div><div><small>Time</small><b>1 minute</b></div></div></div></div>`;
 $('rcDots').innerHTML=PRE.concat([0]).map(()=>'<i></i>').join('');
 const NS=PRE.length+1,view=$('rcView');
 view.addEventListener('click',e=>{const b=e.target.closest('.dirseg button');if(!b)return;const sl=b.closest('.rslide'),i=+sl.dataset.i,p=PRE[i];DIRP[p.id]=b.dataset.d;
