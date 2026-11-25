@@ -231,6 +231,14 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .evt.ch .evt-tag .star{background:linear-gradient(110deg,#5b21b6,#7c3aed);border-color:#5b21b6;color:#fff}
 .evt.ch .evt-meta{color:#475569}.evt.ch .evt-meta b{color:#13233f}
 .evt.ch .evt-go{background:linear-gradient(110deg,#5b21b6,#7c3aed);color:#fff;box-shadow:0 4px 12px #5b21b64d}
+/* bikes card: same shape as the chat and simulator cards */
+.evt.bk{color:#13233f;background:linear-gradient(90deg,#5b21b6 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) top/100% 4px no-repeat,radial-gradient(60% 150% at 100% 0%,#7c3aed1a 0%,transparent 65%),linear-gradient(110deg,#ffffff 0%,#f7f3ff 55%,#efe7ff 100%);box-shadow:inset 0 0 0 1px #e4d8fb,0 8px 22px #5b21b61a}
+.evt.bk:hover{box-shadow:inset 0 0 0 1px #d4c4f5,0 12px 28px #5b21b633}
+.evt.bk .bk-ico{background:#fff;border:1px solid #e4d8fb;box-shadow:0 3px 10px #5b21b61f;font-size:22px}
+.evt.bk .evt-tag span{background:#f3e8ff;border-color:#e4d8fb;color:#5b21b6}
+.evt.bk .evt-tag .star{background:linear-gradient(110deg,#5b21b6,#7c3aed);border-color:#5b21b6;color:#fff}
+.evt.bk .evt-meta{color:#475569}.evt.bk .evt-meta b{color:#13233f}
+.evt.bk .evt-go{background:linear-gradient(110deg,#5b21b6,#7c3aed);color:#fff;box-shadow:0 4px 12px #5b21b64d}
 @media (prefers-reduced-motion:reduce){.sm-dot{display:none}}
 /* ---------- conditions card: same size as the event cards, 5–6 sliding slides ---------- */
 #cond.cx{height:70px;padding:0;box-sizing:border-box;border-radius:16px}
@@ -866,6 +874,19 @@ footer a:hover{color:var(--text)}
 
 </div>
 
+<section class="sponsors bikesec">
+  <h3>Bikes</h3>
+  <a class="evt bk" href="bikes.html" title="Bikes for sale">
+    <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#5b21b6" stroke-opacity=".16" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/></svg>
+    <div class="evt-date bk-ico" aria-hidden="true">🚲</div>
+    <div class="evt-main">
+      <div class="evt-tag"><span class="star">🚲<span class="st-l"> Bikes for sale</span></span><span class="up">From riders</span></div>
+      <div class="evt-title">Buy or sell a bike</div>
+      <div class="evt-meta">List yours · <b>photos &amp; price</b><span class="evt-uci"> · email sign-in</span></div>
+    </div>
+    <span class="evt-go">See bikes ↗</span>
+  </a>
+</section>
 <section class="sponsors chatsec">
   <h3>Chat</h3>
   <a class="evt ch" href="chat.html" title="Open the cyclist chat">

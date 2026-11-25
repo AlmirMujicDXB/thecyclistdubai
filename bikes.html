@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f3fb">
+<title>Bikes for sale · TheCyclistDubai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="home-btn.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Sora,system-ui,sans-serif;color:#13233f;background:radial-gradient(900px 420px at 90% -10%,#efe7ff 0%,transparent 55%),#f6f3fb}
+.wrap{max-width:1040px;margin:0 auto;padding:12px 12px 40px}
+.tcd-bar{display:flex;align-items:center;gap:12px;height:64px;padding:8px 10px 10px 12px;margin:0 0 12px;border-radius:16px;border:1px solid #ead9bb;box-shadow:0 10px 26px #8a5a1f1f;background:linear-gradient(90deg,#0072ce 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) left bottom/100% 4px no-repeat,
+  repeating-linear-gradient(177deg,#a8702d12 0 1px,transparent 1px 10px),linear-gradient(110deg,#fdf9f2 0%,#f8eedd 60%,#f2e2c6 100%)}
+.bar{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:4px 0 12px}
+.bar h1{font-size:24px;letter-spacing:-.4px;margin:0}
+.bar p{margin:2px 0 0;color:#4b5563;font-size:13px}
+.btn{border:0;border-radius:12px;padding:11px 14px;font:800 14px Sora,system-ui,sans-serif;color:#fff;background:linear-gradient(110deg,#5b21b6,#7c3aed);cursor:pointer}
+.btn.ghost{background:#fff;color:#5b21b6;border:1.5px solid #e4d8fb}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.card{display:flex;flex-direction:column;background:#fff;border:1px solid #e4d8fb;border-radius:18px;overflow:hidden;box-shadow:0 8px 22px #5b21b612;padding:0;text-align:left;cursor:pointer;font:inherit;color:inherit;width:100%}
+.card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#f3e8ff;display:block}
+.card .body{padding:10px 12px 12px}
+.card h2{font-size:16px;margin:0 0 4px}
+.price{font-weight:800;color:#5b21b6}
+.meta{color:#4b5563;font-size:13px;font-weight:600;margin-top:2px}
+.sold{display:inline-block;margin-left:6px;background:#fee2e2;color:#9f1239;border-radius:999px;padding:2px 7px;font-size:11px;font-weight:800;letter-spacing:.4px}
+.empty{background:#fff;border:1px dashed #e4d8fb;border-radius:18px;padding:28px 16px;text-align:center;color:#6b7280;font-weight:700}
+.panel{background:#fff;border:1px solid #e4d8fb;border-radius:18px;box-shadow:0 10px 28px #5b21b614;padding:18px 16px;margin-bottom:14px}
+.panel h2{margin:0 0 6px;font-size:22px}
+.lead{margin:0 0 12px;color:#4b5563;font-size:14px;line-height:1.45}
+label{display:block;font-size:12px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:#6d28d9;margin:10px 0 6px}
+input,textarea,select{width:100%;font:600 16px Sora,system-ui,sans-serif;color:#13233f;border:1.5px solid #e4d8fb;border-radius:12px;padding:11px 12px;background:#faf8ff}
+textarea{min-height:96px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr;gap:0}
+.choice{display:flex;gap:8px;flex-wrap:wrap}
+.choice button{flex:1;border:1.5px solid #e4d8fb;background:#fff;border-radius:12px;padding:10px;font:800 13px Sora,system-ui,sans-serif;color:#13233f;cursor:pointer}
+.choice button.on{background:#f3e8ff;border-color:#7c3aed;color:#5b21b6}
+.previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.previews img{width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid #e4d8fb}
+.err{min-height:1.2em;margin:8px 0 0;color:#b91c1c;font-size:13px;font-weight:700}
+.actions{display:flex;gap:8px;margin-top:12px}
+.actions .btn{flex:1}
+#shade{position:fixed;inset:0;background:#0f172acc;display:none;align-items:flex-end;justify-content:center;z-index:40;padding:12px}
+#shade.open{display:flex}
+.sheet{background:#fff;border-radius:18px;width:min(640px,100%);max-height:92vh;overflow:auto;padding:12px}
+.sheet img.hero{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;background:#f3e8ff}
+.thumbs{display:flex;gap:6px;margin-top:8px}
+.thumbs button{padding:0;border:2px solid transparent;border-radius:10px;background:none;cursor:pointer}
+.thumbs button.on{border-color:#7c3aed}
+.thumbs img{width:58px;height:58px;object-fit:cover;border-radius:8px;display:block}
+.sheet h2{margin:10px 0 4px;font-size:22px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.facts div{background:#faf8ff;border-radius:12px;padding:8px 10px}
+.facts small{display:block;color:#6d28d9;font-size:11px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+.facts b{font-size:14px}
+.sheet p{font-size:14.5px;line-height:1.45;margin:8px 0}
+.x{float:right;border:0;background:#f3e8ff;color:#5b21b6;width:36px;height:36px;border-radius:10px;font-weight:800;cursor:pointer}
+[hidden]{display:none !important}
+@media (min-width:720px){
+  .grid{grid-template-columns:1fr 1fr}
+  .row2{grid-template-columns:1fr 1fr;gap:10px}
+  #shade{align-items:center}
+  .bar h1{font-size:28px}
+}
+@media (min-width:1020px){
+  .grid{grid-template-columns:1fr 1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tcd-bar"><a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a></header>
+  <div class="bar">
+    <div><h1>Bikes for sale</h1><p id="sub">Bikes from riders in the group.</p></div>
+    <button class="btn" id="sellBtn" type="button">Sell your bike</button>
+  </div>
+  <section class="panel" id="viewSignin" hidden>
+    <h2>Sign in to sell</h2>
+    <p class="lead">Anyone can browse. Selling uses the same email magic link as the chat. No password.</p>
+    <form id="emailForm">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" required placeholder="you@email.com" maxlength="120">
+      <button class="btn" id="sendLink" type="submit">Send magic link</button>
+    </form>
+    <form id="codeForm" hidden>
+      <p class="lead" id="sentNote">Check your inbox for the sign-in link.</p>
+      <label for="code">6-digit code</label>
+      <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
+      <button class="btn" type="submit">Sign in with code</button>
+    </form>
+    <p class="err" id="authErr" role="alert"></p>
+    <button class="btn ghost" id="closeAuth" type="button" style="margin-top:8px">Close</button>
+  </section>
+  <section class="panel" id="viewName" hidden>
+    <h2>Your name</h2>
+    <p class="lead">This is the name on your listing. It is the same name as in the chat.</p>
+    <form id="nameForm">
+      <label for="dname">Display name</label>
+      <input id="dname" maxlength="24" required placeholder="Alex M">
+      <button class="btn" type="submit">Continue</button>
+    </form>
+    <p class="err" id="nameErr" role="alert"></p>
+  </section>
+  <section class="panel" id="viewForm" hidden>
+    <h2>Sell your bike</h2>
+    <p class="lead">1 to 4 photos. JPG, PNG or WebP, up to 5 MB each. Photos are resized before upload.</p>
+    <form id="sellForm">
+      <label for="photos">Photos</label>
+      <input id="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+      <div class="previews" id="previews"></div>
+      <label for="title">Title</label>
+      <input id="title" required maxlength="80" placeholder="Endurance bike, lightly used">
+      <div class="row2">
+        <div><label for="brand">Brand / model</label><input id="brand" required maxlength="60" placeholder="Canyon Endurace"></div>
+        <div><label for="year">Year</label><input id="year" required inputmode="numeric" maxlength="4" placeholder="2022"></div>
+      </div>
+      <div class="row2">
+        <div><label for="size">Frame size</label><input id="size" required maxlength="20" placeholder="M / 54 cm"></div>
+        <div><label for="condition">Condition</label>
+          <select id="condition"><option>Like new</option><option>New</option><option>Good</option><option>Fair</option></select>
+        </div>
+      </div>
+      <div class="row2">
+        <div><label for="price">Price (AED)</label><input id="price" required inputmode="numeric" placeholder="4500"></div>
+        <div><label for="location">Location</label><input id="location" required maxlength="60" placeholder="Al Qudra"></div>
+      </div>
+      <label for="description">Description</label>
+      <textarea id="description" required maxlength="1500" placeholder="Size, groupset, what is included, why you are selling."></textarea>
+      <label>Contact</label>
+      <div class="choice" id="contactChoice">
+        <button type="button" data-k="whatsapp" class="on">WhatsApp number</button>
+        <button type="button" data-k="chat">Message in chat</button>
+      </div>
+      <div id="waWrap"><label for="whatsapp">WhatsApp</label><input id="whatsapp" inputmode="tel" placeholder="9715xxxxxxxx" maxlength="16"></div>
+      <div class="actions">
+        <button class="btn ghost" id="cancelSell" type="button">Cancel</button>
+        <button class="btn" id="publish" type="submit">Publish listing</button>
+      </div>
+      <p class="err" id="formErr" role="alert"></p>
+    </form>
+  </section>
+  <div class="grid" id="grid"></div>
+</div>
+<div id="shade" role="dialog" aria-modal="true" aria-label="Bike listing">
+  <div class="sheet" id="sheet"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="bikes.js"></script>
+</body>
+</html>
