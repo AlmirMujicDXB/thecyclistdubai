@@ -110,6 +110,15 @@ body.th-strava{background:#f7f7fa}
 .whenbar .wt{font-size:12px;font-weight:700;color:#6d6d78}
 @media (max-width:480px){.whenbar{gap:6px;padding:9px 8px}.whenbar .wl{display:none}.whenbar label{padding:1px 2px 1px 6px;font-size:13px}.whenbar input{font-size:12.5px}.whenbar .wt{flex-basis:100%;text-align:center}}
 
+/* ride name box in the hero (required) */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.nmlab{display:block;font-size:12px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#fff3ec;margin:6px 0 5px}.nmlab b{color:#fff}
+.hero .nm{width:100%;max-width:560px;box-sizing:border-box;font:800 22px Sora,system-ui,sans-serif;color:#242428;background:#fff;border:2px solid #fff;border-radius:14px;padding:10px 14px;box-shadow:0 6px 18px #7c2d1233}
+.hero .nm::placeholder{color:#b3b3bd;font-weight:700}
+.hero .nm:focus{outline:none;border-color:#242428;box-shadow:0 0 0 4px #ffffff66}
+.hero .nm.need{border-color:#242428;animation:nmShake .45s}
+@keyframes nmShake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@media (max-width:480px){.hero .nm{font-size:18px;padding:9px 12px}}
 /* track menu (same tracks as the homepage) */
 .trkbar{display:flex;gap:6px;padding:10px 14px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--bd);background:#fff}
 .trkbar::-webkit-scrollbar{display:none}
@@ -166,8 +175,9 @@ body.th-strava{background:#f7f7fa}
     <div class="dtile"><span>YOUR</span><b>+</b><span>RIDE</span></div>
     <div class="hmain">
       <div class="tags"><span class="tag l">🧭 Ride organizer</span><span class="tag">Free · 1 minute</span></div>
-      <h1>Organize your ride</h1>
-      <div class="hsub"><span style="white-space:normal">Pick a route, set date, time &amp; pace. Map, wind &amp; forecast are added, then share.</span></div>
+      <h1 class="vh">Organize your ride</h1>
+      <label class="nmlab" for="fName">Name your ride <b>*</b></label>
+      <input id="fName" class="nm" maxlength="40" placeholder="e.g. Saturday Coffee Ride" autocomplete="off" required>
     </div>
   </div>
 </section>
@@ -187,17 +197,15 @@ body.th-strava{background:#f7f7fa}
   </div>
   <div class="whenbar"><label title="Ride date"><i>📅</i><input type="date" id="fDate" aria-label="Ride date"></label><label title="Start time"><i>⏰</i><input type="time" id="fTime" value="06:30" step="300" aria-label="Start time"></label><label title="Your planned average speed for the group" class="pace"><em>Planned avg speed</em><i>⚡</i><input type="number" id="fPace" min="12" max="50" step="1" value="28" aria-label="Planned average speed in km/h"><span>km/h</span></label><span class="wt" id="whenTxt"></span></div>
   <div class="more" id="more">
-    <button type="button" class="more-h" id="moreBtn" aria-expanded="false" aria-controls="moreBody"><span>✏️ Add details manually</span><small id="moreSum">name · start location · organiser · join link · notes</small><i class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></i></button>
+    <button type="button" class="more-h" id="moreBtn" aria-expanded="false" aria-controls="moreBody"><span>✏️ Add details manually</span><small id="moreSum">track · start point · route · organiser · join link · notes</small><i class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></i></button>
     <div class="more-b" id="moreBody"><div class="more-in">
     <div class="form">
       <div class="full autonote" id="autoNote"></div>
-      <label class="full">Ride name<input id="fName" maxlength="40" placeholder="Saturday Coffee Ride"></label>
       <label>Track<select id="fTrack"></select></label>
       <label>Type<select id="fType"><option>Road</option><option>Gravel</option><option>MTB</option><option>Social / no-drop</option><option>Training</option></select></label>
-      <label>Start point<input id="fStart" maxlength="40" placeholder="BOTS"></label>
+      <label>Start point<select id="fStartSel"></select></label>
+      <label id="startTyped">Start point<input id="fStart" maxlength="40" placeholder="Where do you meet?"></label>
       <label>Distance (km)<input type="number" id="fDist" min="1" max="300" step="0.5" value="50"></label>
-      <label class="full">Start location <small>(Google Maps link, shared in the message)</small>
-        <span class="locrow"><input id="fLoc" type="url" maxlength="300" placeholder="https://maps.app.goo.gl/…"><button type="button" class="btn out sm" id="bFind">📍 Find on Google Maps ↗</button></span></label>
       <label class="full">Route <small>(optional)</small><input id="fRoute" maxlength="60" placeholder="BOTS → Last Exit & back"></label>
       <label>Organiser <small>(optional)</small><input id="fOrg" maxlength="30" placeholder="Your name or club"></label>
       <label>Join link <small>(optional)</small><input id="fJoin" type="url" maxlength="200" placeholder="WhatsApp / Strava link"></label>
