@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Organize your ride · TheCyclistDubai</title>
-<meta name="description" content="Organize a group ride in Dubai: pick the track, date, time and pace, get the forecast and share a ride card and a weather card to WhatsApp.">
+<meta name="description" content="Organize a group ride in Dubai: pick a ready Al Qudra route or your own, set date and time, get the forecast and wind on the route, and share ride, weather and route cards to WhatsApp.">
 <meta name="theme-color" content="#e2001a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="ride-page.css">
 <link rel="stylesheet" href="home-btn.css">
 <script src="site-data.js"></script>
 <script src="share-core.js"></script>
+<script src="route-presets.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 body.th-org{--p0:#9f0014;--p1:#c8001a;--p2:#e2001a;--p3:#ff4d5e;--p4:#ffe4e6;--p5:#fff5f6;--glow:#ffffff00;--shadow:#e2001a26;--bd:#f6d3d6;--bd2:#fff7f7}
 /* King of the Mountains polka-dot jersey */
@@ -53,6 +56,50 @@ body.th-org{--p0:#9f0014;--p1:#c8001a;--p2:#e2001a;--p3:#ff4d5e;--p4:#ffe4e6;--p
 .wxnote{font-size:12px;color:var(--mut);margin-top:8px}
 @media (max-width:900px){.org{grid-template-columns:1fr}.prev{position:static}.steps{grid-template-columns:1fr 1fr 1fr}.steps div{font-size:11px;padding:7px 8px}.steps b{font-size:13px}.acts{grid-template-columns:1fr 1fr}.acts .btn.big{grid-column:1/-1}}
 @media (max-width:480px){.form{grid-template-columns:1fr}}
+
+/* ready routes carousel */
+.rsec .sech{background:linear-gradient(90deg,#fff,#fff5f6)}
+.rc{position:relative}
+.rc-view{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.rc-view::-webkit-scrollbar{display:none}
+.rslide{flex:0 0 100%;scroll-snap-align:center;box-sizing:border-box;padding:14px 64px;display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:center;min-height:212px}
+.rshape{position:relative;height:184px;border-radius:14px;background:#fff;border:1px solid #f6d3d6;overflow:hidden}
+.rshape::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,#e2001a22 0 2.2px,transparent 2.8px) 0 0/14px 14px}
+.rshape svg{position:absolute;inset:0;width:100%;height:100%}
+.rinfo .rtags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.rinfo .rtags span{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:7px;background:#fff;border:1px solid #e2001a55;color:#b00016}
+.rinfo .rtags span.k{background:#e2001a;border-color:#e2001a;color:#fff}
+.rinfo h3{margin:0;font-size:21px;letter-spacing:-.3px;color:#13233f}
+.rinfo p{margin:5px 0 10px;color:#3b4a60;font-size:13px;line-height:1.45}
+.rfacts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.rfacts div{background:#fff7f7;border:1px solid #f6d3d6;border-radius:10px;padding:6px 9px}
+.rfacts small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#e2001a}
+.rfacts b{font-size:14.5px;color:#13233f;white-space:nowrap}
+.relev{height:34px;margin-top:8px}
+.relev svg{width:100%;height:100%;display:block}
+.rc-arr{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;border:1px solid #f6c9ce;background:#fff;color:#e2001a;font:800 26px/1 Sora,sans-serif;cursor:pointer;box-shadow:0 6px 16px #e2001a26;display:grid;place-items:center;padding:0 0 3px}
+.rc-arr:hover{background:#e2001a;color:#fff}
+.rc-arr:disabled{opacity:.35;cursor:default;background:#fff;color:#e2001a}
+.rc-arr.l{left:12px}.rc-arr.r{right:12px}
+.rc-dots{display:flex;justify-content:center;gap:6px;padding:0 0 12px}
+.rc-dots i{width:7px;height:7px;border-radius:5px;background:#f3c4c9;transition:.25s}
+.rc-dots i.on{width:22px;background:#e2001a}
+.rslide.custom .rshape{display:grid;place-items:center;font-size:54px}
+.rmap{border-top:1px solid #f6d3d6}
+.rmap .mapbox{height:min(52vh,420px);min-height:300px}
+.rstats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:12px 14px;border-top:1px solid #f6d3d6}
+.rstats div{background:#fff;border:1px solid #f6d3d6;border-radius:10px;padding:7px 10px}
+.rstats small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#e2001a}
+.rstats b{font-size:15px;color:#13233f;white-space:nowrap}
+.rstats .h b{color:#dc2626}.rstats .t b{color:#16a34a}
+.form label.when{color:#e2001a}
+.form label.when input{border-color:#e2001a88;font-size:15px}
+.autonote{font-size:12px;font-weight:700;color:#3b4a60;background:#fff5f6;border:1px dashed #f3a5ae;border-radius:10px;padding:8px 10px}
+.autonote:empty{display:none}
+.imgs{grid-template-columns:1fr 1fr 1fr}
+@media (max-width:900px){.rslide{grid-template-columns:1fr;padding:12px 14px 6px;gap:10px}.rshape{height:150px}.rc-arr{top:88px;width:36px;height:36px;font-size:22px}.rc-arr.l{left:22px}.rc-arr.r{right:22px}
+  .rfacts{grid-template-columns:repeat(2,1fr)}.rstats{grid-template-columns:repeat(3,1fr)}.rinfo h3{font-size:18px}.rinfo p{font-size:12.5px}}
+@media (max-width:480px){.imgs{grid-template-columns:1fr 1fr}.rstats b{font-size:13.5px}}
 </style>
 </head>
 <body class="th-org">
@@ -68,10 +115,27 @@ body.th-org{--p0:#9f0014;--p1:#c8001a;--p2:#e2001a;--p3:#ff4d5e;--p4:#ffe4e6;--p
     <div class="hmain">
       <div class="tags"><span class="tag l">🧭 Ride organizer</span><span class="tag">Free · 1 minute</span></div>
       <h1>Organize your ride</h1>
-      <div class="hsub"><span style="white-space:normal">Pick the track, date, time &amp; pace. We add the forecast, you share it.</span></div>
+      <div class="hsub"><span style="white-space:normal">Pick a ready route, set the date &amp; time. We add the map, wind &amp; forecast, you share it.</span></div>
     </div>
   </div>
-  <div class="steps"><div><b>1 · Details</b>Fill in your ride</div><div><b>2 · Forecast</b>Added automatically</div><div><b>3 · Share</b>Ride card + weather card</div></div>
+  <div class="steps"><div><b>1 · Route</b>Pick a ready route</div><div><b>2 · Date &amp; time</b>Forecast added</div><div><b>3 · Share</b>Ride, weather &amp; route cards</div></div>
+</section>
+
+<section class="sec rsec">
+  <div class="sech"><h2>🗺️ Ready routes</h2><div class="sp"></div><span class="note" id="rcCount"></span></div>
+  <div class="rc">
+    <button class="rc-arr l" id="rcPrev" type="button" aria-label="Previous route">‹</button>
+    <div class="rc-view" id="rcView"></div>
+    <button class="rc-arr r" id="rcNext" type="button" aria-label="Next route">›</button>
+  </div>
+  <div class="rc-dots" id="rcDots"></div>
+  <div class="rmap">
+    <div class="mapbox"><div id="map"></div><div class="mhint" id="mhint">Use two fingers to move the map</div>
+      <div class="mapui"><div class="wbadge"><div class="warr" id="wArr">↓</div><div><b id="wSpd">--</b><small id="wTxt">Wind at start</small></div></div>
+        <div class="legend" id="legend"><span><i style="background:#dc2626"></i>Headwind</span><span><i style="background:#16a34a"></i>Tailwind</span><span><i style="background:#eab308"></i>Crosswind</span></div></div>
+    </div>
+    <div class="rstats" id="rStats"></div>
+  </div>
 </section>
 
 <div class="org">
@@ -79,9 +143,10 @@ body.th-org{--p0:#9f0014;--p1:#c8001a;--p2:#e2001a;--p3:#ff4d5e;--p4:#ffe4e6;--p
     <div class="sech"><h2>📝 Your ride</h2></div>
     <div class="secb">
       <div class="form">
+        <label class="when">📅 Date<input type="date" id="fDate"></label>
+        <label class="when">⏰ Start time<input type="time" id="fTime" value="06:30" step="300"></label>
+        <div class="full autonote" id="autoNote"></div>
         <label class="full">Ride name<input id="fName" maxlength="40" placeholder="Saturday Coffee Ride"></label>
-        <label>Date<input type="date" id="fDate"></label>
-        <label>Start time<input type="time" id="fTime" value="06:30" step="300"></label>
         <label>Track<select id="fTrack"></select></label>
         <label>Start point<input id="fStart" maxlength="40"></label>
         <label class="full">Route <small>(optional)</small><input id="fRoute" maxlength="50" placeholder="BOTS → Last Exit & back"></label>
@@ -100,10 +165,10 @@ body.th-org{--p0:#9f0014;--p1:#c8001a;--p2:#e2001a;--p3:#ff4d5e;--p4:#ffe4e6;--p
   <section class="sec prev">
     <div class="sech"><h2>📤 Preview &amp; share</h2><div class="sp"></div><span class="note" id="fcNote">Loading forecast…</span></div>
     <div class="secb">
-      <div class="imgs"><div><canvas id="cvRide" width="1080" height="1080"></canvas><small>Ride card</small></div><div><canvas id="cvWx" width="1080" height="1080"></canvas><small>Weather card</small></div></div>
+      <div class="imgs"><div><canvas id="cvRide" width="1080" height="1080"></canvas><small>Ride card</small></div><div><canvas id="cvWx" width="1080" height="1080"></canvas><small>Weather card</small></div><div id="rcWrap"><canvas id="cvRoute" width="1080" height="1080"></canvas><small>Route card</small></div></div>
       <div class="acts"><button class="btn big" id="bShare" type="button">Share ride ↗</button><button class="btn out" id="bCopy" type="button">Copy text</button><button class="btn out" id="bSave" type="button">Download images</button></div>
       <div class="txt" id="txt"></div>
-      <div class="wxnote">Forecast: Open-Meteo, up to 16 days ahead. Images are 1080×1080 for WhatsApp, Instagram and Strava.</div>
+      <div class="wxnote">Forecast: Open-Meteo, up to 16 days ahead. Images are 1080×1080 for WhatsApp, Instagram and Strava. Ready routes: owner's Strava routes with GPX.</div>
     </div>
   </section>
 </div>
