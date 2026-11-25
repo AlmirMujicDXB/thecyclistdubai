@@ -1579,6 +1579,7 @@ const THEMES=TCDS.THEMES,RIDE_TH=TCDS.RIDE_TH,LIGHT=TCDS.LIGHT,wrapLines=TCDS.wr
 const RIDE_ROW={green:'linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)',purple:'linear-gradient(110deg,#2e1065,#5b21b6 50%,#a855f7)',orange:'linear-gradient(110deg,#7c2d12,#c2410c 50%,#fb923c)'};
 const canvasFile=TCDS.canvasFile;
 function shareNow(file,text,title){
+  if(file&&window.TCDS&&TCDS.share){TCDS.share(file,text,title,toast);return}
   copyText(text);
   try{if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],text,title}).then(()=>toast('Shared ✔ Text also copied, paste it if WhatsApp drops it')).catch(e=>{if(e.name!=='AbortError')openShareModal(text,file,file.name)});return}}catch(e){}
   openShareModal(text,file,file&&file.name);

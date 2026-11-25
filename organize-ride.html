@@ -110,6 +110,12 @@ body.th-strava{background:#f7f7fa}
 .whenbar .wt{font-size:12px;font-weight:700;color:#6d6d78}
 @media (max-width:480px){.whenbar{gap:6px;padding:9px 8px}.whenbar .wl{display:none}.whenbar label{padding:1px 2px 1px 6px;font-size:13px}.whenbar input{font-size:12.5px}.whenbar .wt{flex-basis:100%;text-align:center}}
 
+/* track menu (same tracks as the homepage) */
+.trkbar{display:flex;gap:6px;padding:10px 14px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--bd);background:#fff}
+.trkbar::-webkit-scrollbar{display:none}
+.trkbar button{flex:none;border:1px solid #ffd9c4;background:#fff;border-radius:10px;padding:7px 13px;font:800 12.5px Sora,sans-serif;color:#242428;cursor:pointer}
+.trkbar button:hover{border-color:#fc4c02}
+.trkbar button.on{background:linear-gradient(110deg,#e34402,#fc4c02 60%,#ff7a3d);color:#fff;border-color:#fc4c02;box-shadow:0 3px 10px #fc4c0240}
 /* compact layout v3: one route illustration beside the sliding route info */
 .mapbox.illu{background:linear-gradient(135deg,#fff,#fff6f1);overflow:hidden}
 .mapbox.illu::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,#24242814 0 1.4px,transparent 1.9px) 0 0/18px 18px}
@@ -168,6 +174,7 @@ body.th-strava{background:#f7f7fa}
 
 <section class="sec rsec">
   <div class="sech"><h2>🗺️ Pick a route</h2><div class="sp"></div><span class="note" id="rcCount"></span></div>
+  <div class="trkbar" id="trkBar" role="group" aria-label="Cycling track"></div>
   <div class="rbox">
     <div class="mapbox illu"><svg id="illu" viewBox="0 0 600 420" preserveAspectRatio="xMidYMid meet" aria-label="Route illustration"></svg><canvas id="wind"></canvas>
       <div class="mapui"><div class="wbadge"><div class="warr" id="wArr">↓</div><div><b id="wSpd">--</b><small id="wTxt">Wind at start</small></div></div>

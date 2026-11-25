@@ -355,11 +355,7 @@ function shareForecast(r){if(!ST.wx)return null;const sh=+r.time.slice(0,2),hs=[
 async function shareRide(){if(!window.TCDS){toast('Sharing is not available right now');return}
   const ov=(RIDE.changes&&RIDE.changes[ST.date])||{},r={...RIDE,...ov,occ:ST.date,time:ov.time||RIDE.time};
   const f=shareForecast(r),text=TCDS.rideText(r,f),file=TCDS.canvasFile(TCDS.rideImage(r,f,ST.wx&&ST.wx.H?ST.wx:null),'thecyclistdubai-ride.png');
-  try{navigator.clipboard.writeText(text).catch(()=>{})}catch(e){}
-  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text,title:r.name});toast('Shared ✔ Text also copied, paste it if WhatsApp drops it');return}
-    if(navigator.share){await navigator.share({text,title:r.name});return}}
-  catch(e){if(e.name==='AbortError')return}
-  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');toast('Opening WhatsApp · text copied')}
+  TCDS.share(file,text,r.name,toast)}
 $('bShare').onclick=shareRide;
 
 /* ---------- wire up ---------- */

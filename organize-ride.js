@@ -13,11 +13,11 @@ const rad=Math.PI/180;
 const CARD=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
 const card=d=>CARD[Math.round(((d%360)+360)%360/22.5)%16];
 const TRACKS=[
-  {id:'alqudra',name:'Al Qudra Cycle Track',place:'Al Qudra',start:'BOTS',lat:24.93,lon:55.33,elev:55},
-  {id:'meydan',name:'Meydan · Nad Al Sheba Cycle Park',place:'Meydan',start:'Nad Al Sheba Cycle Park',lat:25.1487,lon:55.2864,elev:10},
-  {id:'mushrif',name:'Mushrif National Park',place:'Mushrif Park',start:'MTB Park entrance',lat:25.219,lon:55.456,elev:25},
-  {id:'kite',name:'Kite Beach · Jumeirah',place:'Kite Beach',start:'Kite Beach',lat:25.1626,lon:55.207,elev:3},
-  {id:'hatta',name:'Hatta MTB Trail Centre',place:'Hatta',start:'Hatta Wadi Hub',lat:24.803,lon:56.126,elev:330},
+  {id:'alqudra',st:[24.99891,55.30695],name:'Al Qudra Cycle Track',place:'Al Qudra',start:'BOTS',lat:24.93,lon:55.33,elev:55},
+  {id:'meydan',st:[25.1487,55.2864],name:'Meydan · Nad Al Sheba Cycle Park',place:'Meydan',start:'Nad Al Sheba Cycle Park',lat:25.1487,lon:55.2864,elev:10},
+  {id:'mushrif',st:[25.2190,55.4560],name:'Mushrif National Park',place:'Mushrif Park',start:'MTB Park entrance',lat:25.219,lon:55.456,elev:25},
+  {id:'kite',st:[25.1626,55.2070],name:'Kite Beach · Jumeirah',place:'Kite Beach',start:'Kite Beach',lat:25.1626,lon:55.207,elev:3},
+  {id:'hatta',st:[24.8030,56.1260],name:'Hatta MTB Trail Centre',place:'Hatta',start:'Hatta Wadi Hub',lat:24.803,lon:56.126,elev:330},
   {id:'other',name:'Other place in Dubai',place:'Dubai',start:'',lat:25.20,lon:55.27,elev:10},
 ];
 const COLORS=[['jaune','#ffe100','Maillot jaune · Tour de France'],['vert','#00a650','Maillot vert · Tour de France'],['pois','radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 0 0/12px 12px,radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 6px 6px/12px 12px,#fff','Maillot à pois · Tour de France'],['blanc','linear-gradient(135deg,#fff,#e9edf2)','Maillot blanc · Tour de France'],['rosa','linear-gradient(135deg,#ffd9e8,#f472b6)','Maglia rosa · Giro d\'Italia'],['roja','linear-gradient(135deg,#9e001d,#ff2d55)','La Roja · La Vuelta']];
@@ -41,6 +41,14 @@ const paceKmh=()=>{const v=parseFloat($('fPace').value);return v>5&&v<60?v:28};
 
 /* ---------- form ---------- */
 $('fTrack').innerHTML=TRACKS.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+const TSHORT={alqudra:'Al Qudra',meydan:'Meydan',mushrif:'Mushrif',kite:'Kite Beach',hatta:'Hatta',other:'Other'};
+$('trkBar').innerHTML=TRACKS.map(t=>`<button type="button" data-t="${t.id}">${TSHORT[t.id]}</button>`).join('');
+let routeAuto='';
+function customDefaults(){const t=TR(),T={alqudra:'Al Qudra',meydan:'Meydan',mushrif:'Mushrif',kite:'Kite Beach',hatta:'Hatta',other:'Dubai'}[t.id];
+  if(nameAuto)$('fName').value=`${T} Ride`;if(!$('fRoute').value||$('fRoute').value===routeAuto)$('fRoute').value='';
+  $('fStart').value=t.start||'';if(t.st){const ql=`https://www.google.com/maps/search/?api=1&query=${t.st[0]},${t.st[1]}`;if(!$('fLoc').value||$('fLoc').value===locAuto){$('fLoc').value=ql;locAuto=ql}}
+  else if($('fLoc').value===locAuto)$('fLoc').value=''}
+function syncChips(){document.querySelectorAll('#trkBar button').forEach(b=>b.classList.toggle('on',b.dataset.t===$('fTrack').value))}
 $('fColor').innerHTML=COLORS.map(c=>`<button type="button" data-c="${c[0]}" style="background:${c[1]}" title="${c[2]}" aria-label="${c[2]}"></button>`).join('');
 const dubai=()=>new Date(Date.now()+4*3600e3);
 const ymd=d=>`${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`;
@@ -79,7 +87,7 @@ const slideInner=(p,i)=>`<div class="rinfo">
     ${p.dir?`<div class="dirseg" role="group" aria-label="Loop direction">${['cw','ccw'].map(d=>`<button type="button" data-d="${d}" class="${d===p.dir?'on':''}">${DIRI[d]} ${DIRN[d]}</button>`).join('')}</div>`:`<div class="relev">${elevSvg(p)}</div>`}</div>`;
 $('rcView').innerHTML=PRE.map((p,i)=>`<div class="rslide" data-i="${i}">${slideInner(variant(p),i)}</div>`).join('')+
   `<div class="rslide custom" data-i="${PRE.length}"><div class="rinfo"><div class="rtags"><span class="k">Custom</span><span>Any track in Dubai</span></div>
-    <h3>✏️ Your own route</h3><p>Al Qudra, Meydan, Mushrif, Kite Beach, Hatta or anywhere else: set the track, start location, route and distance in “Add details manually” below.</p>
+    <h3>✏️ Your own route</h3><p>Pick the track above (Al Qudra full network, Meydan, Mushrif, Kite Beach, Hatta or other), then set start location, route and distance in “Add details manually”.</p>
     <div class="rfacts"><div><small>Tracks</small><b>5 + other</b></div><div><small>Forecast</small><b>16 days</b></div><div><small>Share</small><b>1 image</b></div><div><small>Time</small><b>1 minute</b></div></div></div></div>`;
 $('rcDots').innerHTML=PRE.concat([0]).map(()=>'<i></i>').join('');
 const NS=PRE.length+1,view=$('rcView');
@@ -90,22 +98,36 @@ function selectSlide(i){if(i===curSlide)return;curSlide=i;
   document.querySelectorAll('#rcDots i').forEach((d,k)=>d.classList.toggle('on',k===i));$('rcPrev').disabled=i===0;$('rcNext').disabled=i===NS-1;
   $('rcCount').textContent=i<PRE.length?`Route ${i+1} of ${PRE.length} · swipe or use the arrows`:'Custom route';
   preset=i<PRE.length?variant(PRE[i]):null;
-  if(preset){$('fTrack').value='alqudra';lastTrack='alqudra';$('fStart').value=preset.start;$('fRoute').value=preset.dir?`${preset.name} · ${DIRN[preset.dir].toLowerCase()}`:preset.name;$('fDist').value=preset.km;$('fType').value='Road';
+  if(preset){$('fTrack').value='alqudra';lastTrack='alqudra';$('fStart').value=preset.start;$('fRoute').value=preset.dir?`${preset.name} · ${DIRN[preset.dir].toLowerCase()}`:preset.name;routeAuto=$('fRoute').value;$('fDist').value=preset.km;$('fType').value='Road';
     if(nameAuto)$('fName').value=`${preset.short} Ride`;
     const ql=`https://www.google.com/maps/search/?api=1&query=${preset.pts[0][0]},${preset.pts[0][1]}`;if(!$('fLoc').value||$('fLoc').value===locAuto)$('fLoc').value=ql;locAuto=ql;
     $('autoNote').innerHTML=`✨ Auto-filled from <b>${preset.name}</b>${preset.dir?` (${DIRN[preset.dir].toLowerCase()})`:''}: Al Qudra · start ${preset.start} · ${preset.km} km · ${preset.gain} m climb. Just set the date &amp; time under the routes (edit anything below if you like).`}
-  else{$('autoNote').innerHTML='';if(curSlide>=0&&!first0)setMore(true)}first0=false;
-  loadWx().then(update)}
+  else{$('autoNote').innerHTML='';if(!first0)customDefaults();if(curSlide>=0&&!first0)setMore(true)}first0=false;
+  syncChips();Promise.all([loadWx(),loadNet($('fTrack').value)]).then(update)}
 let scT;view.addEventListener('scroll',()=>{clearTimeout(scT);scT=setTimeout(()=>selectSlide(Math.round(view.scrollLeft/Math.max(1,view.clientWidth))),110)},{passive:true});
-$('fTrack').addEventListener('change',()=>{if(preset&&$('fTrack').value!=='alqudra')goSlide(NS-1)});
+$('fTrack').addEventListener('change',()=>{syncChips();if(preset&&$('fTrack').value!=='alqudra')goSlide(NS-1);else if(!preset)customDefaults();loadNet($('fTrack').value).then(()=>update())});
+document.querySelectorAll('#trkBar button').forEach(b=>b.onclick=()=>{const id=b.dataset.t;if(id===$('fTrack').value)return;
+  $('fTrack').value=id;$('fTrack').dispatchEvent(new Event('change'))});
 $('rcPrev').onclick=()=>goSlide(curSlide-1);$('rcNext').onclick=()=>goSlide(curSlide+1);
 addEventListener('resize',()=>{view.style.scrollBehavior='auto';view.scrollLeft=curSlide*view.clientWidth;view.style.scrollBehavior=''});
 $('fName').addEventListener('input',()=>{nameAuto=!$('fName').value.trim()});
 $('fPace').addEventListener('input',()=>document.querySelectorAll('.rslide .et').forEach(b=>b.textContent=estTime(+b.dataset.km)));
 
+/* ---------- track networks (tracks/<id>.json, the same OpenStreetMap geometry as the homepage map) ---------- */
+const NET={};
+function loadNet(id){if(NET[id]!==undefined)return Promise.resolve(NET[id]);if(id==='other'){NET[id]=null;return Promise.resolve(null)}
+  return fetch(`tracks/${id}.json`).then(r=>r.ok?r.json():null).then(j=>NET[id]=j&&j.lines&&j.lines.length?j.lines:null).catch(()=>NET[id]=null)}
+const netDir=r=>{const wx=WX[TR().id];if(!wx)return null;const w=wx.H[`${r.occ}T${r.time.slice(0,2)}:00`];return w?w.wind_direction_10m:null};
+
 /* ---------- route illustration (one drawing that changes with the slides; no map tiles) ---------- */
 // coloured by the forecast wind at the time the group reaches each part; out & back = two lanes; loops get direction arrows
 function drawIllu(r,wi){const svg=$('illu'),W=600,H=420;
+  if(!preset&&NET[TR().id]){const t=TR(),lines=NET[t.id],all=[].concat(...lines),P=TCDS_fit(all,0,86,W,H-86,30),wd=netDir(r);let g='';
+    lines.forEach(l=>{const xy=l.map(P);g+=`<path d="M${xy.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L')}" stroke="#ececf0" stroke-width="9"/>`;
+      for(let i=1;i<xy.length;i++){let col='#fc4c02';if(wd!=null){const a=Math.abs(((wd-brg(l[i-1],l[i]))%360+540)%360-180);col=a<45||a>135?KCOL.head:KCOL.cross}
+        g+=`<path d="M${xy[i-1][0].toFixed(1)} ${xy[i-1][1].toFixed(1)}L${xy[i][0].toFixed(1)} ${xy[i][1].toFixed(1)}" stroke="${col}" stroke-width="4"/>`}});
+    const st=P(t.st||[t.lat,t.lon]);svg.innerHTML=`<g fill="none" stroke-linecap="round" stroke-linejoin="round">${g}</g><g transform="translate(${st[0].toFixed(1)} ${st[1].toFixed(1)})"><circle r="13" fill="#16a34a" stroke="#fff" stroke-width="4"/><text y="5" text-anchor="middle" font-size="13" font-weight="800" fill="#fff" font-family="Sora,sans-serif">S</text></g>
+      <text x="590" y="410" text-anchor="end" font-size="15" font-weight="800" fill="#6d6d78" font-family="Sora,sans-serif">${t.name}</text>`;return}
   if(!preset){const t=TR();svg.innerHTML=`<g font-family="Sora,sans-serif" text-anchor="middle"><circle cx="300" cy="180" r="62" fill="#fff6f1" stroke="#ffd9c4" stroke-width="3"/><text x="300" y="204" font-size="62">✏️</text>
     <text x="300" y="285" font-size="24" font-weight="800" fill="#242428">Your own route</text><text x="300" y="317" font-size="17" font-weight="600" fill="#6d6d78">${t.name}</text></g>`;return}
   const p=preset,P=TCDS_fit(p.pts,0,86,W,H-86,34),xy=p.pts.map(P),off=p.turn?6:0,d='M'+xy.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L');
@@ -164,7 +186,8 @@ function stats(r,f,wi){const km=parseFloat($('fDist').value)||0,mins=km/paceKmh(
   const w=wi?wi.start:f?f.hs[0]:null;
   if(w){$('wArr').style.transform=`rotate(${w.wind_direction_10m}deg)`;$('wSpd').textContent=`${Math.round(w.wind_speed_10m)} km/h ${card(w.wind_direction_10m)}`;$('wTxt').textContent=`Wind at ${TCDS.fmtTime(r.time)} · gusts ${Math.round(w.wind_gusts_10m)}`;setParticles(w.wind_direction_10m,w.wind_speed_10m)}
   else{$('wArr').style.transform='';$('wSpd').textContent='--';$('wTxt').textContent=WX[TR().id]===null?'Forecast unavailable':'Forecast closer to the day';setParticles(null)}
-  $('legend').style.display=preset&&wi?'':'none';
+  const isNet=!preset&&NET[TR().id];$('legend').style.display=(preset&&wi)||(isNet&&f)?'':'none';
+  $('legend').innerHTML=isNet?'<span><i style="background:#dc2626"></i>Along the wind</span><span><i style="background:#eab308"></i>Crosswind</span>':'<span><i style="background:#dc2626"></i>Head</span><span><i style="background:#16a34a"></i>Tail</span><span><i style="background:#eab308"></i>Cross</span>';
   $('whenTxt').innerHTML=`${km?`${km} km · ${fmtDur(mins)} · back ${backT}`:TCDS.occLabel(r.occ)}${wi?` · <b class="h">${wi.head}% head</b> · <b class="t">${wi.tail}% tail</b>`:f?` · ${f.tr}`:''}`}
 
 /* ---------- ride + message ---------- */
@@ -185,18 +208,13 @@ function message(r,f,wi){const ev=TCDS.upcomingEvents().map(e=>`• ${e.name}: $
 let CUR={};
 function update(){const r=ride(),f=forecast(r),wi=windInfo(r);
   try{localStorage.setItem('tcd_org',JSON.stringify(Object.assign(Object.fromEntries(FIELDS.map(k=>[k,$(k).value])),{fRule:$('fRule').checked,color,colorPicked,dirPref:DIRP,preset:preset?preset.id:'custom',nameAuto})))}catch(e){}
-  const sc=TCDS.shareCard(r,f,wi,preset,paceKmh());const t=$('cvShare');t.getContext('2d').drawImage(sc,0,0);const text=message(r,f,wi);$('txt').textContent=text;
+  const t0=TR(),sc=TCDS.shareCard(r,f,wi,preset,paceKmh(),0,!preset&&NET[t0.id]?{lines:NET[t0.id],windDir:netDir(r),start:t0.st||[t0.lat,t0.lon],name:t0.name}:null);const t=$('cvShare');t.getContext('2d').drawImage(sc,0,0);const text=message(r,f,wi);$('txt').textContent=text;
   stats(r,f,wi);drawIllu(r,wi);
   $('fcNote').textContent=WX[TR().id]===null?'Forecast unavailable right now':f?`Forecast loaded · ride score ${f.sc}`:'Forecast comes closer to the day';
   CUR={r,f,sc,text}}
 function toast(m){const t=$('rToast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200)}
 const fileName=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'ride';
-$('bShare').onclick=async()=>{update();const {r,sc,text}=CUR,base=fileName(r.name);
-  const files=[TCDS.canvasFile(sc,`${base}.png`)];
-  try{navigator.clipboard.writeText(text).catch(()=>{})}catch(e){}
-  try{if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files,text,title:r.name});toast('Shared ✔ Text also copied');return}
-    if(navigator.share){await navigator.share({text,title:r.name});return}}catch(e){if(e.name==='AbortError')return}
-  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');toast('Opening WhatsApp · download the image to attach it')};
+$('bShare').onclick=()=>{update();const {r,sc,text}=CUR;TCDS.share(TCDS.canvasFile(sc,`${fileName(r.name)}.png`),text,r.name,toast)};
 $('bCopy').onclick=()=>{update();try{navigator.clipboard.writeText(CUR.text).then(()=>toast('Text copied ✔'),()=>toast('Select the text below to copy'))}catch(e){toast('Select the text below to copy')}};
 $('bSave').onclick=()=>{update();const a=document.createElement('a');a.href=CUR.sc.toDataURL('image/jpeg',.93);a.download=`${fileName(CUR.r.name)}.jpg`;document.body.appendChild(a);a.click();a.remove();toast('Downloading the ride image')};
 (function tick(){const n=dubai();$('clk').textContent=`${pad(n.getUTCHours())}:${pad(n.getUTCMinutes())}`;setTimeout(tick,15000)})();

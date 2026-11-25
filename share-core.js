@@ -120,7 +120,7 @@ const JERSEY={
   blanc:{name:'Maillot blanc',bg:['#ffffff','#f6f7f9','#e9edf2'],light:1,ink:'#13233f',sub:'#475569',acc:'#64748b',bar:['#13233f','#24365a','#3a4f78'],dubai:'#cfd8e6'},
   rosa:{name:'Maglia rosa',bg:['#fff3f8','#ffd9e8','#f9aecd'],light:1,ink:'#3b0a2a',sub:'#6b2a52',acc:'#e6007e',bar:['#8a0049','#d4006f','#ff4fa3'],dubai:'#ffd1e3',pat:'giro'},
   roja:{name:'La Roja',bg:['#9e001d','#d50032','#ff2d55'],ink:'#fff',sub:'#ffffffd9',acc:'#ffd1da',bar:['#5e0011','#7f0018','#a8001f'],dubai:'#ffc2cc'}};
-function shareCard(r,f,wi,p,pace,stopMin=0){const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d'),J=JERSEY[r.theme]||JERSEY.jaune;
+function shareCard(r,f,wi,p,pace,stopMin=0,net=null){const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d'),J=JERSEY[r.theme]||JERSEY.jaune;
   const txt=(s,x,y,size,w,col,al='left',max)=>{c.font=`${w} ${size}px Sora,sans-serif`;c.fillStyle=col;c.textAlign=al;if(max)while(c.measureText(s).width>max&&s.length>4)s=s.slice(0,-2).trimEnd()+'…';c.fillText(s,x,y)};
   const PANEL=J.light?'rgba(255,255,255,.9)':'rgba(255,255,255,.14)',STROKE=J.light?'rgba(19,35,63,.12)':'rgba(255,255,255,.28)';
   const panel=(x,y,w,h,rad,fill=PANEL,st=STROKE)=>{rr(c,x,y,w,h,rad);c.fillStyle=fill;c.fill();c.strokeStyle=st;c.lineWidth=2;c.stroke()};
@@ -152,6 +152,13 @@ function shareCard(r,f,wi,p,pace,stopMin=0){const W=1080,H=1350,cv=document.crea
     // wind-on-route legend (or ride facts if no forecast yet)
     const ly=MY+MH-28;if(wi)[['head','Head',wi.head],['tail','Tail',wi.tail],['cross','Cross',wi.cross]].forEach(([k,l,v],i)=>{const x=92+i*186;c.fillStyle=KCOL[k];rr(c,x,ly-16,26,13,6);c.fill();txt(`${l} ${v}%`,x+34,ly-3,22,800,'#13233f')});
     else txt(p.dir?`${DIRN[p.dir]} · ${p.km} km · ${p.gain} m`:`${p.km} km · ${p.gain} m climb`,92,ly-3,22,800,'#13233f')}
+  else if(net&&net.lines&&net.lines.length){panel(64,MY,600,MH,28,'#ffffff',STROKE);const all=[].concat(...net.lines),P=fitter(all,64,MY,600,MH-70,40);c.lineJoin=c.lineCap='round';
+    c.strokeStyle='#e5e7eb';c.lineWidth=12;net.lines.forEach(l=>{c.beginPath();l.forEach((q,i)=>{const z=P(q);i?c.lineTo(z[0],z[1]):c.moveTo(z[0],z[1])});c.stroke()});
+    const wd=net.windDir;net.lines.forEach(l=>{for(let i=1;i<l.length;i++){const A=P(l[i-1]),B=P(l[i]);let col='#fc4c02';if(wd!=null){const a=Math.abs(((wd-brg(l[i-1],l[i]))%360+540)%360-180);col=a<45||a>135?KCOL.head:KCOL.cross}
+      c.strokeStyle=col;c.lineWidth=6;c.beginPath();c.moveTo(A[0],A[1]);c.lineTo(B[0],B[1]);c.stroke()}});
+    if(net.start){const z=P(net.start);c.fillStyle='#16a34a';c.strokeStyle='#fff';c.lineWidth=5;c.beginPath();c.arc(z[0],z[1],18,0,7);c.fill();c.stroke();txt('S',z[0],z[1]+8,22,800,'#fff','center')}
+    const ly=MY+MH-28;if(wd!=null)[['head','Along the wind'],['cross','Crosswind']].forEach(([k,l],i)=>{const x=92+i*250;c.fillStyle=KCOL[k];rr(c,x,ly-16,26,13,6);c.fill();txt(l,x+34,ly-3,22,800,'#13233f')});
+    else txt(net.name||r.place,92,ly-3,22,800,'#13233f')}
   else{[['Distance',km?`${km} km`:'--'],['Pace',`${pace} km/h`],['Ride time',km?fmtDur(mins):'--'],['Back at',backT]].forEach(([l,v],i)=>{const x=64+(i%2)*306,y=MY+Math.floor(i/2)*266;panel(x,y,294,250,26);
       txt(l.toUpperCase(),x+28,y+64,24,800,J.acc);txt(v,x+28,y+150,54,800,J.ink,'left',250)})}
   // weather column
@@ -170,7 +177,7 @@ function shareCard(r,f,wi,p,pace,stopMin=0){const W=1080,H=1350,cv=document.crea
       c.save();c.translate(X-46,SY+113);c.rotate((x.wind_direction_10m+180)*rad);c.fillStyle=J.ink;c.beginPath();c.moveTo(0,-9);c.lineTo(6,5);c.lineTo(0,2);c.lineTo(-6,5);c.closePath();c.fill();c.restore();txt(`${Math.round(x.wind_speed_10m)} km/h`,X+8,SY+121,21,700,J.sub,'center')})}
   else txt('Hour-by-hour forecast appears up to 16 days before the ride',540,SY+80,24,700,J.sub,'center');
   // ride facts row (ready route)
-  const FY=SY+160,facts=p?[['Distance',`${p.km} km`],['Climb',`${p.gain} m`],['Ride time',fmtDur(mins)],['Back at',backT]]:[['Type',r.type||'Ride'],['Start',r.start||r.place],['Organiser',r.org||'Open ride'],['Ride score',f?`${f.sc} / 100`:'--']];
+  const FY=SY+160,facts=p?[['Distance',`${p.km} km`],['Climb',`${p.gain} m`],['Ride time',fmtDur(mins)],['Back at',backT]]:net&&net.lines&&net.lines.length?[['Distance',km?`${km} km`:'--'],['Avg speed',`${pace} km/h`],['Ride time',km?fmtDur(mins):'--'],['Back at',backT]]:[['Type',r.type||'Ride'],['Start',r.start||r.place],['Organiser',r.org||'Open ride'],['Ride score',f?`${f.sc} / 100`:'--']];
   facts.forEach(([l,v],i)=>{const x=64+i*242;panel(x,FY,226,100,22);txt(l.toUpperCase(),x+22,FY+38,20,800,J.acc);txt(v,x+22,FY+80,30,800,J.ink,'left',190)});
   // rule + who line
   txt([r.rule&&`⛑️💡 ${r.rule}`,r.joinLine].filter(Boolean).join('   '),64,FY+150,26,700,J.ink,'left',952);
@@ -180,8 +187,32 @@ function shareCard(r,f,wi,p,pace,stopMin=0){const W=1080,H=1350,cv=document.crea
   txt('thecyclistdubai.com',W-56,H-34,28,700,'#fff','right');
   return cv}
 
+// ONE share flow for every page: share sheet with the image + text where the device supports files (phones),
+// otherwise (laptops) a dialog with the SAME image and text: Copy image · Copy text · Download · WhatsApp
+function copyTxt(t){try{navigator.clipboard.writeText(t).catch(()=>{})}catch(e){}}
+function share(file,text,title,toast=()=>{}){copyTxt(text);
+  try{if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],text,title}).then(()=>toast('Shared ✔ Text also copied, paste it if the app drops it')).catch(e=>{if(e.name!=='AbortError')shareDialog(file,text,toast)});return}}catch(e){}
+  shareDialog(file,text,toast)}
+function shareDialog(file,text,toast){let m=document.getElementById('tcdShare');
+  if(!m){m=document.createElement('div');m.id='tcdShare';m.innerHTML=`<style>#tcdShare{position:fixed;inset:0;z-index:5000;background:#13233f99;display:none;place-items:center;padding:14px;font-family:Sora,system-ui,sans-serif}
+#tcdShare .bx{background:#fff;border-radius:18px;max-width:760px;width:100%;max-height:calc(100vh - 28px);overflow:auto;display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:16px;padding:16px;box-shadow:0 20px 50px #0005;position:relative}
+#tcdShare img{width:100%;border-radius:12px;box-shadow:0 6px 18px #0002}#tcdShare h3{margin:0 0 6px;font-size:17px;color:#13233f}#tcdShare p{margin:0 0 10px;font-size:12.5px;color:#5b6b80}
+#tcdShare pre{white-space:pre-wrap;font:500 11.5px/1.45 'JetBrains Mono',monospace;background:#f6f7f9;border-radius:10px;padding:9px;max-height:210px;overflow:auto;margin:0 0 10px;color:#13233f}
+#tcdShare .bs{display:grid;grid-template-columns:1fr 1fr;gap:8px}#tcdShare .bs a,#tcdShare .bs button{height:40px;border-radius:10px;border:1px solid #e2e5ea;background:#fff;font:800 13px Sora,sans-serif;color:#13233f;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
+#tcdShare .bs .wa{background:#25d366;border-color:#25d366;color:#fff;grid-column:1/-1}#tcdShare .x{position:absolute;right:10px;top:8px;border:0;background:#f1f3f5;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
+@media(max-width:620px){#tcdShare .bx{grid-template-columns:1fr}#tcdShare img{max-width:260px;margin:0 auto;display:block}}</style>
+<div class="bx"><button class="x" aria-label="Close">×</button><div><img alt="Share image"></div><div><h3>Share this ride</h3><p>Same image and text as on the phone. Copy the image and paste it in WhatsApp Web, then paste the text, or download the image.</p><pre></pre>
+<div class="bs"><button class="ci">🖼️ Copy image</button><button class="ct">📋 Copy text</button><a class="dl">⬇️ Download image</a><button class="ns">↗ Share…</button><a class="wa" target="_blank" rel="noopener">Open WhatsApp with the text</a></div></div></div>`;
+    document.body.appendChild(m);m.addEventListener('click',e=>{if(e.target===m||e.target.classList.contains('x'))m.style.display='none'})}
+  const u=file?URL.createObjectURL(file):'';m.querySelector('img').src=u;m.querySelector('img').style.display=file?'':'none';m.querySelector('pre').textContent=text;
+  const dl=m.querySelector('.dl');dl.href=u;dl.download=file?file.name:'';dl.style.display=file?'':'none';
+  m.querySelector('.wa').href='https://wa.me/?text='+encodeURIComponent(text);
+  m.querySelector('.ct').onclick=()=>{copyTxt(text);toast('Text copied ✔')};
+  const ci=m.querySelector('.ci');ci.style.display=file&&window.ClipboardItem?'':'none';ci.onclick=()=>{navigator.clipboard.write([new ClipboardItem({[file.type]:file})]).then(()=>toast('Image copied ✔ Paste it in the chat'),()=>toast('Copy not allowed here: download the image'))};
+  const ns=m.querySelector('.ns');ns.style.display=navigator.share?'':'none';ns.onclick=()=>navigator.share({text}).catch(()=>{});
+  m.style.display='grid'}
 function canvasFile(cv,name){const d=cv.toDataURL('image/png'),b=atob(d.split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new File([u],name,{type:'image/png'})}
-window.TCDS={shareCard,rideImage,loadWx,windowForecast,windKinds,mkRoute,JERSEY,giroLines,polka,root,eventLines,dayParts,fmtTime,occLabel,upcomingEvents,sameLink,rideRule,rideKind,scoreLabel,footerText,sponsorsShort,eventsShort,rideText,THEMES,RIDE_TH,LIGHT,rr,wrapLines,drawCard,rideCard,canvasFile};
+window.TCDS={share,shareDialog,shareCard,rideImage,loadWx,windowForecast,windKinds,mkRoute,JERSEY,giroLines,polka,root,eventLines,dayParts,fmtTime,occLabel,upcomingEvents,sameLink,rideRule,rideKind,scoreLabel,footerText,sponsorsShort,eventsShort,rideText,THEMES,RIDE_TH,LIGHT,rr,wrapLines,drawCard,rideCard,canvasFile};
 })();
 // prefetch the forecast for the big ride image (not on the organizer page, which loads its own)
 if(!/organize-ride/.test(location.pathname))setTimeout(()=>window.TCDS&&TCDS.loadWx(),400);
