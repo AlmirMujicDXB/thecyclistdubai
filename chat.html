@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f3fb">
+<title>Chat · TheCyclistDubai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="home-btn.css">
+<style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:Sora,system-ui,sans-serif;color:#13233f;background:radial-gradient(900px 420px at 90% -10%,#efe7ff 0%,transparent 55%),#f6f3fb}
+.wrap{max-width:760px;margin:0 auto;height:100%;display:flex;flex-direction:column;padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
+.tcd-bar{display:flex;align-items:center;gap:12px;height:64px;padding:8px 10px 10px 12px;margin:0 0 12px;border-radius:16px;border:1px solid #ead9bb;box-shadow:0 10px 26px #8a5a1f1f;background:linear-gradient(90deg,#0072ce 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) left bottom/100% 4px no-repeat,
+  repeating-linear-gradient(177deg,#a8702d12 0 1px,transparent 1px 10px),linear-gradient(110deg,#fdf9f2 0%,#f8eedd 60%,#f2e2c6 100%)}
+.panel{background:#fff;border:1px solid #e4d8fb;border-radius:18px;box-shadow:0 10px 28px #5b21b614;padding:22px 18px}
+.panel h1{font-size:26px;letter-spacing:-.4px;margin:0 0 6px}
+.lead{margin:0 0 16px;color:#4b5563;font-size:14.5px;line-height:1.5}
+label{display:block;font-size:12px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#6d28d9;margin:0 0 6px}
+input,textarea{width:100%;font:600 16px Sora,system-ui,sans-serif;color:#13233f;border:1.5px solid #e4d8fb;border-radius:12px;padding:12px 12px;background:#faf8ff}
+input:focus,textarea:focus{outline:2px solid #c4b5fd;border-color:#7c3aed}
+.btn{display:inline-flex;align-items:center;justify-content:center;width:100%;margin-top:12px;border:0;border-radius:12px;padding:12px 14px;font:800 15px Sora,system-ui,sans-serif;color:#fff;background:linear-gradient(110deg,#5b21b6,#7c3aed);cursor:pointer}
+.btn[disabled]{opacity:.55;cursor:default}
+.linkish{margin-top:12px;background:none;border:0;color:#5b21b6;font:700 13px Sora,system-ui,sans-serif;cursor:pointer;padding:0}
+.err{min-height:1.2em;margin:8px 0 0;color:#b91c1c;font-size:13px;font-weight:700}
+.ok{margin:8px 0 0;color:#3f6b55;font-size:13.5px;font-weight:700}
+.chat{flex:1;min-height:0;display:none;flex-direction:column;background:#fff;border:1px solid #e4d8fb;border-radius:18px;box-shadow:0 10px 28px #5b21b614;overflow:hidden}
+.chat.on{display:flex}
+.top{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #f0e9ff}
+.top b{display:block;font-size:14px}
+.top small{color:#6b7280;font-weight:600}
+.top .who{flex:1;min-width:0}
+.ghost{border:1.5px solid #e4d8fb;background:#fff;color:#5b21b6;border-radius:10px;padding:7px 10px;font:800 12px Sora,system-ui,sans-serif;cursor:pointer}
+.log{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(#faf8ff,#fff)}
+.empty{margin:auto;color:#6b7280;font-weight:700;text-align:center;font-size:14px}
+.msg{max-width:85%;background:#fff;border:1px solid #efe7ff;border-radius:14px;padding:8px 10px;box-shadow:0 2px 8px #5b21b60d}
+.msg.mine{align-self:flex-end;background:#f3e8ff;border-color:#e4d8fb}
+.msg .nm{font-size:12px;font-weight:800;color:#5b21b6}
+.msg p{margin:2px 0;font-size:14.5px;line-height:1.4;white-space:pre-wrap;word-break:break-word}
+.msg .ft{display:flex;align-items:center;gap:8px}
+.msg time{font-size:11px;color:#6b7280;font-weight:600}
+.msg .del{margin-left:auto;border:0;background:none;color:#9f1239;font:800 11px Sora,system-ui,sans-serif;cursor:pointer;padding:0}
+.compose{display:flex;gap:8px;align-items:flex-end;padding:10px;border-top:1px solid #f0e9ff}
+.compose textarea{resize:none;height:46px;padding:11px 12px}
+.send{flex:none;width:auto;margin:0;height:46px;padding:0 16px}
+.count{font-size:11px;color:#6b7280;font-weight:700;text-align:right;padding:0 12px 8px}
+.views{flex:1;display:flex;align-items:center}
+.views .panel{width:100%}
+[hidden]{display:none !important}
+@media (min-width:800px){
+  .wrap{padding-top:20px}
+  .panel h1{font-size:30px}
+  .msg{max-width:70%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tcd-bar"><a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a></header>
+  <div class="views" id="views">
+    <section class="panel" id="viewWelcome">
+      <h1>Cyclist chat</h1>
+      <p class="lead">One room for the group. Sign in with your email before you can read or send a message. We never ask for a password.</p>
+      <button class="btn" id="goSign" type="button">Sign in with email</button>
+    </section>
+    <section class="panel" id="viewSignin" hidden>
+      <h1>Sign in</h1>
+      <p class="lead">We will email you a magic link. Open it on this phone or computer, or type the 6-digit code if the email shows one.</p>
+      <form id="emailForm">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" required placeholder="you@email.com" maxlength="120">
+        <button class="btn" id="sendLink" type="submit">Send magic link</button>
+      </form>
+      <form id="codeForm" hidden>
+        <p class="ok" id="sentNote">Check your inbox for the sign-in link.</p>
+        <label for="code">6-digit code</label>
+        <input id="code" inputmode="numeric" autocomplete="one-time-code" placeholder="123456" maxlength="6" pattern="[0-9]{6}">
+        <button class="btn" id="verifyCode" type="submit">Sign in with code</button>
+      </form>
+      <p class="err" id="authErr" role="alert"></p>
+      <button class="linkish" id="backWelcome" type="button">Back</button>
+    </section>
+    <section class="panel" id="viewName" hidden>
+      <h1>Your name</h1>
+      <p class="lead">This is the name other riders will see. It is not your email.</p>
+      <form id="nameForm">
+        <label for="dname">Display name</label>
+        <input id="dname" maxlength="24" required placeholder="Alex M" autocomplete="nickname">
+        <button class="btn" id="saveName" type="submit">Join the chat</button>
+      </form>
+      <p class="err" id="nameErr" role="alert"></p>
+    </section>
+  </div>
+  <section class="chat" id="viewChat" hidden>
+    <div class="top">
+      <div class="who"><b>General room</b><small id="meLine">Signed in</small></div>
+      <button class="ghost" id="signOut" type="button">Sign out</button>
+    </div>
+    <div class="log" id="log" aria-live="polite"></div>
+    <form class="compose" id="sendForm">
+      <textarea id="body" maxlength="500" placeholder="Message the group" required></textarea>
+      <button class="btn send" id="sendBtn" type="submit">Send</button>
+    </form>
+    <div class="count" id="count">0/500</div>
+    <p class="err" id="chatErr" role="alert" style="padding:0 12px 10px;margin:0"></p>
+  </section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>
