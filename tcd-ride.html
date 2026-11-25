@@ -23,7 +23,7 @@
 <body>
 <div class="wrap" id="app"></div>
 <!-- Ride facts (time, pace, distance, start, links, stop) come from site-data.js; this block only sets the page's route and look. -->
-<script>window.RIDE_PAGE={name:'TCD Ride',theme:'green',gpx:'tcd-ride.gpx',gpxName:'TCD-Ride-BOTS-to-ZADS-and-back.gpx',stravaRoute:'https://www.strava.com/routes/3560214924726770550',turnName:'ZADS',turnShort:'ZADS',turnIcon:'📍',lat:24.93,lon:55.34,elev:55,cafe:'BOTS',toolsNote:'No shops on the track: carry what you need.'};</script>
+<script>window.RIDE_PAGE={name:'TCD Ride',theme:'green',full:true,gpx:'tcd-ride.gpx',gpxName:'TCD-Ride-BOTS-to-ZADS-and-back.gpx',stravaRoute:'https://www.strava.com/routes/3560214924726770550',turnName:'ZADS',turnShort:'ZADS',turnIcon:'📍',lat:24.93,lon:55.34,elev:55,cafe:'BOTS',toolsNote:'No shops on the track: carry what you need.'};</script>
 <script>document.write('<script src="ride-page.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
 <!-- RSVP for this ride. data-ride-ref is the sign-up key. The widget paints before the Supabase download finishes, so a stalled CDN cannot hide the section. -->
 <div id="rsvp-mount" data-ride-ref="tcd-ride" hidden></div>

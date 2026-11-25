@@ -15,8 +15,8 @@ const NET=!CFG.gpx; // trail-network mode (no GPX): map shows the trails, distan
 const TURN_NAME=CFG.turnName||'the turnaround',TURN_ICON=CFG.turnIcon||'↩️';
 const START=RIDE.start||'the start';
 
-/* ---------- markup: full page only when the ride sets full:true (Purple). TCD stays on the short page. ---------- */
-const FULL=!!CFG.full;
+/* One layout for every ride page. Ride details come from window.RIDE_PAGE. */
+const FULL=true; /* both ride pages share this one layout */
 if(FULL){
 const POS=CFG.positions||[['Hoods',.36],['Drops / in the bunch',.32,1],['Aero bars',.27]];
 const DRAFT=CFG.draft||[['Solo / on the front',1],['Sitting in (≈28% less drag)',.72,1]];
@@ -52,13 +52,20 @@ document.getElementById('app').innerHTML=`
     ${CFG.stravaRoute?`<a class="btn w" href="${esc(CFG.stravaRoute)}" target="_blank" rel="noopener">Strava route ↗</a>`:''}
   </div>
 </section>
-<section class="sec">
-  <div class="sech"><h2>🗓️ Plan for</h2><div class="sp"></div><span class="note" id="fcNote">Loading forecast…</span></div>
-  <div class="secb when"><div class="chips" id="dChips"></div><label class="fld">Start <input type="time" id="tStart" value="06:30" step="300"></label></div>
+<section class="sec plansec">
+  <div class="sech">
+    <div class="sech-t"><h2>🗓️ Plan for</h2><span class="note" id="fcNote">Loading forecast…</span></div>
+  </div>
+  <div class="secb when">
+    <div class="chips" id="dChips"></div>
+    <label class="fld startfld">Start <input type="time" id="tStart" value="06:30" step="300"></label>
+  </div>
 </section>
 <section class="sec">
-  <div class="sech"><h2>🗺️ ${NET?'Trails':'Route'} &amp; wind <em id="mapWhen"></em></h2><div class="sp"></div>
-    <div class="seg${NET?' hide':''}" id="legSeg"><button data-l="out" class="on">Way out</button><button data-l="back">Way back</button></div></div>
+  <div class="sech windh">
+    <div class="sech-t"><h2>🗺️ ${NET?'Trails':'Route'} &amp; wind</h2><em id="mapWhen"></em></div>
+    <div class="seg${NET?' hide':''}" id="legSeg"><button data-l="out" class="on">Way out</button><button data-l="back">Way back</button></div>
+  </div>
   <div class="mapbox">
     <div id="map"></div><canvas id="wind"></canvas>
     <div class="mapui">
@@ -106,51 +113,6 @@ document.getElementById('app').innerHTML=`
 </section>
 <div class="rtoast" id="rToast"></div>
 <div class="foot">Forecast: Open-Meteo · Map: © OpenStreetMap contributors, CyclOSM, Esri · Estimates use standard bike physics and are a guide only. <a href="disclaimer.html">Disclaimer</a> · <a href="./">← Back to TheCyclistDubai</a></div>`;
-}else{
-/* ---------- markup (identical on every ride page) ---------- */
-const linkBits=[];
-if(CFG.gpx)linkBits.push(`<a href="${esc(CFG.gpx)}" download="${esc(CFG.gpxName||CFG.gpx)}">Download GPX</a>`);
-if(CFG.stravaRoute)linkBits.push(`<a href="${esc(CFG.stravaRoute)}" target="_blank" rel="noopener">Strava route</a>`);
-if(RIDE.location)linkBits.push(`<a href="${esc(RIDE.location)}" target="_blank" rel="noopener">Meeting point on Maps</a>`);
-if(WA&&WA!=='#')linkBits.push(`<a href="${esc(WA)}" target="_blank" rel="noopener">WhatsApp group</a>`);
-document.getElementById('app').innerHTML=`
-<header class="top">
-  <div class="hl"><a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a></div>
-</header>
-<section class="hero slim">
-  <div class="hrow">
-    <div class="dtile"><span id="hDow">---</span><b id="hDay">--</b><span id="hMon">---</span></div>
-    <div class="hmain">
-      <h1>${esc(RIDE.name)}</h1>
-      <p class="whenline" id="hWhen">--</p>
-      <p class="meet">Meet at <b>${esc(START)}</b>${RIDE.place?` · ${esc(RIDE.place)}`:''}${RIDE.weekly?` · Every ${esc(DAYN[RIDE.weekly]||'week')}`:''}</p>
-      <p class="rule">⛑️💡 ${esc(SITE.rideRule||'Lights & helmet mandatory')}</p>
-    </div>
-  </div>
-  <div class="stats three">
-    <div class="stat"><small>Distance</small><b id="sDist">--</b></div>
-    <div class="stat"><small>Pace</small><b id="sPace">--</b></div>
-    <div class="stat"><small>Level</small><b>${esc(RIDE.type||'Road')}</b></div>
-  </div>
-  ${RIDE.strava?`<div class="hbtns"><a class="btn strava" href="${esc(RIDE.strava)}" target="_blank" rel="noopener"><svg class="slogo" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>Join ride on Strava ↗</a></div>`:''}
-</section>
-<section class="sec">
-  <div class="sech"><h2>🗺️ Route</h2><div class="sp"></div>
-    <div class="seg${NET?' hide':''}" id="legSeg"><button data-l="out" class="on">Way out</button><button data-l="back">Way back</button></div></div>
-  <div class="mapbox">
-    <div id="map"></div><canvas id="wind"></canvas>
-    <div class="mapui">
-      <div class="wbadge"><div class="warr" id="wArr">↓</div><div><b id="wSpd">-- km/h</b><small id="wFrom">wind from --</small></div></div>
-      <div class="legend">${NET?'<span><i style="background:var(--head)"></i>Along the wind</span><span><i style="background:var(--cross)"></i>Crosswind</span>':'<span><i style="background:var(--head)"></i>Headwind</span><span><i style="background:var(--tail)"></i>Tailwind</span><span><i style="background:var(--cross)"></i>Crosswind</span>'}</div>
-    </div>
-    <div class="mapctl"><div class="seg" id="layerSeg"><button data-t="cycle" class="on">Map</button><button data-t="sat">Satellite</button></div></div>
-    <div class="mhint" id="mhint">Use two fingers to move the map</div>
-  </div>
-  <p class="maperr" id="mapErr" hidden>The route could not be loaded.</p>
-  ${linkBits.length?`<p class="quiet">${linkBits.join('')}</p>`:''}
-</section>
-<div class="foot">Map: © OpenStreetMap contributors, CyclOSM, Esri · <a href="disclaimer.html">Disclaimer</a> · <a href="./">TheCyclistDubai</a></div>`;
-
 }
 
 const $=id=>document.getElementById(id);
@@ -293,10 +255,10 @@ function renderFull(){
   if(NET){$('sDist').textContent=RIDE.distance||`${routeKm()} km`;$('sDistN').textContent=RIDE.distance?'':'set in the planner';$('sGain').textContent=CFG.gainText||'Rolling';$('sTurn').textContent=`${(NETLEN/1000).toFixed(1)} km`}
   else{$('sDist').textContent=(CUM[CUM.length-1]/1000).toFixed(1)+' km';$('sGain').textContent=Math.round(GAIN)+' m';$('sTurn').textContent=`${CFG.turnShort||'km'} · ${(CUM[TURN]/1000).toFixed(1)}`}
   renderChips();
-  $('fcNote').textContent=has?'Forecast loaded for this ride':ST.wx?'Forecast not out yet for this date (16 days ahead): planner uses still air':'Forecast unavailable right now: planner uses still air';
+  $('fcNote').textContent=has?'Forecast loaded':ST.wx?'Forecast not out yet for this date':'Forecast unavailable right now';
   const g=sim('speed',pace,has),fin=sm+g.t/60+STOP;
   $('sTime').textContent=hm(g.t/60+STOP);$('sTimeN').textContent=STOP?`incl. ${STOP} min stop`:'';$('sBack').textContent=clock(fin).replace(/ (AM|PM)/,m=>m.toLowerCase());
-  const when=`· ${relLabel(ST.date)} ${clock(sm)}`;$('mapWhen').textContent=when;$('wxWhen').textContent=when;$('kitWhen').textContent=when;
+  const when=`${relLabel(ST.date)} · ${clock(sm)}`;$('mapWhen').textContent=when;$('wxWhen').textContent='· '+when;$('kitWhen').textContent='· '+when;
   drawRoute(g);
   const w0=wxAt(sm);
   if(w0){$('wSpd').textContent=`${Math.round(w0.wind_speed_10m)} km/h`;$('wFrom').textContent=`from ${card(w0.wind_direction_10m)} · gusts ${Math.round(w0.wind_gusts_10m)} km/h`;$('wArr').style.transform=`rotate(${w0.wind_direction_10m}deg)`;setParticles(w0.wind_direction_10m,w0.wind_speed_10m)}
