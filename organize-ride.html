@@ -126,7 +126,7 @@ body.th-strava{background:#f7f7fa}
 .trkbar button:hover{border-color:#fc4c02}
 .trkbar button.on{background:linear-gradient(110deg,#e34402,#fc4c02 60%,#ff7a3d);color:#fff;border-color:#fc4c02;box-shadow:0 3px 10px #fc4c0240}
 /* compact layout v3: one route illustration beside the sliding route info */
-.mapbox.illu{background:linear-gradient(135deg,#fff,#fff6f1);overflow:hidden}
+.mapbox.illu{touch-action:pan-y;user-select:none;cursor:grab;background:linear-gradient(135deg,#fff,#fff6f1);overflow:hidden}
 .mapbox.illu::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,#24242814 0 1.4px,transparent 1.9px) 0 0/18px 18px}
 #illu{position:absolute;inset:0;width:100%;height:100%}
 .whenbar label.pace{border:2px solid #fc4c02;background:#fff;box-shadow:0 0 0 3px #fc4c021f;position:relative}

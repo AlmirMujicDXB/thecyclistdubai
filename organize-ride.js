@@ -127,6 +127,12 @@ let scT;view.addEventListener('scroll',()=>{clearTimeout(scT);scT=setTimeout(()=
 $('fTrack').addEventListener('change',()=>{syncChips();if(preset&&$('fTrack').value!=='alqudra')goSlide(NS-1);else if(!preset)customDefaults();loadNet($('fTrack').value).then(()=>update())});
 document.querySelectorAll('#trkBar button').forEach(b=>b.onclick=()=>{const id=b.dataset.t;if(id===$('fTrack').value)return;
   $('fTrack').value=id;$('fTrack').dispatchEvent(new Event('change'))});
+// swipe left/right on the route drawing (finger or mouse) and mouse-drag on the route info → previous / next route
+function swipeNav(el,touch){let x0=null,y0=0,t0=0;
+  el.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'&&!touch)return;if(e.target.closest('button,a,input,select'))return;x0=e.clientX;y0=e.clientY;t0=Date.now()});
+  el.addEventListener('pointerup',e=>{if(x0==null)return;const dx=e.clientX-x0,dy=e.clientY-y0;x0=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.3&&Date.now()-t0<900)goSlide(curSlide+(dx<0?1:-1))});
+  el.addEventListener('pointercancel',()=>{x0=null})}
+swipeNav(document.querySelector('.mapbox.illu'),true);swipeNav(view,false);
 $('rcPrev').onclick=()=>goSlide(curSlide-1);$('rcNext').onclick=()=>goSlide(curSlide+1);
 addEventListener('resize',()=>{view.style.scrollBehavior='auto';view.scrollLeft=curSlide*view.clientWidth;view.style.scrollBehavior=''});
 $('fName').addEventListener('input',()=>$('fName').classList.remove('need'));
