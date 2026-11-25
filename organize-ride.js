@@ -20,14 +20,21 @@ const TRACKS=[
   {id:'hatta',name:'Hatta MTB Trail Centre',place:'Hatta',start:'Hatta Wadi Hub',lat:24.803,lon:56.126,elev:330},
   {id:'other',name:'Other place in Dubai',place:'Dubai',start:'',lat:25.20,lon:55.27,elev:10},
 ];
-const COLORS=[['org','radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 0 0/12px 12px,radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 6px 6px/12px 12px,#fff'],['green','linear-gradient(135deg,#052e16,#16a34a)'],['purple','linear-gradient(135deg,#2e1065,#a855f7)'],['orange','linear-gradient(135deg,#7c2d12,#fb923c)'],['blue','linear-gradient(135deg,#0c2d48,#0ea5e9)']];
-const IMG_TH={org:'org',green:'green',purple:'purple',orange:'rorange',blue:'sky'};
-const ACCENT={org:'#e2001a',green:'#16a34a',purple:'#7c3aed',orange:'#ea580c',blue:'#0284c7'};
+const COLORS=[['giro','repeating-linear-gradient(120deg,#ffffff66 0 3px,transparent 3px 9px),linear-gradient(135deg,#ffe1ee,#f472b6 70%,#e6007e)'],['org','radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 0 0/12px 12px,radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 6px 6px/12px 12px,#fff'],['green','linear-gradient(135deg,#052e16,#16a34a)'],['purple','linear-gradient(135deg,#2e1065,#a855f7)'],['orange','linear-gradient(135deg,#7c2d12,#fb923c)'],['blue','linear-gradient(135deg,#0c2d48,#0ea5e9)']];
+const IMG_TH={giro:'giro',org:'org',green:'green',purple:'purple',orange:'rorange',blue:'sky'};
+const ACCENT={giro:'#e6007e',org:'#e2001a',green:'#16a34a',purple:'#7c3aed',orange:'#ea580c',blue:'#0284c7'};
 const KCOL={head:'#dc2626',tail:'#16a34a',cross:'#eab308'};
 const hav=(a,b)=>{const p1=a[0]*rad,p2=b[0]*rad,dp=p2-p1,dl=(b[1]-a[1])*rad;return 2*6371e3*Math.asin(Math.sqrt(Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2))};
 const brg=(a,b)=>{const p1=a[0]*rad,p2=b[0]*rad,dl=(b[1]-a[1])*rad;return(Math.atan2(Math.sin(dl)*Math.cos(p2),Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl))/rad+360)%360};
-const PRE=(window.ROUTE_PRESETS||[]).map(p=>{const cum=[0];for(let i=1;i<p.pts.length;i++)cum.push(cum[i-1]+hav(p.pts[i-1],p.pts[i]));
-  let ti=0;if(p.turn){let best=0;p.pts.forEach((q,i)=>{const d=hav(p.pts[0],q);if(d>best){best=d;ti=i}})}return Object.assign({},p,{cum,ti})});
+// loops come in both directions: the GPX's own direction (Strava route) + the reversed one (own GPX, no Strava link)
+const DIRN={cw:'Clockwise',ccw:'Anticlockwise'},DIRI={cw:'↻',ccw:'↺'};
+const mkRoute=(p,pts)=>{const cum=[0];for(let i=1;i<pts.length;i++)cum.push(cum[i-1]+hav(pts[i-1],pts[i]));
+  let ti=0;if(p.turn){let best=0;pts.forEach((q,i)=>{const d=hav(pts[0],q);if(d>best){best=d;ti=i}})}return Object.assign({},p,{pts,cum,ti})};
+const PRE=(window.ROUTE_PRESETS||[]).map(p=>{const a=mkRoute(p,p.pts);if(p.dir){a.alt=Object.assign(mkRoute(p,p.pts.slice().reverse()),{dir:p.dir==='cw'?'ccw':'cw',gpx:p.gpxAlt,strava:null,alt:a})}return a});
+let DIRP={};try{DIRP=(JSON.parse(localStorage.getItem('tcd_org')||'null')||{}).dirPref||{}}catch(e){}
+const variant=p=>p.dir&&DIRP[p.id]&&DIRP[p.id]!==p.dir?p.alt:p;
+// positions (point index, bearing) at given fractions of the route, for direction arrows
+function arrowsAt(p,fr){const L=p.cum[p.cum.length-1];return fr.map(f=>{let i=p.cum.findIndex(c=>c>=f*L);i=Math.max(1,Math.min(p.pts.length-1,i));return[i,brg(p.pts[i-1],p.pts[i])]})}
 // fit lat/lon points into a box (keeps the shape: longitude scaled by cos(latitude))
 function fitter(pts,x,y,w,h,pd){const k=Math.cos(pts[0][0]*rad);let a=1e9,b=-1e9,c=1e9,d=-1e9;pts.forEach(q=>{const X=q[1]*k,Y=q[0];a=Math.min(a,X);b=Math.max(b,X);c=Math.min(c,Y);d=Math.max(d,Y)});
   const sc=Math.min((w-2*pd)/((b-a)||1e-6),(h-2*pd)/((d-c)||1e-6)),ox=x+(w-(b-a)*sc)/2,oy=y+(h-(d-c)*sc)/2;return q=>[ox+(q[1]*k-a)*sc,oy+(d-q[0])*sc]}
@@ -41,8 +48,8 @@ const dubai=()=>new Date(Date.now()+4*3600e3);
 const ymd=d=>`${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`;
 function nextSat(){const d=dubai();let k=(6-d.getUTCDay()+7)%7;if(k===0&&d.getUTCHours()>=6)k=7;return ymd(new Date(d.getTime()+k*864e5))}
 const FIELDS=['fName','fDate','fTime','fTrack','fStart','fRoute','fType','fDist','fPace','fOrg','fJoin','fNotes'];
-let color='org';
-try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv){FIELDS.forEach(k=>{if(sv[k]!=null)$(k).value=sv[k]});$('fRule').checked=sv.fRule!==false;color=sv.color||color}}catch(e){}
+let color='giro';
+try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv){FIELDS.forEach(k=>{if(sv[k]!=null)$(k).value=sv[k]});$('fRule').checked=sv.fRule!==false;color=sv.colorPicked&&sv.color?sv.color:color}}catch(e){}
 if(!$('fName').value)$('fName').value='Saturday Coffee Ride';
 if(!$('fDate').value||$('fDate').value<ymd(dubai()))$('fDate').value=nextSat();
 $('fDate').min=ymd(dubai());
@@ -50,7 +57,8 @@ if(!$('fStart').value)$('fStart').value=TRACKS[0].start;
 const TR=()=>TRACKS.find(t=>t.id===$('fTrack').value)||TRACKS[0];
 function setColor(c){color=c;document.querySelectorAll('#fColor button').forEach(b=>b.classList.toggle('on',b.dataset.c===c))}
 setColor(color);
-document.querySelectorAll('#fColor button').forEach(b=>b.onclick=()=>{setColor(b.dataset.c);update()});
+let colorPicked=false;try{colorPicked=!!(JSON.parse(localStorage.getItem('tcd_org')||'null')||{}).colorPicked}catch(e){}
+document.querySelectorAll('#fColor button').forEach(b=>b.onclick=()=>{colorPicked=true;setColor(b.dataset.c);update()});
 let lastTrack=$('fTrack').value;
 $('fTrack').addEventListener('change',()=>{const old=TRACKS.find(t=>t.id===lastTrack);if(!$('fStart').value||(old&&$('fStart').value===old.start))$('fStart').value=TR().start;lastTrack=$('fTrack').value;loadWx().then(update)});
 FIELDS.concat(['fRule']).forEach(k=>$(k).addEventListener('input',()=>{clearTimeout(window._u);window._u=setTimeout(update,180)}));
@@ -60,31 +68,34 @@ $('fDate').addEventListener('change',update);$('fTime').addEventListener('change
 let preset=null,nameAuto=true,curSlide=-1,fitFor=null;
 try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv&&sv.nameAuto===false)nameAuto=false}catch(e){}
 function shapeSvg(p,W,H){const P=fitter(p.pts,0,0,W,H,18),xy=p.pts.map(P),d='M'+xy.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L'),s=xy[0];
-  const t=p.turn?xy[p.ti]:null;
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#e2001a" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>`+
-    (t?`<circle cx="${t[0]}" cy="${t[1]}" r="7" fill="#13233f" stroke="#fff" stroke-width="2.5"/>`:'')+`<circle cx="${s[0]}" cy="${s[1]}" r="8" fill="#16a34a" stroke="#fff" stroke-width="3"/></svg>`}
+  const t=p.turn?xy[p.ti]:null,arr=p.dir?arrowsAt(p,[.22,.5,.78]).map(([i,b])=>`<path d="M0 -7L6 5L-6 5Z" transform="translate(${xy[i][0].toFixed(1)} ${xy[i][1].toFixed(1)}) rotate(${b.toFixed(0)})" fill="#3b0a2a" stroke="#fff" stroke-width="1.5"/>`).join(''):'';
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#e6007e" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>`+
+    arr+(t?`<circle cx="${t[0]}" cy="${t[1]}" r="7" fill="#13233f" stroke="#fff" stroke-width="2.5"/>`:'')+`<circle cx="${s[0]}" cy="${s[1]}" r="8" fill="#16a34a" stroke="#fff" stroke-width="3"/></svg>`}
 function elevSvg(p){const W=400,H=34,e=p.pts.map(q=>q[2]),lo=Math.min(...e)-3,hi=Math.max(...e)+3,L=p.cum[p.cum.length-1];
   const xy=p.pts.map((q,i)=>[(p.cum[i]/L*W).toFixed(1),(H-(q[2]-lo)/(hi-lo)*H).toFixed(1)]);
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="M0 ${H}L${xy.map(q=>q.join(' ')).join('L')}L${W} ${H}Z" fill="#e2001a1f"/><path d="M${xy.map(q=>q.join(' ')).join('L')}" fill="none" stroke="#e2001a" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`}
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="M0 ${H}L${xy.map(q=>q.join(' ')).join('L')}L${W} ${H}Z" fill="#e6007e1f"/><path d="M${xy.map(q=>q.join(' ')).join('L')}" fill="none" stroke="#e6007e" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`}
 const estTime=km=>fmtDur(km/paceKmh()*60);
-$('rcView').innerHTML=PRE.map((p,i)=>`<div class="rslide" data-i="${i}"><div class="rshape">${shapeSvg(p,300,184)}</div><div class="rinfo">
+const slideInner=(p,i)=>`<div class="rshape">${shapeSvg(p,300,184)}</div><div class="rinfo">
     <div class="rtags"><span class="k">${p.kind}</span><span>Al Qudra</span><span>Start: ${p.start}</span>${i===0?'<span>TCD Ride route</span>':p.id==='mosque'?'<span>Purple Ride route</span>':''}</div>
     <h3>${p.name}</h3><p>${p.desc}</p>
-    <div class="rfacts"><div><small>Distance</small><b>${p.km} km</b></div><div><small>Climb</small><b>${p.gain} m</b></div><div><small>${p.turn?'Turn at':'Route'}</small><b>${p.turn?`${p.turn} · ${p.turnKm}`:p.kind}</b></div><div><small>Ride time</small><b class="et" data-km="${p.km}">${estTime(p.km)}</b></div></div>
-    <div class="relev">${elevSvg(p)}</div></div></div>`).join('')+
+    <div class="rfacts"><div><small>Distance</small><b>${p.km} km</b></div><div><small>Climb</small><b>${p.gain} m</b></div><div><small>${p.turn?'Turn at':'Direction'}</small><b>${p.turn?`${p.turn} · ${p.turnKm}`:`${DIRI[p.dir]} ${DIRN[p.dir]}`}</b></div><div><small>Ride time</small><b class="et" data-km="${p.km}">${estTime(p.km)}</b></div></div>
+    ${p.dir?`<div class="dirseg" role="group" aria-label="Loop direction">${['cw','ccw'].map(d=>`<button type="button" data-d="${d}" class="${d===p.dir?'on':''}">${DIRI[d]} ${DIRN[d]}</button>`).join('')}</div>`:`<div class="relev">${elevSvg(p)}</div>`}</div>`;
+$('rcView').innerHTML=PRE.map((p,i)=>`<div class="rslide" data-i="${i}">${slideInner(variant(p),i)}</div>`).join('')+
   `<div class="rslide custom" data-i="${PRE.length}"><div class="rshape">✏️</div><div class="rinfo"><div class="rtags"><span class="k">Custom</span><span>Any track in Dubai</span></div>
     <h3>Your own route</h3><p>Al Qudra, Meydan, Mushrif, Kite Beach, Hatta or anywhere else: pick the track, start point, route and distance yourself in the form below.</p>
     <div class="rfacts"><div><small>Tracks</small><b>5 + other</b></div><div><small>Forecast</small><b>16 days</b></div><div><small>Share</small><b>2 images</b></div><div><small>Time</small><b>1 minute</b></div></div></div></div>`;
 $('rcDots').innerHTML=PRE.concat([0]).map(()=>'<i></i>').join('');
 const NS=PRE.length+1,view=$('rcView');
+view.addEventListener('click',e=>{const b=e.target.closest('.dirseg button');if(!b)return;const sl=b.closest('.rslide'),i=+sl.dataset.i,p=PRE[i];DIRP[p.id]=b.dataset.d;
+  sl.innerHTML=slideInner(variant(p),i);if(i===curSlide){curSlide=-1;selectSlide(i)}});
 function goSlide(i,smooth=true){i=Math.max(0,Math.min(NS-1,i));view.style.scrollBehavior=smooth?'smooth':'auto';view.scrollLeft=i*view.clientWidth;if(!smooth)setTimeout(()=>view.style.scrollBehavior='',0);selectSlide(i)}
 function selectSlide(i){if(i===curSlide)return;curSlide=i;
   document.querySelectorAll('#rcDots i').forEach((d,k)=>d.classList.toggle('on',k===i));$('rcPrev').disabled=i===0;$('rcNext').disabled=i===NS-1;
   $('rcCount').textContent=i<PRE.length?`Route ${i+1} of ${PRE.length} · swipe or use the arrows`:'Custom route';
-  preset=i<PRE.length?PRE[i]:null;
-  if(preset){$('fTrack').value='alqudra';lastTrack='alqudra';$('fStart').value=preset.start;$('fRoute').value=preset.name;$('fDist').value=preset.km;$('fType').value='Road';
+  preset=i<PRE.length?variant(PRE[i]):null;
+  if(preset){$('fTrack').value='alqudra';lastTrack='alqudra';$('fStart').value=preset.start;$('fRoute').value=preset.dir?`${preset.name} · ${DIRN[preset.dir].toLowerCase()}`:preset.name;$('fDist').value=preset.km;$('fType').value='Road';
     if(nameAuto)$('fName').value=`${preset.short} Ride`;
-    $('autoNote').innerHTML=`✨ Auto-filled from <b>${preset.name}</b>: Al Qudra · start ${preset.start} · ${preset.km} km · ${preset.gain} m climb. Just set the date &amp; time (edit anything below if you like).`}
+    $('autoNote').innerHTML=`✨ Auto-filled from <b>${preset.name}</b>${preset.dir?` (${DIRN[preset.dir].toLowerCase()})`:''}: Al Qudra · start ${preset.start} · ${preset.km} km · ${preset.gain} m climb. Just set the date &amp; time (edit anything below if you like).`}
   else $('autoNote').innerHTML='';
   loadWx().then(update)}
 let scT;view.addEventListener('scroll',()=>{clearTimeout(scT);scT=setTimeout(()=>selectSlide(Math.round(view.scrollLeft/Math.max(1,view.clientWidth))),110)},{passive:true});
@@ -103,11 +114,12 @@ const pinI=(bg,t)=>L.divIcon({className:'',html:`<div class="pin" style="backgro
 function drawMap(r,wi){if(!map)return;try{lay.clearLayers();
   if(preset){const ll=preset.pts.map(q=>[q[0],q[1]]);L.polyline(ll,{color:'#fff',weight:10,opacity:.95,interactive:false}).addTo(lay);
     if(wi){let run=[ll[0]],k=wi.kinds[0];for(let i=1;i<ll.length;i++){const kk=wi.kinds[i-1];if(kk!==k){L.polyline(run,{color:KCOL[k],weight:5.5,lineCap:'round'}).addTo(lay);run=[ll[i-1]];k=kk}run.push(ll[i])}L.polyline(run,{color:KCOL[k],weight:5.5,lineCap:'round'}).addTo(lay)}
-    else L.polyline(ll,{color:'#e2001a',weight:5.5,lineCap:'round'}).addTo(lay);
-    if(preset.turn)L.marker(ll[preset.ti],{icon:pinI('#e2001a',preset.turnIcon)}).bindTooltip(`Turnaround: ${preset.turn} · km ${preset.turnKm}`).addTo(lay);
+    else L.polyline(ll,{color:'#e6007e',weight:5.5,lineCap:'round'}).addTo(lay);
+    if(preset.turn)L.marker(ll[preset.ti],{icon:pinI('#a1005a',preset.turnIcon)}).bindTooltip(`Turnaround: ${preset.turn} · km ${preset.turnKm}`).addTo(lay);
+    if(preset.dir)arrowsAt(preset,[.12,.3,.48,.66,.84]).forEach(([i,b])=>L.marker(ll[i],{interactive:false,icon:L.divIcon({className:'',html:`<div class="darrow" style="transform:rotate(${b}deg)">▲</div>`,iconSize:[22,22],iconAnchor:[11,11]})}).addTo(lay));
     L.marker(ll[0],{icon:pinI('#16a34a','🚴')}).bindTooltip(`Start & finish: ${preset.start}`).addTo(lay);
     if(fitFor!==preset.id){map.fitBounds(L.latLngBounds(ll),{padding:[28,28]});fitFor=preset.id}}
-  else{const t=TR();L.marker([t.lat,t.lon],{icon:pinI('#e2001a','🚴')}).bindTooltip(t.name).addTo(lay);if(fitFor!=='c-'+t.id){map.setView([t.lat,t.lon],t.id==='alqudra'?11:13);fitFor='c-'+t.id}}}catch(e){}}
+  else{const t=TR();L.marker([t.lat,t.lon],{icon:pinI('#e6007e','🚴')}).bindTooltip(t.name).addTo(lay);if(fitFor!=='c-'+t.id){map.setView([t.lat,t.lon],t.id==='alqudra'?11:13);fitFor='c-'+t.id}}}catch(e){}}
 
 /* ---------- weather ---------- */
 const WX={};
@@ -153,16 +165,16 @@ function ride(){const t=TR(),dist=parseFloat($('fDist').value);
 function message(r,f,wi){const ev=TCDS.eventLines(),p=preset;
   const build=(nEv,notes,gpx=true)=>`🚴‍♂️ *${r.name}* · group ride\n🗓️ ${TCDS.occLabel(r.occ)} · ${TCDS.fmtTime(r.time)}\n📍 ${r.start&&r.start!==r.place?`Start: ${r.start} · `:''}${r.place}\n`+
     (r.route?`🛣️ ${r.route}${p?` · ${p.gain} m climb`:''}\n`:'')+(TCDS.rideKind(r)?`${TCDS.rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(r.rule?`⛑️💡 ${r.rule}\n`:'')+
-    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(wi?`💨 Wind on route: ${wi.head}% headwind · ${wi.tail}% tailwind\n`:'')+(r.org?`🙋 Organised by ${r.org}\n`:'')+(notes&&r.notes?`📝 ${r.notes}\n`:'')+(r.join?`✅ Join: ${r.join}\n`:'')+(p?`🗺️ Strava route: ${p.strava}\n`+(gpx?`⬇️ GPX: ${TCDS.root()}${p.gpx}\n`:''):'')+
+    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(wi?`💨 Wind on route: ${wi.head}% headwind · ${wi.tail}% tailwind\n`:'')+(r.org?`🙋 Organised by ${r.org}\n`:'')+(notes&&r.notes?`📝 ${r.notes}\n`:'')+(r.join?`✅ Join: ${r.join}\n`:'')+(p?(p.strava?`🗺️ Strava route: ${p.strava}\n`:'')+(gpx?`⬇️ GPX: ${TCDS.root()}${p.gpx}\n`:''):'')+
     (nEv?`\n📅 *Recommended events*\n${ev.slice(0,nEv).join('\n')}\n`:'')+`\n📲 Ride weather & planner: ${TCDS.root()}\n🧭 Organize your ride: ${TCDS.root()}organize-ride.html`;
   let t=build(ev.length,true);for(let n=ev.length;t.length>1010&&n>0;n--)t=build(n-1,true);if(t.length>1010)t=build(0,false);if(t.length>1010)t=build(0,false,false);return t}
 
 /* ---------- weather card image ---------- */
-function weatherCard(r,f){const S=1080,cv=document.createElement('canvas');cv.width=S;cv.height=S;const c=cv.getContext('2d'),th=IMG_TH[r.theme]||'org',T3=TCDS.THEMES[th],rr=TCDS.rr,L=th==='org';
-  const INK=L?'#13233f':'#fff',SUB=L?'#3b4a60':'#ffffffcc',ACC=L?'#e2001a':T3[3],TILE=L?'rgba(255,255,255,.94)':'#ffffff1f',STRIP=L?'rgba(255,255,255,.94)':'#00000026';
+function weatherCard(r,f){const S=1080,cv=document.createElement('canvas');cv.width=S;cv.height=S;const c=cv.getContext('2d'),th=IMG_TH[r.theme]||'org',T3=TCDS.THEMES[th],rr=TCDS.rr,L=th==='org'||th==='giro',G=th==='giro';
+  const INK=L?(G?'#3b0a2a':'#13233f'):'#fff',SUB=L?(G?'#6b2a52':'#3b4a60'):'#ffffffcc',ACC=L?(G?'#e6007e':'#e2001a'):T3[3],TILE=L?'rgba(255,255,255,.94)':'#ffffff1f',STRIP=L?'rgba(255,255,255,.94)':'#00000026';
   const g=c.createLinearGradient(0,0,S,S);g.addColorStop(0,T3[0]);g.addColorStop(.6,T3[1]);g.addColorStop(1,T3[2]);c.fillStyle=g;c.fillRect(0,0,S,S);
-  if(L)TCDS.polka(c,S,S,380);else{const rg=c.createRadialGradient(S,0,0,S,0,760);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S,S)}
-  const panel=(x,y,w,h,r,col)=>{rr(c,x,y,w,h,r);c.fillStyle=col;c.fill();if(L){c.strokeStyle='rgba(226,0,26,.35)';c.lineWidth=2;c.stroke()}};
+  if(G)TCDS.giroLines(c,S,S,380);else if(L)TCDS.polka(c,S,S,380);else{const rg=c.createRadialGradient(S,0,0,S,0,760);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S,S)}
+  const panel=(x,y,w,h,r,col)=>{rr(c,x,y,w,h,r);c.fillStyle=col;c.fill();if(L){c.strokeStyle=G?'rgba(230,0,126,.35)':'rgba(226,0,26,.35)';c.lineWidth=2;c.stroke()}};
   const txt=(s,x,y,size,w,col,al='left')=>{c.font=`${w} ${size}px Sora,sans-serif`;c.fillStyle=col;c.textAlign=al;c.fillText(s,x,y)};
   txt('RIDE FORECAST',80,120,30,800,ACC);
   const nm=r.name.length>26?r.name.slice(0,25)+'…':r.name;txt(nm,80,196,62,800,INK);
@@ -177,27 +189,27 @@ function weatherCard(r,f){const S=1080,cv=document.createElement('canvas');cv.wi
     txt(String(f.sc),cx,cy+22,84,800,INK,'center');txt(f.lab.toUpperCase(),cx,cy+R+50,28,800,INK,'center');
     if(L)panel(370,330,630,280,30,TILE);txt(f.tr,400,420,96,800,INK);txt(`feels up to ${f.feels}°C`,404,476,34,600,SUB);
     // wind arrow
-    const wx0=760,wy0=560;c.save();c.translate(wx0,wy0);c.rotate((f.mid.wind_direction_10m+180)*rad);c.fillStyle=L?'#e2001a':'#fff';c.beginPath();c.moveTo(0,-34);c.lineTo(20,12);c.lineTo(6,6);c.lineTo(6,34);c.lineTo(-6,34);c.lineTo(-6,6);c.lineTo(-20,12);c.closePath();c.fill();c.restore();
+    const wx0=760,wy0=560;c.save();c.translate(wx0,wy0);c.rotate((f.mid.wind_direction_10m+180)*rad);c.fillStyle=L?ACC:'#fff';c.beginPath();c.moveTo(0,-34);c.lineTo(20,12);c.lineTo(6,6);c.lineTo(6,34);c.lineTo(-6,34);c.lineTo(-6,6);c.lineTo(-20,12);c.closePath();c.fill();c.restore();
     txt(`${Math.round(f.w)} km/h ${f.dir}`,404,574,44,800,INK);
     const tiles=[['Gusts',`${f.gust} km/h`],['Humidity',`${f.hum}%`],['Rain',`${f.rain}%`],['UV',`${f.uv.toFixed(0)}`],['Sunrise',f.sunrise?f.sunrise.slice(11,16):'--']];
     tiles.forEach((t,i)=>{const x=80+i*188,y=640;panel(x,y,172,120,22,TILE);txt(t[0].toUpperCase(),x+20,y+42,22,800,ACC);txt(t[1],x+20,y+94,36,800,INK)});
     // hourly strip
     const hs=f.hs.slice(0,5),cw=920/hs.length;panel(80,790,920,150,26,STRIP);
     hs.forEach((x,i)=>{const X=80+cw*i+cw/2;txt(`${pad(x.hour)}:00`,X,836,26,700,SUB,'center');txt(`${Math.round(x.temperature_2m)}°`,X,884,40,800,INK,'center');
-      c.font='700 24px Sora,sans-serif';const lw=c.measureText(`${Math.round(x.wind_speed_10m)} km/h`).width;c.save();c.translate(X-lw/2-8,918);c.rotate((x.wind_direction_10m+180)*rad);c.fillStyle=L?'#e2001a':'#fff';c.beginPath();c.moveTo(0,-11);c.lineTo(7,5);c.lineTo(0,2);c.lineTo(-7,5);c.closePath();c.fill();c.restore();
+      c.font='700 24px Sora,sans-serif';const lw=c.measureText(`${Math.round(x.wind_speed_10m)} km/h`).width;c.save();c.translate(X-lw/2-8,918);c.rotate((x.wind_direction_10m+180)*rad);c.fillStyle=L?ACC:'#fff';c.beginPath();c.moveTo(0,-11);c.lineTo(7,5);c.lineTo(0,2);c.lineTo(-7,5);c.closePath();c.fill();c.restore();
       txt(`${Math.round(x.wind_speed_10m)} km/h`,X+10,926,24,700,SUB,'center')});
   }
-  if(L){const bg=c.createLinearGradient(0,0,S,0);bg.addColorStop(0,'#9f0014');bg.addColorStop(.5,'#d0001a');bg.addColorStop(1,'#ff2d45');c.fillStyle=bg;c.fillRect(0,S-90,S,90)}
-  txt('Open-Meteo forecast for the ride time',80,L?1046:1010,24,600,L?'#ffe4e6':'#ffffff99');
+  if(L){const bg=c.createLinearGradient(0,0,S,0);if(G){bg.addColorStop(0,'#8a0049');bg.addColorStop(.5,'#d4006f');bg.addColorStop(1,'#ff4fa3')}else{bg.addColorStop(0,'#9f0014');bg.addColorStop(.5,'#d0001a');bg.addColorStop(1,'#ff2d45')}c.fillStyle=bg;c.fillRect(0,S-90,S,90)}
+  txt('Open-Meteo forecast for the ride time',80,L?1046:1010,24,600,L?(G?'#ffe1ee':'#ffe4e6'):'#ffffff99');
   txt('thecyclistdubai.com',S-80,L?1046:1010,26,700,L?'#fff':'#ffffffcc','right');
   return cv}
 
 /* ---------- route card image (ready routes) ---------- */
-function routeCard(r,f,wi){const p=preset,S=1080,cv=document.createElement('canvas');cv.width=S;cv.height=S;const c=cv.getContext('2d'),th=IMG_TH[r.theme]||'org',T3=TCDS.THEMES[th],rr=TCDS.rr,A=ACCENT[r.theme]||'#e2001a';
+function routeCard(r,f,wi){const p=preset,S=1080,cv=document.createElement('canvas');cv.width=S;cv.height=S;const c=cv.getContext('2d'),th=IMG_TH[r.theme]||'org',T3=TCDS.THEMES[th],rr=TCDS.rr,A=ACCENT[r.theme]||'#e6007e';
   const txt=(s,x,y,size,w,col,al='left')=>{c.font=`${w} ${size}px Sora,sans-serif`;c.fillStyle=col;c.textAlign=al;c.fillText(s,x,y)};
-  c.fillStyle='#fff';c.fillRect(0,0,S,S);if(th==='org')TCDS.polka(c,S,250,640,.6);
+  c.fillStyle='#fff';c.fillRect(0,0,S,S);if(th==='org')TCDS.polka(c,S,250,640,.6);else if(th==='giro'){c.fillStyle='#fff3f8';c.fillRect(0,0,S,250);TCDS.giroLines(c,S,250,600)}
   txt('RIDE ROUTE',80,110,30,800,A);txt(p.name,80,175,56,800,'#13233f');
-  txt(`${p.km} km · ${p.gain} m climb · ${p.kind} · start ${p.start}`,80,226,30,600,'#3b4a60');
+  txt(`${p.km} km · ${p.gain} m climb · ${p.dir?DIRN[p.dir].toLowerCase():p.kind} · start ${p.start}`,80,226,30,600,'#3b4a60');
   // map panel
   rr(c,80,262,920,456,30);c.fillStyle='#f6f7f9';c.fill();c.strokeStyle=A+'55';c.lineWidth=3;c.stroke();
   c.save();rr(c,80,262,920,456,30);c.clip();c.fillStyle=A+'14';for(let y=280;y<718;y+=28)for(let x=96+((y/28)%2?14:0);x<1000;x+=28){c.beginPath();c.arc(x,y,2.4,0,7);c.fill()}c.restore();
@@ -205,6 +217,7 @@ function routeCard(r,f,wi){const p=preset,S=1080,cv=document.createElement('canv
   c.strokeStyle='#fff';c.lineWidth=22;c.beginPath();xy.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.stroke();
   for(let i=1;i<xy.length;i++){c.strokeStyle=wi?KCOL[wi.kinds[i-1]]:A;c.lineWidth=11;c.beginPath();c.moveTo(xy[i-1][0],xy[i-1][1]);c.lineTo(xy[i][0],xy[i][1]);c.stroke()}
   const dot=(q,col,t)=>{c.fillStyle=col;c.strokeStyle='#fff';c.lineWidth=6;c.beginPath();c.arc(q[0],q[1],20,0,7);c.fill();c.stroke();txt(t,q[0],q[1]+9,24,800,'#fff','center')};
+  if(p.dir)arrowsAt(p,[.2,.45,.7,.88]).forEach(([i,b])=>{const q=xy[i];c.save();c.translate(q[0],q[1]);c.rotate(b*rad);c.fillStyle='#13233f';c.strokeStyle='#fff';c.lineWidth=4;c.beginPath();c.moveTo(0,-17);c.lineTo(13,11);c.lineTo(-13,11);c.closePath();c.stroke();c.fill();c.restore()});
   if(p.turn)dot(xy[p.ti],'#13233f','T');dot(xy[0],'#16a34a','S');
   // wind compass + legend
   const w=wi?wi.start:f?f.mid:null;
@@ -217,8 +230,8 @@ function routeCard(r,f,wi){const p=preset,S=1080,cv=document.createElement('canv
   c.strokeStyle=A;c.lineWidth=4;c.beginPath();p.pts.forEach((q,i)=>i?c.lineTo(ex(i),ey(q[2])):c.moveTo(ex(i),ey(q[2])));c.stroke();
   txt('ELEVATION',80,812,20,800,A);txt(`${Math.round(lo)}–${Math.round(hi)} m`,1000,812,22,700,'#3b4a60','right');
   // brand bar
-  const bg=c.createLinearGradient(0,0,S,0);if(th==='org'){bg.addColorStop(0,'#9f0014');bg.addColorStop(.5,'#d0001a');bg.addColorStop(1,'#ff2d45')}else{bg.addColorStop(0,T3[0]);bg.addColorStop(.5,T3[1]);bg.addColorStop(1,T3[2])}
-  c.fillStyle=bg;c.fillRect(0,S-90,S,90);c.font='800 38px Sora,sans-serif';c.textAlign='left';c.fillStyle='#fff';c.fillText('TheCyclist',60,S-32);const w2=c.measureText('TheCyclist').width;c.fillStyle=th==='org'?'#ffd6da':T3[3];c.fillText('Dubai',60+w2,S-32);
+  const bg=c.createLinearGradient(0,0,S,0);if(th==='giro'){bg.addColorStop(0,'#8a0049');bg.addColorStop(.5,'#d4006f');bg.addColorStop(1,'#ff4fa3')}else if(th==='org'){bg.addColorStop(0,'#9f0014');bg.addColorStop(.5,'#d0001a');bg.addColorStop(1,'#ff2d45')}else{bg.addColorStop(0,T3[0]);bg.addColorStop(.5,T3[1]);bg.addColorStop(1,T3[2])}
+  c.fillStyle=bg;c.fillRect(0,S-90,S,90);c.font='800 38px Sora,sans-serif';c.textAlign='left';c.fillStyle='#fff';c.fillText('TheCyclist',60,S-32);const w2=c.measureText('TheCyclist').width;c.fillStyle=th==='org'?'#ffd6da':th==='giro'?'#ffd1e3':T3[3];c.fillText('Dubai',60+w2,S-32);
   txt('thecyclistdubai.com',S-60,S-34,26,700,'#fff','right');
   return cv}
 
@@ -226,8 +239,8 @@ function routeCard(r,f,wi){const p=preset,S=1080,cv=document.createElement('canv
 let CUR={};
 function draw(target,src){const t=$(target),x=t.getContext('2d');x.clearRect(0,0,1080,1080);x.drawImage(src,0,0)}
 function update(){const r=ride(),f=forecast(r),wi=windInfo(r);
-  try{localStorage.setItem('tcd_org',JSON.stringify(Object.assign(Object.fromEntries(FIELDS.map(k=>[k,$(k).value])),{fRule:$('fRule').checked,color,preset:preset?preset.id:'custom',nameAuto})))}catch(e){}
-  const rc=TCDS.rideCard(Object.assign({},r,{theme:color==='org'?'org':color}),f,w=>`${Math.round(w)} km/h`),wc=weatherCard(r,f),pc=preset?routeCard(r,f,wi):null;
+  try{localStorage.setItem('tcd_org',JSON.stringify(Object.assign(Object.fromEntries(FIELDS.map(k=>[k,$(k).value])),{fRule:$('fRule').checked,color,colorPicked,dirPref:DIRP,preset:preset?preset.id:'custom',nameAuto})))}catch(e){}
+  const rc=TCDS.rideCard(Object.assign({},r,{theme:color}),f,w=>`${Math.round(w)} km/h`),wc=weatherCard(r,f),pc=preset?routeCard(r,f,wi):null;
   draw('cvRide',rc);draw('cvWx',wc);if(pc)draw('cvRoute',pc);$('rcWrap').style.display=pc?'':'none';const text=message(r,f,wi);$('txt').textContent=text;
   stats(r,f,wi);drawMap(r,wi);
   $('fcNote').textContent=WX[TR().id]===null?'Forecast unavailable right now':f?`Forecast loaded · ride score ${f.sc}`:'Forecast comes closer to the day';
