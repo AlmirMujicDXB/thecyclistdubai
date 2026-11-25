@@ -45,15 +45,18 @@ $('fColor').innerHTML=COLORS.map(c=>`<button type="button" data-c="${c[0]}" styl
 const dubai=()=>new Date(Date.now()+4*3600e3);
 const ymd=d=>`${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`;
 function nextSat(){const d=dubai();let k=(6-d.getUTCDay()+7)%7;if(k===0&&d.getUTCHours()>=6)k=7;return ymd(new Date(d.getTime()+k*864e5))}
-const FIELDS=['fName','fDate','fTime','fTrack','fStart','fRoute','fType','fDist','fPace','fOrg','fJoin','fNotes'];
+const FIELDS=['fName','fDate','fTime','fTrack','fStart','fLoc','fRoute','fType','fDist','fPace','fOrg','fJoin','fNotes'];
 let color='jaune';
 try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv){FIELDS.forEach(k=>{if(sv[k]!=null)$(k).value=sv[k]});$('fRule').checked=sv.fRule!==false;color=sv.colorPicked&&COLORS.some(x=>x[0]===sv.color)?sv.color:color}}catch(e){}
 if(!$('fName').value)$('fName').value='Saturday Coffee Ride';
+if(!(parseFloat($('fPace').value)>0))$('fPace').value=28;
+$('bFind').onclick=()=>{const q=[$('fStart').value.trim(),TR().id==='other'?'':TR().name,'Dubai'].filter(Boolean).join(', ');window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q),'_blank','noopener');toast('Find the place, tap Share → Copy link, paste it here')};
+$('fLoc').addEventListener('input',()=>{locAuto=''});
 if(!$('fDate').value||$('fDate').value<ymd(dubai()))$('fDate').value=nextSat();
 $('fDate').min=ymd(dubai());
 if(!$('fStart').value)$('fStart').value=TRACKS[0].start;
 const TR=()=>TRACKS.find(t=>t.id===$('fTrack').value)||TRACKS[0];
-function setColor(c){color=c;document.querySelectorAll('#fColor button').forEach(b=>b.classList.toggle('on',b.dataset.c===c))}
+function setColor(c){color=c;const k=COLORS.find(x=>x[0]===c);$('colName').textContent=k?k[2]:'';document.querySelectorAll('#fColor button').forEach(b=>b.classList.toggle('on',b.dataset.c===c))}
 setColor(color);
 let colorPicked=false;try{colorPicked=!!(JSON.parse(localStorage.getItem('tcd_org')||'null')||{}).colorPicked}catch(e){}
 document.querySelectorAll('#fColor button').forEach(b=>b.onclick=()=>{colorPicked=true;setColor(b.dataset.c);update()});
@@ -63,24 +66,20 @@ FIELDS.concat(['fRule']).forEach(k=>$(k).addEventListener('input',()=>{clearTime
 $('fDate').addEventListener('change',update);$('fTime').addEventListener('change',update);
 
 /* ---------- ready routes carousel ---------- */
-let preset=null,nameAuto=true,curSlide=-1,fitFor=null;
+let preset=null,nameAuto=true,curSlide=-1,fitFor=null,locAuto='',first0=true;
 try{const sv=JSON.parse(localStorage.getItem('tcd_org')||'null');if(sv&&sv.nameAuto===false)nameAuto=false}catch(e){}
-function shapeSvg(p,W,H){const P=fitter(p.pts,0,0,W,H,18),xy=p.pts.map(P),d='M'+xy.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L'),s=xy[0];
-  const t=p.turn?xy[p.ti]:null,arr=p.dir?arrowsAt(p,[.22,.5,.78]).map(([i,b])=>`<path d="M0 -7L6 5L-6 5Z" transform="translate(${xy[i][0].toFixed(1)} ${xy[i][1].toFixed(1)}) rotate(${b.toFixed(0)})" fill="#242428" stroke="#fff" stroke-width="1.5"/>`).join(''):'';
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#fc4c02" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>`+
-    arr+(t?`<circle cx="${t[0]}" cy="${t[1]}" r="7" fill="#13233f" stroke="#fff" stroke-width="2.5"/>`:'')+`<circle cx="${s[0]}" cy="${s[1]}" r="8" fill="#16a34a" stroke="#fff" stroke-width="3"/></svg>`}
 function elevSvg(p){const W=400,H=34,e=p.pts.map(q=>q[2]),lo=Math.min(...e)-3,hi=Math.max(...e)+3,L=p.cum[p.cum.length-1];
   const xy=p.pts.map((q,i)=>[(p.cum[i]/L*W).toFixed(1),(H-(q[2]-lo)/(hi-lo)*H).toFixed(1)]);
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="M0 ${H}L${xy.map(q=>q.join(' ')).join('L')}L${W} ${H}Z" fill="#fc4c021f"/><path d="M${xy.map(q=>q.join(' ')).join('L')}" fill="none" stroke="#fc4c02" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`}
 const estTime=km=>fmtDur(km/paceKmh()*60);
-const slideInner=(p,i)=>`<div class="rshape">${shapeSvg(p,300,184)}</div><div class="rinfo">
+const slideInner=(p,i)=>`<div class="rinfo">
     <div class="rtags"><span class="k">${p.kind}</span><span>Al Qudra</span><span>Start: ${p.start}</span>${i===0?'<span>TCD Ride route</span>':p.id==='mosque'?'<span>Purple Ride route</span>':''}</div>
     <h3>${p.name}</h3><p>${p.desc}</p>
     <div class="rfacts"><div><small>Distance</small><b>${p.km} km</b></div><div><small>Climb</small><b>${p.gain} m</b></div><div><small>${p.turn?'Turn at':'Direction'}</small><b>${p.turn?`${p.turn} · ${p.turnKm}`:`${DIRI[p.dir]} ${DIRN[p.dir]}`}</b></div><div><small>Ride time</small><b class="et" data-km="${p.km}">${estTime(p.km)}</b></div></div>
     ${p.dir?`<div class="dirseg" role="group" aria-label="Loop direction">${['cw','ccw'].map(d=>`<button type="button" data-d="${d}" class="${d===p.dir?'on':''}">${DIRI[d]} ${DIRN[d]}</button>`).join('')}</div>`:`<div class="relev">${elevSvg(p)}</div>`}</div>`;
 $('rcView').innerHTML=PRE.map((p,i)=>`<div class="rslide" data-i="${i}">${slideInner(variant(p),i)}</div>`).join('')+
-  `<div class="rslide custom" data-i="${PRE.length}"><div class="rshape">✏️</div><div class="rinfo"><div class="rtags"><span class="k">Custom</span><span>Any track in Dubai</span></div>
-    <h3>Your own route</h3><p>Al Qudra, Meydan, Mushrif, Kite Beach, Hatta or anywhere else: pick the track, start point, route and distance yourself in the form below.</p>
+  `<div class="rslide custom" data-i="${PRE.length}"><div class="rinfo"><div class="rtags"><span class="k">Custom</span><span>Any track in Dubai</span></div>
+    <h3>✏️ Your own route</h3><p>Al Qudra, Meydan, Mushrif, Kite Beach, Hatta or anywhere else: set the track, start location, route and distance in “Add details manually” below.</p>
     <div class="rfacts"><div><small>Tracks</small><b>5 + other</b></div><div><small>Forecast</small><b>16 days</b></div><div><small>Share</small><b>1 image</b></div><div><small>Time</small><b>1 minute</b></div></div></div></div>`;
 $('rcDots').innerHTML=PRE.concat([0]).map(()=>'<i></i>').join('');
 const NS=PRE.length+1,view=$('rcView');
@@ -93,8 +92,9 @@ function selectSlide(i){if(i===curSlide)return;curSlide=i;
   preset=i<PRE.length?variant(PRE[i]):null;
   if(preset){$('fTrack').value='alqudra';lastTrack='alqudra';$('fStart').value=preset.start;$('fRoute').value=preset.dir?`${preset.name} · ${DIRN[preset.dir].toLowerCase()}`:preset.name;$('fDist').value=preset.km;$('fType').value='Road';
     if(nameAuto)$('fName').value=`${preset.short} Ride`;
+    const ql=`https://www.google.com/maps/search/?api=1&query=${preset.pts[0][0]},${preset.pts[0][1]}`;if(!$('fLoc').value||$('fLoc').value===locAuto)$('fLoc').value=ql;locAuto=ql;
     $('autoNote').innerHTML=`✨ Auto-filled from <b>${preset.name}</b>${preset.dir?` (${DIRN[preset.dir].toLowerCase()})`:''}: Al Qudra · start ${preset.start} · ${preset.km} km · ${preset.gain} m climb. Just set the date &amp; time under the routes (edit anything below if you like).`}
-  else $('autoNote').innerHTML='';
+  else{$('autoNote').innerHTML='';if(curSlide>=0&&!first0)$('more').open=true}first0=false;
   loadWx().then(update)}
 let scT;view.addEventListener('scroll',()=>{clearTimeout(scT);scT=setTimeout(()=>selectSlide(Math.round(view.scrollLeft/Math.max(1,view.clientWidth))),110)},{passive:true});
 $('fTrack').addEventListener('change',()=>{if(preset&&$('fTrack').value!=='alqudra')goSlide(NS-1)});
@@ -159,24 +159,22 @@ function windInfo(r){const wx=WX.alqudra;if(!preset||!wx)return null;const [h,m]
 function stats(r,f,wi){const km=parseFloat($('fDist').value)||0,mins=km/paceKmh()*60,[h,m]=r.time.split(':').map(Number),back=h*60+m+mins;
   const backT=km?TCDS.fmtTime(`${pad(Math.floor(back/60)%24)}:${pad(Math.round(back%60)%60)}`):'--';
   const box=(l,v,c='')=>`<div class="${c}"><small>${l}</small><b>${v}</b></div>`;
-  $('rStats').innerHTML=preset?box('Distance',`${preset.km} km`)+box('Climb',`${preset.gain} m`)+box('Ride time',fmtDur(mins))+box('Back at',backT)+box('Headwind',wi?`${wi.head}%`:'--','h')+box('Tailwind',wi?`${wi.tail}%`:'--','t')
-    :box('Distance',km?`${km} km`:'--')+box('Pace',`${paceKmh()} km/h`)+box('Ride time',km?fmtDur(mins):'--')+box('Back at',backT)+box('Temp',f?f.tr:'--')+box('Wind',f?`${Math.round(f.w)} km/h ${f.dir}`:'--');
   const w=wi?wi.start:f?f.hs[0]:null;
   if(w){$('wArr').style.transform=`rotate(${w.wind_direction_10m}deg)`;$('wSpd').textContent=`${Math.round(w.wind_speed_10m)} km/h ${card(w.wind_direction_10m)}`;$('wTxt').textContent=`Wind at ${TCDS.fmtTime(r.time)} · gusts ${Math.round(w.wind_gusts_10m)}`;setParticles(w.wind_direction_10m,w.wind_speed_10m)}
   else{$('wArr').style.transform='';$('wSpd').textContent='--';$('wTxt').textContent=WX[TR().id]===null?'Forecast unavailable':'Forecast closer to the day';setParticles(null)}
   $('legend').style.display=preset&&wi?'':'none';
-  $('whenTxt').textContent=`${TCDS.occLabel(r.occ)} · ${TCDS.fmtTime(r.time)}${km?` → back ${backT}`:''}`}
+  $('whenTxt').innerHTML=`${km?`${km} km · ${fmtDur(mins)} · back ${backT}`:TCDS.occLabel(r.occ)}${wi?` · <b class="h">${wi.head}% head</b> · <b class="t">${wi.tail}% tail</b>`:f?` · ${f.tr}`:''}`;if(map)setTimeout(()=>map.invalidateSize(),0)}
 
 /* ---------- ride + message ---------- */
 function ride(){const t=TR(),dist=parseFloat($('fDist').value);
   return{name:($('fName').value||'Group Ride').trim(),occ:$('fDate').value,time:$('fTime').value||'06:30',theme:color,type:$('fType').value,
-    distance:dist?`${dist} km`:'',pace:$('fPace').value.trim(),start:$('fStart').value.trim(),route:$('fRoute').value.trim(),place:t.id==='other'?($('fStart').value.trim()||'Dubai'):t.place,
+    distance:dist?`${dist} km`:'',pace:`${paceKmh()} km/h avg`,loc:$('fLoc').value.trim(),start:$('fStart').value.trim(),route:$('fRoute').value.trim(),place:t.id==='other'?($('fStart').value.trim()||'Dubai'):t.place,
     rule:$('fRule').checked?(SITE.rideRule||'Lights & helmet mandatory'):'',org:$('fOrg').value.trim(),join:$('fJoin').value.trim(),notes:$('fNotes').value.trim().replace(/\s+/g,' '),
     joinLine:$('fOrg').value.trim()?`🙋 Organised by ${$('fOrg').value.trim()}`:$('fJoin').value.trim()?'✅ Join: link in the message':'👋 Everyone welcome'}}
 function message(r,f,wi){const ev=TCDS.upcomingEvents().map(e=>`• ${e.name}: ${e.url}`),p=preset;
   const build=(nEv,notes,gpx=true)=>`🚴‍♂️ *${r.name}* · group ride\n🗓️ ${TCDS.occLabel(r.occ)} · ${TCDS.fmtTime(r.time)}\n📍 ${r.start&&r.start!==r.place?`Start: ${r.start} · `:''}${r.place}\n`+
     (r.route?`🛣️ ${r.route}${p?` · ${p.gain} m climb`:''}\n`:'')+(TCDS.rideKind(r)?`${TCDS.rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(r.rule?`⛑️💡 ${r.rule}\n`:'')+
-    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(wi?`💨 Wind on route: ${wi.head}% headwind · ${wi.tail}% tailwind\n`:'')+(r.org?`🙋 Organised by ${r.org}\n`:'')+(notes&&r.notes?`📝 ${r.notes}\n`:'')+(r.join?`✅ Join: ${r.join}\n`:'')+(p?(p.strava?`🗺️ Strava route: ${p.strava}\n`:'')+(gpx?`⬇️ GPX: ${TCDS.root()}${p.gpx}\n`:''):'')+
+    (f?`🌤️ Forecast: ${f.txt}\n`:'')+(wi?`💨 Wind on route: ${wi.head}% headwind · ${wi.tail}% tailwind\n`:'')+(r.org?`🙋 Organised by ${r.org}\n`:'')+(notes&&r.notes?`📝 ${r.notes}\n`:'')+(r.loc?`📌 Start location: ${r.loc}\n`:'')+(r.join?`✅ Join: ${r.join}\n`:'')+(p?(p.strava?`🗺️ Strava route: ${p.strava}\n`:'')+(gpx?`⬇️ GPX: ${TCDS.root()}${p.gpx}\n`:''):'')+
     (nEv?`\n📅 *Recommended events*\n${ev.slice(0,nEv).join('\n')}\n`:'')+`\n📲 Ride weather & planner: ${TCDS.root()}\n🧭 Organize your ride: ${TCDS.root()}organize-ride.html`;
   let t=build(ev.length,true);for(let n=ev.length;t.length>1010&&n>0;n--)t=build(n-1,true);if(t.length>1010)t=build(0,false);if(t.length>1010)t=build(0,false,false);return t}
 

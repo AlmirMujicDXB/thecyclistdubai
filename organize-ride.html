@@ -105,11 +105,43 @@ body.th-strava{background:#f7f7fa}
 @media (max-width:480px){.rstats b{font-size:13.5px}}
 .whenbar{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--bd);background:#fff8f4}
 .whenbar .wl{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#fc4c02}
+.whenbar label i{font-style:normal}
 .whenbar label{display:inline-flex;align-items:center;gap:5px;font-size:14px;background:#fff;border:1px solid #ffc9ad;border-radius:10px;padding:2px 4px 2px 8px}
 .whenbar input{border:0;background:transparent;font:700 13px Sora,system-ui,sans-serif;color:#242428;padding:5px 2px;min-width:0;width:auto}
 .whenbar input:focus{outline:none}.whenbar label:focus-within{border-color:#fc4c02;box-shadow:0 0 0 2px #fc4c0233}
 .whenbar .wt{font-size:12px;font-weight:700;color:#6d6d78}
 @media (max-width:480px){.whenbar{gap:6px;padding:9px 8px}.whenbar .wl{display:none}.whenbar label{padding:1px 2px 1px 6px;font-size:13px}.whenbar input{font-size:12.5px}.whenbar .wt{flex-basis:100%;text-align:center}}
+
+/* compact layout v3: one map beside the sliding route info */
+.hero.compact{padding:14px 16px}.hero.compact h1{font-size:23px}
+.rbox{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);border-top:0}
+.rbox .mapbox{height:auto;min-height:330px;border-right:1px solid var(--bd)}
+.rc{position:relative;display:flex;flex-direction:column;min-width:0}
+.rc .rslide{grid-template-columns:1fr;padding:14px 16px 6px;min-height:0;align-items:start}
+.rc-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 14px 12px;margin-top:auto}
+.rc-nav .rc-arr{position:static;transform:none;width:38px;height:38px;font-size:24px}
+.rc-nav .rc-dots{padding:0}
+.rinfo p{margin:4px 0 10px}
+.whenbar{justify-content:flex-start}.whenbar .wt b.h{color:#dc2626}.whenbar .wt b.t{color:#16a34a}
+.whenbar label.pace input{width:44px;text-align:right}.whenbar label.pace span{font-size:11px;font-weight:800;color:#6d6d78;padding-right:6px}
+.more{border-top:1px solid var(--bd)}
+.more summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 16px;font-weight:800;color:#242428}
+.more summary::-webkit-details-marker{display:none}
+.more summary small{flex:1;font-weight:600;color:#6d6d78;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.more summary i{margin-left:auto;font-style:normal;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:#fff6f1;border:1px solid #ffd9c4;color:#fc4c02;font-weight:900;transition:transform .2s}
+.more[open] summary i{transform:rotate(45deg)}
+.more summary:hover{background:#fff8f4}
+.more .form{padding:4px 16px 16px}
+.locrow{display:flex;gap:8px}.locrow input{flex:1}
+.btn.sm{height:40px;font-size:12.5px;white-space:nowrap;padding:0 12px}
+.shbox{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:18px;padding:16px;align-items:start}
+.shbox .one canvas{max-width:100%}
+.clab{font-size:11.5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:var(--mut);margin-bottom:6px}.clab small{text-transform:none;letter-spacing:0;color:#fc4c02;margin-left:6px}
+.shside .acts{margin-top:12px}
+@media (max-width:900px){.rbox{grid-template-columns:1fr}.rbox .mapbox{min-height:260px;height:260px;border-right:0;border-bottom:1px solid var(--bd)}
+  .shbox{grid-template-columns:minmax(0,1fr)}.shbox .one canvas{max-width:340px}}
+@media (max-width:480px){.locrow{flex-direction:column}.more summary small{display:none}
+  .whenbar{display:grid;grid-template-columns:1.45fr 1fr .85fr;gap:6px}.whenbar label{min-width:0;padding:1px 2px 1px 5px;font-size:12px;gap:3px}.whenbar input{width:100%;font-size:12px}.whenbar label.pace input{width:100%}.whenbar label.pace span{padding-right:3px;font-size:10px}.whenbar .wt{grid-column:1/-1}.whenbar label i{display:none}.whenbar input::-webkit-calendar-picker-indicator{margin:0;padding:0;width:12px}}
 </style>
 </head>
 <body class="th-strava">
@@ -118,69 +150,63 @@ body.th-strava{background:#f7f7fa}
   <div class="hl"><a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a><div class="clock"><i></i><span id="clk">--:--</span> Dubai</div></div>
 </header>
 
-<section class="hero strava">
-  <svg class="deco" viewBox="0 0 600 200" preserveAspectRatio="none" aria-hidden="true"><path d="M-10 150 C120 190 220 90 330 130 S520 180 610 70" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/></svg>
+<section class="hero strava compact">
   <div class="hrow">
     <div class="dtile"><span>YOUR</span><b>+</b><span>RIDE</span></div>
     <div class="hmain">
       <div class="tags"><span class="tag l">🧭 Ride organizer</span><span class="tag">Free · 1 minute</span></div>
       <h1>Organize your ride</h1>
-      <div class="hsub"><span style="white-space:normal">Pick a ready route, set the date &amp; time. We add the map, wind &amp; forecast, you share it.</span></div>
+      <div class="hsub"><span style="white-space:normal">Pick a route, set date, time &amp; pace. Map, wind &amp; forecast are added, then share.</span></div>
     </div>
   </div>
-  <div class="steps"><div><b>1 · Route</b>Pick a ready route</div><div><b>2 · Date &amp; time</b>Forecast added</div><div><b>3 · Share</b>One image + full details</div></div>
 </section>
 
 <section class="sec rsec">
-  <div class="sech"><h2>🗺️ Ready routes</h2><div class="sp"></div><span class="note" id="rcCount"></span></div>
-  <div class="rc">
-    <button class="rc-arr l" id="rcPrev" type="button" aria-label="Previous route">‹</button>
-    <div class="rc-view" id="rcView"></div>
-    <button class="rc-arr r" id="rcNext" type="button" aria-label="Next route">›</button>
-  </div>
-  <div class="rc-dots" id="rcDots"></div>
-  <div class="whenbar"><span class="wl">When?</span><label>📅<input type="date" id="fDate" aria-label="Ride date"></label><label>⏰<input type="time" id="fTime" value="06:30" step="300" aria-label="Start time"></label><span class="wt" id="whenTxt"></span></div>
-  <div class="rmap">
+  <div class="sech"><h2>🗺️ Pick a route</h2><div class="sp"></div><span class="note" id="rcCount"></span></div>
+  <div class="rbox">
     <div class="mapbox"><div id="map"></div><canvas id="wind"></canvas><div class="mhint" id="mhint">Use two fingers to move the map</div>
       <div class="mapui"><div class="wbadge"><div class="warr" id="wArr">↓</div><div><b id="wSpd">--</b><small id="wTxt">Wind at start</small></div></div>
-        <div class="legend" id="legend"><span><i style="background:#dc2626"></i>Headwind</span><span><i style="background:#16a34a"></i>Tailwind</span><span><i style="background:#eab308"></i>Crosswind</span></div></div>
+        <div class="legend" id="legend"><span><i style="background:#dc2626"></i>Head</span><span><i style="background:#16a34a"></i>Tail</span><span><i style="background:#eab308"></i>Cross</span></div></div>
     </div>
-    <div class="rstats" id="rStats"></div>
+    <div class="rc">
+      <div class="rc-view" id="rcView"></div>
+      <div class="rc-nav"><button class="rc-arr" id="rcPrev" type="button" aria-label="Previous route">‹</button><div class="rc-dots" id="rcDots"></div><button class="rc-arr" id="rcNext" type="button" aria-label="Next route">›</button></div>
+    </div>
   </div>
+  <div class="whenbar"><label title="Ride date"><i>📅</i><input type="date" id="fDate" aria-label="Ride date"></label><label title="Start time"><i>⏰</i><input type="time" id="fTime" value="06:30" step="300" aria-label="Start time"></label><label title="Average speed" class="pace"><i>⚡</i><input type="number" id="fPace" min="12" max="50" step="1" value="28" aria-label="Average speed in km/h"><span>km/h</span></label><span class="wt" id="whenTxt"></span></div>
+  <details class="more" id="more">
+    <summary><span>✏️ Add details manually</span><small id="moreSum">name · start location · organiser · join link · notes</small><i>＋</i></summary>
+    <div class="form">
+      <div class="full autonote" id="autoNote"></div>
+      <label class="full">Ride name<input id="fName" maxlength="40" placeholder="Saturday Coffee Ride"></label>
+      <label>Track<select id="fTrack"></select></label>
+      <label>Type<select id="fType"><option>Road</option><option>Gravel</option><option>MTB</option><option>Social / no-drop</option><option>Training</option></select></label>
+      <label>Start point<input id="fStart" maxlength="40" placeholder="BOTS"></label>
+      <label>Distance (km)<input type="number" id="fDist" min="1" max="300" step="0.5" value="50"></label>
+      <label class="full">Start location <small>(Google Maps link, shared in the message)</small>
+        <span class="locrow"><input id="fLoc" type="url" maxlength="300" placeholder="https://maps.app.goo.gl/…"><button type="button" class="btn out sm" id="bFind">📍 Find on Google Maps ↗</button></span></label>
+      <label class="full">Route <small>(optional)</small><input id="fRoute" maxlength="60" placeholder="BOTS → Last Exit & back"></label>
+      <label>Organiser <small>(optional)</small><input id="fOrg" maxlength="30" placeholder="Your name or club"></label>
+      <label>Join link <small>(optional)</small><input id="fJoin" type="url" maxlength="200" placeholder="WhatsApp / Strava link"></label>
+      <label class="full">Notes <small>(optional, short)</small><textarea id="fNotes" maxlength="140" placeholder="Coffee stop at the end · bring 2 bottles"></textarea></label>
+      <label class="full tog"><input type="checkbox" id="fRule" checked> ⛑️💡 Lights &amp; helmet mandatory</label>
+    </div>
+  </details>
 </section>
 
-<div class="org">
-  <section class="sec">
-    <div class="sech"><h2>📝 Your ride</h2></div>
-    <div class="secb">
-      <div class="form">
-        <div class="full autonote" id="autoNote"></div>
-        <label class="full">Ride name<input id="fName" maxlength="40" placeholder="Saturday Coffee Ride"></label>
-        <label>Track<select id="fTrack"></select></label>
-        <label>Start point<input id="fStart" maxlength="40"></label>
-        <label class="full">Route <small>(optional)</small><input id="fRoute" maxlength="50" placeholder="BOTS → Last Exit & back"></label>
-        <label>Type<select id="fType"><option>Road</option><option>Gravel</option><option>MTB</option><option>Social / no-drop</option><option>Training</option></select></label>
-        <label>Distance (km)<input type="number" id="fDist" min="1" max="300" step="0.5" value="50"></label>
-        <label>Pace<input id="fPace" maxlength="24" value="28 km/h avg"></label>
-        <label>Organiser <small>(optional)</small><input id="fOrg" maxlength="30" placeholder="Your name or club"></label>
-        <label class="full">Join link <small>(WhatsApp, Strava or Instagram, optional)</small><input id="fJoin" type="url" maxlength="200" placeholder="https://chat.whatsapp.com/…"></label>
-        <label class="full">Notes <small>(optional, short)</small><textarea id="fNotes" maxlength="140" placeholder="Coffee stop at the end · bring 2 bottles"></textarea></label>
-        <label class="full">Card colour<div class="colors" id="fColor"></div></label>
-        <label class="full tog"><input type="checkbox" id="fRule" checked> ⛑️💡 Lights &amp; helmet mandatory</label>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec prev">
-    <div class="sech"><h2>📤 Preview &amp; share</h2><div class="sp"></div><span class="note" id="fcNote">Loading forecast…</span></div>
-    <div class="secb">
-      <div class="one"><canvas id="cvShare" width="1080" height="1350"></canvas><small>Share image · 1080×1350 · ride, forecast &amp; route in one</small></div>
+<section class="sec share">
+  <div class="sech"><h2>📤 Share</h2><div class="sp"></div><span class="note" id="fcNote">Loading forecast…</span></div>
+  <div class="shbox">
+    <div class="one"><canvas id="cvShare" width="1080" height="1350"></canvas></div>
+    <div class="shside">
+      <div class="clab">Card colour <small id="colName"></small></div>
+      <div class="colors" id="fColor"></div>
       <div class="acts"><button class="btn big" id="bShare" type="button">Share ride ↗</button><button class="btn out" id="bCopy" type="button">Copy text</button><button class="btn out" id="bSave" type="button">Download image</button></div>
       <div class="txt" id="txt"></div>
-      <div class="wxnote">Forecast: Open-Meteo, up to 16 days ahead. One 1080×1350 image for WhatsApp, Instagram and Strava; everything that does not fit is in the text. Card colours: Tour de France, Giro &amp; Vuelta jerseys.</div>
+      <div class="wxnote">One 1080×1350 image + the full text (links, notes, events). Forecast: Open-Meteo, up to 16 days ahead.</div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
 
 <div class="rtoast" id="rToast"></div>
 <div class="foot">Forecast: Open-Meteo · Ride cards by TheCyclistDubai · <a href="disclaimer.html">Disclaimer</a> · <a href="./">← Back to TheCyclistDubai</a></div>
