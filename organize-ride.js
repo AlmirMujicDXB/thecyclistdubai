@@ -17,7 +17,7 @@ const TRACKS=[
   {id:'hatta',name:'Hatta MTB Trail Centre',place:'Hatta',start:'Hatta Wadi Hub',lat:24.803,lon:56.126,elev:330},
   {id:'other',name:'Other place in Dubai',place:'Dubai',start:'',lat:25.20,lon:55.27,elev:10},
 ];
-const COLORS=[['org','linear-gradient(135deg,#13233f,#6b9a80)'],['green','linear-gradient(135deg,#052e16,#16a34a)'],['purple','linear-gradient(135deg,#2e1065,#a855f7)'],['orange','linear-gradient(135deg,#7c2d12,#fb923c)'],['blue','linear-gradient(135deg,#0c2d48,#0ea5e9)']];
+const COLORS=[['org','radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 0 0/12px 12px,radial-gradient(circle,#e2001a 0 3px,transparent 3.6px) 6px 6px/12px 12px,#fff'],['green','linear-gradient(135deg,#052e16,#16a34a)'],['purple','linear-gradient(135deg,#2e1065,#a855f7)'],['orange','linear-gradient(135deg,#7c2d12,#fb923c)'],['blue','linear-gradient(135deg,#0c2d48,#0ea5e9)']];
 const IMG_TH={org:'org',green:'green',purple:'purple',orange:'rorange',blue:'sky'};
 
 /* ---------- form ---------- */
@@ -75,35 +75,38 @@ function message(r,f){const ev=TCDS.eventLines();
   let t=build(ev.length,true);for(let n=ev.length;t.length>1010&&n>0;n--)t=build(n-1,true);if(t.length>1010)t=build(0,false);return t}
 
 /* ---------- weather card image ---------- */
-function weatherCard(r,f){const S=1080,cv=document.createElement('canvas');cv.width=S;cv.height=S;const c=cv.getContext('2d'),T3=TCDS.THEMES[IMG_TH[r.theme]||'org'],rr=TCDS.rr;
+function weatherCard(r,f){const S=1080,cv=document.createElement('canvas');cv.width=S;cv.height=S;const c=cv.getContext('2d'),th=IMG_TH[r.theme]||'org',T3=TCDS.THEMES[th],rr=TCDS.rr,L=th==='org';
+  const INK=L?'#13233f':'#fff',SUB=L?'#3b4a60':'#ffffffcc',ACC=L?'#e2001a':T3[3],TILE=L?'rgba(255,255,255,.94)':'#ffffff1f',STRIP=L?'rgba(255,255,255,.94)':'#00000026';
   const g=c.createLinearGradient(0,0,S,S);g.addColorStop(0,T3[0]);g.addColorStop(.6,T3[1]);g.addColorStop(1,T3[2]);c.fillStyle=g;c.fillRect(0,0,S,S);
-  const rg=c.createRadialGradient(S,0,0,S,0,760);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S,S);
+  if(L)TCDS.polka(c,S,S,380);else{const rg=c.createRadialGradient(S,0,0,S,0,760);rg.addColorStop(0,T3[3]+'55');rg.addColorStop(1,T3[3]+'00');c.fillStyle=rg;c.fillRect(0,0,S,S)}
+  const panel=(x,y,w,h,r,col)=>{rr(c,x,y,w,h,r);c.fillStyle=col;c.fill();if(L){c.strokeStyle='rgba(226,0,26,.35)';c.lineWidth=2;c.stroke()}};
   const txt=(s,x,y,size,w,col,al='left')=>{c.font=`${w} ${size}px Sora,sans-serif`;c.fillStyle=col;c.textAlign=al;c.fillText(s,x,y)};
-  txt('RIDE FORECAST',80,120,30,800,T3[3]);
-  const nm=r.name.length>26?r.name.slice(0,25)+'…':r.name;txt(nm,80,196,62,800,'#fff');
-  const dp=TCDS.dayParts(r.occ);txt(`${dp.day} ${dp.date} ${dp.mon} · ${TCDS.fmtTime(r.time)} · ${r.place}`,80,252,34,600,'#ffffffd9');
-  if(!f){rr(c,80,330,920,300,36);c.fillStyle='#ffffff1f';c.fill();txt('🌤️',140,500,90,400,'#fff');
-    txt('Forecast available',280,470,50,800,'#fff');txt('closer to the day',280,530,50,800,'#fff');txt('(up to 16 days ahead)',280,580,30,600,'#ffffffb3')}
+  txt('RIDE FORECAST',80,120,30,800,ACC);
+  const nm=r.name.length>26?r.name.slice(0,25)+'…':r.name;txt(nm,80,196,62,800,INK);
+  const dp=TCDS.dayParts(r.occ);txt(`${dp.day} ${dp.date} ${dp.mon} · ${TCDS.fmtTime(r.time)} · ${r.place}`,80,252,34,600,SUB);
+  if(!f){panel(80,330,920,300,36,TILE);txt('🌤️',140,500,90,400,INK);
+    txt('Forecast available',280,470,50,800,INK);txt('closer to the day',280,530,50,800,INK);txt('(up to 16 days ahead)',280,580,30,600,SUB)}
   else{
     // score ring
     const cx=200,cy=430,R=104,col=f.sc>=80?'#22c55e':f.sc>=65?'#84cc16':f.sc>=50?'#eab308':'#ef4444';
-    c.lineWidth=26;c.strokeStyle='#ffffff26';c.beginPath();c.arc(cx,cy,R,0,7);c.stroke();
+    if(L){c.fillStyle='#fff';c.beginPath();c.arc(cx,cy,R+24,0,7);c.fill()}c.lineWidth=26;c.strokeStyle=L?'#f1f5f9':'#ffffff26';c.beginPath();c.arc(cx,cy,R,0,7);c.stroke();
     c.strokeStyle=col;c.lineCap='round';c.beginPath();c.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+f.sc/100*Math.PI*2);c.stroke();
-    txt(String(f.sc),cx,cy+22,84,800,'#fff','center');txt(f.lab.toUpperCase(),cx,cy+R+50,28,800,'#fff','center');
-    txt(f.tr,400,420,96,800,'#fff');txt(`feels up to ${f.feels}°C`,404,476,34,600,'#ffffffcc');
+    txt(String(f.sc),cx,cy+22,84,800,INK,'center');txt(f.lab.toUpperCase(),cx,cy+R+50,28,800,INK,'center');
+    if(L)panel(370,330,630,280,30,TILE);txt(f.tr,400,420,96,800,INK);txt(`feels up to ${f.feels}°C`,404,476,34,600,SUB);
     // wind arrow
-    const wx0=760,wy0=560;c.save();c.translate(wx0,wy0);c.rotate((f.mid.wind_direction_10m+180)*rad);c.fillStyle='#fff';c.beginPath();c.moveTo(0,-34);c.lineTo(20,12);c.lineTo(6,6);c.lineTo(6,34);c.lineTo(-6,34);c.lineTo(-6,6);c.lineTo(-20,12);c.closePath();c.fill();c.restore();
-    txt(`${Math.round(f.w)} km/h ${f.dir}`,404,574,44,800,'#fff');
+    const wx0=760,wy0=560;c.save();c.translate(wx0,wy0);c.rotate((f.mid.wind_direction_10m+180)*rad);c.fillStyle=L?'#e2001a':'#fff';c.beginPath();c.moveTo(0,-34);c.lineTo(20,12);c.lineTo(6,6);c.lineTo(6,34);c.lineTo(-6,34);c.lineTo(-6,6);c.lineTo(-20,12);c.closePath();c.fill();c.restore();
+    txt(`${Math.round(f.w)} km/h ${f.dir}`,404,574,44,800,INK);
     const tiles=[['Gusts',`${f.gust} km/h`],['Humidity',`${f.hum}%`],['Rain',`${f.rain}%`],['UV',`${f.uv.toFixed(0)}`],['Sunrise',f.sunrise?f.sunrise.slice(11,16):'--']];
-    tiles.forEach((t,i)=>{const x=80+i*188,y=640;rr(c,x,y,172,120,22);c.fillStyle='#ffffff1f';c.fill();txt(t[0].toUpperCase(),x+20,y+42,22,800,T3[3]);txt(t[1],x+20,y+94,36,800,'#fff')});
+    tiles.forEach((t,i)=>{const x=80+i*188,y=640;panel(x,y,172,120,22,TILE);txt(t[0].toUpperCase(),x+20,y+42,22,800,ACC);txt(t[1],x+20,y+94,36,800,INK)});
     // hourly strip
-    const hs=f.hs.slice(0,5),cw=920/hs.length;rr(c,80,790,920,150,26);c.fillStyle='#00000026';c.fill();
-    hs.forEach((x,i)=>{const X=80+cw*i+cw/2;txt(`${pad(x.hour)}:00`,X,836,26,700,'#ffffffcc','center');txt(`${Math.round(x.temperature_2m)}°`,X,884,40,800,'#fff','center');
-      c.font='700 24px Sora,sans-serif';const lw=c.measureText(`${Math.round(x.wind_speed_10m)} km/h`).width;c.save();c.translate(X-lw/2-8,918);c.rotate((x.wind_direction_10m+180)*rad);c.fillStyle='#fff';c.beginPath();c.moveTo(0,-11);c.lineTo(7,5);c.lineTo(0,2);c.lineTo(-7,5);c.closePath();c.fill();c.restore();
-      txt(`${Math.round(x.wind_speed_10m)} km/h`,X+10,926,24,700,'#ffffffcc','center')});
+    const hs=f.hs.slice(0,5),cw=920/hs.length;panel(80,790,920,150,26,STRIP);
+    hs.forEach((x,i)=>{const X=80+cw*i+cw/2;txt(`${pad(x.hour)}:00`,X,836,26,700,SUB,'center');txt(`${Math.round(x.temperature_2m)}°`,X,884,40,800,INK,'center');
+      c.font='700 24px Sora,sans-serif';const lw=c.measureText(`${Math.round(x.wind_speed_10m)} km/h`).width;c.save();c.translate(X-lw/2-8,918);c.rotate((x.wind_direction_10m+180)*rad);c.fillStyle=L?'#e2001a':'#fff';c.beginPath();c.moveTo(0,-11);c.lineTo(7,5);c.lineTo(0,2);c.lineTo(-7,5);c.closePath();c.fill();c.restore();
+      txt(`${Math.round(x.wind_speed_10m)} km/h`,X+10,926,24,700,SUB,'center')});
   }
-  txt('Open-Meteo forecast for the ride time',80,1010,24,600,'#ffffff99');
-  txt('thecyclistdubai.com',S-80,1010,26,700,'#ffffffcc','right');
+  if(L){const bg=c.createLinearGradient(0,0,S,0);bg.addColorStop(0,'#9f0014');bg.addColorStop(.5,'#d0001a');bg.addColorStop(1,'#ff2d45');c.fillStyle=bg;c.fillRect(0,S-90,S,90)}
+  txt('Open-Meteo forecast for the ride time',80,L?1046:1010,24,600,L?'#ffe4e6':'#ffffff99');
+  txt('thecyclistdubai.com',S-80,L?1046:1010,26,700,L?'#fff':'#ffffffcc','right');
   return cv}
 
 /* ---------- render + share ---------- */

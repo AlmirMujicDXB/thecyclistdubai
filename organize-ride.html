@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Organize your ride · TheCyclistDubai</title>
 <meta name="description" content="Organize a group ride in Dubai: pick the track, date, time and pace, get the forecast and share a ride card and a weather card to WhatsApp.">
-<meta name="theme-color" content="#2f5446">
+<meta name="theme-color" content="#e2001a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -14,7 +14,16 @@
 <script src="site-data.js"></script>
 <script src="share-core.js"></script>
 <style>
-body.th-org{--p0:#13233f;--p1:#2f5446;--p2:#3f6b55;--p3:#6b9a80;--p4:#e6f0e9;--p5:#f3f7f4;--glow:#f3e9d655;--shadow:#13233f40;--bd:#dde8e1;--bd2:#edf3ef}
+body.th-org{--p0:#9f0014;--p1:#c8001a;--p2:#e2001a;--p3:#ff4d5e;--p4:#ffe4e6;--p5:#fff5f6;--glow:#ffffff00;--shadow:#e2001a26;--bd:#f6d3d6;--bd2:#fff7f7}
+/* King of the Mountains polka-dot jersey */
+.hero.polka{color:#13233f;background:#fff;border:1px solid #f6c9ce}
+.hero.polka::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,#e2001a 0 5px,transparent 5.7px) 0 0/26px 26px,radial-gradient(circle,#e2001a 0 5px,transparent 5.7px) 13px 13px/26px 26px;-webkit-mask-image:linear-gradient(100deg,transparent 0,#0000 28%,#0007 58%,#000 92%);mask-image:linear-gradient(100deg,transparent 0,#0000 28%,#0007 58%,#000 92%)}
+.hero.polka>*{position:relative;z-index:1}
+.hero.polka svg.deco{display:none}
+.hero.polka .dtile{border:2px solid #e2001a;box-sizing:border-box}.hero.polka .dtile span,.hero.polka .dtile b{color:#e2001a}
+.hero.polka .tag{background:#fff;border-color:#e2001a66;color:#b00016}.hero.polka .tag.l{background:#e2001a;border-color:#e2001a;color:#fff}
+.hero.polka h1{color:#13233f}.hero.polka .hsub{color:#3b4a60}
+.hero.polka .steps div{background:#ffffffeb;border-color:#e2001a40;color:#3b4a60}.hero.polka .steps b{color:#e2001a}
 .steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
 .steps div{background:#ffffff1f;border:1px solid #ffffff33;border-radius:12px;padding:9px 11px;font-size:12.5px;color:var(--p4)}
 .steps b{display:block;color:#fff;font-size:14.5px}
@@ -29,9 +38,9 @@ body.th-org{--p0:#13233f;--p1:#2f5446;--p2:#3f6b55;--p3:#6b9a80;--p4:#e6f0e9;--p
 .form input:focus,.form select:focus,.form textarea:focus{outline:2px solid var(--p3);outline-offset:1px;border-color:var(--p3)}
 .colors{display:flex;gap:8px;flex-wrap:wrap}
 .colors button{width:44px;height:44px;border-radius:12px;border:3px solid #fff;box-shadow:0 0 0 1px var(--bd);cursor:pointer}
-.colors button.on{box-shadow:0 0 0 3px var(--red)}
+.colors button.on{box-shadow:0 0 0 3px #13233f}
 .tog{display:flex!important;flex-direction:row!important;align-items:center;gap:10px!important;text-transform:none!important;font-size:13.5px!important;color:var(--ink)!important;letter-spacing:0!important;cursor:pointer}
-.tog input{width:20px;height:20px;accent-color:var(--p2)}
+.tog input{width:20px;height:20px;accent-color:#e2001a}
 .prev{position:sticky;top:12px}
 .imgs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .imgs canvas{width:100%;height:auto;border-radius:14px;box-shadow:0 8px 22px #13233f26;display:block}
@@ -39,7 +48,7 @@ body.th-org{--p0:#13233f;--p1:#2f5446;--p2:#3f6b55;--p3:#6b9a80;--p4:#e6f0e9;--p
 .txt{margin-top:12px;white-space:pre-wrap;font:500 12px/1.5 'JetBrains Mono',monospace;background:var(--p5);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;max-height:260px;overflow:auto;color:var(--ink)}
 .acts{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-top:12px}
 .acts .btn{width:100%;padding:0 10px}
-.btn.big{background:linear-gradient(110deg,#2f5446,#6b9a80);color:#fff;box-shadow:0 6px 16px #2f544655}
+.btn.big{background:linear-gradient(110deg,#b00016,#e2001a 60%,#ff2d45);color:#fff;box-shadow:0 6px 16px #e2001a55}
 .btn.out{background:#fff;color:var(--p1);border:1px solid var(--bd)}
 .wxnote{font-size:12px;color:var(--mut);margin-top:8px}
 @media (max-width:900px){.org{grid-template-columns:1fr}.prev{position:static}.steps{grid-template-columns:1fr 1fr 1fr}.steps div{font-size:11px;padding:7px 8px}.steps b{font-size:13px}.acts{grid-template-columns:1fr 1fr}.acts .btn.big{grid-column:1/-1}}
@@ -52,7 +61,7 @@ body.th-org{--p0:#13233f;--p1:#2f5446;--p2:#3f6b55;--p3:#6b9a80;--p4:#e6f0e9;--p
   <div class="hl"><a class="tcd-logo" href="./" title="Back to the TheCyclistDubai homepage" aria-label="Back to the TheCyclistDubai homepage"><i>‹</i><b>TheCyclist<span>Dubai</span></b><em>Homepage</em></a><div class="clock"><i></i><span id="clk">--:--</span> Dubai</div></div>
 </header>
 
-<section class="hero">
+<section class="hero polka">
   <svg class="deco" viewBox="0 0 600 200" preserveAspectRatio="none" aria-hidden="true"><path d="M-10 150 C120 190 220 90 330 130 S520 180 610 70" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/></svg>
   <div class="hrow">
     <div class="dtile"><span>YOUR</span><b>+</b><span>RIDE</span></div>

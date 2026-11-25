@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14532d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="Live temperature, wind and 48-hour ride forecast for Al Qudra, Meydan, Mushrif Park, Kite Beach and Hatta MTB.">
+<title>TheCyclistDubai Weather · Al Qudra, Meydan, Mushrif, Kite Beach, Hatta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="file:///tmp/simt/stub.js"></script>
+<style>
+:root{
+  --bg:#f5f8fb; --panel:#fff; --panel2:#f1f5f9; --line:#e2e8f0; --text:#0f172a; --muted:#4b5a6e;
+  --accent:#65a30d; --accent-soft:#f7fee7; --hot:#ea580c; --cool:#0284c7; --good:#16a34a; --warn:#d97706; --bad:#dc2626;
+  --shadow:0 1px 2px #0f172a0a,0 6px 20px #0f172a0d; --r:18px;
+  /* THEME: velodrome: maple-wood boards, soft sage accents, red sprinter's line, UCI rainbow stripes */
+  --th-dark:#3f6b55; --th-mid:#5b8a72; --th-bright:#7fa892; --th-teal:#e11d48; --th-lime:#cfe0d5; --th-ink:#13233f;
+  --th-soft:#fbf6ee; --th-soft2:#f3e8d6; --th-line:#e7d6b8; --th-glow:#5b8a7233;
+  --th-grad:linear-gradient(110deg,#4f7a64 0%,#6b9a80 60%,#86b39a 100%);
+  --th-hdr:linear-gradient(110deg,#fdf9f2 0%,#f8eedd 60%,#f3e5cb 100%);
+  /* RIDES: same green as the header (dark forest → green → bright green, lime accents) */
+  --rd-dark:#052e16; --rd-mid:#14532d; --rd-bright:#16a34a; --rd-glow:#bef264; --rd-cream:#bef264; --rd-peach:#bef264;
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:Sora,system-ui,sans-serif}
+body{background:radial-gradient(1200px 600px at 85% -10%,#ecfccb 0%,transparent 60%),radial-gradient(900px 500px at -10% 5%,#e0f2fe 0%,transparent 55%),var(--bg);min-height:100vh;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:1280px;margin:0 auto;padding:12px 16px calc(96px + env(safe-area-inset-bottom))}
+.mono{font-family:"JetBrains Mono",monospace}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+
+/* ---------- header ---------- */
+header{display:grid;grid-template-columns:1fr auto auto;align-items:center;column-gap:12px;row-gap:4px;margin:2px 0 10px;padding:8px 10px 8px 16px;height:70px;box-sizing:border-box;border-radius:16px;color:#13233f;position:relative;overflow:hidden;
+  background:repeating-linear-gradient(177deg,#a8702d12 0 1px,transparent 1px 10px),linear-gradient(110deg,#fdf9f2 0%,#f8eedd 60%,#f2e2c6 100%);border:1px solid #ead9bb;box-shadow:0 10px 26px #8a5a1f1f}
+header::after{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 80' preserveAspectRatio='none'%3E%3Cpath d='M0 80 L0 70 C180 70 360 58 600 30 L600 52 C380 72 200 80 120 80 Z' fill='%2386b39a' fill-opacity='.2'/%3E%3Cpath d='M0 64 C200 64 380 48 600 16' fill='none' stroke='%2313233f' stroke-opacity='.22' stroke-width='1.2'/%3E%3Cpath d='M0 56 C200 56 390 38 600 4' fill='none' stroke='%23e11d48' stroke-opacity='.5' stroke-width='2'/%3E%3Cpath d='M0 40 C210 40 400 20 600 -14' fill='none' stroke='%235b8a72' stroke-opacity='.45' stroke-width='2'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+/* UAE flag stripe along the bottom */
+header::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,#0072ce 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) left bottom/100% 4px no-repeat}
+header .uaet{z-index:3}
+.brand{grid-column:1;grid-row:1}
+.hbtns{grid-column:3;grid-row:1/3}
+/* ---------- UAE Tour live counter ---------- */
+.uaet{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:292px;padding:5px 10px 6px;border-radius:12px;cursor:pointer;color:#fff;text-decoration:none;overflow:hidden;
+  color:#13233f;background:linear-gradient(118deg,transparent 0 86%,#e11d48b3 86% 87.6%,transparent 87.6% 89%,#86b39a66 89% 90.2%,transparent 90.2%),linear-gradient(110deg,#e3ede6 0%,#edf4ef 60%,#f6faf7 100%);border:1px solid #c7dacd;box-shadow:inset 0 1px 0 #fff,0 6px 16px #3f6b5524;transition:transform .2s,box-shadow .2s}
+.uaet:hover{transform:translateY(-1px);border-color:#a9c7b4;box-shadow:inset 0 1px 0 #fff,0 10px 22px #3f6b5538}
+/* 5-second auto-rotation: progress bar + slide-in */
+.ut-in{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ut-in.out{transform:translateX(-26px);opacity:0;filter:blur(1.5px);transition:transform .22s ease-in,opacity .22s ease-in,filter .22s}
+.ut-in.in{animation:utIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes utIn{from{transform:translateX(30px);opacity:0;filter:blur(1.5px)}to{transform:none;opacity:1;filter:none}}
+.ut-top,.ut-bot{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.ut-logo{font-weight:900;font-size:11px;letter-spacing:1.6px;display:inline-flex;align-items:center;gap:4px}
+.ut-logo b{color:#5b8a72}
+.ut-logo i{width:7px;height:7px;border-radius:50%;background:#5b8a72;box-shadow:0 0 0 0 #5b8a72aa;font-style:normal}
+.uaet.utlive .ut-logo i{background:#e11d48;animation:utPulse 1.4s infinite}
+@keyframes utPulse{0%{box-shadow:0 0 0 0 #e11d48cc}100%{box-shadow:0 0 0 8px #e11d4800}}
+.ut-race{margin-left:auto;font-size:10px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#fff;background:linear-gradient(110deg,#e11d48,#f43f5e);padding:2px 9px;border-radius:6px;box-shadow:0 1px 6px #e11d4866}
+.ut-cd{display:inline-flex;align-items:baseline;gap:5px;font-family:"JetBrains Mono",monospace}
+.ut-cd>span{display:inline-flex;align-items:baseline;gap:1px}
+.ut-cd b{display:inline-block;min-width:2ch;text-align:right;font-size:18px;font-weight:800;line-height:1;color:#13233f;font-variant-numeric:tabular-nums}
+.ut-cd i{font-style:normal;font-size:10px;font-weight:700;color:#5b8a72}
+.ut-cd .ut-live{font-family:Sora,sans-serif;font-size:13px;font-weight:800;letter-spacing:.2px}
+.ut-sub{font-size:10px;color:#5e6f66}
+.ut-j{margin-left:auto;display:inline-flex;gap:3px}
+.ut-j svg{width:16px;height:16px;filter:drop-shadow(0 1px 1px #0006);transition:transform .15s}
+.ut-j svg:hover{transform:translateY(-2px) scale(1.15)}
+@media (prefers-reduced-motion:reduce){.ut-in.in,.ut-in.out,.uaet.utlive .ut-logo i{animation:none}}
+header>*{position:relative;z-index:1}
+.brand{flex:1;min-width:0}
+.brand h1{font-size:19px;margin:0;letter-spacing:-.6px;font-style:italic;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand h1 span{background:linear-gradient(90deg,#6b9a80,#3f6b55);-webkit-background-clip:text;background-clip:text;color:transparent}
+header .wx-tag{background:linear-gradient(110deg,#e11d48,#be123c);border-color:#be123c;color:#fff}
+header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;font-size:12px;color:#6b5a45;white-space:nowrap;justify-self:start}
+.wx-tag{font-weight:800;letter-spacing:1.4px;text-transform:uppercase;font-size:10px;color:#fff;background:#ffffff26;border:1px solid #ffffff40;padding:2px 7px;border-radius:6px}
+.clk{display:inline-flex;align-items:center;gap:5px;padding-left:4px;overflow:hidden;text-overflow:ellipsis}
+.clk i{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px #34d39955;flex:none}
+.clk b{font-family:"JetBrains Mono",monospace;color:#13233f;font-weight:700}
+.clk i{background:#e11d48!important;box-shadow:0 0 0 3px #e11d4833!important}
+.ig{flex:none;position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--th-ink);font-size:12.5px;font-weight:800;padding:4px 12px 4px 4px;border-radius:12px;background:#fff;border:1px solid #ead9bb;box-shadow:0 4px 12px #8a5a1f1c;transition:.15s}
+.ig .igi{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285aeb 90%)}
+.ig:hover{transform:translateY(-1px);box-shadow:0 6px 16px #8a5a1f2e;border-color:#dcc49a}
+.hbtns{display:flex;gap:8px;flex:none;position:relative;z-index:1}
+.ig.wa{color:#166534}
+.ig.wa .igi{background:#25d366}
+.ig.st{color:var(--th-ink)}
+.ig.st .igi{background:#fc4c02}
+
+/* ---------- sticky control bar ---------- */
+.ctl{position:sticky;top:0;z-index:1200;margin:0 -16px 12px;padding:8px 16px 10px;background:#f5f8fbe8;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.row::-webkit-scrollbar{display:none}
+.row+.row{margin-top:8px}
+.lbl{flex:none;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);width:42px}
+.pill{flex:none;border:1px solid var(--line);background:#fff;border-radius:12px;padding:7px 12px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:.15s;white-space:nowrap}
+.pill:hover{border-color:#94a3b8}
+.pill.on{background:var(--th-grad);border-color:var(--th-teal);color:#fff;box-shadow:0 4px 12px var(--th-glow)}
+.pill.on .dot{box-shadow:0 0 0 2px #fff}
+.pill .t{font-family:"JetBrains Mono",monospace;font-size:12px;opacity:.75}
+.pill .dot{width:7px;height:7px;border-radius:50%}
+.pill.now{border-color:var(--accent);color:var(--accent)}
+.pill.now.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.when2{display:flex;gap:8px;margin-top:8px;align-items:stretch;position:relative}
+.cal{position:absolute;top:calc(100% + 6px);left:0;z-index:1400;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px #0f172a30;padding:12px;width:292px}
+.cal[hidden]{display:none}
+.cal h4{margin:0 0 8px;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.cal h4 small{font-size:10.5px;color:var(--muted);font-weight:600}
+.cal .wk,.cal .gd{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+.cal .wk span{font-size:10px;font-weight:700;color:var(--muted);padding:2px 0}
+.cal .gd+h4{margin-top:12px}
+.cd{border:0;background:none;border-radius:10px;height:38px;font:600 13px Sora;color:#cbd5e1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:default}
+.cd.av{color:var(--text);background:var(--th-soft);cursor:pointer}
+.cd.av:hover{background:var(--th-soft2)}
+.cd.on{background:var(--th-grad);color:#fff}
+.cd i{width:5px;height:5px;border-radius:50%;display:block}
+.cd.on i{box-shadow:0 0 0 1.5px #fff}
+.cd.today{outline:1.5px solid var(--th-teal);outline-offset:-1.5px}
+.cd.av:not(.fc){background:#f8fafc;color:#334155}
+.cd i.nd,.calnote i.nd{background:#cbd5e1}
+.cal h4 span{flex:1;text-align:center}
+.cnav{border:1px solid var(--line);background:#fff;border-radius:9px;width:30px;height:30px;font-size:18px;line-height:1;color:var(--text);cursor:pointer}
+.cnav:hover{border-color:var(--th-teal);color:var(--th-teal)}
+.calnote{display:flex;justify-content:space-between;gap:6px;margin-top:10px;font-size:10px;color:var(--muted);flex-wrap:wrap}
+.calnote span{display:flex;align-items:center;gap:4px}
+.calnote i{width:6px;height:6px;border-radius:50%;display:block}
+.calnow{margin-top:8px;width:100%;border:1px solid var(--th-line);background:var(--th-soft);color:var(--th-teal);border-radius:10px;padding:7px;font-weight:700;font-size:12px;cursor:pointer}
+.fld{position:relative;flex:1;min-width:0;max-width:240px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:7px 12px 7px 8px;cursor:pointer;transition:.15s;box-shadow:0 1px 2px #0f172a0a}
+.fld:hover,.fld:focus-within{border-color:var(--th-teal);box-shadow:0 0 0 3px #e11d481f}
+.fi{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--th-teal);background:linear-gradient(135deg,#fbf6ee,#ffe4e9);flex:none}
+.fv{display:flex;flex-direction:column;min-width:0;flex:1}
+.fv small{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.fv b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chev{color:var(--muted);font-size:12px}
+.fld input,.fld select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;font-size:16px;-webkit-appearance:none;appearance:none}
+.selscore{flex:none;align-self:center;font-size:12px;font-weight:800;padding:6px 10px;border-radius:12px;white-space:nowrap}
+.hr{flex:none;border:1px solid var(--line);background:#fff;border-radius:12px;min-width:52px;padding:5px 6px 6px;text-align:center;font:600 13px "JetBrains Mono",monospace;line-height:1.15}
+.hr small{display:block;font:500 10px Sora;color:var(--muted);margin-top:2px}
+.hr i{display:block;width:16px;height:4px;border-radius:2px;margin:4px auto 0}
+.hr.on{background:var(--text);color:#fff;border-color:var(--text)}
+.hr.on small{color:#cbd5e1}
+.hr.night{background:#f1f5f9}
+.hr.on.night{background:var(--text)}
+
+/* ---------- layout ---------- */
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
+.grid>.mapcard{grid-column:1;grid-row:1}
+.grid>#cond{grid-column:1;grid-row:2}
+.grid>#evts{grid-column:1;grid-row:3}
+.evts{display:flex;flex-direction:column;gap:8px}
+.evts h3{margin:4px 0 2px}
+
+.evts:empty{display:none}
+
+.evt{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 14px 8px 8px;border-radius:16px;text-decoration:none;color:#fff;
+  background:radial-gradient(70% 140% at 100% 0%,#38bdf833 0%,transparent 60%),linear-gradient(110deg,#0b1f4b 0%,#123a8a 55%,#1d4ed8 100%);box-shadow:0 8px 22px #0b1f4b40;transition:.2s}
+.evt:hover{transform:translateY(-1px);box-shadow:0 12px 28px #0b1f4b55}
+.evt-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.evt>*:not(.evt-route){position:relative}
+.evt-date{flex:none;width:48px;height:48px;border-radius:12px;background:#fff;color:#0b1f4b;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.evt-date b{font:800 20px Sora}
+.evt-date span{font:800 9.5px Sora;letter-spacing:1.5px;color:#dc2626;margin-top:2px}
+.evt-main{flex:1;min-width:0}
+.evt-tag{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:3px}
+.evt-tag span{font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#ffffff1f;border:1px solid #ffffff33;white-space:nowrap}
+.evt-tag .star{background:#fbbf24;border-color:#fbbf24;color:#3b2a00}
+.evt-title{font-weight:800;font-size:14.5px;line-height:1.25;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evt-meta{font-size:11.5px;color:#dbeafe;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evt-cd{flex:none;text-align:center;line-height:1;padding:0 6px;border-left:1px solid #ffffff33}
+.evt-cd b{display:block;font:800 22px "JetBrains Mono",monospace;color:#fbbf24}
+.evt-cd span{font-size:9.5px;color:#bfdbfe;letter-spacing:.5px;text-transform:uppercase}
+.evt-go{flex:none;font-size:12px;font-weight:800;background:#fff;color:#0b1f4b;padding:7px 11px;border-radius:10px}
+.evt-code{font-family:"JetBrains Mono",monospace;font-weight:800;letter-spacing:.3px;text-transform:none}
+.evt-tag .code{background:#fffffff0;border-color:#fff;color:#111}
+.evt.y .evt-tag .code{background:#fffffff2;border-color:#fff;color:#1f1a00}
+/* yellow event card (L'Étape Dubai colours: neon yellow + black) */
+.evt.y{color:#1f1a00;background:radial-gradient(70% 140% at 100% 0%,#ffffffb3 0%,transparent 60%),linear-gradient(110deg,#ffcf00 0%,#ffe100 50%,#fff16a 100%);box-shadow:0 8px 22px #c9a20040}
+/* Tour de France: maillot jaune + King of the Mountains polka dots */
+.evt.y::after{content:"";position:absolute;inset:0 0 0 auto;width:34%;pointer-events:none;background:radial-gradient(circle,#e2001a 0 2.4px,transparent 2.9px) 0 0/12px 12px;opacity:.5;-webkit-mask-image:linear-gradient(90deg,transparent,#000 70%);mask-image:linear-gradient(90deg,transparent,#000 70%)}
+.evt.y>*:not(.evt-route){position:relative;z-index:1}
+.evt.y:hover{box-shadow:0 12px 28px #c9a20066}
+.evt.y .evt-route path{stroke:#7a6200;stroke-opacity:.25}.evt.y .evt-route circle{fill:#e2001a40}
+.evt.y .evt-date{background:#fff;box-shadow:0 3px 10px #8a6d0026}.evt.y .evt-date b{color:#e2001a}.evt.y .evt-date span{color:#7a6200}
+.evt.y .evt-tag span{background:#ffffff73;border-color:#ffffffb3;color:#3d3300}
+.evt.y .evt-tag .star{background:linear-gradient(110deg,#ef1c2e,#d0001a);border-color:#d0001a;color:#fff;box-shadow:0 2px 6px #d0001a40}
+.evt-tag span span{background:none!important;border:0!important;padding:0;color:inherit!important}
+.evt.y .evt-meta{color:#3d3300}.evt.y .evt-meta b{color:#1f1a00}
+.evt.y .evt-cd{border-left-color:#7a620033}.evt.y .evt-cd b{color:#d0001a}.evt.y .evt-cd span{color:#5c4a00}
+.evt.y .evt-go{background:linear-gradient(110deg,#ef1c2e,#c00018);color:#fff;box-shadow:0 4px 12px #c0001855}
+.evt.lm{color:#00482a;box-shadow:0 8px 22px #00482a30;background:
+  linear-gradient(118deg,transparent 0 80%,#b5cc4a 80% 83.5%,transparent 83.5% 85%,#00482a 85% 87%,transparent 87% 88.5%,#c4d24c 88.5% 92.5%,transparent 92.5% 94%,#0c4b3e 94% 95.2%,transparent 95.2%),
+  linear-gradient(110deg,#f2f2dc 0%,#e9f1d2 50%,#d6e38a 100%)}
+.evt.lm:hover{box-shadow:0 12px 28px #00482a45}
+.evt.lm .evt-route path{stroke:#00482a;stroke-opacity:.2}.evt.lm .evt-route circle{fill:#00482a33}
+.evt.lm .evt-date{background:#fff;box-shadow:0 3px 10px #00482a22}.evt.lm .evt-date b{color:#00482a}.evt.lm .evt-date span{color:#6b8a12}
+.evt.lm .evt-tag span{background:#00482a14;border-color:#00482a33;color:#00482a}
+.evt.lm .evt-tag .star{background:linear-gradient(110deg,#00482a,#0c4b3e);border-color:#00482a;color:#e9f5a8}
+.evt.lm .evt-meta{color:#22543d}.evt.lm .evt-meta b{color:#00482a}
+.evt.lm .evt-cd{border-left-color:#00482a33}.evt.lm .evt-cd b{color:#00482a}.evt.lm .evt-cd span{color:#4d6b12}
+.evt.lm .evt-go{background:linear-gradient(110deg,#00482a,#0c6b45);color:#e9f5a8;box-shadow:0 4px 12px #00482a40}
+.evt.lm .cshare{background:#ffffffcc;border-color:#00482a33;color:#00482a}
+.evt.y .cshare{background:#ffffffb3;border-color:#ffffff;color:#d0001a}
+.grid+.sponsors{margin-top:14px}
+/* simulator card: white→light blue, UCI rainbow stripe on top, simulator blue (#0057b8) */
+.evt.sm{color:#13233f;background:linear-gradient(90deg,#0057b8 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) top/100% 4px no-repeat,radial-gradient(60% 150% at 100% 0%,#0057b81a 0%,transparent 65%),linear-gradient(110deg,#ffffff 0%,#f5f8fd 55%,#e8f0fb 100%);box-shadow:inset 0 0 0 1px #dbe6f5,0 8px 22px #0057b81f}
+.evt.sm:hover{box-shadow:inset 0 0 0 1px #c9dbf3,0 12px 28px #0057b833}
+.evt.sm .sm-map{background:#fff;border:1px solid #dbe6f5;box-shadow:0 3px 10px #0057b81f;padding:0}
+.evt.sm .sm-map svg{width:100%;height:100%;display:block}
+.sm-trk{fill:none;stroke:#0057b8;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.sm-start{fill:#16a34a;stroke:#fff;stroke-width:1.2}
+.sm-dot{fill:#e4002b;stroke:#fff;stroke-width:1.4}
+.evt.sm .evt-tag span{background:#e8f0fb;border-color:#c9dbf3;color:#0057b8}
+.evt.sm .evt-tag .star{background:linear-gradient(110deg,#0057b8,#2f80e0);border-color:#0057b8;color:#fff}
+.evt.sm .evt-meta{color:#475569}.evt.sm .evt-meta b{color:#13233f}
+.evt.sm .evt-cd{border-left-color:#c9dbf3}.evt.sm .evt-cd b{color:#0057b8}.evt.sm .evt-cd span{color:#5b6b82}
+.evt.sm .evt-go{background:linear-gradient(110deg,#0057b8,#2f80e0);color:#fff;box-shadow:0 4px 12px #0057b84d}
+@media (prefers-reduced-motion:reduce){.sm-dot{display:none}}
+/* ---------- conditions card: same size as the event cards, 5–6 sliding slides ---------- */
+#cond.cx{height:70px;padding:0;box-sizing:border-box;border-radius:16px}
+.cx-view{position:absolute;left:0;top:4px;bottom:0;right:190px;cursor:grab;user-select:none;overflow:hidden;touch-action:pan-y}
+.cx-track{display:flex;height:100%;transition:transform .6s cubic-bezier(.22,.8,.2,1);will-change:transform}
+.cx-s{flex:0 0 100%;min-width:0;height:100%;box-sizing:border-box;display:flex;align-items:center;gap:14px;padding:0 14px 0 14px}
+.cx-s[hidden]{display:none}
+.cx-nav{position:absolute;right:0;top:4px;bottom:0;width:190px;box-sizing:border-box;padding:0 14px;border-left:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:6px}
+.cx-when{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.cx-when .val{font:700 12.5px "JetBrains Mono",monospace;color:var(--ink)}
+.cx-sel{display:flex;align-items:center;gap:6px}
+.cx-view.drag{cursor:grabbing}.cx-view.drag .cx-track{transition:none}
+.cx-t{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.cx-dots{display:flex;gap:4px}
+.cx-dots i{display:block;width:7px;height:7px;border-radius:4px;background:#cbd5e1;transition:width .3s,background .3s}
+.cx-dots i.on{width:18px;background:#16a34a}
+.cx-score .ring{width:46px;height:46px}
+.cx-main{min-width:0;flex:1}
+.cx-h{font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cx-d{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cx-sky{flex:none;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;background:var(--panel2);padding:6px 12px;border-radius:10px}
+.cx-sky #wxIcon{font-size:18px}
+.cx-tiles{gap:0}
+.cx-st{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;padding:0 12px;border-left:1px solid var(--line)}
+.cx-st:first-child{border-left:0;padding-left:0}
+.cx-st small{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.cx-st b{font:700 15px "JetBrains Mono",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.cx-st b.sm{font-size:13px;letter-spacing:-.3px}
+.cx-st .arr{display:inline-block;color:var(--accent);margin-right:6px;transition:transform .7s}
+.cx-wind .units{margin:0 0 0 12px;flex:none}
+.cx-track-wind .wsplit{flex:1;min-width:0;margin:0;background:none;padding:0}
+.cx-track-wind .ws-bar{margin:5px 0}
+.cx-track-wind .ws-l{justify-content:flex-start;gap:16px}
+.cx-track-wind .wdesc{flex:0 1 38%;margin:0;font-size:12px;line-height:1.4;background:var(--panel2);padding:7px 11px;border-radius:10px}
+.cx-plan{gap:10px}
+.cx-plan .best,.cx-plan .tip{flex:1;min-width:0;margin:0;height:46px;box-sizing:border-box;display:flex;align-items:center;font-size:12.5px;line-height:1.35;padding:6px 12px;border-radius:12px}
+.cx-plan .best{flex:1.5}
+.cx-kite .tip.kite{display:flex}
+@media (prefers-reduced-motion:reduce){.cx-track{transition:none}}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.panel.band::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#a3e635,#22c55e,#0ea5e9)}
+.panel h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+/* ---------- map ---------- */
+.mapcard{padding:0}
+.mapbox{position:relative;height:470px}
+#map,#wind{position:absolute;inset:0;width:100%;height:100%}
+#wind{pointer-events:none;z-index:450}
+.leaflet-container{background:#e5e7eb;font-family:Sora,sans-serif}
+.leaflet-control-attribution{font-size:9px!important}
+.ov{position:absolute;z-index:500;background:#ffffffeb;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid #ffffff;border-radius:16px;box-shadow:0 4px 18px #0f172a26}
+.mhero{left:12px;top:12px;padding:10px 14px;min-width:170px;transform:scale(.805);transform-origin:top left}
+.mhero .tn{font-size:12px;font-weight:700;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mhero .wn{font-size:11px;color:var(--muted);margin-top:1px}
+.mhero .big{display:flex;align-items:center;gap:10px;margin-top:6px}
+.mhero .big .tp{font:800 38px/1 Sora;letter-spacing:-1.5px}
+.mhero .big .ic{font-size:28px}
+.mhero .wd{display:flex;align-items:center;gap:6px;margin-top:6px;font:700 14px "JetBrains Mono",monospace}
+.mhero .wd svg{transition:transform .7s}
+.mhero .wd span{font:500 12px Sora;color:var(--muted)}
+.mhero .sc{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;padding:4px 9px;border-radius:8px}
+.mtools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 12px;border-top:1px solid var(--line);background:#fcfcfd}
+.lgd{display:flex;gap:14px;align-items:center;font-size:12px;font-weight:600;flex-wrap:wrap}
+.lgd .lg{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.lgd i{width:18px;height:5px;border-radius:3px;display:block}
+.tright{display:flex;align-items:center;gap:8px;margin-left:auto}
+.tl{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted)}
+.dirb{flex:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 12px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.dirb:hover{border-color:var(--th-teal);color:var(--th-teal)}
+.dirb:active{background:var(--th-soft)}
+.vsw{flex:none;display:flex;gap:2px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:2px}
+.vsw button{border:0;background:none;padding:6px 11px;border-radius:9px;font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.vsw button.on{background:var(--th-grad);color:#fff;box-shadow:0 2px 8px var(--th-glow)}
+.darr{width:18px;height:18px;display:grid;place-items:center;color:#fff;font-size:13px;line-height:1;text-shadow:0 0 3px #000,0 0 2px #000;pointer-events:none}
+.maploading{left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;font-size:12px;display:none;border-radius:10px}
+.mapinfo{padding:12px 14px 14px;border-top:1px solid var(--line)}
+.mi-top{display:flex;align-items:flex-start;gap:12px}
+.mi-txt{flex:1;min-width:0}
+.mi-name{font-weight:800;font-size:15px}
+.mi-desc{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+.mi-desc b{color:var(--text)}
+.dirlink{flex:none;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font:600 13px Sora,sans-serif;color:#fff;background:#1a73e8;padding:6px 14px 6px 6px;border-radius:12px;box-shadow:0 1px 2px #3c40434d,0 1px 3px 1px #3c404326;transition:.15s}
+.dirlink .gdi{width:26px;height:26px;border-radius:8px;background:#fff;display:grid;place-items:center}
+.dirlink:active{background:#1765cc}
+.dirlink:hover{background:#1b66c9;box-shadow:0 1px 3px #3c40434d,0 4px 8px 3px #3c404326}
+.fac{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.fac>*{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px}
+.fac span{font-size:18px;line-height:1.2}
+.fac b{font-size:11.5px;white-space:nowrap}
+.fac small{font-size:10px;color:var(--good);font-weight:700}
+/* bike rental = button to Wolfi's, yellow outline */
+.fac a.fac-rent{text-decoration:none;color:inherit;background:#fffdf0;border:2px solid #facc15;box-shadow:0 0 0 3px #fde04733;cursor:pointer;transition:transform .15s,box-shadow .15s;padding:7px 6px}
+.fac a.fac-rent:hover{transform:translateY(-2px);box-shadow:0 0 0 3px #fde04766,0 6px 14px #ca8a0433}
+.fac a.fac-rent small{display:flex;align-items:center;justify-content:center;height:14px;color:#a16207}
+.wlogo{height:13px;width:auto;max-width:72px;object-fit:contain;display:block}
+a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px solid #facc15}
+
+/* ---------- details ---------- */
+.when{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.when .val{font-weight:700;font-size:15px}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--good);font-weight:800;letter-spacing:.5px}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--good);animation:pulse 1.6s infinite}
+.live.fc{color:var(--warn)} .live.fc i{background:var(--warn);animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 #16a34a66}100%{box-shadow:0 0 0 10px #16a34a00}}
+.bigtemp{display:flex;align-items:center;gap:14px;margin:8px 0 2px}
+.bigtemp .v{font:800 60px/1 "JetBrains Mono",monospace;letter-spacing:-3px}
+.bigtemp .v sup{font-size:22px;letter-spacing:0;vertical-align:top;margin-left:2px}
+.bigtemp .wx{font-size:40px}
+.sub{color:var(--muted);font-size:13px}
+.thermo{height:7px;border-radius:6px;background:linear-gradient(90deg,#0284c7,#16a34a 35%,#d97706 60%,#ea580c 78%,#dc2626);position:relative;margin:12px 0 4px}
+.thermo b{position:absolute;top:-5px;width:6px;height:17px;margin-left:-3px;border-radius:3px;background:var(--text);border:2px solid #fff;box-shadow:0 1px 4px #0f172a55;transition:left .5s}
+.thermo-l{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.windbox{display:grid;grid-template-columns:128px 1fr;gap:14px;align-items:center;margin-top:14px}
+.compass{width:128px;height:128px}
+.compass .needle{transition:transform .7s cubic-bezier(.3,1.4,.5,1);transform-origin:75px 75px}
+.wstats .w{font:800 30px "JetBrains Mono",monospace}
+.wstats .w small{font-size:13px;color:var(--muted);font-weight:500}
+.wstats .dir{font-size:14px;font-weight:600;margin-top:2px}
+.wstats .desc{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+.units{display:inline-flex;background:var(--panel2);border-radius:9px;padding:2px;margin-top:8px}
+.units button{border:0;background:none;padding:4px 8px;border-radius:7px;font-size:11px;font-weight:700;color:var(--muted)}
+.units button.on{background:#fff;color:var(--th-teal);box-shadow:0 1px 3px #0f172a22}
+.kv{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.kv div{background:var(--panel2);border-radius:12px;padding:9px 4px;text-align:center}
+.kv span{display:block;font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
+.kv b{font:700 15px "JetBrains Mono",monospace}
+.score{margin-top:10px;background:var(--panel2);border-radius:14px;padding:12px 14px;display:flex;gap:14px;align-items:center}
+.ring{width:60px;height:60px;flex:none}
+.score .t1{font-weight:700}
+.score .t2{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.sky{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;font-weight:600}
+.sky #wxIcon{font-size:20px}
+.sky .units{margin:0 0 0 auto}
+.wt{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px;table-layout:fixed}
+.wt th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:7px 4px 7px 0;width:23%}
+.wt td{font:700 14px "JetBrains Mono",monospace;padding:7px 8px 7px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:27%}
+.wt tr+tr th,.wt tr+tr td{border-top:1px solid var(--line)}
+.wt td.sm{font-size:12px;letter-spacing:-.3px;overflow:visible}
+.wt .arr{display:inline-block;color:var(--accent);margin-right:6px;font-size:14px;transition:transform .7s}
+.wdesc{font-size:12px;color:var(--muted);margin-top:6px}
+.wsplit{margin-top:10px;background:var(--panel2);border-radius:12px;padding:10px 12px}
+.ws-h{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.ws-h small{font-size:11px;text-transform:none;letter-spacing:0;font-weight:600}
+.ws-bar{display:flex;height:10px;border-radius:6px;overflow:hidden;margin:8px 0 8px;background:#e2e8f0}
+.ws-bar span{display:block;height:100%;width:0;transition:width .6s}
+.ws-l{display:flex;justify-content:space-between;gap:8px;font-size:12px;flex-wrap:wrap}
+.ws-l span{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.ws-l i{width:8px;height:8px;border-radius:50%;display:block}
+.ws-l b{font-family:"JetBrains Mono",monospace}
+.tip{margin-top:10px;font-size:13px;padding:10px 12px;border-radius:12px;line-height:1.45}
+.tip.kit{background:#fff7ed;color:#7c2d12}
+.tip.kite{background:#e0f2fe;color:#075985;display:none}
+
+/* ---------- forecast ---------- */
+.best{display:flex;align-items:center;gap:8px;font-size:12.5px;line-height:1.45;background:linear-gradient(90deg,#65a30d1f,transparent);border:1px solid #65a30d40;padding:10px 12px;border-radius:12px;margin-top:10px;flex-wrap:wrap}
+.best b{color:var(--accent)}
+.best button{margin-left:auto;border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700}
+
+/* ---------- sponsors ---------- */
+.sponsors{margin-top:16px}
+.sponsors.rtop{margin:0 0 12px}
+.sponsors h3,.evts h3{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.spgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
+.sp{border-radius:16px;min-height:118px;overflow:hidden}
+.spwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
+.spstack{display:flex;flex-direction:column;gap:8px}
+.rides{display:flex;flex-direction:column;gap:8px}
+/* one-card carousels (Events, Group rides) */
+.car-view{position:relative;min-width:0;contain:inline-size;clip-path:inset(-10px -26px -28px -26px);touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.car-view.drag{cursor:grabbing}.car-view.drag .car-track{transition:none}
+.car-track{display:flex;gap:40px;transition:transform .6s cubic-bezier(.22,.8,.2,1);will-change:transform}
+.car-track>*{flex:0 0 100%;min-width:0;box-sizing:border-box}
+.grid>*,.spwrap>*,.spstack,.rides,.evts{min-width:0}
+.car-view a,.car-view img{-webkit-user-drag:none}
+.evts h3,.sponsors h3{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+.car-dots{display:inline-flex;gap:4px}
+.car-dots i{display:block;width:7px;height:7px;border-radius:4px;background:#cbd5e1;transition:width .3s,background .3s}
+.car-dots i.on{width:18px;background:#16a34a}
+@media (prefers-reduced-motion:reduce){.car-track{transition:none}}
+.spb{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;text-decoration:none}
+.spb-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.spb>*:not(.spb-route){position:relative}
+.spb.lameda{color:#f4f1ec;background:radial-gradient(70% 140% at 100% 0%,#f4f1ec26 0%,transparent 60%),linear-gradient(110deg,#0a0a0a 0%,#27272a 55%,#57534e 100%);box-shadow:0 8px 22px #0a0a0a40}
+.lm-art{flex:none;width:48px;height:48px;border-radius:12px;background:#f4f1ec;position:relative;overflow:hidden}
+.lm-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s}
+.lm-art img.on{opacity:1}
+.lm-art .fb{position:absolute;inset:0;display:grid;place-items:center;color:#111;font:800 22px Sora;letter-spacing:0}
+.spb-body{flex:1;min-width:0}
+.spb-tag{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:3px}
+.spb-tag span{font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#ffffff1f;border:1px solid #ffffff33;white-space:nowrap}
+.spb-tag .star{background:#f4f1ec;border-color:#f4f1ec;color:#111}
+.spb-title{font-weight:800;font-size:14.5px;letter-spacing:1.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spb-title span{letter-spacing:0;font-weight:600;color:#d6d3d1}
+.spb-meta{font-size:11.5px;color:#d6d3d1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spb-btns{flex:none;display:flex;gap:6px;align-items:center}
+.spb .lmcode{margin:0;background:#111;color:#f4f1ec;border-radius:10px;padding:6px 10px;font-size:12px;border:1.5px dashed #bef264;outline:0;cursor:pointer;white-space:nowrap;align-self:center}
+.spb .lmcode b{color:#bef264;letter-spacing:1px}
+.spshop{font-size:12px;font-weight:800;background:#f4f1ec;color:#111;padding:7px 11px;border-radius:10px;white-space:nowrap}
+.spb.empty{justify-content:center;gap:10px;border:2px dashed #cbd5e1;color:#94a3b8;background:repeating-linear-gradient(135deg,transparent 0 14px,#0f172a06 14px 28px)}
+.spb.empty span{font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:12px}
+.spb.empty small{font-size:11px}
+.spcta{border:1px solid var(--line);background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.spcta b{display:block;font-size:15px}
+.spcta p{font-size:12.5px;color:var(--muted);margin:6px 0 12px;line-height:1.5}
+.spcta a{display:inline-block;text-decoration:none;font-size:12.5px;font-weight:800;color:#fff;background:var(--th-grad);padding:8px 13px;border-radius:10px}
+.rides:empty{display:none}
+.ride{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 10px 8px 8px;border-radius:16px;color:#fff;
+  background:radial-gradient(70% 140% at 100% 0%,var(--rd-halo,#bef26440) 0%,transparent 60%),linear-gradient(110deg,var(--rd-dark) 0%,var(--rd-mid) 50%,var(--rd-bright) 100%);box-shadow:0 8px 22px var(--rd-shadow,#052e1640)}
+/* ride colour themes (site-data.js theme:) */
+.ride.haspage{cursor:pointer}
+/* organizer card (last slide of the group rides) */
+.ride.th-org{--rd-dark:#13233f;--rd-cream:#e2001a;--rd-ink:#fff;--rd-accent:#e2001a;--rd-shadow:#e2001a2e;color:#13233f;background:linear-gradient(110deg,#fff 0%,#fff 40%,#fff5f6 100%);box-shadow:inset 0 0 0 1px #f6c9ce,0 8px 22px #e2001a2e}
+.ride.th-org::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,#e2001a 0 3.4px,transparent 4px) 0 0/18px 18px,radial-gradient(circle,#e2001a 0 3.4px,transparent 4px) 9px 9px/18px 18px;opacity:.85;-webkit-mask-image:linear-gradient(90deg,transparent 0,#0000 22%,#0006 50%,#000 85%);mask-image:linear-gradient(90deg,transparent 0,#0000 22%,#0006 50%,#000 85%)}
+.ride.th-org>:not(.ride-route){position:relative;z-index:1}
+.ride.th-org .ride-route{display:none}
+.ride.th-org .ride-date{border:2px solid #e2001a;box-sizing:border-box}
+.ride.th-org .ride-tag .star{background:#e2001a;border-color:#e2001a;color:#fff}
+.ride.th-org .ride-tag .typ{background:#fff;border-color:#e2001a66;color:#b00016}
+.ride.th-org .ride-title span{color:#e2001a}
+.ride.th-org .ride-meta{color:#3b4a60;text-shadow:0 0 6px #fff,0 0 3px #fff}
+.ride.th-org .ride-facts div{background:#ffffffeb;border-color:#e2001a55}
+.ride.th-org .ride-facts small{color:#e2001a;opacity:1}
+.ride.th-org .ride-btns .rshare{background:#e2001a;border-color:#e2001a;color:#fff;box-shadow:0 4px 12px #e2001a40}
+.ride .org-tile span,.ride .org-tile span:first-child{color:#e2001a}
+.ride .org-tile b{font-size:26px;line-height:.9;color:#e2001a}
+.ride-btns .rorg{width:140px}
+
+.ride.haspage .ride-title::after{content:' ›';opacity:.7}
+.ride.th-purple{--rd-dark:#2e1065;--rd-mid:#5b21b6;--rd-bright:#a855f7;--rd-cream:#e9d5ff;--rd-peach:#f5d0fe;--rd-ink:#3b0764;--rd-meta:#f3e8ff;--rd-halo:#e879f94d;--rd-shadow:#3b076440;--rd-accent:#7e22ce}
+.ride.th-orange{--rd-dark:#7c2d12;--rd-mid:#c2410c;--rd-bright:#fb923c;--rd-cream:#fed7aa;--rd-peach:#fde68a;--rd-ink:#431407;--rd-meta:#ffedd5;--rd-halo:#fde68a4d;--rd-shadow:#7c2d1240;--rd-accent:#c2410c}
+.ride-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ride>*:not(.ride-route){position:relative}
+.ride-date{flex:none;width:48px;height:48px;border-radius:12px;background:#fff;color:var(--rd-dark);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.ride-date span{font:800 8.5px Sora;letter-spacing:1.2px;color:var(--rd-accent,#15803d)}
+.ride-date span:first-child{color:#dc2626;margin-bottom:1px}
+.ride-date b{font:800 19px Sora}
+.ride-body{flex:1;min-width:0}
+.ride-tag{display:flex;gap:6px;flex-wrap:nowrap;overflow:hidden;margin-bottom:3px}
+.ride-tag:has(.chg) .up{display:none}
+.ride-tag span{font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#ffffff1f;border:1px solid #ffffff33;white-space:nowrap}
+.ride-tag .mand{background:var(--rd-cream);border-color:var(--rd-cream);color:var(--rd-ink,#1a2e05);text-transform:none;letter-spacing:.2px;font-size:10px}
+.ride-tag .mand-s,.ride .m-pace{display:none}
+.ride-tag .typ{background:#ffffff26;border-color:#ffffff4d;text-transform:none;letter-spacing:.2px;font-size:10px}
+.ride-tag .chg{background:#fbbf24;border-color:#fbbf24;color:#3b2a00}
+.ride-tag .star{background:var(--rd-cream);border-color:var(--rd-cream);color:var(--rd-ink,#1a2e05)}
+.ride-title{font-weight:800;font-size:14.5px;line-height:1.25;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ride-title span{color:var(--rd-peach)}
+.ride-tag .pace{background:var(--rd-dark);border-color:color-mix(in srgb,var(--rd-cream) 40%,transparent);color:var(--rd-peach);text-transform:none;letter-spacing:.2px;font-size:10px}
+.ride-meta{font-size:11.5px;color:var(--rd-meta,#dcfce7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ride-btns{flex:none;display:flex;gap:6px;align-items:center}
+.ride-btns a{text-decoration:none;font-size:12px;font-weight:800;padding:7px 11px;border-radius:10px;white-space:nowrap}
+.rjoin{background:#25d366;color:#fff;box-shadow:0 4px 12px #25d36655}
+.rloc{background:#fff;color:var(--rd-dark)}
+.cshare{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid #ffffff55;background:#ffffff1f;color:#fff;display:grid;place-items:center;cursor:pointer;position:relative}
+.cshare:hover{background:#ffffff33}
+.ride-btns .cshare{height:32px}
+/* ride cards: Details + Share, identical size, clear gap (owner asked) */
+.ride-btns{gap:10px}
+.ride-btns .rloc,.ride-btns .rshare{box-sizing:border-box;width:104px;height:36px;padding:0 12px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font:800 12.5px Sora,sans-serif;letter-spacing:.1px;white-space:nowrap;transition:transform .15s,background .15s}
+.ride-btns .rloc{background:#ffffff1f;color:#fff;border:1px solid #ffffff66}
+.ride-btns .rloc:hover{background:#ffffff33;transform:translateY(-1px)}
+.ride-btns .rshare{background:#fff;color:var(--rd-dark);border:1px solid #fff;box-shadow:0 4px 12px #00000026}
+.ride-btns .rshare:hover{background:#fff;transform:translateY(-1px)}
+.ride-btns .rshare svg{width:15px;height:15px}
+/* ride card layout (owner: spread the content, no empty corner under the date) */
+.ride-facts{flex:none;display:flex;gap:8px}
+.ride-facts div{min-width:86px;padding:5px 10px;border-radius:10px;background:#ffffff1a;border:1px solid #ffffff2e;line-height:1.2}
+.ride-facts small{display:block;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--rd-meta,#dcfce7);opacity:.85}
+.ride-facts b{font-size:13px;font-weight:800;white-space:nowrap}
+@media (max-width:1100px){.ride-facts div:first-child{display:none}}
+@media (max-width:980px){.ride-facts{display:none}}
+
+#sheet{display:none;position:fixed;inset:0;background:#0f172a88;z-index:9997;align-items:flex-end;justify-content:center}
+#sheet .sbox{background:#fff;width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));max-height:86vh;overflow:auto;box-shadow:0 -10px 40px #0f172a33}
+@media(min-width:681px){#sheet{align-items:center}#sheet .sbox{border-radius:20px}}
+#sheet .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+#sheet .mh b{font-size:17px}
+#sheet .mx{border:0;background:var(--panel2);border-radius:10px;width:32px;height:32px;font-size:14px;cursor:pointer}
+.sgrp{font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:14px 2px 6px}
+.srow{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);background:#fff;border-radius:14px;padding:10px 12px;margin-bottom:8px;cursor:pointer;font:inherit;color:var(--text)}
+.srow:hover{border-color:var(--th-teal);background:var(--th-soft)}
+.srow .si{flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:20px;color:#fff}
+.srow .st{flex:1;min-width:0}
+.srow .st b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow .st small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow .sa{flex:none;font-size:12px;font-weight:800;color:#15803d}
+.snote{font-size:11.5px;color:var(--muted);margin:6px 2px 0}
+.sp.empty{border:2px dashed #cbd5e1;display:grid;place-items:center;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;background:repeating-linear-gradient(135deg,transparent 0 14px,#0f172a06 14px 28px)}
+.sp.lameda{display:grid;grid-template-columns:1.1fr 1fr;background:#f4f1ec;color:#111;text-decoration:none;border:1px solid #e7e2da;transition:.2s}
+.sp.lameda:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0f172a22}
+.lmart{position:relative;background:#111;min-height:118px;overflow:hidden}
+.lmart img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s}
+.lmart img.on{opacity:1}
+.lmart .fb{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 30% 30%,#2b2b2b,#0d0d0d);color:#f4f1ec;font:800 26px Sora;letter-spacing:6px}
+.lmbody{padding:12px 14px;display:flex;flex-direction:column;gap:3px}
+.lmname{font:800 20px Sora;letter-spacing:5px}
+.lmtag{font-size:12px;font-style:italic;color:#444}
+.lmdesc{font-size:12px;color:#555;margin-top:2px;line-height:1.4}
+.lmcode{margin-top:8px;align-self:flex-start;background:#111;color:#f4f1ec;border-radius:10px;padding:8px 12px;font-size:13px;border:2px dashed #f4f1ec;outline:2px solid #111;cursor:pointer}
+.lmcode b{color:#bef264;letter-spacing:1px}
+.lmcta{margin-top:8px;font-size:12px;font-weight:700;border-bottom:2px solid #111;align-self:flex-start}
+
+/* ---------- footer, share, toast ---------- */
+footer{margin-top:10px;padding:10px 0;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;font-size:12px;color:var(--muted)}
+footer a{text-decoration:none;font-weight:600;color:var(--muted)}
+footer a:hover{color:var(--text)}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:1300;display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;border:0;border-radius:999px;padding:13px 18px;font-size:14px;font-weight:700;box-shadow:0 8px 24px #25d36666,0 2px 6px #0f172a33}
+.fab:hover{filter:brightness(1.05)}
+.err{display:none;background:#fef2f2;border:1px solid #dc262655;color:#991b1b;padding:10px 14px;border-radius:12px;margin-bottom:12px;font-size:13px}
+.err button{border:0;background:#991b1b;color:#fff;border-radius:8px;padding:4px 10px;margin-left:6px}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:12px 18px;border-radius:14px;font-size:13px;font-weight:600;z-index:9999;transition:.3s;max-width:90vw;box-shadow:0 10px 40px #0f172a44;opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%);opacity:1}
+#modal{display:none;position:fixed;inset:0;background:#0f172a88;z-index:9998;place-items:center;padding:20px}
+#modal .box{background:#fff;border-radius:18px;padding:20px;max-width:420px;width:100%}
+#modal .btns{display:flex;gap:8px;flex-wrap:wrap}
+#modal .btns a,#modal .btns button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700;text-decoration:none;color:var(--text)}
+#modal .btns a.wa,#modal .btns button.wa{background:#25d366;border-color:#25d366;color:#fff}
+#modal .btns a.wa2{border-color:#25d366;color:#15803d}
+#modal .box{max-height:92vh;overflow:auto}
+#modal .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#modal .mh b{font-size:16px}
+#modal .mx{border:0;background:var(--panel2);border-radius:10px;width:32px;height:32px;font-size:14px;cursor:pointer}
+#modal .mprev{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--panel2);min-height:160px;margin-bottom:10px}
+#modal .mprev img{display:block;width:100%}
+#modal .mspin{position:absolute;inset:0;display:grid;place-items:center;font-size:13px;color:var(--muted);font-weight:600}
+#modal #mTxt{margin:0 0 12px;font-size:12.5px}
+
+/* equal size for event, group ride and sponsor cards */
+.evt.evt,.ride.ride,.spb.spb{min-height:70px;box-sizing:border-box}
+/* ---------- responsive ---------- */
+@media (max-width:1100px){header .ig .igt{display:none}header .ig{padding:3px}header .ig .igi{width:30px;height:30px}}
+@media (max-width:1000px){
+  .grid{grid-template-columns:1fr}
+  .grid>.mapcard,.grid>#evts,.grid>#cond{grid-column:1;grid-row:auto}
+  #cond.cx{height:126px;border-radius:14px}
+  .cx-view{right:0;bottom:24px}
+  .cx-nav{left:0;width:auto;top:auto;bottom:0;height:26px;border-left:0;border-top:1px solid var(--line);flex-direction:row;justify-content:space-between;align-items:center;padding:0 12px}
+  .cx-when .val{font-size:11.5px}.cx-when .live{font-size:10px}
+  .cx-s{padding:0 12px;gap:10px}
+  .cx-score{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;row-gap:5px;align-content:center}
+  .cx-score .ring{width:56px;height:56px;grid-row:1/3}
+  .cx-h{font-size:14px}.cx-d{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:11.5px;line-height:1.3}
+  .cx-sky{grid-column:2;justify-self:start;font-size:12px;padding:3px 9px}.cx-sky #wxIcon{font-size:15px}
+  .cx-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-content:center;row-gap:9px}
+  .cx-st{border-left:0;padding:0}.cx-st b{font-size:14px}
+  .cx-wind .units{grid-column:2/4;margin:0;justify-self:start;align-self:end}
+  .cx-track-wind{flex-direction:column;align-items:stretch;justify-content:center;gap:6px}
+  .cx-track-wind .wsplit{flex:none}
+  .cx-track-wind .ws-l{justify-content:space-between;gap:6px;font-size:11.5px}
+  .cx-track-wind .wdesc{flex:none;font-size:11px;padding:4px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cx-plan{flex-direction:column;align-items:stretch;justify-content:center;gap:6px}
+  .cx-plan .best,.cx-plan .tip{height:auto;flex:none;font-size:11.5px;padding:5px 9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .cx-kite .tip.kite{display:-webkit-box;-webkit-line-clamp:4}
+  .spgrid{grid-template-columns:1fr 1fr 1fr}
+  .sp.lameda{grid-column:1/-1}
+  .spwrap{grid-template-columns:1fr}
+  .sp.lameda{grid-row:1}
+}
+@media (max-width:680px){
+  .wrap{padding:10px 12px calc(92px + env(safe-area-inset-bottom))}
+  .ctl{margin:0 -12px 10px;padding:6px 12px 8px}
+  .row+.row{margin-top:6px}
+  .pill{padding:6px 11px;font-size:12.5px}
+  .fld{max-width:none;padding:6px 10px 6px 6px;gap:8px}
+  #dateFld{flex:1.35}
+  .fi{width:30px;height:30px}
+  .fv b{font-size:13.5px}
+  .selscore{display:none}
+  .hr{min-width:48px;padding:4px 5px 5px;font-size:12px}
+  .hr small{font-size:9.5px}
+  .hr i{margin-top:3px}
+  header{grid-template-columns:1fr auto;padding:10px 12px 12px 14px;column-gap:10px;row-gap:7px;height:126px;border-radius:14px;align-content:center}
+  .hbtns{grid-column:2;grid-row:1}
+  .uaet{grid-column:1/-1;grid-row:2;min-width:0;flex-direction:row;align-items:center;gap:8px;padding:5px 8px}
+  .ut-in{flex-direction:row;align-items:center;gap:8px;flex:1}
+  .uaet{background:linear-gradient(110deg,#e3ede6 0%,#edf4ef 60%,#f6faf7 100%)}
+  header::after{opacity:.6}
+  .ut-top{gap:6px}.ut-top .ut-race{margin-left:0}
+  .ut-bot{flex:1;min-width:0;gap:6px}
+  .ut-cd b{font-size:16px}.ut-sub{display:none}
+  .ut-j{display:none}.ut-cd{margin-left:auto}
+  header .tag{grid-column:1/-1;grid-row:3}
+  header .tag{font-size:12px}
+  .brand h1{font-size:21px}
+  .ig{padding:3px 3px;gap:0}
+  .ig .igt{display:none}
+  .ig .igi{width:30px;height:30px}
+  .hbtns{gap:6px}
+  .mapcard{margin:0 -12px;border-radius:0;border-left:0;border-right:0}
+  .mapbox{height:min(380px,52vh)}
+  .mhero{left:10px;top:10px;padding:9px 12px;min-width:0}
+  .mhero{padding:7px 10px;border-radius:13px}
+  .mhero .tn{font-size:11px;max-width:170px}
+  .mhero .wn{font-size:10px}
+  .mhero .big{margin-top:3px;gap:6px}
+  .mhero .big .tp{font-size:26px}
+  .mhero .big .ic{font-size:20px}
+  .mhero .wd{margin-top:3px;font-size:12px}
+  .mhero .wd svg{width:18px;height:18px}
+  .mhero .sc{margin-top:5px;font-size:11px;padding:3px 8px}
+  .leaflet-control-zoom{display:none}
+  .evt{gap:10px;padding:8px 10px 8px 8px;border-radius:14px;flex-wrap:wrap}
+  .evt-main{flex:1 1 calc(100% - 60px)}
+  .evt-cd{order:3;margin-left:54px;border-left:0;padding:0;display:flex;align-items:baseline;gap:5px;background:#ffffff1f;border:1px solid #ffffff33;border-radius:10px;padding:7px 10px}
+  .evt-cd b{font-size:15px;display:inline}
+  .evt .evt-go{display:block;order:4;flex:1;text-align:center}
+  .evt .cshare{order:5;height:32px}
+  .evt.evt,.ride.ride,.spb.spb{min-height:126px}
+  .evt-tag .uci{display:none}
+  .evt-title{font-size:13.5px}
+  .evt-meta{white-space:normal;font-size:11px;line-height:1.35}
+  .evt-us,.evt-uci,.evt-tag .up{display:none}
+  .evt-title{white-space:normal}
+  .evt-date{width:44px;height:46px}
+  .evt-cd b{font-size:19px}
+  .evt.y .evt-cd{background:#ffffffb3;border-color:#ffffff}
+  .evt.sm .evt-cd{background:#ffffffcc;border-color:#c9dbf3}
+  .evt.lm .evt-cd{background:#ffffffb3;border-color:#00482a26}
+  .evt-tag:has(.code) .st-l{display:none}
+  .mapinfo{padding:11px 12px 13px}
+  .fac{gap:6px}
+  .fac b{font-size:10.5px}
+  .mtools{padding:8px 10px;gap:8px}
+  .lgd{gap:12px;font-size:11.5px;width:100%;justify-content:space-between}
+  .tright{margin-left:0;width:100%}
+  .tright .vsw{margin-left:auto}
+  .mhero{max-width:calc((100% - 20px)/.805)}
+  .bigtemp .v{font-size:58px}
+  .kv b{font-size:15px}
+  .best{font-size:13px}
+  .sp{min-height:64px}
+  .sp.lameda{grid-template-columns:120px 1fr}
+  .ride,.spb.lameda{gap:10px;padding:8px 10px 8px 8px;border-radius:14px;min-height:0;flex-wrap:wrap}
+  .spb-tag .up{display:none}
+  .spb-title{font-size:13.5px;white-space:normal}
+  .spb-meta{white-space:normal;font-size:11px;line-height:1.35}
+  .lm-art{width:44px;height:46px}
+  .spb-btns{width:100%;padding-left:54px}
+  .spshop{flex:1;text-align:center}
+  .spb .lmcode{flex:1.4;text-align:center}
+  .ride-tag .up{display:none}
+  .ride-title{font-size:13.5px;white-space:nowrap}
+  .ride .ride-meta{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+  .ride .ride-tag{margin-bottom:4px}
+  .ride .ride-btns{margin-top:2px}
+  .ride-tag:has(.chg) .star,.ride-tag:has(.typ) .star{display:none}
+  .ride-tag .mand-l,.ride-tag .pace{display:none}
+  .ride-tag .mand-s{display:inline}
+  .ride .m-pace{display:inline}
+  .ride .m-fl{display:none}
+  .ride-meta{white-space:normal;font-size:11px;line-height:1.35}
+  .ride-date{width:44px;height:46px}
+  .ride-btns{width:100%;padding-left:54px}
+  .ride-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ride-btns .rloc,.ride-btns .rshare{width:100%;height:36px}
+  .ride{display:grid;grid-template-columns:54px minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;column-gap:12px;row-gap:9px;height:126px;padding:9px 10px;align-items:center}
+  .ride .ride-date{grid-column:1;grid-row:1;width:54px;height:58px;border-radius:12px;align-self:center}
+  .ride .ride-date b{font-size:22px;margin:1px 0}
+  .ride .ride-body{grid-column:2;grid-row:1;align-self:center;min-width:0}
+  .ride .ride-btns{grid-column:1/-1;grid-row:2;width:auto;padding-left:0;margin-top:0}
+  .ride .m-nf{display:none}
+  .ride-btns .rorg{grid-column:1/-1;width:100%}
+  .lmart{min-height:0}
+  .lmart .fb{font-size:15px;letter-spacing:3px}
+  .lmdesc{display:none}
+  .sp.empty{font-size:10.5px;letter-spacing:1px}
+  .fab{padding:13px 16px}
+}
+@media (max-width:420px){
+  .windbox{grid-template-columns:112px 1fr;gap:12px}
+  .compass{width:112px;height:112px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="capture">
+
+<section class="sponsors rtop">
+  <h3>Group rides<span class="car-dots" id="rdDots" aria-hidden="true"></span></h3>
+  <div class="spwrap">
+    <div class="spstack">
+      <div class="rides" id="rides"></div>
+    </div>
+  </div>
+</section>
+
+<header>
+  <div class="brand">
+    <h1>TheCyclist<span>Dubai</span></h1>
+  </div>
+  <div class="hbtns">
+    <a class="ig" href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener" title="Follow @thecyclistdubai on Instagram" data-noshot>
+    <span class="igi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg></span><span class="igt">Follow</span>
+    </a>
+    <a class="ig wa" href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t" target="_blank" rel="noopener" title="Join TheCyclistDubai WhatsApp group" data-noshot>
+      <span class="igi"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.13c-.24.68-1.41 1.3-1.95 1.38-.5.07-1.13.1-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2.01.89 2.16.07.14.12.31.02.5-.1.19-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.38-.24.65-.14.27.1 1.7.8 1.99.95.29.14.48.22.55.34.07.12.07.7-.17 1.38z"/></svg></span><span class="igt">Join group</span>
+    </a>
+    <a class="ig st" href="https://www.strava.com/athletes/13924498" target="_blank" rel="noopener" title="Follow on Strava" data-noshot>
+      <span class="igi"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg></span><span class="igt">Strava</span>
+    </a>
+  </div>
+  <div class="uaet" id="uaet" role="link" tabindex="0" title="UAE Tour: open the official website" data-noshot>
+    <div class="ut-in" id="utIn"><div class="ut-top"><span class="ut-logo"><i></i>UAE <b>TOUR</b></span><span class="ut-yr ut-sub" id="utYr"></span>
+      <span class="ut-race" id="utRace"></span></div>
+    <div class="ut-bot"><span class="ut-cd" id="utCd" aria-live="off"></span><span class="ut-sub" id="utSub"></span>
+      <span class="ut-j" aria-label="UAE Tour jerseys">
+        <svg viewBox="0 0 24 24" aria-label="Red jersey: overall leader"><title>Red jersey · overall leader (GC)</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#e4142f" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 24 24" aria-label="Green jersey: points"><title>Green jersey · points (sprinters)</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#00843d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <svg class="wj" viewBox="0 0 24 24" aria-label="White jersey: best young rider"><title>White jersey · best young rider</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#fff" stroke="#9aa8a0" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 24 24" aria-label="Black jersey: intermediate sprints"><title>Black jersey · intermediate sprints</title><path d="M8 2h8l1 2 5 3-2 5-3-1.5V22H7V10.5L4 12 2 7l5-3z" fill="#0a0f1a" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      </span></div></div>
+  </div>
+  <div class="tag"><span class="clk"><i></i><b id="clk">--:--</b> <span id="clkd">Dubai</span></span></div>
+</header>
+
+<div class="ctl" id="ctl">
+  <div class="row" id="trackRow"></div>
+  <div class="when2" id="whenRow">
+    <div class="fld" id="dateFld" role="button" tabindex="0" aria-haspopup="dialog" aria-expanded="false">
+      <span class="fi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+      <span class="fv"><small>Date</small><b id="dateTxt">Today</b></span><span class="chev">▾</span>
+    </div>
+    <label class="fld" id="timeFld">
+      <span class="fi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+      <span class="fv"><small>Time</small><b id="timeTxt">Now</b></span><span class="chev">▾</span>
+      <select id="pickHour" aria-label="Choose time"></select>
+    </label>
+    <span class="selscore" id="selScore"></span>
+    <div class="cal" id="cal" role="dialog" aria-label="Choose date" hidden></div>
+  </div>
+</div>
+
+<div class="err" id="err"></div>
+
+<div class="grid">
+  <!-- map first -->
+  <div class="panel mapcard">
+    <div class="mapbox">
+      <div id="map"></div>
+      <canvas id="wind"></canvas>
+      <div class="ov mhero" id="mhero">
+        <div class="tn" id="mName">—</div>
+        <div class="wn" id="mWhen">Loading…</div>
+        <div class="big"><span class="tp" id="mTemp">--°</span><span class="ic" id="mIcon">⏳</span></div>
+        <div class="wd"><svg width="22" height="22" viewBox="0 0 34 34" id="mArrow"><circle cx="17" cy="17" r="16" fill="#f1f5f9" stroke="#cbd5e1"/><path d="M17 5 L23 21 L17 17 L11 21 Z" fill="#65a30d"/></svg><b id="mWind">--</b><span id="mDir"></span></div>
+        <div class="sc" id="mScore">—</div>
+      </div>
+      <div class="ov maploading" id="maploading">Loading track…</div>
+    </div>
+    <div class="mtools">
+      <div class="lgd">
+        <span class="lg"><i style="background:#dc2626"></i>Headwind</span>
+        <span class="lg"><i style="background:#16a34a"></i>Tailwind</span>
+        <span class="lg"><i style="background:#eab308"></i>Crosswind</span>
+      </div>
+      <div class="tright">
+        <span class="tl">Riding</span>
+        <button class="dirb" id="dirBtn" title="Tap to reverse your riding direction">Clockwise</button>
+        <div class="vsw" id="layers" data-noshot>
+          <button data-l="sat" class="on">Satellite</button>
+          <button data-l="cycle">Cycling map</button>
+        </div>
+      </div>
+    </div>
+    <div class="mapinfo">
+      <div class="mi-top">
+        <div class="mi-txt"><div class="mi-name" id="miName">—</div><div class="mi-desc" id="mapInfo">—</div></div>
+        <a class="dirlink" id="dirLink" href="#" target="_blank" rel="noopener" data-noshot><span class="gdi"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#1a73e8" d="M21.71 11.29l-9-9a1 1 0 0 0-1.42 0l-9 9a1 1 0 0 0 0 1.42l9 9a1 1 0 0 0 1.42 0l9-9a1 1 0 0 0 0-1.42z"/><path fill="#fff" d="M14 14.5V12h-4v3H8v-4a1 1 0 0 1 1-1h5V7.5l3.5 3.5-3.5 3.5z"/></svg></span>Directions</a>
+      </div>
+      <div class="fac">
+        <div><span>🚿</span><b>Showers</b><small>Free</small></div>
+        <div><span>🚻</span><b>Toilets</b><small>Free</small></div>
+        <div><span>☕</span><b>Coffee</b><small>On site</small></div>
+        <a class="fac-rent" id="rentBtn" href="https://wolfis.ae/pages/rental-bikes" target="_blank" rel="noopener" title="Rent a bike at Wolfi's" data-noshot><span>🚲</span><b>Bike rental ↗</b><small><img class="wlogo" id="rentLogo" src="https://wolfis.ae/cdn/shop/files/WOLFIS_HOMEPAGE_TOP_LOGO_24_YEARS.png?v=1787554065&amp;width=420" alt="Wolfi's" loading="lazy" onerror="this.replaceWith(document.createTextNode('Wolfi\'s'))"></small></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- conditions: one card, sliding -->
+  <div class="panel band cx" id="cond" aria-roledescription="carousel" aria-label="Riding conditions">
+    <div class="cx-view" id="cxView"><div class="cx-track" id="cxTrack">
+      <section class="cx-s cx-score" data-t="Ride score">
+        <svg class="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#e2e8f0" stroke-width="7"/><circle id="ringArc" cx="32" cy="32" r="27" fill="none" stroke="#65a30d" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 170" transform="rotate(-90 32 32)"/><text id="ringTxt" x="32" y="37" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a" font-family="JetBrains Mono">--</text></svg>
+        <div class="cx-main"><div class="cx-h" id="scoreT">Ride score</div><div class="cx-d" id="scoreD"></div></div>
+        <div class="cx-sky"><span id="wxIcon">⏳</span><span id="wxDesc">Loading forecast…</span></div>
+      </section>
+      <section class="cx-s cx-tiles" data-t="Conditions">
+        <div class="cx-st"><small>Temp</small><b id="temp">--</b></div>
+        <div class="cx-st"><small>Feels</small><b id="feels">--</b></div>
+        <div class="cx-st"><small>Humidity</small><b id="hum">--</b></div>
+        <div class="cx-st"><small>UV</small><b id="uv">--</b></div>
+        <div class="cx-st"><small>Rain</small><b id="rain">--</b></div>
+        <div class="cx-st"><small>Sun</small><b class="sm"><span id="sunr">--</span>–<span id="suns">--</span></b></div>
+      </section>
+      <section class="cx-s cx-tiles cx-wind" data-t="Wind">
+        <div class="cx-st"><small>Wind</small><b><span class="arr" id="wArr">➤</span><span id="wspd">--</span></b></div>
+        <div class="cx-st"><small>Gusts</small><b id="gust">--</b></div>
+        <div class="cx-st"><small>From</small><b id="wdir">--</b></div>
+        <div class="cx-st"><small>Riding</small><b id="xw">--</b></div>
+        <div class="units" id="units" data-noshot><button data-u="kmh">km/h</button><button data-u="kn">kn</button><button data-u="ms">m/s</button></div>
+      </section>
+      <section class="cx-s cx-track-wind" data-t="Track wind">
+        <div class="wsplit" id="wsplit">
+          <div class="ws-h">Wind on the track <small id="wsDir"></small></div>
+          <div class="ws-bar"><span id="wsHb" style="background:#dc2626"></span><span id="wsTb" style="background:#16a34a"></span><span id="wsCb" style="background:#eab308"></span></div>
+          <div class="ws-l">
+            <span><i style="background:#dc2626"></i>Headwind <b id="wsH">--</b></span>
+            <span><i style="background:#16a34a"></i>Tailwind <b id="wsT">--</b></span>
+            <span><i style="background:#eab308"></i>Crosswind <b id="wsC">--</b></span>
+          </div>
+        </div>
+        <div class="wdesc" id="wdesc"></div>
+      </section>
+      <section class="cx-s cx-plan" data-t="Ride plan">
+        <div class="best" id="best">⏳ Finding the best riding window…</div>
+        <div class="tip kit" id="kit"></div>
+      </section>
+      <section class="cx-s cx-plan cx-kite" data-t="Kitesurf" hidden>
+        <div class="tip kite" id="kite"></div>
+      </section>
+    </div></div>
+    <div class="cx-nav">
+      <div class="cx-when"><span class="val" id="whenVal">—</span><span id="liveTag" class="live"><i></i>LIVE</span></div>
+      <div class="cx-sel"><span class="cx-t" id="cxT">Ride score</span><span class="cx-dots" id="cxDots" aria-hidden="true"></span></div>
+    </div>
+  </div>
+
+  <!-- events (from site-data.js) -->
+  <div class="evts" id="evts"></div>
+
+</div>
+
+<!-- Al Qudra Cycling Simulator (separate page) -->
+<section class="sponsors simsec">
+  <h3>Simulator</h3>
+  <a class="evt sm" href="al-qudra-simulator.html" title="Open the Al Qudra Cycling Simulator">
+    <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#0057b8" stroke-opacity=".16" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/></svg>
+    <div class="evt-date sm-map" aria-hidden="true"><svg viewBox="0 0 60 60"><path class="sm-trk" d="M33.7 6.1 L33.8 6.3 L34.0 6.1 L34.0 6.2 L34.6 6.7 L35.4 7.4 L36.5 8.1 L37.4 8.9 L38.2 9.7 L38.7 10.5 L39.1 10.5 L39.1 11.0 L39.7 12.1 L40.1 13.3 L40.4 14.6 L40.7 15.7 L40.6 16.3 L40.4 17.2 L40.4 18.5 L40.4 19.8 L40.3 21.0 L40.3 22.4 L40.3 23.7 L40.2 25.1 L40.2 26.1 L40.2 26.9 L40.1 28.0 L40.1 29.6 L40.1 31.0 L40.0 32.5 L40.1 33.7 L40.6 34.7 L41.0 35.0 L41.3 35.0 L41.2 35.2 L42.0 34.9 L43.3 34.5 L43.6 34.7 L43.8 36.0 L44.0 37.4 L44.2 38.9 L44.3 39.8 L44.4 41.0 L44.6 42.3 L44.9 43.6 L45.2 44.8 L45.7 45.9 L46.0 46.8 L45.2 47.8 L45.1 48.8 L44.9 50.0 L44.8 50.8 L44.0 50.9 L42.9 51.0 L41.8 51.6 L41.4 52.2 L41.9 53.2 L41.3 53.5 L40.3 53.9 L39.7 54.0 L38.5 54.0 L36.9 54.0 L35.4 54.0 L33.9 54.0 L32.5 54.0 L31.3 53.7 L30.0 52.9 L29.0 52.5 L28.0 51.6 L27.2 51.5 L25.8 51.6 L24.3 51.7 L22.7 51.8 L21.2 52.0 L19.6 52.1 L18.1 52.2 L17.1 51.9 L16.2 51.2 L15.6 50.2 L15.2 49.0 L14.6 47.8 L14.0 46.7 L14.2 46.1 L15.6 45.5 L17.0 44.9 L18.4 44.2 L19.9 43.6 L21.3 42.9 L21.7 42.8 L22.9 42.2 L24.0 41.7 L24.8 41.4 L26.2 40.8 L27.5 40.3 L28.8 39.8 L29.5 39.6 L30.2 39.2 L31.7 38.7 L33.1 38.2 L34.6 37.9 L35.1 37.8 L36.1 37.5 L37.2 37.2 L38.6 36.5 L39.9 35.7 L40.7 35.6 L41.1 35.6 L41.2 35.2 L41.2 35.0 L40.9 35.0 L40.4 34.3 L40.0 33.3 L40.0 32.0 L40.1 30.6 L40.1 29.1 L40.2 27.6 L40.2 26.5 L40.2 25.8 L40.2 24.6 L40.3 23.3 L40.3 22.0 L40.3 20.7 L40.4 19.4 L40.4 18.1 L40.5 16.8 L40.7 16.1 L40.5 15.4 L40.3 14.1 L40.0 13.0 L39.5 11.7 L39.0 10.8 L39.0 10.5 L38.5 10.1 L38.0 9.5 L37.2 8.7 L36.2 7.9 L35.2 7.2 L34.2 6.4 L34.0 6.1 L34.0 6.2 L33.8 6.3 L33.7 6.1"/><circle class="sm-start" cx="33.7" cy="6.1" r="2.6"/><circle class="sm-dot" r="3.4"><animateMotion dur="12s" repeatCount="indefinite" path="M33.7 6.1 L33.8 6.3 L34.0 6.1 L34.0 6.2 L34.6 6.7 L35.4 7.4 L36.5 8.1 L37.4 8.9 L38.2 9.7 L38.7 10.5 L39.1 10.5 L39.1 11.0 L39.7 12.1 L40.1 13.3 L40.4 14.6 L40.7 15.7 L40.6 16.3 L40.4 17.2 L40.4 18.5 L40.4 19.8 L40.3 21.0 L40.3 22.4 L40.3 23.7 L40.2 25.1 L40.2 26.1 L40.2 26.9 L40.1 28.0 L40.1 29.6 L40.1 31.0 L40.0 32.5 L40.1 33.7 L40.6 34.7 L41.0 35.0 L41.3 35.0 L41.2 35.2 L42.0 34.9 L43.3 34.5 L43.6 34.7 L43.8 36.0 L44.0 37.4 L44.2 38.9 L44.3 39.8 L44.4 41.0 L44.6 42.3 L44.9 43.6 L45.2 44.8 L45.7 45.9 L46.0 46.8 L45.2 47.8 L45.1 48.8 L44.9 50.0 L44.8 50.8 L44.0 50.9 L42.9 51.0 L41.8 51.6 L41.4 52.2 L41.9 53.2 L41.3 53.5 L40.3 53.9 L39.7 54.0 L38.5 54.0 L36.9 54.0 L35.4 54.0 L33.9 54.0 L32.5 54.0 L31.3 53.7 L30.0 52.9 L29.0 52.5 L28.0 51.6 L27.2 51.5 L25.8 51.6 L24.3 51.7 L22.7 51.8 L21.2 52.0 L19.6 52.1 L18.1 52.2 L17.1 51.9 L16.2 51.2 L15.6 50.2 L15.2 49.0 L14.6 47.8 L14.0 46.7 L14.2 46.1 L15.6 45.5 L17.0 44.9 L18.4 44.2 L19.9 43.6 L21.3 42.9 L21.7 42.8 L22.9 42.2 L24.0 41.7 L24.8 41.4 L26.2 40.8 L27.5 40.3 L28.8 39.8 L29.5 39.6 L30.2 39.2 L31.7 38.7 L33.1 38.2 L34.6 37.9 L35.1 37.8 L36.1 37.5 L37.2 37.2 L38.6 36.5 L39.9 35.7 L40.7 35.6 L41.1 35.6 L41.2 35.2 L41.2 35.0 L40.9 35.0 L40.4 34.3 L40.0 33.3 L40.0 32.0 L40.1 30.6 L40.1 29.1 L40.2 27.6 L40.2 26.5 L40.2 25.8 L40.2 24.6 L40.3 23.3 L40.3 22.0 L40.3 20.7 L40.4 19.4 L40.4 18.1 L40.5 16.8 L40.7 16.1 L40.5 15.4 L40.3 14.1 L40.0 13.0 L39.5 11.7 L39.0 10.8 L39.0 10.5 L38.5 10.1 L38.0 9.5 L37.2 8.7 L36.2 7.9 L35.2 7.2 L34.2 6.4 L34.0 6.1 L34.0 6.2 L33.8 6.3 L33.7 6.1"/></circle></svg></div>
+    <div class="evt-main">
+      <div class="evt-tag"><span class="star">🚴<span class="st-l"> Ride simulator</span></span><span class="up">Solar 88 km · Jurassic 84.5 km</span></div>
+      <div class="evt-title">Al Qudra Cycling Simulator</div>
+      <div class="evt-meta">Live wind on the route · <b>power &amp; speed</b><span class="evt-uci"> · ride time, water &amp; kit · elevation · GPX</span></div>
+    </div>
+    <div class="evt-cd"><b>88</b><span>km · stick + loop</span></div>
+    <span class="evt-go">Open simulator ↗</span>
+  </a>
+</section>
+
+
+
+<footer data-noshot>
+  <a href="disclaimer.html">Disclaimer & data sources</a>
+  <a href="quiz.html">Group Ride Etiquette Quiz</a>
+  <a href="https://www.instagram.com/thecyclistdubai/" target="_blank" rel="noopener">@thecyclistdubai</a>
+  <a href="https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t" target="_blank" rel="noopener">WhatsApp group</a>
+  <a href="https://www.strava.com/athletes/13924498" target="_blank" rel="noopener">Strava</a>
+</footer>
+</div>
+
+<button class="fab" id="share" aria-label="Share to WhatsApp">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.13c-.24.68-1.41 1.3-1.95 1.38-.5.07-1.13.1-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2.01.89 2.16.07.14.12.31.02.5-.1.19-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.38-.24.65-.14.27.1 1.7.8 1.99.95.29.14.48.22.55.34.07.12.07.7-.17 1.38z"/></svg>
+  Share
+</button>
+
+<div class="toast" id="toast"></div>
+<div id="sheet" role="dialog" aria-label="Share">
+  <div class="sbox">
+    <div class="mh"><b>Share</b><button class="mx" id="sClose" aria-label="Close">✕</button></div>
+    <div id="sList"></div>
+    <p class="snote">Weather, ride and sponsor messages include the site link and sponsor codes. Event messages include only the event details.</p>
+  </div>
+</div>
+<div id="modal">
+  <div class="box">
+    <div class="mh"><b>Share to WhatsApp</b><button class="mx" id="mClose" aria-label="Close">✕</button></div>
+    <div class="mprev"><img id="mImg" alt="Map image to share"><div class="mspin" id="mSpin">Preparing map image…</div></div>
+    <p class="sub" id="mTxt"></p>
+    <div class="btns">
+      <button id="mShare" class="wa">Share image + text</button>
+      <a id="mWa" class="wa2" target="_blank" rel="noopener">Send text on WhatsApp</a>
+      <a id="mDl">Download image</a>
+      <button id="mCopy">Copy text</button>
+    </div>
+  </div>
+</div>
+
+<script>/* always load the latest rides/events/sponsors (GitHub caches files for 10 min) */document.write('<script src="site-data.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="share-core.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
+<script>
+/* ================= tracks ================= */
+const TRACKS = [
+  { id:'alqudra', name:'Al Qudra Cycle Track', short:'Al Qudra', lat:24.99891, lng:55.30695, zoom:11,
+    info:'Desert loops of <b>18, 49, 86 & 100+ km</b>',
+    bbox:[24.60,55.12,25.02,55.52], filter:'way["highway"="cycleway"]', dir:'cw' },
+  { id:'meydan', name:'Meydan · Nad Al Sheba Cycle Park', short:'Meydan', lat:25.1487, lng:55.2864, zoom:14,
+    info:'<b>10 km</b> loop · one-way anticlockwise · lit at night',
+    bbox:[25.133,55.262,25.172,55.308], filter:'way["highway"="cycleway"]', dir:'ccw' },
+  { id:'mushrif', name:'Mushrif National Park', short:'Mushrif', lat:25.2190, lng:55.4560, zoom:14,
+    info:'<b>50 km</b> MTB trails (green / blue / red) + 4 km park track',
+    bbox:[25.190,55.420,25.250,55.500], filter:'way["highway"~"cycleway|path|track"]["bicycle"~"designated|yes"];way["mtb:scale"]', mtb:true },
+  { id:'kite', name:'Kite Beach · Jumeirah Beach Track', short:'Kite Beach', lat:25.16260, lng:55.20700, zoom:15,
+    info:'<b>16 km</b> beachfront track · 20 km/h speed limit',
+    bbox:[25.140,55.178,25.176,55.215], filter:'way["highway"="cycleway"]', kite:true, line:true },
+  { id:'hatta', name:'Hatta MTB Trail Centre', short:'Hatta MTB', lat:24.8030, lng:56.1260, zoom:13,
+    info:'<b>~53 km</b> graded MTB trails, 21 routes · start: Hatta Wadi Hub',
+    bbox:[24.755,56.060,24.860,56.195], filter:'way["mtb:scale"];way["highway"~"path|track|cycleway"]["bicycle"~"designated|yes"];way["highway"~"path|track"]["mtb"="yes"]', mtb:true },
+];
+
+/* ================= state ================= */
+function load(k,d){try{return localStorage.getItem(k)||d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+const S = {
+  track: (t=>TRACKS.some(x=>x.id===t)?t:'alqudra')(load('rw_track','alqudra')),
+  unit: (u=>['kmh','kn','ms'].includes(u)?u:'kmh')(load('rw_unit','kmh')),
+  layer: (l=>['sat','cycle'].includes(l)?l:'sat')(load('rw_layer','sat')),
+  sel:0, wx:null, start:0, geo:{}, best:null, mode:'fc', alt:null, altH:7, altCache:{}, minOff:0, maxOff:47, calYM:null,
+};
+const $ = id => document.getElementById(id);
+const T = () => TRACKS.find(t=>t.id===S.track);
+const TI = () => TRACKS.findIndex(t=>t.id===S.track);
+
+/* ================= time (Dubai) ================= */
+const fmtParts = new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dubai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
+function dubaiNow(){const p={};fmtParts.formatToParts(new Date()).forEach(x=>p[x.type]=x.value);return p}
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function parseLocal(s){const d=new Date(s+':00Z');return {day:DAYS[d.getUTCDay()], date:d.getUTCDate(), mon:MONTHS[d.getUTCMonth()], h:d.getUTCHours(), hm:s.slice(11,16)}}
+function relDay(s){const n=dubaiNow();const diff=Math.round((new Date(s.slice(0,10)+'T00:00Z')-new Date(`${n.year}-${n.month}-${n.day}T00:00Z`))/864e5);
+  return diff===0?'Today':diff===1?'Tomorrow':diff===-1?'Yesterday':parseLocal(s).day}
+/* ---------- UAE Tour live counter (data in site-data.js: uaeTour) ---------- */
+const UT={pick:null,prev:{}};
+function utRaces(){return ((SITE.uaeTour||{}).races||[]).map(r=>({...r,t0:tsOf(r.start,'00:00'),t1:tsOf(r.end,'00:00')+864e5}))}
+function utRender(){const el=$('uaet');if(!el)return;const rs=utRaces(),now=Date.now();
+  if(!rs.length){el.style.display='none';return}
+  const nextIdx=Math.max(0,rs.findIndex(r=>now<r.t1));const allDone=rs.every(r=>now>=r.t1);
+  if(UT.pick==null||UT.pick>=rs.length)UT.pick=0;
+  const r=rs[UT.pick];
+  $('utRace').textContent=r.name;
+  const live=now>=r.t0&&now<r.t1,done=now>=r.t1;el.classList.toggle("utlive",live);
+  const l0=parseLocal(r.start+'T00:00'),l1=parseLocal(r.end+'T00:00');$('utYr').textContent=r.start.slice(0,4);
+  const cd=$('utCd'),sub=$('utSub');
+  if(live){const day=Math.floor((now-r.t0)/864e5)+1;cd.innerHTML=`<span class="ut-live">🔴 LIVE · Stage ${Math.min(day,r.stages||day)}/${r.stages||'?'}</span>`;sub.textContent='today';UT.prev={};return}
+  if(done){cd.innerHTML=`<span class="ut-live">🏆 Finished</span>`;sub.textContent=(SITE.uaeTour.nextNote||'next edition: dates TBA');UT.prev={};return}
+  let d=Math.max(0,r.t0-now)/1e3;const v={d:Math.floor(d/86400),h:Math.floor(d%86400/3600),m:Math.floor(d%3600/60),s:Math.floor(d%60)};
+  if(!cd.querySelector('[data-k]'))cd.innerHTML=['d','h','m','s'].map(k=>`<span><b data-k="${k}"></b><i>${k}</i></span>`).join('');
+  for(const k in v){const b=cd.querySelector(`[data-k="${k}"]`),t=k==='d'?String(v[k]):String(v[k]).padStart(2,'0');
+    if(b.textContent!==t)b.textContent=t;}
+  sub.textContent=`to ${l0.date} ${l0.mon}${r.start!==r.end?`–${l1.date} ${l1.mon}`:''}`}
+/* switch race every 5 s (pauses while hovered); tapping a tab shows it and restarts the 5 s */
+/* one race at a time: Men first, then slides to Women, every 5 s (pauses while hovered) */
+function utSwap(i){const w=$('utIn');w.classList.remove('in');w.classList.add('out');
+  setTimeout(()=>{UT.pick=i;UT.prev={};$('utCd').innerHTML='';utRender();w.classList.remove('out');void w.offsetWidth;w.classList.add('in')},230)}
+function utCycle(){clearTimeout(UT.t);const n=utRaces().length;if(n<2)return;
+  UT.t=setTimeout(()=>{if(UT.hold){UT.resume=true;return}utSwap((UT.pick+1)%n);utCycle()},10000)}
+function utInit(){const el=$('uaet');if(!el)return;
+  el.addEventListener('mouseenter',()=>{UT.hold=true;el.classList.add('hold')});
+  el.addEventListener('mouseleave',()=>{UT.hold=false;el.classList.remove('hold');if(UT.resume){UT.resume=false;utSwap((UT.pick+1)%utRaces().length);utCycle()}});
+  const go=e=>{window.open((SITE.uaeTour||{}).url||'https://www.theuaetour.com/','_blank','noopener')};
+  el.addEventListener('click',go);el.addEventListener('keydown',e=>{if(e.key==='Enter')go(e)});
+  utRender();setInterval(utRender,1000);utCycle()}
+function tickClock(){const p=dubaiNow();$('clk').textContent=`${p.hour}:${p.minute}`;
+  const d=new Date(`${p.year}-${p.month}-${p.day}T00:00Z`);$('clkd').textContent=`${DAYS[d.getUTCDay()]} ${+p.day} ${MONTHS[d.getUTCMonth()]}`}
+setInterval(tickClock,5000);tickClock();
+
+/* ================= units & words ================= */
+function spd(k){if(k==null)return'--';if(S.unit==='kn')return(k/1.852).toFixed(0);if(S.unit==='ms')return(k/3.6).toFixed(1);return Math.round(k)+''}
+const uLbl=()=>({kmh:'km/h',kn:'kn',ms:'m/s'})[S.unit];
+const PTS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+const PTN={N:'north',NNE:'north-northeast',NE:'northeast',ENE:'east-northeast',E:'east',ESE:'east-southeast',SE:'southeast',SSE:'south-southeast',S:'south',SSW:'south-southwest',SW:'southwest',WSW:'west-southwest',W:'west',WNW:'west-northwest',NW:'northwest',NNW:'north-northwest'};
+const card=d=>PTS[Math.round(((d%360)+360)%360/22.5)%16];
+function windWords(k){
+  if(k<6)return'Calm: perfect for a PR attempt.';
+  if(k<12)return'Light breeze: easy riding in every direction.';
+  if(k<20)return'Gentle breeze: you\'ll feel it on exposed stretches.';
+  if(k<29)return'Moderate wind: tough headwind sections, ride in a group.';
+  if(k<39)return'Fresh wind: hard going into it, sand may blow across.';
+  return'Strong wind: consider a short or sheltered ride.';
+}
+const WX={0:['☀️','Clear sky'],1:['🌤️','Mainly clear'],2:['⛅','Partly cloudy'],3:['☁️','Overcast'],45:['🌫️','Fog'],48:['🌫️','Rime fog'],51:['🌦️','Light drizzle'],53:['🌦️','Drizzle'],55:['🌧️','Heavy drizzle'],61:['🌧️','Light rain'],63:['🌧️','Rain'],65:['🌧️','Heavy rain'],80:['🌦️','Rain showers'],81:['🌧️','Showers'],82:['⛈️','Violent showers'],95:['⛈️','Thunderstorm'],96:['⛈️','Thunderstorm, hail'],99:['⛈️','Thunderstorm, hail']};
+function wx(code,isDay){const w=WX[code]||['🌡️','—'];let i=w[0];if(!isDay&&code<=2)i=code===0?'🌙':'☁️';return[i,w[1]]}
+
+/* ================= ride score & kit ================= */
+function rideScore(h){let s=100;
+  if(h.t>26)s-=(h.t-26)*4.2;if(h.t<16)s-=(16-h.t)*3;
+  if(h.w>12)s-=(h.w-12)*1.5;if(h.g>32)s-=(h.g-32)*.9;
+  s-=(h.pp||0)*.35;if(h.code>=95)s-=30;if(h.uv>6)s-=(h.uv-6)*3;if(h.code===45||h.code===48)s-=15;if(!h.day)s-=10;
+  return Math.max(0,Math.min(100,Math.round(s)))}
+function scoreInfo(s){if(s>=80)return['Excellent','#16a34a','#dcfce7'];if(s>=65)return['Good','#65a30d','#ecfccb'];if(s>=50)return['Fair','#d97706','#fef3c7'];return['Tough','#dc2626','#fee2e2']}
+function scoreReason(h){const r=[];
+  if(h.t>32)r.push('very hot');else if(h.t>27)r.push('warm');else if(h.t>=18)r.push('comfortable temperature');else r.push('cool');
+  if(h.w>=29)r.push('strong wind');else if(h.w>=20)r.push('breezy');else r.push('light wind');
+  if(h.g>40)r.push('gusty');if(h.uv>=8)r.push('very high UV');if((h.pp||0)>=30)r.push(`${h.pp}% rain chance`);if(!h.day)r.push('dark');
+  return r.join(' · ').replace(/^./,m=>m.toUpperCase())+'.'}
+function kitTip(h){let k;
+  if(h.t>=32)k='Light vented jersey, sun sleeves, 2+ bottles with electrolytes';
+  else if(h.t>=26)k='Short sleeves, sunscreen, 2 bottles';
+  else if(h.t>=20)k='Short sleeves: perfect kit weather';
+  else if(h.t>=16)k='Short sleeves + arm warmers or a gilet';
+  else k='Long sleeves or a light jacket';
+  const x=[];if(h.w>=25&&h.t<26)x.push('a windproof gilet');if(h.uv>=8)x.push('SPF 50');if(!h.day)x.push('front & rear lights');if((h.pp||0)>=40)x.push('a rain shell');
+  return '👕 <b>Kit:</b> '+k+(x.length?' · add '+x.join(', '):'')+'.'}
+
+/* ================= data ================= */
+function hourAt(ti,off){const d=S.wx[ti],i=S.start+off,H=d.hourly;
+  const h={time:H.time[i],t:H.temperature_2m[i],fl:H.apparent_temperature[i],w:H.wind_speed_10m[i],g:H.wind_gusts_10m[i],dir:H.wind_direction_10m[i],rh:H.relative_humidity_2m[i],uv:H.uv_index[i],pp:H.precipitation_probability[i],code:H.weather_code[i],day:H.is_day[i]};
+  if(off===0&&d.current){const c=d.current;Object.assign(h,{t:c.temperature_2m,fl:c.apparent_temperature,w:c.wind_speed_10m,g:c.wind_gusts_10m,dir:c.wind_direction_10m,rh:c.relative_humidity_2m,code:c.weather_code,day:c.is_day})}
+  h.score=rideScore(h);return h}
+function altAt(ti,hh){const A=S.alt,d=A.data[ti],H=d.hourly,D=d.daily;
+  const rise=D&&D.sunrise?+D.sunrise[0].slice(11,13)+(+D.sunrise[0].slice(14,16))/60:6.5,set=D&&D.sunset?+D.sunset[0].slice(11,13)+(+D.sunset[0].slice(14,16))/60:17.5;
+  const h={time:`${A.date}T${String(hh).padStart(2,'0')}:00`,t:H.temperature_2m[hh],fl:H.apparent_temperature[hh],w:H.wind_speed_10m[hh],g:H.wind_gusts_10m[hh],dir:H.wind_direction_10m[hh],
+    rh:H.relative_humidity_2m[hh],uv:null,pp:null,mm:H.precipitation?H.precipitation[hh]:null,code:H.weather_code[hh],day:(hh+.5>=rise&&hh+.5<=set)?1:0,kind:A.kind};
+  h.score=rideScore(h);return h}
+function cur(ti){return S.mode==='alt'&&S.alt?altAt(ti,S.altH):hourAt(ti,S.sel)}
+function sunFor(ti,t){
+  if(S.mode==='alt'&&S.alt){const D=S.alt.data[ti].daily;return D&&D.sunrise?{rise:D.sunrise[0].slice(11),set:D.sunset[0].slice(11)}:null}
+  const D=S.wx[ti].daily,k=D.time.indexOf(t.slice(0,10));return k<0?null:{rise:D.sunrise[k].slice(11),set:D.sunset[k].slice(11)}}
+/* any date outside the forecast: past = recorded weather, later = same day last year (typical) */
+async function loadAlt(d){
+  if(S.altCache[d])return S.altCache[d];
+  const H=S.wx[0].hourly.time,first=H[0].slice(0,10),n=dubaiNow(),today=`${n.year}-${n.month}-${n.day}`;
+  let kind,src=d;
+  if(d<first)kind='past';
+  else{kind='typical';let y=+d.slice(0,4)-1;src=`${y}${d.slice(4)}`;
+    const lim=new Date(Date.parse(today+'T00:00Z')-8*864e5).toISOString().slice(0,10);
+    while(src>lim){y--;src=`${y}${d.slice(4)}`}
+    if(d.slice(5)==='02-29'&&!(y%4===0&&(y%100!==0||y%400===0)))src=`${y}-02-28`}
+  const v='temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,precipitation';
+  const url='https://archive-api.open-meteo.com/v1/archive?latitude='+TRACKS.map(t=>t.lat).join(',')+'&longitude='+TRACKS.map(t=>t.lng).join(',')+
+    `&start_date=${src}&end_date=${src}&hourly=${v}&daily=sunrise,sunset&timezone=Asia%2FDubai&wind_speed_unit=kmh`;
+  const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);let j=await r.json();if(!Array.isArray(j))j=[j];
+  const A={date:d,src,kind,data:j};S.altCache[d]=A;return A}
+
+let lastFetch=0;
+async function fetchWeather(){
+  $('err').style.display='none';
+  const v='temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,is_day';
+  const url='https://api.open-meteo.com/v1/forecast?latitude='+TRACKS.map(t=>t.lat).join(',')+'&longitude='+TRACKS.map(t=>t.lng).join(',')+
+    '&current='+v+'&hourly='+v+',uv_index,precipitation_probability&daily=sunrise,sunset&timezone=Asia%2FDubai&past_days=7&forecast_days=16&wind_speed_unit=kmh';
+  try{
+    const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);
+    let j=await r.json();if(!Array.isArray(j))j=[j];
+    const keepTime=S.wx?S.wx[0].hourly.time[S.start+S.sel]:null;
+    S.wx=j;lastFetch=Date.now();
+    const p=dubaiNow(),nowH=`${p.year}-${p.month}-${p.day}T${p.hour}:00`;
+    S.start=Math.max(0,j[0].hourly.time.findIndex(t=>t>=nowH));S.minOff=-S.start;S.maxOff=j[0].hourly.time.length-1-S.start;
+    if(keepTime&&S.sel!==0){const k=j[0].hourly.time.indexOf(keepTime)-S.start;S.sel=k>=S.minOff&&k<=S.maxOff?k:0}
+    renderAll();
+  }catch(e){
+    $('err').style.display='block';
+    $('err').innerHTML='⚠️ Couldn\'t load the forecast. Check your connection. <button onclick="fetchWeather()">Retry</button>';
+  }
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-lastFetch>10*60e3)fetchWeather()});
+setInterval(()=>{if(!document.hidden)fetchWeather()},15*60e3);
+
+/* ================= control bar ================= */
+function renderTrackRow(){
+  $('trackRow').innerHTML=TRACKS.map((t,i)=>{let ex='';
+    if(S.wx){const h=cur(i);ex=`<span class="t">${Math.round(h.t)}°</span><span class="dot" style="background:${scoreInfo(h.score)[1]}"></span>`}
+    return `<button class="pill ${t.id===S.track?'on':''}" data-t="${t.id}">${t.short}${ex}</button>`}).join('');
+  $('trackRow').querySelectorAll('.pill').forEach(b=>b.onclick=()=>selectTrack(b.dataset.t));
+}
+function days(){const H=S.wx[0].hourly.time,out=[];for(let i=0;i<48;i++){const d=H[S.start+i].slice(0,10);if(!out.includes(d))out.push(d)}return out}
+const SEMO=s=>s>=80?'🟢':s>=65?'🟩':s>=50?'🟡':'🔴';
+function selDate(){return S.mode==='alt'&&S.alt?S.alt.date:S.wx[0].hourly.time[S.start+S.sel].slice(0,10)}
+function dateLabel(d){const lt=parseLocal(d+'T00:00'),rd=relDay(d+'T00:00'),n=dubaiNow();
+  return (rd==='Today'||rd==='Tomorrow'||rd==='Yesterday'?rd:lt.day)+` ${lt.date} ${lt.mon}`+(d.slice(0,4)!==n.year?` ${d.slice(0,4)}`:'')}
+function renderWhen(){
+  if(!S.wx)return;const ti=TI(),H=S.wx[0].hourly.time,d=selDate(),n=dubaiNow();
+  $('dateTxt').textContent=dateLabel(d);
+  let o='';
+  if(S.mode==='alt'&&S.alt){for(let hh=0;hh<24;hh++){const x=altAt(ti,hh);o+=`<option value="a${hh}">${String(hh).padStart(2,'0')}:00  ${SEMO(x.score)} ${Math.round(x.t)}° · ${spd(x.w)} ${uLbl()} ${card(x.dir)}</option>`}
+    $('pickHour').innerHTML=o;$('pickHour').value='a'+S.altH;$('timeTxt').textContent=`${String(S.altH).padStart(2,'0')}:00`}
+  else{for(let i=S.minOff;i<=S.maxOff;i++){if(!H[S.start+i].startsWith(d))continue;const x=hourAt(ti,i),l=parseLocal(x.time);
+      o+=`<option value="f${i}">${i===0?`Now (${n.hour}:${n.minute})`:l.hm}  ${SEMO(x.score)} ${Math.round(x.t)}° · ${spd(x.w)} ${uLbl()} ${card(x.dir)}</option>`}
+    $('pickHour').innerHTML=o;$('pickHour').value='f'+S.sel;$('timeTxt').textContent=S.sel===0?`Now · ${n.hour}:${n.minute}`:parseLocal(H[S.start+S.sel]).hm}
+  const h=cur(ti),[lab,col,bg]=scoreInfo(h.score);$('selScore').textContent=`${lab} · ${h.score}`;$('selScore').style.color=col;$('selScore').style.background=bg;
+}
+async function pickDay(d){
+  const H=S.wx[0].hourly.time,curH=parseLocal(cur(TI()).time).h,wasNow=S.mode==='fc'&&S.sel===0,opts=[];
+  for(let i=S.minOff;i<=S.maxOff;i++)if(H[S.start+i].startsWith(d))opts.push(i);
+  if(opts.length){
+    if(opts.includes(0)&&(wasNow||S.mode==='alt')){setSel(0);return}
+    let pick=wasNow?null:opts.find(i=>parseLocal(H[S.start+i]).h===curH);
+    if(pick==null)pick=opts.find(i=>parseLocal(H[S.start+i]).h===7)??opts[0];
+    setSel(pick);return}
+  try{toast('Loading weather for '+dateLabel(d)+'…',6000);const A=await loadAlt(d);S.alt=A;S.mode='alt';S.altH=wasNow?7:curH;
+    $('toast').classList.remove('show');renderWhen();renderTrackRow();renderCond()}
+  catch(e){toast('Couldn\'t load weather for that date. Try again.')}
+}
+$('pickHour').addEventListener('change',e=>{const v=e.target.value;v[0]==='a'?setAlt(+v.slice(1)):setSel(+v.slice(1))});
+/* own calendar: tap a date = selected immediately (no OK button) */
+const MONTHS_L=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function renderCal(){
+  if(!S.wx)return;const ti=TI(),H=S.wx[0].hourly.time,sel=selDate(),n=dubaiNow(),today=`${n.year}-${n.month}-${n.day}`;
+  if(!S.calYM)S.calYM=sel.slice(0,7);const [y,m]=S.calYM.split('-').map(Number);
+  const best={};for(let i=S.minOff;i<=S.maxOff;i++){const d=H[S.start+i].slice(0,10),sc=hourAt(ti,i).score;best[d]=Math.max(best[d]??-1,sc)}
+  const first=new Date(Date.UTC(y,m-1,1)).getUTCDay(),dim=new Date(Date.UTC(y,m,0)).getUTCDate();
+  let h=`<h4><button class="cnav" data-nav="-1" aria-label="Previous month">‹</button><span>${MONTHS_L[m-1]} ${y}</span><button class="cnav" data-nav="1" aria-label="Next month">›</button></h4>
+    <div class="wk">${['S','M','T','W','T','F','S'].map(x=>`<span>${x}</span>`).join('')}</div><div class="gd">`;
+  for(let i=0;i<first;i++)h+='<span></span>';
+  for(let dd=1;dd<=dim;dd++){const d=`${S.calYM}-${String(dd).padStart(2,'0')}`,fc=d in best;
+    h+=`<button class="cd av ${fc?'fc':''} ${d===sel?'on':''} ${d===today?'today':''}" data-d="${d}">${dd}${fc?`<i style="background:${scoreInfo(best[d])[1]}"></i>`:'<i class="nd"></i>'}</button>`}
+  h+=`</div><div class="calnote"><span><i style="background:#16a34a"></i>Forecast (16 days)</span><span><i class="nd"></i>Past: recorded · Later: typical</span></div>`;
+  if(S.calYM!==today.slice(0,7))h+=`<button class="calnow" data-today>Back to today</button>`;
+  $('cal').innerHTML=h;
+  $('cal').querySelectorAll('.cd.av').forEach(b=>b.onclick=e=>{e.stopPropagation();closeCal();pickDay(b.dataset.d)});
+  $('cal').querySelectorAll('.cnav').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=+b.dataset.nav;let yy=y,mm=m+k;if(mm<1){mm=12;yy--}if(mm>12){mm=1;yy++}S.calYM=`${yy}-${String(mm).padStart(2,'0')}`;renderCal()});
+  const tb=$('cal').querySelector('[data-today]');if(tb)tb.onclick=e=>{e.stopPropagation();closeCal();setSel(0)};
+}
+function openCal(){S.calYM=null;renderCal();$('cal').hidden=false;$('dateFld').setAttribute('aria-expanded','true')}
+function closeCal(){$('cal').hidden=true;$('dateFld').setAttribute('aria-expanded','false')}
+$('dateFld').addEventListener('click',e=>{e.stopPropagation();$('cal').hidden?openCal():closeCal()});
+$('dateFld').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('cal').hidden?openCal():closeCal()}});
+$('cal').addEventListener('click',e=>e.stopPropagation());
+document.addEventListener('click',()=>{if(!$('cal').hidden)closeCal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCal()});
+
+/* ================= details panel ================= */
+function renderCond(){
+  if(!S.wx)return;const ti=TI(),h=cur(ti),lt=parseLocal(h.time),alt=S.mode==='alt',live=!alt&&S.sel===0,n=dubaiNow();
+  const whenTxt=live?`Now · ${n.hour}:${n.minute}`:`${dateLabel(h.time.slice(0,10))} · ${lt.hm}`;
+  const tag=live?'LIVE':alt?(h.kind==='past'?'RECORDED':'TYPICAL'):S.sel<0?'EARLIER':'FORECAST';
+  $('liveTag').className=live?'live':'live fc';$('liveTag').innerHTML='<i></i>'+tag;
+  $('whenVal').textContent=whenTxt;
+  $('temp').textContent=`${Math.round(h.t)}°C`;
+  const [ic,desc]=wx(h.code,h.day);$('wxIcon').textContent=ic;$('wxDesc').textContent=desc;
+  $('wArr').style.transform=`rotate(${h.dir+90}deg)`;
+  $('wspd').textContent=`${spd(h.w)} ${uLbl()}`;
+  const c=card(h.dir);$('wdir').textContent=`${c} ${Math.round(h.dir)}°`;
+  $('wdesc').textContent=(alt?(h.kind==='past'?`📚 Recorded weather for this date. `:`📚 Typical: based on the same day in ${S.alt.src.slice(0,4)}. The forecast covers 16 days ahead. `):'')+`💨 Blowing ${PTN[card(h.dir+180)]}. ${windWords(h.w)}`;
+  $('feels').textContent=Math.round(h.fl)+'°C';$('gust').textContent=`${spd(h.g)} ${uLbl()}`;$('hum').textContent=h.rh+'%';
+  $('uv').textContent=h.uv==null?'--':h.uv.toFixed(0);$('rain').textContent=h.pp!=null?h.pp+'%':h.mm!=null?h.mm.toFixed(1)+' mm':'--';
+  const sun=sunFor(ti,h.time);$('sunr').textContent=sun?sun.rise:'--';$('suns').textContent=sun?sun.set:'--';
+  const [lab,col,bg]=scoreInfo(h.score);
+  $('ringArc').setAttribute('stroke-dasharray',`${h.score/100*169.6} 170`);$('ringArc').setAttribute('stroke',col);$('ringTxt').textContent=h.score;
+  $('scoreT').innerHTML=`Ride score: <span style="color:${col}">${lab}</span>`;$('scoreD').textContent=scoreReason(h);
+  $('kit').innerHTML='<span>'+kitTip(h)+'</span>';
+  const kb=$('kite');
+  if(T().kite){const kn=h.w/1.852;kb.style.display='block';
+    kb.innerHTML='<span>'+(kn<10?`🪁 <b>Kitesurf:</b> ${kn.toFixed(0)} kn, too light for most kites.`:kn<=25?`🪁 <b>Kitesurf:</b> ${kn.toFixed(0)} kn from ${c}, rideable! ${(h.dir>=225||h.dir<=30)?'Onshore/side-on (good).':'Offshore component, take care.'}`:`🪁 <b>Kitesurf:</b> ${kn.toFixed(0)} kn, strong, experts only.`)+'</span>'}
+  else kb.style.display='none';
+  // map hero
+  $('mName').textContent=T().name;$('mWhen').textContent=whenTxt;
+  $('mTemp').textContent=Math.round(h.t)+'°';$('mIcon').textContent=ic;
+  $('mArrow').style.transform=`rotate(${h.dir+180}deg)`;$('mWind').textContent=`${spd(h.w)} ${uLbl()}`;$('mDir').textContent=`${c}`;
+  $('mScore').textContent=`${lab} · ${h.score}`;$('mScore').style.color=col;$('mScore').style.background=bg;
+  colorTrack(h.dir);setParticles(h.dir,h.w);prepShot();cxSync();
+}
+
+/* ================= conditions slider ================= */
+const CX={i:0,hold:false,t:null};
+function cxSlides(){return [...document.querySelectorAll('#cxTrack .cx-s')].filter(x=>!x.hidden)}
+function cxGo(i,user){const sl=cxSlides(),n=sl.length;if(!n)return;CX.i=(i+n)%n;
+  const all=[...document.querySelectorAll('#cxTrack .cx-s')];const k=all.indexOf(sl[CX.i]);
+  $('cxTrack').style.transform=`translateX(${-100*sl.slice(0,CX.i).length}%)`;
+  $('cxT').textContent=sl[CX.i].dataset.t;
+  [...$('cxDots').children].forEach((b,j)=>b.classList.toggle('on',j===CX.i));
+  if(user)cxTimer()}
+function cxSync(){const ks=document.querySelector('#cxTrack .cx-kite');ks.hidden=!T().kite;
+  const sl=cxSlides();if($('cxDots').children.length!==sl.length){$('cxDots').innerHTML=sl.map((x,j)=>`<i aria-label="${esc(x.dataset.t)}"></i>`).join('')}
+  if(CX.i>=sl.length)CX.i=0;cxGo(CX.i)}
+function cxTimer(){clearTimeout(CX.t);CX.t=setTimeout(()=>{if(!CX.hold)cxGo(CX.i+1);cxTimer()},5000)}
+(function(){const c=$('cond');c.addEventListener('mouseenter',()=>CX.hold=true);c.addEventListener('mouseleave',()=>CX.hold=false);
+  let x0=null,y0=null;const v=$('cxView');
+  /* mouse drag on desktop: the slide follows the mouse, then snaps */
+  let mx=null,base=0;v.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0||e.target.closest('button'))return;mx=e.clientX;
+    base=-100*CX.i;v.classList.add('drag');v.setPointerCapture(e.pointerId)});
+  v.addEventListener('pointermove',e=>{if(mx==null)return;const dx=e.clientX-mx;$('cxTrack').style.transform=`translateX(calc(${base}% + ${dx}px))`});
+  const end=e=>{if(mx==null)return;const dx=e.clientX-mx;mx=null;v.classList.remove('drag');
+    if(Math.abs(dx)>50)cxGo(CX.i+(dx<0?1:-1),true);else cxGo(CX.i)};
+  v.addEventListener('pointerup',end);v.addEventListener('pointercancel',end);
+  v.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY;v.classList.add('drag')},{passive:true});
+  v.addEventListener('touchmove',e=>{if(x0==null)return;const dx=e.touches[0].clientX-x0,dy=e.touches[0].clientY-y0;if(Math.abs(dx)>Math.abs(dy))$('cxTrack').style.transform=`translateX(calc(${-100*CX.i}% + ${dx}px))`},{passive:true});
+  v.addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;
+    v.classList.remove('drag');if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))cxGo(CX.i+(dx<0?1:-1),true);else cxGo(CX.i)},{passive:true});
+  // keep the units buttons from triggering a swipe
+  cxTimer()})();
+
+/* ================= best window ================= */
+function renderBest(){
+  // Season tip (Nov–Mar): best to start 06:30 and finish 10:00. Compare that window across the next 48 h.
+  const ti=TI(),H=S.wx[0].hourly.time,n=dubaiNow(),nowH=+n.hour;let best=null;
+  days().forEach(d=>{const idx=[];for(let i=0;i<48;i++){const t=H[S.start+i];if(t.startsWith(d)){const h=parseLocal(t).h;if(h>=6&&h<=9)idx.push(i)}}
+    if(!idx.length)return;const hs=idx.map(i=>hourAt(ti,i));const avg=Math.round(hs.reduce((s,h)=>s+h.score,0)/hs.length);
+    if(!best||avg>best.avg)best={d,idx,hs,avg}});
+  S.best=best?best.idx[0]:null;S.bestTxt=null;
+  if(!best){$('best').innerHTML='<span>⭐ No 06:30–10:00 morning in the 48-hour forecast yet.</span>';return}
+  const t=best.hs.map(h=>h.t),w=best.hs.map(h=>h.w),mid=best.hs[Math.floor(best.hs.length/2)];
+  const rng=(a,f)=>{const lo=f(Math.min(...a)),hi=f(Math.max(...a));return lo===hi?lo:`${lo}–${hi}`};
+  S.bestTxt=`${relDay(best.hs[0].time)} 06:30–10:00`;
+  $('best').innerHTML=`<span>⭐ Best morning at <b>${T().short}</b>: <b>${S.bestTxt}</b> · ${rng(t,Math.round)}°C, wind ${rng(w,v=>spd(v))} ${uLbl()} ${card(mid.dir)} · score <b>${best.avg}</b></span>`;
+}
+
+/* ================= selection ================= */
+function setSel(i){i=Math.max(S.minOff,Math.min(S.maxOff,i|0));S.mode='fc';S.sel=i;renderWhen();renderTrackRow();renderCond()}
+function setAlt(hh){S.mode='alt';S.altH=hh;renderWhen();renderTrackRow();renderCond()}
+function renderAll(){renderTrackRow();renderBest();renderWhen();renderCond();if(typeof renderData==='function')renderData()}
+
+/* ================= map ================= */
+const map=L.map('map',{zoomControl:false,attributionControl:true}).setView([T().lat,T().lng],T().zoom);
+L.control.zoom({position:'bottomright'}).addTo(map);
+const touch=matchMedia('(pointer:coarse)').matches;
+if(touch){map.dragging.disable();map.tap&&map.tap.disable();
+  const el=$('map');el.addEventListener('touchstart',e=>{if(e.touches.length>1)map.dragging.enable()},{passive:true});
+  el.addEventListener('touchend',e=>{if(e.touches.length<2)map.dragging.disable()},{passive:true});
+  let hinted=false;el.addEventListener('touchmove',e=>{if(e.touches.length===1&&!hinted){hinted=true;toast('Use two fingers to move the map')}},{passive:true});}
+const LAYERS={
+  sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,crossOrigin:true,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'}),
+  cycle:L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',{maxZoom:20,crossOrigin:true,attribution:'CyclOSM · © OpenStreetMap contributors'}),
+};
+let curLayer=null;
+function setLayer(k){save('rw_layer',k);S.layer=k;if(curLayer)map.removeLayer(curLayer);curLayer=LAYERS[k]||LAYERS.sat;curLayer.addTo(map);
+  document.querySelectorAll('#layers button').forEach(b=>b.classList.toggle('on',b.dataset.l===k))}
+document.querySelectorAll('#layers button').forEach(b=>b.onclick=()=>setLayer(b.dataset.l));
+setLayer(S.layer);
+
+const trackLayer=L.layerGroup().addTo(map);let startMarker=null,segs=[];
+const startIcon=L.divIcon({className:'',html:'<div style="width:30px;height:30px;border-radius:50%;background:#65a30d;border:3px solid #fff;box-shadow:0 0 0 3px #65a30d66,0 4px 14px #0f172a33;display:grid;place-items:center;font-size:15px">🚴</div>',iconSize:[30,30],iconAnchor:[15,15]});
+function bearing(a,b){const r=Math.PI/180,y=Math.sin((b[1]-a[1])*r)*Math.cos(b[0]*r),x=Math.cos(a[0]*r)*Math.sin(b[0]*r)-Math.sin(a[0]*r)*Math.cos(b[0]*r)*Math.cos((b[1]-a[1])*r);return(Math.atan2(y,x)/r+360)%360}
+function dist(a,b){const r=Math.PI/180,dl=(b[0]-a[0])*r,dg=(b[1]-a[1])*r,h=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dg/2)**2;return 12742*Math.asin(Math.sqrt(h))}
+// keep only the largest connected network (drops separate cycle paths in the search box, e.g. Expo / Dubai South near Al Qudra)
+// Al Qudra starts at BOTS: drop the path north of it (towards E311)
+function clipNorth(lines,max,min=-90){const out=[];lines.forEach(l=>{let part=[];l.pts.forEach(p=>{if(p[0]<=max&&p[0]>=min)part.push(p);else{if(part.length>1)out.push({pts:part});part=[]}});if(part.length>1)out.push({pts:part})});return out}
+function mainNetwork(lines){const k=Math.cos(25*Math.PI/180),d=(a,b)=>Math.hypot((a[0]-b[0])*111000,(a[1]-b[1])*111000*k);
+  const n=lines.length,par=[...Array(n).keys()],f=x=>{while(par[x]!==x){par[x]=par[par[x]];x=par[x]}return x};
+  const near=(A,B)=>[A[0],A[A.length-1]].some(e=>B.some(q=>d(e,q)<40));
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const A=lines[i].pts,B=lines[j].pts;if(near(A,B)||near(B,A))par[f(i)]=f(j)}
+  const g={},len=w=>w.reduce((s,p,i)=>i?s+d(w[i-1],p):0,0);lines.forEach((l,i)=>(g[f(i)]=g[f(i)]||[]).push(i));
+  const best=Object.values(g).sort((a,b)=>b.reduce((s,i)=>s+len(lines[i].pts),0)-a.reduce((s,i)=>s+len(lines[i].pts),0))[0];
+  return best.sort((a,b)=>a-b).map(i=>lines[i])}
+async function loadTrack(tr){
+  if(S.geo[tr.id])return S.geo[tr.id];
+  // 1) geometry stored on this site (updated weekly from OpenStreetMap by GitHub Actions)
+  try{const r=await fetch(`tracks/${tr.id}.json`,{cache:'no-cache'});if(r.ok){const j=await r.json();
+    const lines=(j.lines||[]).map(pts=>({pts}));if(lines.length){S.geo[tr.id]=lines;return lines}}}catch(e){}
+  // 2) browser cache from an earlier live download
+  try{const c=localStorage.getItem('rw_geo2_'+tr.id);if(c){const g=JSON.parse(c);if(Date.now()-g.ts<7*864e5&&g.lines&&g.lines.length){S.geo[tr.id]=g.lines;return g.lines}}}catch(e){}
+  // 3) live from Overpass
+  const [s,w,n,e]=tr.bbox,bb=`(${s},${w},${n},${e})`;
+  const q=`[out:json][timeout:30];(${tr.filter.split(';').map(f=>f+bb+';').join('')});out geom;`;
+  for(const m of['https://overpass-api.de/api/interpreter','https://overpass.private.coffee/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter','https://overpass.kumi.systems/api/interpreter']){
+    try{const r=await fetch(m,{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}});if(!r.ok)continue;
+      const j=await r.json();const lines=j.elements.filter(x=>x.geometry&&x.geometry.length>1).map(x=>({pts:x.geometry.map(p=>[p.lat,p.lon])}));
+      if(!lines.length)continue;if(tr.id==='alqudra')lines=mainNetwork(clipNorth(lines,24.9988));if(tr.id==='meydan')lines=clipNorth(lines,90,25.1489);S.geo[tr.id]=lines;try{localStorage.setItem('rw_geo2_'+tr.id,JSON.stringify({ts:Date.now(),lines}))}catch(e){}return lines}catch(e){}}
+  return null;
+}
+async function drawTrack(){
+  const tr=T();trackLayer.clearLayers();segs=[];arrowLayer.clearLayers();paintDirLabel();if(startMarker)map.removeLayer(startMarker);
+  startMarker=L.marker([tr.lat,tr.lng],{icon:startIcon}).addTo(map).bindPopup(`<b>${tr.name}</b><br>${tr.info}<br>🚿 Free showers · 🚻 Toilets · ☕ Coffee · <a class="rentlink" href="${esc(rentUrl())}" target="_blank" rel="noopener">🚲 Bike rental (Wolfi's) ↗</a>`);
+  map.setView([tr.lat,tr.lng],tr.zoom);
+  $('mapInfo').innerHTML=tr.info;$('miName').textContent=tr.name;$('dirLink').href=`https://www.google.com/maps/dir/?api=1&destination=${tr.lat},${tr.lng}`;
+  $('maploading').style.display='block';const lines=await loadTrack(tr);$('maploading').style.display='none';
+  if(tr.id!==S.track)return;
+  if(!lines||!lines.length){L.circle([tr.lat,tr.lng],{radius:tr.zoom<13?6000:700,color:'#65a30d',weight:2,dashArray:'6 6',fillOpacity:.05}).addTo(trackLayer);return}
+  const all=[];lines.forEach(l=>all.push(...l.pts));
+  // centroid & main axis (for riding-direction maths)
+  const cy=all.reduce((s,p)=>s+p[0],0)/all.length,cx0=all.reduce((s,p)=>s+p[1],0)/all.length,k=Math.cos(cy*Math.PI/180);
+  let sxx=0,syy=0,sxy=0;all.forEach(p=>{const x=(p[1]-cx0)*k,y=p[0]-cy;sxx+=x*x;syy+=y*y;sxy+=x*y});
+  const ang=.5*Math.atan2(2*sxy,sxx-syy);let ax=[Math.cos(ang),Math.sin(ang)];if(ax[1]<0||(ax[1]===0&&ax[0]<0))ax=[-ax[0],-ax[1]];
+  S.axisBrg=(Math.atan2(ax[0],ax[1])*180/Math.PI+360)%360;
+  lines.forEach(l=>{L.polyline(l.pts,{color:'#fff',weight:8,opacity:.8,interactive:false}).addTo(trackLayer);
+    for(let i=0;i<l.pts.length-1;i++){const a=l.pts[i],b=l.pts[i+1];const p=L.polyline([a,b],{color:'#65a30d',weight:4.5,lineCap:'round'}).addTo(trackLayer);
+      p.bindTooltip(()=>segTip(p),{sticky:true});p._brg=bearing(a,b);p._km=dist(a,b);p._mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];p._a=a;p._b=b;
+      const vx=(b[1]-a[1])*k,vy=b[0]-a[0],mx=(p._mid[1]-cx0)*k,my=p._mid[0]-cy;
+      p._ccw=(mx*vy-my*vx)>0; p._fwd=(vx*ax[0]+vy*ax[1])>=0; segs.push(p)}});
+  paintDir();
+  map.fitBounds(L.latLngBounds(all),{padding:[40,40],maxZoom:16});
+  if(S.wx)colorTrack(cur(TI()).dir);
+}
+const relAngle=(b,d)=>Math.abs(((b-d)%360+540)%360-180);
+/* riding direction: loops = clockwise / anticlockwise, lines = along main axis */
+function rideDir(){const t=T();const d=load('rw_dir_'+t.id,'');if(t.line)return d==='rev'?'rev':'fwd';return d==='cw'||d==='ccw'?d:(t.dir||'cw')}
+function effBrg(p){const t=T(),d=rideDir();const keep=t.line?(p._fwd===(d==='fwd')):(p._ccw===(d==='ccw'));return keep?p._brg:(p._brg+180)%360}
+function windKind(p,from){const a=relAngle(effBrg(p),from);return a<60?'head':a>120?'tail':'cross'}
+const KCOL={head:'#dc2626',tail:'#16a34a',cross:'#eab308'},KTXT={head:'Headwind',tail:'Tailwind',cross:'Crosswind'};
+function paintDirLabel(){const t=T(),d=rideDir();$('dirBtn').textContent=t.line?'Direction':(d==='ccw'?'Anticlockwise':'Clockwise')}
+function paintDir(){const t=T(),d=rideDir();
+  if(t.line){const b=d==='fwd'?S.axisBrg||45:((S.axisBrg||45)+180)%360;$('dirBtn').textContent=`Heading ${PTN[card(b)]}`}
+  else $('dirBtn').textContent=d==='ccw'?'Anticlockwise':'Clockwise';
+  drawArrows();if(S.wx)colorTrack(cur(TI()).dir)}
+$('dirBtn').onclick=()=>{const t=T(),d=rideDir();save('rw_dir_'+t.id,t.line?(d==='fwd'?'rev':'fwd'):(d==='ccw'?'cw':'ccw'));paintDir();
+  toast(t.line?'Riding direction reversed':`Riding ${rideDir()==='ccw'?'anticlockwise':'clockwise'}`)};
+const arrowLayer=L.layerGroup().addTo(map);
+function drawArrows(){arrowLayer.clearLayers();if(!segs.length)return;let acc=0;const tot=segs.reduce((s,p)=>s+p._km,0),gap=Math.max(.25,tot/14);
+  segs.forEach(p=>{acc+=p._km;if(acc<gap)return;acc=0;const b=effBrg(p);
+    L.marker(p._mid,{interactive:false,icon:L.divIcon({className:'',html:`<div class="darr" style="transform:rotate(${b-90}deg)">➤</div>`,iconSize:[18,18],iconAnchor:[9,9]})}).addTo(arrowLayer)})}
+function segTip(p){if(!S.wx)return'';const k=windKind(p,cur(TI()).dir);return `Riding ${card(effBrg(p))}: <b style="color:${KCOL[k]}">${KTXT[k]}</b>`}
+function colorTrack(dir){
+  const t=T(),d=rideDir(),dl=t.line?`Heading ${card(d==='fwd'?S.axisBrg||45:((S.axisBrg||45)+180)%360)}`:(d==='ccw'?'Anticlockwise':'Clockwise');
+  $('xw').textContent=dl;$('wsDir').textContent=`riding ${dl.toLowerCase()}`;
+  if(!segs.length){['wsH','wsT','wsC'].forEach(id=>$(id).textContent='--');['wsHb','wsTb','wsCb'].forEach(id=>$(id).style.width='0');return}
+  const km={head:0,tail:0,cross:0};let tot=0;
+  segs.forEach(p=>{const k=windKind(p,dir);p.setStyle({color:KCOL[k]});km[k]+=p._km;tot+=p._km});
+  let H=Math.round(km.head/tot*100),Tl=Math.round(km.tail/tot*100),C=100-H-Tl;if(C<0)C=0;
+  $('wsH').textContent=H+'%';$('wsT').textContent=Tl+'%';$('wsC').textContent=C+'%';
+  $('wsHb').style.width=H+'%';$('wsTb').style.width=Tl+'%';$('wsCb').style.width=C+'%';
+}
+
+/* wind particles */
+const cv=$('wind'),cx=cv.getContext('2d');let P=[],vx=0,vy=0,pA=.5;
+function sizeCv(){const r=cv.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=r.height*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+new ResizeObserver(sizeCv).observe(cv);sizeCv();
+function setParticles(dir,k){const to=(dir+180)*Math.PI/180,sp=.4+k/9;vx=Math.sin(to)*sp;vy=-Math.cos(to)*sp;pA=Math.min(.75,.25+k/50);
+  const n=Math.round(60+k*7),w=cv.clientWidth,h=cv.clientHeight;while(P.length<n)P.push({x:Math.random()*w,y:Math.random()*h,a:Math.random()*80});P.length=n}
+(function step(){const w=cv.clientWidth,h=cv.clientHeight;cx.clearRect(0,0,w,h);cx.lineCap='round';const sat=S.layer==='sat';
+  for(const p of P){const ox=p.x,oy=p.y;p.x+=vx*(.85+Math.random()*.3);p.y+=vy*(.85+Math.random()*.3);p.a++;
+    if(p.x<0||p.x>w||p.y<0||p.y>h||p.a>90){p.x=Math.random()*w;p.y=Math.random()*h;p.a=0;continue}
+    const life=Math.sin(p.a/90*Math.PI);cx.strokeStyle=sat?`rgba(255,255,255,${pA*life})`:`rgba(15,23,42,${pA*life*.7})`;cx.lineWidth=1.4;
+    cx.beginPath();cx.moveTo(ox-vx*6,oy-vy*6);cx.lineTo(p.x,p.y);cx.stroke()}
+  requestAnimationFrame(step)})();
+
+/* ================= track select ================= */
+function selectTrack(id){S.track=id;save('rw_track',id);renderTrackRow();drawTrack();
+  const on=$('trackRow').querySelector('.pill.on');if(on)$('trackRow').scrollTo({left:on.offsetLeft-20,behavior:'smooth'});
+  if(S.wx){renderBest();renderWhen();renderCond()}}
+
+/* ================= units ================= */
+function paintUnits(){document.querySelectorAll('#units button').forEach(b=>b.classList.toggle('on',b.dataset.u===S.unit))}
+document.querySelectorAll('#units button').forEach(b=>b.onclick=()=>{S.unit=b.dataset.u;save('rw_unit',S.unit);paintUnits();if(S.wx)renderAll()});
+paintUnits();
+
+/* ================= share ================= */
+function toast(m,ms=3200){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),ms)}
+/* ================= share texts (built from site-data.js) ================= */
+const SITE=window.SITE||{links:{},sponsors:[],events:[],rides:[]};
+function siteUrl(){return /^https?:/.test(location.protocol)?location.origin+location.pathname:'https://thecyclistdubai.com/'}
+const spDeal=(x,b='*')=>`use ${x.kind||'code'} ${b}${x.code}${b}`+(x.discount?` for ${b}${x.discount}${b}`:'');
+const spShort=x=>x.discount||(x.kind?x.kind.replace(/^./,m=>m.toUpperCase()):'Code')+' '+x.code;
+// sponsors in a share; a sponsor that is also an upcoming event is skipped (the event list in the same message already has its link + code)
+function sponsorsText(){const evU=new Set(upcomingEvents().map(e=>(e.url||'').replace(/\/$/,'')));const sp=(SITE.sponsors||[]).filter(x=>!evU.has((x.url||'').replace(/\/$/,'')));if(!sp.length)return'';
+  return '\n🎁 *Sponsor discounts*\n'+sp.map(x=>`• *${x.name}*${x.what?` (${x.what})`:''}: ${spDeal(x)}\n  ${x.url}`).join('\n')+'\n'}
+const sameLink=(a,b)=>!!a&&!!b&&a.split('?')[0].replace(/\/$/,'')===b.split('?')[0].replace(/\/$/,'');
+function footerText(){return `\n📲 Live ride weather & forecast: ${siteUrl()}`+(SITE.links.whatsappGroup?`\n👥 Join our WhatsApp group: ${SITE.links.whatsappGroup}`:'')}
+function weatherText(){
+  if(!S.wx)return'TheCyclistDubai Weather\n'+siteUrl();
+  const ti=TI(),h=cur(ti),lt=parseLocal(h.time),[lab]=scoreInfo(h.score),n=dubaiNow();
+  const when=(S.mode==='fc'&&S.sel===0)?`Now (${n.hour}:${n.minute})`:`${dateLabel(h.time.slice(0,10))}, ${lt.hm}`+(S.mode==='alt'?(h.kind==='past'?' (recorded)':' (typical)'):'');
+  const sun=sunFor(ti,h.time),uv=h.uv==null?'-':h.uv.toFixed(0),rain=h.pp!=null?h.pp+'%':h.mm!=null?h.mm.toFixed(1)+' mm':'-';
+  let s=`🚴 *${T().name}*\n🕒 ${when} · Dubai time\n\n`+
+    `🌡️ ${Math.round(h.t)}°C, feels ${Math.round(h.fl)}°C · ${wx(h.code,h.day)[1]} ${wx(h.code,h.day)[0]}\n`+
+    `💨 Wind ${spd(h.w)} ${uLbl()} from ${card(h.dir)}, gusts ${spd(h.g)} ${uLbl()}\n`+
+    `💧 Humidity ${h.rh}% · UV ${uv} · Rain ${rain}\n`+(sun?`🌅 Sunrise ${sun.rise} · Sunset ${sun.set}\n`:'')+
+    `✅ Ride score *${h.score}/100* (${lab})\n`;
+  if(segs.length)s+=`🧭 On the track (${$('xw').textContent.toLowerCase()}): headwind ${$('wsH').textContent} · tailwind ${$('wsT').textContent} · crosswind ${$('wsC').textContent}\n`;
+  if(S.bestTxt)s+=`⭐ Best morning: ${S.bestTxt}\n`;
+  s+=`👕 ${kitTip(h).replace(/<[^>]+>/g,'').replace(/^👕\s*/,'')}\n`;
+  const rides=upcomingRides();if(rides.length){s+=`\n🚴‍♂️ *${rides.length>1?'Upcoming group rides':'Next group ride'}*\n`+rides.map(r=>`• ${r.name}, ${occLabel(r.occ)} ${fmtTime(r.time)}, ${r.place}${r.route?` (${r.route})`:''}${[r.type,r.distance].filter(Boolean).length?`, ${[r.type,r.distance].filter(Boolean).join(' · ')}`:''}${r.start?`, start ${r.start}`:''}${r.pace?`, ${r.pace}`:''}${rideRule(r)?`, ${rideRule(r).replace(/^./,m=>m.toLowerCase())}`:''}\n`+(r.join&&!sameLink(r.join,SITE.links.whatsappGroup)?`  Join: ${r.join}\n`:'')).join('')}
+  s+=eventPromoText();
+  return s+sponsorsText()+footerText();
+}
+const shareText=weatherText;
+
+/* ---------- map image (drawn directly, no page screenshot) ---------- */
+function loadImg(src,ms=7000){return new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';let done=false;
+  const fin=v=>{if(!done){done=true;res(v)}};im.onload=()=>fin(im);im.onerror=()=>fin(null);setTimeout(()=>fin(null),ms);im.src=src})}
+const TILEURL={sat:(z,x,y)=>`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`,
+  cycle:(z,x,y)=>`https://${'abc'[(x+y)%3]}.tile-cyclosm.openstreetmap.fr/cyclosm/${z}/${x}/${y}.png`};
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+async function makeShot(){
+  const el=$('map'),W=Math.max(320,el.clientWidth),Hm=Math.max(240,el.clientHeight),sc=2,band=118;
+  const cv2=document.createElement('canvas');cv2.width=W*sc;cv2.height=(Hm+band)*sc;const c=cv2.getContext('2d');c.scale(sc,sc);
+  c.fillStyle='#e5e7eb';c.fillRect(0,0,W,Hm);
+  // tiles
+  const z=Math.round(map.getZoom()),pb=map.getPixelBounds(),n=2**z;
+  const tl=[];for(let tx=Math.floor(pb.min.x/256);tx<=Math.floor(pb.max.x/256);tx++)for(let ty=Math.floor(pb.min.y/256);ty<=Math.floor(pb.max.y/256);ty++){if(ty<0||ty>=n)continue;tl.push([tx,ty])}
+  const draw=async layer=>{const ims=await Promise.all(tl.map(([tx,ty])=>loadImg(TILEURL[layer](z,((tx%n)+n)%n,ty))));let ok=0;
+    ims.forEach((im,k)=>{if(im){ok++;c.drawImage(im,tl[k][0]*256-pb.min.x,tl[k][1]*256-pb.min.y,256,256)}});return ok};
+  let ok=await draw(S.layer);if(ok<tl.length/2&&S.layer!=='sat')await draw('sat');
+  // track
+  const h=cur(TI()),pt=ll=>{const q=map.latLngToContainerPoint(ll);return[q.x,q.y]};
+  c.lineCap='round';c.lineJoin='round';
+  if(segs.length){c.strokeStyle='rgba(255,255,255,.85)';c.lineWidth=7;c.beginPath();segs.forEach(p=>{const A=pt(p._a),B=pt(p._b);c.moveTo(A[0],A[1]);c.lineTo(B[0],B[1])});c.stroke();
+    ['cross','tail','head'].forEach(k=>{c.strokeStyle=KCOL[k];c.lineWidth=4.2;c.beginPath();segs.forEach(p=>{if(windKind(p,h.dir)!==k)return;const A=pt(p._a),B=pt(p._b);c.moveTo(A[0],A[1]);c.lineTo(B[0],B[1])});c.stroke()})}
+  const sp=pt([T().lat,T().lng]);c.fillStyle='#65a30d';c.strokeStyle='#fff';c.lineWidth=3;c.beginPath();c.arc(sp[0],sp[1],9,0,7);c.fill();c.stroke();
+  // weather card (top-left)
+  const [lab,col,bg]=scoreInfo(h.score),[ic,desc]=wx(h.code,h.day);
+  const cw=210,ch=128;c.shadowColor='rgba(15,23,42,.25)';c.shadowBlur=14;c.fillStyle='rgba(255,255,255,.95)';rr(c,12,12,cw,ch,14);c.fill();c.shadowBlur=0;
+  c.fillStyle='#0f172a';c.font='700 13px Sora,sans-serif';c.fillText(T().short,24,34);
+  c.fillStyle='#64748b';c.font='500 11px Sora,sans-serif';c.fillText($('mWhen').textContent,24,50);
+  c.fillStyle='#0f172a';c.font='800 36px Sora,sans-serif';c.fillText(Math.round(h.t)+'°',24,90);
+  c.font='26px sans-serif';c.fillText(ic,24+c.measureText(Math.round(h.t)+'°').width*1.0+28,88);
+  c.save();c.translate(32,108);c.rotate((h.dir+180)*Math.PI/180);c.fillStyle='#65a30d';c.beginPath();c.moveTo(0,-8);c.lineTo(6,7);c.lineTo(0,3);c.lineTo(-6,7);c.closePath();c.fill();c.restore();
+  c.fillStyle='#0f172a';c.font='700 13px "JetBrains Mono",monospace';c.fillText(`${spd(h.w)} ${uLbl()} ${card(h.dir)}`,46,113);
+  c.font='800 11px Sora,sans-serif';const sl=`${lab} · ${h.score}`,sw=c.measureText(sl).width+16;c.fillStyle=bg;rr(c,24,120,sw,16,6);c.fill();c.fillStyle=col;c.fillText(sl,32,132);
+  // bottom band
+  const y0=Hm;c.fillStyle='#ffffff';c.fillRect(0,y0,W,band);
+  c.fillStyle='#64748b';c.font='700 10px Sora,sans-serif';c.fillText('WIND ON THE TRACK · '+$('xw').textContent.toUpperCase(),14,y0+20);
+  const vals=segs.length?[['Headwind',$('wsH').textContent,KCOL.head],['Tailwind',$('wsT').textContent,KCOL.tail],['Crosswind',$('wsC').textContent,KCOL.cross]]:[];
+  let bx=14;const bw=W-28;c.fillStyle='#e2e8f0';rr(c,14,y0+28,bw,10,5);c.fill();
+  if(vals.length){c.save();rr(c,14,y0+28,bw,10,5);c.clip();vals.forEach(([,v,cl])=>{const w=bw*(parseInt(v)||0)/100;c.fillStyle=cl;c.fillRect(bx,y0+28,w,10);bx+=w});c.restore();
+    let lx=14;c.font='600 12px Sora,sans-serif';vals.forEach(([t,v,cl])=>{c.fillStyle=cl;c.beginPath();c.arc(lx+4,y0+56,4,0,7);c.fill();c.fillStyle='#0f172a';const s1=`${t} ${v}`;c.fillText(s1,lx+12,y0+60);lx+=c.measureText(s1).width+30})}
+  else{c.fillStyle='#64748b';c.font='600 12px Sora,sans-serif';c.fillText('Track loading…',14,y0+60)}
+  const g=c.createLinearGradient(0,0,W,0);g.addColorStop(0,'#052e16');g.addColorStop(.5,'#14532d');g.addColorStop(1,'#16a34a');c.fillStyle=g;c.fillRect(0,y0+band-40,W,40);
+  c.fillStyle='#fff';c.font='800 15px Sora,sans-serif';c.fillText('TheCyclist',14,y0+band-15);const tw=c.measureText('TheCyclist').width;c.fillStyle='#bef264';c.fillText('Dubai',14+tw,y0+band-15);
+  c.fillStyle='#dcfce7';c.font='600 11px Sora,sans-serif';const rt='Ride Weather · '+(location.host||'thecyclistdubai');c.fillText(rt,W-14-c.measureText(rt).width,y0+band-16);
+  return await new Promise((res,rej)=>{try{cv2.toBlob(b=>b?res(b):rej(new Error('blob')),'image/png')}catch(e){rej(e)}});
+}
+const shot={key:null,blob:null,job:null};
+function shotKey(){const cc=map.getCenter();return[S.track,S.mode,S.sel,S.altH,S.alt&&S.alt.date,S.layer,S.unit,cc.lat.toFixed(4),cc.lng.toFixed(4),map.getZoom(),rideDir(),segs.length].join('|')}
+function getShot(){const k=shotKey();if(shot.key===k&&shot.blob)return Promise.resolve(shot.blob);if(shot.key===k&&shot.job)return shot.job;
+  shot.key=k;shot.blob=null;shot.job=makeShot().then(b=>{if(shot.key===k)shot.blob=b;return b}).catch(e=>{console.warn(e);if(shot.key===k)shot.job=null;return null});return shot.job}
+function prepShot(){clearTimeout(prepShot.t);prepShot.t=setTimeout(()=>{if(S.wx)getShot()},1500)}
+map.on('moveend',prepShot);
+const fname=()=>`thecyclistdubai-weather-${S.track}.png`;
+function fileOf(b){return new File([b],fname(),{type:'image/png'})}
+function canShareFile(b){try{return!!(b&&navigator.canShare&&navigator.canShare({files:[fileOf(b)]}))}catch(e){return false}}
+function copyText(t){try{navigator.clipboard.writeText(t).catch(()=>{})}catch(e){}}
+async function nativeShare(b,text){copyText(text);
+  try{await navigator.share({files:[fileOf(b)],text,title:'TheCyclistDubai Weather'});toast('Shared ✔ The text is also copied, paste it if WhatsApp drops it');return true}
+  catch(e){if(e.name==='AbortError')return true;return false}}
+$('share').onclick=()=>openSheet();
+function openShareModal(text,imgP,name){
+  imgP=imgP||getShot();$('modal').style.display='grid';$('mImg').removeAttribute('src');$('mSpin').style.display='grid';$('mSpin').textContent='Preparing image…';
+  $('mWa').href='https://wa.me/?text='+encodeURIComponent(text);$('mShare').style.display='none';$('mDl').style.display='none';
+  $('mTxt').textContent='Send the image with the message. The message has the details, site link and sponsor codes.';
+  $('mCopy').onclick=()=>{copyText(text);toast('Text copied')};
+  Promise.resolve(imgP).then(b=>{
+    if(!b){$('mSpin').textContent='Image isn\'t available right now. You can still send the text.';return}
+    const u=URL.createObjectURL(b);$('mImg').src=u;$('mSpin').style.display='none';$('mDl').href=u;$('mDl').download=name||fname();$('mDl').style.display='';
+    if(canShareFile(b)){$('mShare').style.display='';$('mShare').onclick=()=>nativeShare(b,text).then(ok=>{if(ok)$('modal').style.display='none';else toast('Sharing isn\'t available. Download the image and send the text.')})}
+    else $('mTxt').textContent='Download the image, then tap "Send text on WhatsApp" and attach it in the chat.';
+  });
+}
+$('mClose').onclick=()=>{$('modal').style.display='none'};
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').style.display='none'});
+
+/* ================= events & group rides (from site-data.js) ================= */
+const DOWN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const todayStr=()=>{const n=dubaiNow();return `${n.year}-${n.month}-${n.day}`};
+const tsOf=(d,t)=>Date.parse(`${d}T${t||'00:00'}:00+04:00`);
+function fmtTime(t){const [h,m]=t.split(':').map(Number);return `${(h%12)||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`}
+function occLabel(d){const l=parseLocal(d+'T00:00'),rd=relDay(d+'T00:00');return (rd==='Today'||rd==='Tomorrow'?rd+' '+l.day:l.day)+` ${l.date} ${l.mon}`}
+function addDays(d,k){return new Date(Date.parse(d+'T00:00Z')+k*864e5).toISOString().slice(0,10)}
+function upcomingEvents(){return (SITE.events||[]).filter(e=>e.date&&Date.now()<tsOf(e.date,e.time)+12*36e5).sort((a,b)=>tsOf(a.date,a.time)-tsOf(b.date,b.time))}
+/* next date of a ride: one-off rides disappear and weekly rides move to next week as soon as the start time passes */
+function rideOcc(r){
+  const ch=d=>(r.changes&&r.changes[d])||{},startOf=d=>tsOf(d,ch(d).time||r.time);
+  if(r.date)return !ch(r.date).cancelled&&Date.now()<startOf(r.date)?r.date:null;
+  const want=DOWN.indexOf((r.weekly||'').slice(0,3));if(want<0)return null;const d=todayStr();
+  for(let k=0;k<22;k++){const dd=addDays(d,k);if(r.from&&dd<r.from)continue;if(r.until&&dd>r.until)return null;if(new Date(dd+'T00:00Z').getUTCDay()===want&&!ch(dd).cancelled&&Date.now()<startOf(dd))return dd}return null}
+/* rides listed soonest first: the next ride is always at the top */
+function upcomingRides(){return (SITE.rides||[]).map(r=>{const occ=rideOcc(r),ov=occ&&r.changes&&r.changes[occ];return {...r,...(ov||{}),occ,changed:!!ov,usualTime:r.time}}).filter(r=>r.occ&&!r.cancelled).sort((a,b)=>tsOf(a.occ,a.time)-tsOf(b.occ,b.time))}
+function rideWhere(r,sep=' '){return [r.distance,r.place].filter(Boolean).join(sep)}
+function rideRule(r){return r.rule||SITE.rideRule||''}
+function rideKind(r){const t=[r.type,r.distance].filter(Boolean).join(' · ');return t?`${/mtb|gravel/i.test(r.type||'')?'🚵':'🚴'} ${t}`:''}
+function rideForecast(r){
+  if(!S.wx)return null;const ti=Math.max(0,TRACKS.findIndex(t=>t.id===r.track)),H=S.wx[0].hourly.time,sh=+r.time.slice(0,2),hs=[];
+  for(let i=S.minOff;i<=S.maxOff;i++){const t=H[S.start+i];if(t.startsWith(r.occ)){const h=parseLocal(t).h;if(h>=sh&&h<=sh+3)hs.push(hourAt(ti,i))}}
+  if(!hs.length)return null;
+  const lo=Math.round(Math.min(...hs.map(h=>h.t))),hi=Math.round(Math.max(...hs.map(h=>h.t))),w=hs.reduce((a,h)=>a+h.w,0)/hs.length,
+    sc=Math.round(hs.reduce((a,h)=>a+h.score,0)/hs.length),dir=card(hs[Math.floor(hs.length/2)].dir),[lab]=scoreInfo(sc),tr=lo===hi?`${lo}°C`:`${lo}–${hi}°C`;
+  return {tr,w,dir,sc,lab,txt:`${tr}, wind ${spd(w)} ${uLbl()} ${dir}, ride score ${sc} (${lab})`}}
+const SHARE_ICO='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
+function esc(t){return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function renderEvents(){
+  const evs=upcomingEvents();
+  $('evts').innerHTML=(evs.length?'<h3>Events</h3>':'')+evs.map((e,i)=>{const l=parseLocal(e.date+'T00:00'),days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
+    return `<a class="evt${e.theme==='yellow'?' y':e.theme==='lime'?' lm':''}" href="${esc(e.url)}" target="_blank" rel="noopener">
+    <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="20" cy="58" r="5" fill="#ffffff55"/><circle cx="580" cy="30" r="5" fill="#ffffff55"/></svg>
+    <div class="evt-date"><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
+    <div class="evt-main">
+      <div class="evt-tag"><span class="star">★<span class="st-l"> ${esc(e.tag||'Recommended')}</span></span>${e.code?`<span class="code">🎟️ Code <span class="evt-code">${esc(e.code)}</span>${e.discount?` · ${esc(e.discount)}`:''}</span>`:'<span class="up">Upcoming event</span>'}</div>
+      <div class="evt-title">${esc(e.name)}</div>
+      <div class="evt-meta">${l.day} ${e.time?fmtTime(e.time):'· time TBC'}${e.distance?` · <b>${esc(e.distance)}</b>`:''}${e.route?` ${esc(e.route)}`:''}${e.note?`<span class="evt-uci"> · ${esc(e.note)}</span>`:''}${e.weRide?'<span class="evt-us"> · We\'re riding it 🚴</span>':''}</div>
+    </div>
+    <div class="evt-cd"><b>${days<=0?'Today':days}</b><span>${days<=0?'race day':'days to go'}</span></div>
+    <button class="cshare" data-ev="${i}" aria-label="Share event" title="Share event">${SHARE_ICO}</button>
+    <span class="evt-go">${esc(e.button||'Details')} ↗</span>
+  </a>`}).join('');
+  $('evts').querySelectorAll('[data-ev]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareEvent(upcomingEvents()[+b.dataset.ev])});
+}
+// three facts for the card's middle (desktop): start, ride time, back at (from distance, pace and any stop)
+function rideFacts(r){const km=parseFloat(r.distance),pace=parseFloat(r.pace),[h,m]=(r.time||'06:00').split(':').map(Number);
+  const box=(k,v)=>`<div><small>${k}</small><b>${esc(v)}</b></div>`;let out=box('Start',r.start||r.place||'');
+  if(km&&pace){const mins=Math.round(km/pace*60+(+r.stopMin||0)),end=h*60+m+mins,eh=Math.floor(end/60)%24,em=end%60;
+    out+=box('Ride time',`${Math.floor(mins/60)}:${String(mins%60).padStart(2,'0')} h`)+box('Back at',fmtTime(`${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}`))}
+  else out+=box('Pace',(r.pace||'').replace(/\s*avg$/,''))+box('Terrain',r.type||'');
+  return `<div class="ride-facts">${out}</div>`}
+// last slide of the group rides: invite visitors to organise and share their own ride (organize-ride.html)
+function organizerCard(){return `<div class="ride th-org haspage" data-page="organize-ride.html" title="Organize your own group ride">
+      <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
+      <div class="ride-date org-tile"><span>YOUR</span><b>+</b><span>RIDE</span></div>
+      <div class="ride-body">
+        <div class="ride-tag"><span class="star">🧭 Ride organizer</span><span class="typ">Free · 1 minute</span></div>
+        <div class="ride-title">Organize your ride · <span>invite your crew</span></div>
+        <div class="ride-meta">📍 Pick track, time &amp; pace · 🌤️ forecast card · share to WhatsApp</div>
+      </div>
+      <div class="ride-facts"><div><small>Step 1</small><b>Details</b></div><div><small>Step 2</small><b>Forecast</b></div><div><small>Step 3</small><b>Share</b></div></div>
+      <div class="ride-btns"><a class="rshare rorg" href="organize-ride.html">✚ <span>Start now ›</span></a></div>
+    </div>`}
+function renderRides(){
+  const rs=upcomingRides();
+  $('rides').innerHTML='<div class="car-view"><div class="car-track">'+rs.map((r,i)=>{const l=parseLocal(r.occ+'T00:00'),rd=relDay(r.occ+'T00:00'),f=rideForecast(r);
+    const st=(r.route?`📍 <b>${esc(r.route)}</b> · `:r.start?`📍 Start: <b>${esc(r.start)}</b> · `:'')+(r.pace?`<span class="m-pace">⚡ ${esc(r.pace.replace(/\s*avg$/,''))} · </span>`:'');
+    const fx=st+(f?`🌤️ <b>${f.tr}</b> · ${spd(f.w)} ${uLbl()} ${f.dir} · <b>${f.lab} ${f.sc}</b>`:`<span class="m-nf">🌤️ Forecast closer to the day</span>`); // the start time is shown once, in the title
+    return `<div class="ride${r.theme&&r.theme!=='green'?' th-'+esc(r.theme):''}${r.page?' haspage':''}"${r.page?` data-page="${esc(r.page)}" title="Open the ${esc(r.name)} page"`:''}>
+      <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
+      <div class="ride-date"><span>${rd==='Today'?'TODAY':l.day.toUpperCase()}</span><b>${l.date}</b><span>${l.mon.toUpperCase()}</span></div>
+      <div class="ride-body">
+        <div class="ride-tag">${rideRule(r)?`<span class="mand" title="${esc(rideRule(r))}">⛑️💡 <span class="mand-l">${esc(rideRule(r))}</span><span class="mand-s">Mandatory</span></span>`:'<span class="star">★ Recommended</span>'}${rideKind(r)?`<span class="typ">${esc(rideKind(r))}</span>`:''}${r.pace?`<span class="pace">⚡ ${esc(r.pace)}</span>`:''}</div>
+        <div class="ride-title">${esc(r.name)} · <span>${fmtTime(r.time)}</span> · ${esc(r.place)}</div>
+        <div class="ride-meta">${fx}</div>
+      </div>
+      ${rideFacts(r)}
+      <div class="ride-btns">
+        
+        ${r.page?`<a class="rloc" href="${esc(r.page)}">Details ›</a>`:r.location?`<a class="rloc" href="${esc(r.location)}" target="_blank" rel="noopener">Location ↗</a>`:''}
+        <button class="cshare rshare" data-rd="${i}" aria-label="Share ride" title="Share ride">${SHARE_ICO}<span>Share</span></button>
+      </div>
+    </div>`}).join('')+organizerCard()+'</div></div>';carSync('rides');
+  $('rides').querySelectorAll('[data-rd]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareRide(upcomingRides()[+b.dataset.rd])});
+  // cards with their own page open it (a swipe never does: the carousel swallows that click)
+  $('rides').querySelectorAll('.ride[data-page]').forEach(c=>c.addEventListener('click',e=>{if(e.target.closest('a,button'))return;location.href=c.dataset.page}));
+}
+/* ---------- one-card carousels for Events and Group rides: auto every 5 s, manual by sliding ---------- */
+const CAR={rides:{i:0,dots:'rdDots',delay:0}};
+function carTrack(id){return $(id).querySelector('.car-track')}
+function carGo(id,i,user,instant){const c=CAR[id],tr=carTrack(id);if(!tr)return;const n=tr.children.length;if(!n)return;c.i=((i%n)+n)%n;
+  if(instant)tr.style.transition='none';tr.style.transform=`translateX(calc(${-100*c.i}% - ${40*c.i}px))`;if(instant){void tr.offsetWidth;tr.style.transition=''}
+  const d=$(c.dots);if(d)[...d.children].forEach((b,j)=>b.classList.toggle('on',j===c.i));if(user)carTimer(id)}
+function carTimer(id,first){const c=CAR[id];clearTimeout(c.t);c.t=setTimeout(()=>{const tr=carTrack(id);if(!c.hold&&tr&&tr.children.length>1)carGo(id,c.i+1);carTimer(id)},5000+(first?c.delay:0))}
+function carSync(id){const c=CAR[id],tr=carTrack(id);if(!tr)return;const n=tr.children.length,d=$(c.dots);
+  if(d)d.innerHTML=n>1?'<i></i>'.repeat(n):'';if(c.i>=n)c.i=0;carGo(id,c.i,false,true);if(!c.init)carInit(id)}
+function carInit(id){const c=CAR[id],box=$(id);c.init=true;
+  box.addEventListener('mouseenter',()=>c.hold=true);box.addEventListener('mouseleave',()=>c.hold=false);
+  box.addEventListener('dragstart',e=>e.preventDefault());
+  const move=dx=>{const tr=carTrack(id);if(tr)tr.style.transform=`translateX(calc(${-100*c.i}% - ${40*c.i-dx}px))`};
+  const finish=(dx,dy)=>{const v=box.querySelector('.car-view');v&&v.classList.remove('drag');
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))carGo(id,c.i+(dx<0?1:-1),true);else carGo(id,c.i)};
+  // finger
+  let x0=null,y0=null;
+  box.addEventListener('touchstart',e=>{if(!e.target.closest('.car-view'))return;x0=e.touches[0].clientX;y0=e.touches[0].clientY;c.moved=false;box.querySelector('.car-view').classList.add('drag')},{passive:true});
+  box.addEventListener('touchmove',e=>{if(x0==null)return;const dx=e.touches[0].clientX-x0,dy=e.touches[0].clientY-y0;if(Math.abs(dx)>Math.abs(dy)){move(dx);if(Math.abs(dx)>6)c.moved=true}},{passive:true});
+  box.addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;finish(dx,dy)},{passive:true});
+  // mouse
+  let mx=null,my=0;
+  box.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0||!e.target.closest('.car-view')||e.target.closest('button'))return;mx=e.clientX;my=e.clientY;c.moved=false;box.querySelector('.car-view').classList.add('drag')});
+  window.addEventListener('pointermove',e=>{if(mx==null)return;const dx=e.clientX-mx;if(Math.abs(dx)>6)c.moved=true;if(c.moved)move(dx)});
+  window.addEventListener('pointerup',e=>{if(mx==null)return;const dx=e.clientX-mx,dy=e.clientY-my;mx=null;finish(dx,dy)});
+  // a slide must not open the card's link
+  box.addEventListener('click',e=>{if(c.moved){e.preventDefault();e.stopPropagation();c.moved=false}},true);
+  carTimer(id,true)}
+function rentUrl(){try{return (SITE.links||{}).bikeRental||'https://wolfis.ae/pages/rental-bikes'}catch(e){return 'https://wolfis.ae/pages/rental-bikes'}}
+function renderRent(){const a=$('rentBtn');if(a)a.href=rentUrl();const l=$('rentLogo'),u=(SITE.links||{}).bikeRentalLogo;if(l&&u&&l.getAttribute('src')!==u)l.src=u}
+function renderData(){renderEvents();renderRides();renderRent()}
+renderData();setInterval(renderData,60e3);
+
+/* ---------- item share texts ---------- */
+/* one format for every event share (text, image, lists). TheCyclistDubai takes part in every event unless weRide:false */
+const evWe=e=>e.weRide!==false,evWhen=e=>`${occLabel(e.date)} · ${e.time?fmtTime(e.time):'start time TBC'}`,evWhere=e=>[e.distance,e.route].filter(Boolean).join(' · '),
+  evCode=e=>e.code?`🎟️ Code *${e.code}*${e.discount?` for *${e.discount}*`:''}`:'';
+function eventText(e){const days=Math.ceil((tsOf(e.date,e.time)-Date.now())/864e5);
+  return [`📅 *${e.name}*`,`★ ${e.tag||'Recommended'}`,`🗓️ ${evWhen(e)}`,evWhere(e)&&`🚴 ${evWhere(e)}`,e.note&&`🏅 ${e.note}`,days>0&&`⏳ ${days} days to go`,
+    evWe(e)&&`💪 TheCyclistDubai is taking part. Join us on the start line!`,evCode(e),`📝 Register: ${e.url}`].filter(Boolean).join('\n')}
+function eventPromoText(){const ev=upcomingEvents();if(!ev.length)return'';
+  return '\n📅 *Upcoming events* · TheCyclistDubai is taking part 💪\n'+ev.map(e=>[`• *${e.name}*, ${evWhen(e)}${evWhere(e)?`, ${evWhere(e)}`:''}`,`  📝 Register: ${e.url}`,evCode(e)&&`  ${evCode(e)}`].filter(Boolean).join('\n')).join('\n')+'\n'}
+// Ride share message, compact sponsor/event lines and share images live in share-core.js (shared with the ride pages)
+const sponsorsShort=()=>TCDS.sponsorsShort(),eventsShort=()=>TCDS.eventsShort();
+function rideText(r){return TCDS.rideText(r,rideForecast(r))}
+function sponsorText(x){return `🎁 *${x.name}*${x.what?` · ${x.what}`:''}\n${spDeal(x).replace(/^./,m=>m.toUpperCase())}\n🛒 ${x.url}\n\nShared by TheCyclistDubai${footerText()}`}
+
+/* ---------- item share images (drawn instantly, so the share sheet opens straight from the tap) ---------- */
+const THEMES=TCDS.THEMES,RIDE_TH=TCDS.RIDE_TH,LIGHT=TCDS.LIGHT,wrapLines=TCDS.wrapLines,drawCard=TCDS.drawCard;
+const RIDE_ROW={green:'linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)',purple:'linear-gradient(110deg,#2e1065,#5b21b6 50%,#a855f7)',orange:'linear-gradient(110deg,#7c2d12,#c2410c 50%,#fb923c)'};
+const canvasFile=TCDS.canvasFile;
+function shareNow(file,text,title){
+  copyText(text);
+  try{if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],text,title}).then(()=>toast('Shared ✔ Text also copied, paste it if WhatsApp drops it')).catch(e=>{if(e.name!=='AbortError')openShareModal(text,file,file.name)});return}}catch(e){}
+  openShareModal(text,file,file&&file.name);
+}
+function shareEvent(e){if(!e)return;const l=parseLocal(e.date+'T00:00');
+  const cv=drawCard({theme:THEMES[e.theme]?e.theme:'blue',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ '+(e.tag||'Recommended'),'Upcoming event'],title:e.name,
+    lines:[`🕖 ${l.day} ${e.time?fmtTime(e.time):'· start time TBC'}`,evWhere(e)&&('🚴 '+evWhere(e)),e.note&&('🏅 '+e.note),evWe(e)&&'💪 TheCyclistDubai is taking part',e.code&&`🎟️ Code ${e.code}${e.discount?' · '+e.discount:''}`,'📝 Register: '+e.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
+  shareNow(canvasFile(cv,'thecyclistdubai-event.png'),eventText(e),e.name)}
+function shareRide(r){if(!r)return;const f=rideForecast(r);
+  shareNow(canvasFile(TCDS.rideCard(r,f,w=>`${spd(w)} ${uLbl()}`),'thecyclistdubai-ride.png'),rideText(r),r.name)}
+function shareSponsor(x){
+  const n=dubaiNow(),cv=drawCard({theme:'orange',dow:'CODE',day:x.code.length<=4?x.code:'%',mon:(x.discount||x.code).toUpperCase(),tags:['🎁 Sponsor discount'],title:x.discount?`${x.name}: ${x.discount} with ${x.kind||'code'} ${x.code}`:`${x.name}: ${x.kind||'code'} ${x.code}`,
+    lines:[x.what&&('🛍️ '+x.what.replace(/^./,m=>m.toUpperCase())),'🛒 '+x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')]});
+  shareNow(canvasFile(cv,'thecyclistdubai-'+x.name.toLowerCase()+'.png'),sponsorText(x),x.name)}
+function shareWeather(){const text=weatherText(),k=shotKey();
+  if(shot.key===k&&shot.blob&&canShareFile(shot.blob)){nativeShare(shot.blob,text).then(ok=>{if(!ok)openShareModal(text)});return}
+  openShareModal(text)}
+
+
+/* ---------- share menu ---------- */
+function openSheet(){
+  getShot();const h=S.wx?cur(TI()):null,evs=upcomingEvents(),rs=upcomingRides(),sp=SITE.sponsors||[];
+  const row=(id,bg,ic,title,sub,act='Share')=>`<button class="srow" data-s="${id}"><span class="si" style="background:${bg}">${ic}</span><span class="st"><b>${esc(title)}</b><small>${esc(sub)}</small></span><span class="sa">${act}</span></button>`;
+  let H='<div class="sgrp">Weather</div>'+row('w','linear-gradient(110deg,#052e16,#14532d 50%,#16a34a)','🌤️',`${T().short} weather`,h?`${$('mWhen').textContent} · ${Math.round(h.t)}°C · ${spd(h.w)} ${uLbl()} ${card(h.dir)} · score ${h.score}`:'Map image + full forecast');
+  if(rs.length)H+='<div class="sgrp">Group rides</div>'+rs.map((r,i)=>row('r'+i,RIDE_ROW[r.theme]||RIDE_ROW.green,'🚴‍♂️',`${r.name} · ${occLabel(r.occ)}`,`${fmtTime(r.time)} · ${r.place} · ${[r.type,r.distance].filter(Boolean).join(' · ')}${r.start?' · Start '+r.start:''}${r.pace?' · '+r.pace:''}${rideRule(r)?' · '+rideRule(r):''}`)).join('');
+  if(evs.length)H+='<div class="sgrp">Events</div>'+evs.map((e,i)=>row('e'+i,e.theme==='yellow'?'linear-gradient(135deg,#d0001a,#ffcf00 45%,#fff16a)':e.theme==='lime'?'linear-gradient(135deg,#00482a,#0c4b3e 50%,#b5cc4a)':'linear-gradient(135deg,#0b1f4b,#1d4ed8)','📅',e.name,`${occLabel(e.date)} · ${[e.distance,e.route].filter(Boolean).join(' · ')}${e.code?` · Code ${e.code}`:''}`)).join('');
+  if(sp.length)H+='<div class="sgrp">Sponsor codes</div>'+sp.map((x,i)=>row('p'+i,'linear-gradient(135deg,#111,#3f3f46)','🎁',`${x.name}: ${spShort(x)}`,`Code ${x.code} · ${x.url.replace(/^https?:\/\//,'').replace(/\/$/,'')}`)).join('');
+  $('sList').innerHTML=H;$('sheet').style.display='flex';
+  $('sList').querySelectorAll('.srow').forEach(b=>b.onclick=()=>{const id=b.dataset.s,k=+id.slice(1);$('sheet').style.display='none';
+    if(id==='w')shareWeather();else if(id[0]==='r')shareRide(rs[k]);else if(id[0]==='e')shareEvent(evs[k]);else shareSponsor(sp[k])});
+}
+$('sClose').onclick=()=>{$('sheet').style.display='none'};
+$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')$('sheet').style.display='none'});
+
+/* ================= compass ticks & boot ================= */
+renderTrackRow();selectTrack(S.track);fetchWeather();
+utInit();
+</script>
+</body>
+</html>

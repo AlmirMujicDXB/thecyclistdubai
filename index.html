@@ -427,9 +427,20 @@ a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px 
 /* ride colour themes (site-data.js theme:) */
 .ride.haspage{cursor:pointer}
 /* organizer card (last slide of the group rides) */
-.ride.th-org{--rd-dark:#13233f;--rd-mid:#2f5446;--rd-bright:#6b9a80;--rd-cream:#e6f0e9;--rd-peach:#f3e9d6;--rd-ink:#13233f;--rd-meta:#e6f0e9;--rd-halo:#f3e9d64d;--rd-shadow:#13233f40;--rd-accent:#3f6b55}
-.ride .org-tile span,.ride .org-tile span:first-child{color:#3f6b55}
-.ride .org-tile b{font-size:26px;line-height:.9;color:#13233f}
+.ride.th-org{--rd-dark:#13233f;--rd-cream:#e2001a;--rd-ink:#fff;--rd-accent:#e2001a;--rd-shadow:#e2001a2e;color:#13233f;background:linear-gradient(110deg,#fff 0%,#fff 40%,#fff5f6 100%);box-shadow:inset 0 0 0 1px #f6c9ce,0 8px 22px #e2001a2e}
+.ride.th-org::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,#e2001a 0 3.4px,transparent 4px) 0 0/18px 18px,radial-gradient(circle,#e2001a 0 3.4px,transparent 4px) 9px 9px/18px 18px;opacity:.85;-webkit-mask-image:linear-gradient(90deg,transparent 0,#0000 22%,#0006 50%,#000 85%);mask-image:linear-gradient(90deg,transparent 0,#0000 22%,#0006 50%,#000 85%)}
+.ride.th-org>:not(.ride-route){position:relative;z-index:1}
+.ride.th-org .ride-route{display:none}
+.ride.th-org .ride-date{border:2px solid #e2001a;box-sizing:border-box}
+.ride.th-org .ride-tag .star{background:#e2001a;border-color:#e2001a;color:#fff}
+.ride.th-org .ride-tag .typ{background:#fff;border-color:#e2001a66;color:#b00016}
+.ride.th-org .ride-title span{color:#e2001a}
+.ride.th-org .ride-meta{color:#3b4a60;text-shadow:0 0 6px #fff,0 0 3px #fff}
+.ride.th-org .ride-facts div{background:#ffffffeb;border-color:#e2001a55}
+.ride.th-org .ride-facts small{color:#e2001a;opacity:1}
+.ride.th-org .ride-btns .rshare{background:#e2001a;border-color:#e2001a;color:#fff;box-shadow:0 4px 12px #e2001a40}
+.ride .org-tile span,.ride .org-tile span:first-child{color:#e2001a}
+.ride .org-tile b{font-size:26px;line-height:.9;color:#e2001a}
 .ride-btns .rorg{width:140px}
 
 .ride.haspage .ride-title::after{content:' ›';opacity:.7}
