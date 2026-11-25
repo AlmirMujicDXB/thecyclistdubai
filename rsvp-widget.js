@@ -10,23 +10,6 @@
   var rideRef = (mount.getAttribute('data-ride-ref') || '').trim();
   if (!rideRef) return;
 
-  /* EXAMPLE DATA — not real riders.
-     Shown only when the live list is empty or the list cannot be loaded.
-     Names and levels match the approved RSVP mockup (first name + last initial). */
-  var EXAMPLE = [
-    ['Sara K.', 'intermediate'],
-    ['Omar R.', 'advanced'],
-    ['Maya T.', 'beginner'],
-    ['Daniel P.', 'intermediate'],
-    ['Leila H.', 'advanced'],
-    ['Yusuf A.', 'beginner'],
-    ['Priya N.', 'intermediate'],
-    ['Hassan M.', 'advanced'],
-    ['Nina V.', 'intermediate'],
-    ['Tom B.', 'beginner'],
-    ['Fatima S.', 'intermediate'],
-  ];
-
   var EMAIL_RE = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
   var section = document.createElement('section');
   section.className = 'rsvp';
@@ -36,8 +19,19 @@
   if (/^\d{4}-\d{2}-\d{2}$/.test(presetDate)) section.setAttribute('data-ride-date', presetDate);
 
   section.innerHTML =
-    '<div class="rsvp-h"><h2><svg class="rsvp-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.2" cy="16.2" r="3.1"/><circle cx="17.8" cy="16.2" r="3.1"/><path d="M6.2 16.2 L10 9.2h3.6l2.2 4.2H18M10 9.2l2.3 7M13.6 9.2l-2.6 3.4"/></svg> RSVP · Are you coming?</h2></div>' +
-    '<p class="rsvp-lead">Sign up with your email and confirm you\'re coming. The organizer sees your details privately; the public list below shows first name and last initial only, and updates live.</p>' +
+    '<div class="rsvp-who">' +
+      '<div class="rsvp-who-top">' +
+        '<h3>Who\'s coming</h3>' +
+        '<p class="rsvp-count"><b></b> <span></span></p>' +
+        '<div class="rsvp-pills">' +
+          '<span class="rsvp-pill live" hidden><i aria-hidden="true"></i><span>Updating live</span></span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="rsvp-empty" hidden><b></b><span></span></div>' +
+      '<ul class="rsvp-grid"></ul>' +
+      '<p class="rsvp-priv">First name and last initial only. Email addresses stay with the organizer.</p>' +
+    '</div>' +
+    '<p class="rsvp-lead">Sign up with your email and confirm you\'re coming. The list above updates as soon as you\'re saved.</p>' +
     '<form class="rsvp-form" novalidate>' +
       '<label class="rsvp-field"><span class="rsvp-lab">Email address <i class="req">*</i></span>' +
         '<input type="email" name="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" maxlength="200" required placeholder="you@example.com" aria-required="true"></label>' +
@@ -47,19 +41,6 @@
       '<p class="rsvp-msg" hidden></p>' +
     '</form>' +
     '<div class="rsvp-ok" hidden role="status" tabindex="-1"><i aria-hidden="true">✓</i><div><b>You\'re confirmed.</b><span></span></div></div>' +
-    '<div class="rsvp-who">' +
-      '<div class="rsvp-who-top">' +
-        '<h3>Who\'s coming</h3>' +
-        '<p class="rsvp-count"><b>0</b> <span>riders going</span></p>' +
-        '<div class="rsvp-pills">' +
-          '<span class="rsvp-pill ex">EXAMPLE DATA</span>' +
-          '<span class="rsvp-pill live" hidden><i aria-hidden="true"></i><span>Updating live</span></span>' +
-        '</div>' +
-      '</div>' +
-      '<p class="rsvp-priv">Email addresses and mobile numbers are not shown on this public list.</p>' +
-      '<ul class="rsvp-grid"></ul>' +
-    '</div>' +
-    '<p class="rsvp-foot">Your email stays with the organizer. It is not shown on this list.</p>' +
     '<p class="rsvp-sr" aria-live="polite"></p>';
 
   var hero = document.querySelector('#app .hero');
@@ -74,9 +55,12 @@
   var msgEl = form.querySelector('.rsvp-msg');
   var okEl = section.querySelector('.rsvp-ok');
   var okText = okEl.querySelector('span');
-  var countEl = section.querySelector('.rsvp-count b');
-  var countLabel = section.querySelector('.rsvp-count span');
-  var exPill = section.querySelector('.rsvp-pill.ex');
+  var countWrap = section.querySelector('.rsvp-count');
+  var countEl = countWrap.querySelector('b');
+  var countLabel = countWrap.querySelector('span');
+  var emptyEl = section.querySelector('.rsvp-empty');
+  var emptyTitle = emptyEl.querySelector('b');
+  var emptyText = emptyEl.querySelector('span');
   var livePill = section.querySelector('.rsvp-pill.live');
   var liveText = livePill.querySelector('span');
   var grid = section.querySelector('.rsvp-grid');
@@ -88,6 +72,7 @@
   var liveOk = false;
   var fetched = false;
   var pollTimer = 0;
+  var waits = 0;
 
   function client() {
     if (db) return db;
@@ -123,47 +108,47 @@
   function syncDate() {
     var chip = document.querySelector('#dChips .chip.on');
     var d = chip && chip.getAttribute('data-d');
+    if (!d) d = document.body.getAttribute('data-ride-date');
     if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) section.setAttribute('data-ride-date', d);
   }
 
   function watchDate() {
-    var chips = document.getElementById('dChips');
-    if (!chips) { setTimeout(watchDate, 400); return; }
     syncDate();
-    new MutationObserver(syncDate).observe(chips, { subtree: true, attributes: true, childList: true });
+    var chips = document.getElementById('dChips');
+    if (chips) new MutationObserver(syncDate).observe(chips, { subtree: true, attributes: true, childList: true });
+    else new MutationObserver(syncDate).observe(document.body, { attributes: true, attributeFilter: ['data-ride-date'] });
   }
 
-  function personHtml(name, levelClass, levelText) {
+  function personHtml(name, status) {
+    var extra = status === 'maybe' ? '<span class="rsvp-lvl maybe">Maybe</span>' : '';
     return '<li class="rsvp-person"><span class="rsvp-av" aria-hidden="true">' + esc(initials(name)) +
-      '</span><span class="rsvp-id"><strong>' + esc(name) + '</strong><span class="rsvp-lvl ' + esc(levelClass) + '">' +
-      esc(levelText) + '</span></span></li>';
+      '</span><span class="rsvp-id"><strong>' + esc(name) + '</strong>' + extra + '</span></li>';
   }
 
   function paintList() {
-    var usingExample = !liveRows || !liveRows.length;
-    var html, count;
-    if (usingExample) {
-      count = EXAMPLE.length;
-      html = EXAMPLE.map(function (row) { return personHtml(row[0], row[1], row[1]); }).join('');
-    } else {
-      count = Number(liveRows[0].attendee_count);
-      if (!count) count = liveRows.length;
-      html = liveRows.map(function (row) {
-        var badge = row.status === 'maybe' ? 'maybe' : row.status === 'declined' ? 'declined' : 'going';
-        var label = row.status === 'maybe' ? 'Maybe' : row.status === 'declined' ? 'Declined' : 'Going';
-        return personHtml(row.display_name || 'Guest', badge, label);
-      }).join('');
+    var people = (liveRows || []).filter(function (row) { return row.status !== 'declined'; });
+    var count = people.length;
+    var showPeople = fetched && liveOk && count > 0;
+    countWrap.hidden = !showPeople;
+    countEl.textContent = showPeople ? String(count) : '';
+    countLabel.textContent = showPeople ? (count === 1 ? 'rider going' : 'riders going') : '';
+    livePill.hidden = !showPeople;
+    liveText.textContent = 'Updating live';
+    emptyEl.hidden = !(fetched && !showPeople);
+    if (fetched && !liveOk) {
+      emptyTitle.textContent = "Who's coming couldn't be loaded";
+      emptyText.textContent = 'It will try again in a moment.';
+    } else if (fetched && count === 0) {
+      emptyTitle.textContent = 'Be the first to join';
+      emptyText.textContent = 'No one has confirmed yet. Add your name and it will show here.';
     }
-    countEl.textContent = String(count);
-    countLabel.textContent = count === 1 ? 'rider going' : 'riders going';
-    exPill.hidden = !usingExample;
-    livePill.hidden = !fetched;
-    livePill.classList.toggle('off', fetched && !liveOk);
-    liveText.textContent = liveOk ? 'Updating live' : 'List offline';
-    grid.innerHTML = html;
-    sr.textContent = usingExample
-      ? 'Example names. ' + count + ' riders shown until the live list has someone, or if it cannot be loaded.'
-      : count + (count === 1 ? ' rider is' : ' riders are') + ' on the list.';
+    grid.innerHTML = showPeople ? people.map(function (row) {
+      return personHtml(row.display_name || 'Guest', row.status);
+    }).join('') : '';
+    sr.textContent = !fetched ? "Loading who's coming."
+      : !liveOk ? "Who's coming could not be loaded."
+      : count ? count + (count === 1 ? ' rider is' : ' riders are') + ' coming.'
+      : 'Be the first to join. No one has confirmed yet.';
   }
 
   function showMsg(text) {
@@ -192,6 +177,9 @@
   async function refresh() {
     var c = client();
     if (!c) {
+      // The library loads on its own. Keep the section on screen and try again
+      // instead of giving up while that download is still in flight.
+      if (waits++ < 40) { setTimeout(refresh, 200); return; }
       fetched = true;
       liveOk = false;
       liveRows = null;

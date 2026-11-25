@@ -11,8 +11,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="ride-page.css">
-<link rel="stylesheet" href="rsvp-widget.css">
 <link rel="stylesheet" href="home-btn.css">
+<!-- GitHub caches files for about 10 minutes. The stamp matches the homepage, so a laptop that already has this page still fetches this minute's sign-up files. -->
+<script>document.write('<link rel="stylesheet" href="rsvp-widget.css?v='+Math.floor(Date.now()/6e4)+'">')</script>
+<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="site-data.js"></script>
 <script src="route-presets.js"></script>
@@ -22,11 +24,9 @@
 <div class="wrap" id="app"></div>
 <!-- Ride facts (time, pace, distance, start, links, stop) come from site-data.js; this block only sets the page's route and look. -->
 <script>window.RIDE_PAGE={name:'TCD Ride',theme:'green',gpx:'tcd-ride.gpx',gpxName:'TCD-Ride-BOTS-to-ZADS-and-back.gpx',stravaRoute:'https://www.strava.com/routes/3560214924726770550',turnName:'ZADS',turnShort:'ZADS',turnIcon:'📍',lat:24.93,lon:55.34,elev:55,cafe:'BOTS',toolsNote:'No shops on the track: carry what you need.'};</script>
-<script src="ride-page.js"></script>
-<!-- RSVP for this ride. data-ride-ref is the sign-up key (one list per ride). The widget copies the date shown on the page into data-ride-date. -->
+<script>document.write('<script src="ride-page.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
+<!-- RSVP for this ride. data-ride-ref is the sign-up key. The widget paints before the Supabase download finishes, so a stalled CDN cannot hide the section. -->
 <div id="rsvp-mount" data-ride-ref="tcd-ride" hidden></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js"></script>
-<script src="js/supabase-config.js"></script>
-<script src="rsvp-widget.js"></script>
+<script>document.write('<script src="js/supabase-config.js?v='+Math.floor(Date.now()/6e4)+'"><\/script><script src="rsvp-widget.js?v='+Math.floor(Date.now()/6e4)+'"><\/script>')</script>
 </body>
 </html>
