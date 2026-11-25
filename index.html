@@ -223,6 +223,14 @@ header .tag{grid-column:1;grid-row:2;display:flex;align-items:center;gap:10px;fo
 .evt.sm .evt-meta{color:#475569}.evt.sm .evt-meta b{color:#13233f}
 .evt.sm .evt-cd{border-left-color:#c9dbf3}.evt.sm .evt-cd b{color:#0057b8}.evt.sm .evt-cd span{color:#5b6b82}
 .evt.sm .evt-go{background:linear-gradient(110deg,#0057b8,#2f80e0);color:#fff;box-shadow:0 4px 12px #0057b84d}
+/* cyclist chat card: same shape as the simulator, purple accents */
+.evt.ch{color:#13233f;background:linear-gradient(90deg,#5b21b6 0 20%,#e4002b 20% 40%,#1b2a44 40% 60%,#ffd100 60% 80%,#009a44 80%) top/100% 4px no-repeat,radial-gradient(60% 150% at 100% 0%,#7c3aed1f 0%,transparent 65%),linear-gradient(110deg,#ffffff 0%,#f7f3ff 55%,#efe7ff 100%);box-shadow:inset 0 0 0 1px #e4d8fb,0 8px 22px #5b21b61a}
+.evt.ch:hover{box-shadow:inset 0 0 0 1px #d4c4f5,0 12px 28px #5b21b633}
+.evt.ch .ch-ico{background:#fff;border:1px solid #e4d8fb;box-shadow:0 3px 10px #5b21b61f;font-size:22px}
+.evt.ch .evt-tag span{background:#f3e8ff;border-color:#e4d8fb;color:#5b21b6}
+.evt.ch .evt-tag .star{background:linear-gradient(110deg,#5b21b6,#7c3aed);border-color:#5b21b6;color:#fff}
+.evt.ch .evt-meta{color:#475569}.evt.ch .evt-meta b{color:#13233f}
+.evt.ch .evt-go{background:linear-gradient(110deg,#5b21b6,#7c3aed);color:#fff;box-shadow:0 4px 12px #5b21b64d}
 @media (prefers-reduced-motion:reduce){.sm-dot{display:none}}
 /* ---------- conditions card: same size as the event cards, 5–6 sliding slides ---------- */
 #cond.cx{height:70px;padding:0;box-sizing:border-box;border-radius:16px}
@@ -529,6 +537,7 @@ footer{margin-top:10px;padding:10px 0;display:flex;gap:16px;flex-wrap:wrap;justi
 footer a{text-decoration:none;font-weight:600;color:var(--muted)}
 footer a:hover{color:var(--text)}
 .fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:1300;display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;border:0;border-radius:999px;padding:13px 18px;font-size:14px;font-weight:700;box-shadow:0 8px 24px #25d36666,0 2px 6px #0f172a33}
+.chatfab{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:1300;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(110deg,#5b21b6,#7c3aed);color:#fff;text-decoration:none;border-radius:999px;padding:13px 16px;font-size:14px;font-weight:700;box-shadow:0 8px 24px #5b21b655,0 2px 6px #0f172a33}
 .fab:hover{filter:brightness(1.05)}
 .err{display:none;background:#fef2f2;border:1px solid #dc262655;color:#991b1b;padding:10px 14px;border-radius:12px;margin-bottom:12px;font-size:13px}
 .err button{border:0;background:#991b1b;color:#fff;border-radius:8px;padding:4px 10px;margin-left:6px}
@@ -857,6 +866,19 @@ footer a:hover{color:var(--text)}
 
 </div>
 
+<section class="sponsors chatsec">
+  <h3>Chat</h3>
+  <a class="evt ch" href="chat.html" title="Open the cyclist chat">
+    <svg class="evt-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M20 58 C120 20 200 70 300 40 S480 12 580 30" fill="none" stroke="#5b21b6" stroke-opacity=".16" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/></svg>
+    <div class="evt-date ch-ico" aria-hidden="true">💬</div>
+    <div class="evt-main">
+      <div class="evt-tag"><span class="star">💬<span class="st-l"> Cyclist chat</span></span><span class="up">Email sign-in</span></div>
+      <div class="evt-title">Talk with the group</div>
+      <div class="evt-meta">One general room · <b>magic link</b><span class="evt-uci"> · Dubai time</span></div>
+    </div>
+    <span class="evt-go">Open chat ↗</span>
+  </a>
+</section>
 <!-- Al Qudra Cycling Simulator (separate page) -->
 <section class="sponsors simsec">
   <h3>Simulator</h3>
@@ -884,6 +906,7 @@ footer a:hover{color:var(--text)}
 </footer>
 </div>
 
+<a class="chatfab" href="chat.html">💬 Chat</a>
 <button class="fab" id="share" aria-label="Share to WhatsApp">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.13c-.24.68-1.41 1.3-1.95 1.38-.5.07-1.13.1-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2.01.89 2.16.07.14.12.31.02.5-.1.19-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.38-.24.65-.14.27.1 1.7.8 1.99.95.29.14.48.22.55.34.07.12.07.7-.17 1.38z"/></svg>
   Share
