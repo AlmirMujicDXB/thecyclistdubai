@@ -23,14 +23,17 @@
 .rsvp-go:focus-visible{outline:2px solid var(--rsvp-green-deep);outline-offset:2px}
 .rsvp-go:disabled{opacity:.7;cursor:wait}
 .rsvp-msg{grid-column:1/-1;margin:0;font-size:13px;font-weight:700;line-height:1.4;color:#9a3412;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:8px 11px}
-.rsvp-form[hidden],.rsvp-ok[hidden],.rsvp-msg[hidden],.rsvp-pill[hidden]{display:none !important}
+.rsvp-form[hidden],.rsvp-ok[hidden],.rsvp-msg[hidden],.rsvp-pill[hidden],.rsvp-count[hidden],.rsvp-empty[hidden]{display:none !important}
 .rsvp-form.shake{animation:rsvp-shake .4s}
 @keyframes rsvp-shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 .rsvp-ok{display:flex;gap:12px;align-items:flex-start;margin-top:14px;background:#fff;border:1px solid #bbf7d0;border-radius:14px;padding:13px 14px}
 .rsvp-ok i{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--rsvp-mint);color:var(--rsvp-green-d);font-style:normal;font-weight:800}
 .rsvp-ok b{display:block;font-size:15.5px;color:var(--rsvp-green-deep)}
 .rsvp-ok span{display:block;margin-top:2px;font-size:13px;font-weight:500;color:#3f6b55;line-height:1.4}
-.rsvp-who{margin-top:18px}
+.rsvp-who{margin-top:0}
+.rsvp-empty b{display:block;font-size:22px;font-weight:800;letter-spacing:-.3px;color:#14532d}
+.rsvp-empty span{display:block;margin-top:3px;font-size:14px;font-weight:500;color:#5b6b80;line-height:1.4}
+.rsvp-id strong{font-size:16px}
 .rsvp-who-top{display:grid;grid-template-columns:1fr auto;grid-template-areas:"title pills" "count pills";align-items:center;column-gap:12px;row-gap:2px}
 .rsvp-who h3{grid-area:title;margin:0;font-size:18px;font-weight:800;letter-spacing:-.2px}
 .rsvp-count{grid-area:count;margin:0;display:flex;align-items:baseline;gap:8px}

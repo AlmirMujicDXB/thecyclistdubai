@@ -18,7 +18,9 @@ They type an email (required) and a name (optional), then press **Confirm I'm co
 
 The list refreshes about every 20 seconds, and again right after a successful sign-up.
 
-When nobody has signed up yet, or the list cannot be loaded, the page shows 11 example names (Sara K., Omar R., and the rest). Those names are not real riders. They are marked `EXAMPLE DATA` in `rsvp-widget.js`, and the page shows an **Example data** label. A green **Updating live** label means the live list was reached (it is just empty). **List offline** means the live list could not be loaded, so the examples are standing in.
+The list is real people only: a first name and a last initial, and the count. It sits at the top of the sign-up block and refreshes right after someone confirms, then about every 20 seconds. When nobody has signed up, the page says **Be the first to join**. If the list cannot be loaded, it says so in plain words. It does not show example names.
+
+The ride pages ask for a fresh copy of the sign-up files every minute (`?v=` on the CSS and JS, the same idea as the homepage). GitHub otherwise keeps a file for about 10 minutes, which is why a laptop that already had the ride page open can keep the old page with no sign-up, while a phone that opens the link later sees it. The sign-up block is drawn before the Supabase download finishes, so a slow or blocked download cannot leave the block off the page.
 
 ## Where it is saved
 
