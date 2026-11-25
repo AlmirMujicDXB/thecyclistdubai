@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="ride-page.css">
+<link rel="stylesheet" href="rsvp-widget.css">
 <link rel="stylesheet" href="home-btn.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="site-data.js"></script>
@@ -22,5 +23,10 @@
 <!-- Ride facts (time, pace, distance, start, links, stop) come from site-data.js; this block only sets the page's route and look. -->
 <script>window.RIDE_PAGE={name:'Purple Ride',theme:'purple',gpx:'purple-ride.gpx',gpxName:'Purple-Ride-BOTS-Mosque-and-back.gpx',stravaRoute:'https://www.strava.com/routes/3560216414670927544',turnName:'the Mosque',turnShort:'Mosque',turnIcon:'🕌',lat:24.905,lon:55.33,elev:60,cafe:'BOTS',toolsNote:'No shops between BOTS and the Mosque.'};</script>
 <script src="ride-page.js"></script>
+<!-- RSVP for this ride. data-ride-ref is the sign-up key (one list per ride). The widget copies the date shown on the page into data-ride-date. -->
+<div id="rsvp-mount" data-ride-ref="purple-ride" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="rsvp-widget.js"></script>
 </body>
 </html>
