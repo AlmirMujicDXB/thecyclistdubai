@@ -16,7 +16,7 @@ function occLabel(d){const l=dayParts(d),diff=Math.round((Date.parse(d+'T00:00Z'
   return (diff===0?'Today '+l.day:diff===1?'Tomorrow '+l.day:l.day)+` ${l.date} ${l.mon}`}
 function upcomingEvents(){return (SITE.events||[]).filter(e=>e.date&&Date.now()<tsOf(e.date,e.time)+12*36e5).sort((a,b)=>tsOf(a.date,a.time)-tsOf(b.date,b.time))}
 const sameLink=(a,b)=>!!a&&!!b&&a.split('?')[0].replace(/\/$/,'')===b.split('?')[0].replace(/\/$/,'');
-function rideRule(r){return r.rule||SITE.rideRule||''}
+function rideRule(r){return 'rule' in r?(r.rule||''):(SITE.rideRule||'')}
 function rideKind(r){const t=[r.type,r.distance].filter(Boolean).join(' · ');return t?`${/mtb|gravel/i.test(r.type||'')?'🚵':'🚴'} ${t}`:''}
 function scoreLabel(s){return s>=80?'Excellent':s>=65?'Good':s>=50?'Fair':'Tough'}
 function footerText(){return `\n📲 Live ride weather & forecast: ${root()}`+(SITE.links&&SITE.links.whatsappGroup?`\n👥 Join our WhatsApp group: ${SITE.links.whatsappGroup}`:'')}
@@ -24,8 +24,8 @@ function footerText(){return `\n📲 Live ride weather & forecast: ${root()}`+(S
 // so the promotions in ride shares use this compact format (all sponsors + all events, one line each).
 function sponsorsShort(){const evU=new Set(upcomingEvents().map(e=>(e.url||'').replace(/\/$/,'')));const sp=(SITE.sponsors||[]).filter(x=>!evU.has((x.url||'').replace(/\/$/,'')));if(!sp.length)return'';
   return '\n🎁 *Sponsor codes*\n'+sp.map(x=>`• *${x.name}*: ${x.kind||'code'} *${x.code}*${x.discount?` ${x.discount}`:''} ${x.url}`).join('\n')+'\n'}
-function eventsShort(){const ev=upcomingEvents();if(!ev.length)return'';
-  return '\n📅 *Events* · we ride 💪\n'+ev.map(e=>`• *${e.short||e.name}* ${occLabel(e.date).replace(/^(Today|Tomorrow) /,'')}${e.distance?` · ${e.distance}`:''}${e.code?` · code *${e.code}*${e.discount?` ${e.discount}`:''}`:''} ${e.url}`).join('\n')+'\n'}
+function eventLines(){return upcomingEvents().map(e=>`• *${e.short||e.name}* ${occLabel(e.date).replace(/^(Today|Tomorrow) /,'')}${e.distance?` · ${e.distance}`:''}${e.code?` · code *${e.code}*${e.discount?` ${e.discount}`:''}`:''} ${e.url}`)}
+function eventsShort(){const ev=eventLines();if(!ev.length)return'';return '\n📅 *Events* · we ride 💪\n'+ev.join('\n')+'\n'}
 // r = ride from site-data.js with r.occ (YYYY-MM-DD) and any one-off change merged in; f = forecast {txt} or null
 function rideText(r,f){
   const t=`🚴‍♂️ *${r.name}* · group ride\n🗓️ ${occLabel(r.occ)} · ${fmtTime(r.time)}\n📍 ${r.start?`Start: ${r.start} · `:''}${r.place}\n`+(r.route?`🛣️ ${r.route}\n`:'')+(rideKind(r)?`${rideKind(r)}\n`:'')+(r.pace?`⚡ ${r.pace}\n`:'')+(rideRule(r)?`⛑️💡 ${rideRule(r)}\n`:'')+
@@ -33,8 +33,8 @@ function rideText(r,f){
   return t.length>1010?t.replace('📲 Live ride weather & forecast: ','📲 ').replace('👥 Join our WhatsApp group: ','👥 ').replace(/\n🌤️ Forecast: [^\n]*/,''):t}
 
 /* ---------- share images ---------- */
-const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#ffcf00','#ffe100','#fff16a','#ffffff','#d0001a'],lime:['#f2f2dc','#e4efcf','#c4d24c','#ffffff','#00482a'],purple:['#2e1065','#5b21b6','#a855f7','#e9d5ff','#f5d0fe'],rorange:['#7c2d12','#c2410c','#fb923c','#fed7aa','#fde68a']};
-const RIDE_TH={green:'green',purple:'purple',orange:'rorange'};
+const THEMES={blue:['#0b1f4b','#123a8a','#1d4ed8','#38bdf8','#fbbf24'],green:['#052e16','#14532d','#16a34a','#bef264','#bef264'],strava:['#4a1500','#b33600','#fc4c02','#ffb080','#fff1e6'],orange:['#7c2d12','#c2410c','#f59e0b','#fde68a','#fde68a'],yellow:['#ffcf00','#ffe100','#fff16a','#ffffff','#d0001a'],lime:['#f2f2dc','#e4efcf','#c4d24c','#ffffff','#00482a'],purple:['#2e1065','#5b21b6','#a855f7','#e9d5ff','#f5d0fe'],rorange:['#7c2d12','#c2410c','#fb923c','#fed7aa','#fde68a'],sky:['#0c2d48','#0e5a8a','#0ea5e9','#bae6fd','#e0f2fe'],org:['#13233f','#2f5446','#6b9a80','#e6f0e9','#f3e9d6']};
+const RIDE_TH={green:'green',purple:'purple',orange:'rorange',blue:'sky',org:'org'};
 const LIGHT={yellow:{ink:'#1f1a00',line:'rgba(31,26,0,.9)',route:'rgba(122,98,0,.25)',dot:'rgba(226,0,26,.3)',dow:'#e2001a',day:'#e2001a',mon:'#7a6200',t1:'#fff',chip:'rgba(255,255,255,.55)',chipT:'#3d3300'},
   lime:{ink:'#00482a',line:'rgba(0,72,42,.92)',route:'rgba(0,72,42,.2)',dot:'rgba(0,72,42,.22)',dow:'#6b8a12',day:'#00482a',mon:'#6b8a12',t1:'#e9f5a8',chip:'rgba(0,72,42,.1)',chipT:'#00482a'}};
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
@@ -54,14 +54,14 @@ function drawCard({theme,dow,day,mon,tags,title,lines}){
     c.fillStyle=k===0?T3[4]:dk?dk.chip:'rgba(255,255,255,.16)';rr(c,tx,ty-38,w,52,12);c.fill();c.fillStyle=k===0?(dk?dk.t1:T3[0]):dk?dk.chipT:ink;c.fillText(t,tx+18,ty-2);tx+=w+14});
   c.fillStyle=ink;c.font='800 72px Sora,sans-serif';let y=420;wrapLines(c,title,920).slice(0,3).forEach(l=>{c.fillText(l,80,y);y+=86});
   y+=20;c.font='600 40px Sora,sans-serif';lines.filter(Boolean).forEach(l=>{wrapLines(c,l,920).slice(0,2).forEach(x=>{c.fillStyle=dk?dk.line:'rgba(255,255,255,.92)';c.fillText(x,80,y);y+=58});y+=6});
-  const bg=c.createLinearGradient(0,0,S2,0);if(theme==='strava'){bg.addColorStop(0,'#2a0c00');bg.addColorStop(.5,'#4a1500');bg.addColorStop(1,'#7a2400')}else if(theme==='purple'||theme==='rorange'){bg.addColorStop(0,T3[0]);bg.addColorStop(.5,T3[1]);bg.addColorStop(1,T3[2])}else{bg.addColorStop(0,'#052e16');bg.addColorStop(.5,'#14532d');bg.addColorStop(1,'#16a34a')}c.fillStyle=bg;c.fillRect(0,S2-110,S2,110);
-  c.fillStyle='#fff';c.font='800 44px Sora,sans-serif';c.fillText('TheCyclist',60,S2-42);const w2=c.measureText('TheCyclist').width;c.fillStyle=theme==='strava'?'#ffd2b8':(theme==='purple'||theme==='rorange')?T3[3]:'#bef264';c.fillText('Dubai',60+w2,S2-42);
+  const bg=c.createLinearGradient(0,0,S2,0);if(theme==='strava'){bg.addColorStop(0,'#2a0c00');bg.addColorStop(.5,'#4a1500');bg.addColorStop(1,'#7a2400')}else if(theme==='purple'||theme==='rorange'||theme==='sky'||theme==='org'){bg.addColorStop(0,T3[0]);bg.addColorStop(.5,T3[1]);bg.addColorStop(1,T3[2])}else{bg.addColorStop(0,'#052e16');bg.addColorStop(.5,'#14532d');bg.addColorStop(1,'#16a34a')}c.fillStyle=bg;c.fillRect(0,S2-110,S2,110);
+  c.fillStyle='#fff';c.font='800 44px Sora,sans-serif';c.fillText('TheCyclist',60,S2-42);const w2=c.measureText('TheCyclist').width;c.fillStyle=theme==='strava'?'#ffd2b8':(theme==='purple'||theme==='rorange'||theme==='sky'||theme==='org')?T3[3]:'#bef264';c.fillText('Dubai',60+w2,S2-42);
   c.fillStyle='#dcfce7';c.font='600 28px Sora,sans-serif';const rt=root().replace(/^https?:\/\//,'').replace(/\/$/,'');c.fillText(rt,S2-60-c.measureText(rt).width,S2-46);
   return c0}
 // share image of a ride; wind(w) formats the forecast wind (homepage: the visitor's unit; ride pages: km/h)
 function rideCard(r,f,wind){const l=dayParts(r.occ);
   return drawCard({theme:RIDE_TH[r.theme]||'green',dow:l.day.toUpperCase(),day:String(l.date),mon:l.mon.toUpperCase(),tags:['★ Group ride',rideKind(r),r.pace?'⚡ '+r.pace:''].filter(Boolean),title:`${r.name} · ${fmtTime(r.time)}`,
-    lines:[r.start&&`📍 Start: ${r.start}`,r.route&&`🛣️ ${r.route}`,`🗺️ ${r.place}`,f&&`🌤️ ${f.tr} · ${wind(f.w)} ${f.dir} · score ${f.sc}`,rideRule(r)&&`⛑️💡 ${rideRule(r)}`,'👥 Join via the WhatsApp group']})}
+    lines:[r.start&&`📍 Start: ${r.start}`,r.route&&`🛣️ ${r.route}`,`🗺️ ${r.place}`,f&&`🌤️ ${f.tr} · ${wind(f.w)} ${f.dir} · score ${f.sc}`,rideRule(r)&&`⛑️💡 ${rideRule(r)}`,r.joinLine||'👥 Join via the WhatsApp group']})}
 function canvasFile(cv,name){const d=cv.toDataURL('image/png'),b=atob(d.split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new File([u],name,{type:'image/png'})}
-window.TCDS={root,fmtTime,occLabel,upcomingEvents,sameLink,rideRule,rideKind,scoreLabel,footerText,sponsorsShort,eventsShort,rideText,THEMES,RIDE_TH,LIGHT,rr,wrapLines,drawCard,rideCard,canvasFile};
+window.TCDS={root,eventLines,dayParts,fmtTime,occLabel,upcomingEvents,sameLink,rideRule,rideKind,scoreLabel,footerText,sponsorsShort,eventsShort,rideText,THEMES,RIDE_TH,LIGHT,rr,wrapLines,drawCard,rideCard,canvasFile};
 })();

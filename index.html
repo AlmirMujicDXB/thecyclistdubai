@@ -426,6 +426,12 @@ a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px 
   background:radial-gradient(70% 140% at 100% 0%,var(--rd-halo,#bef26440) 0%,transparent 60%),linear-gradient(110deg,var(--rd-dark) 0%,var(--rd-mid) 50%,var(--rd-bright) 100%);box-shadow:0 8px 22px var(--rd-shadow,#052e1640)}
 /* ride colour themes (site-data.js theme:) */
 .ride.haspage{cursor:pointer}
+/* organizer card (last slide of the group rides) */
+.ride.th-org{--rd-dark:#13233f;--rd-mid:#2f5446;--rd-bright:#6b9a80;--rd-cream:#e6f0e9;--rd-peach:#f3e9d6;--rd-ink:#13233f;--rd-meta:#e6f0e9;--rd-halo:#f3e9d64d;--rd-shadow:#13233f40;--rd-accent:#3f6b55}
+.ride .org-tile span,.ride .org-tile span:first-child{color:#3f6b55}
+.ride .org-tile b{font-size:26px;line-height:.9;color:#13233f}
+.ride-btns .rorg{width:140px}
+
 .ride.haspage .ride-title::after{content:' ›';opacity:.7}
 .ride.th-purple{--rd-dark:#2e1065;--rd-mid:#5b21b6;--rd-bright:#a855f7;--rd-cream:#e9d5ff;--rd-peach:#f5d0fe;--rd-ink:#3b0764;--rd-meta:#f3e8ff;--rd-halo:#e879f94d;--rd-shadow:#3b076440;--rd-accent:#7e22ce}
 .ride.th-orange{--rd-dark:#7c2d12;--rd-mid:#c2410c;--rd-bright:#fb923c;--rd-cream:#fed7aa;--rd-peach:#fde68a;--rd-ink:#431407;--rd-meta:#ffedd5;--rd-halo:#fde68a4d;--rd-shadow:#7c2d1240;--rd-accent:#c2410c}
@@ -660,6 +666,7 @@ footer a:hover{color:var(--text)}
   .ride .ride-body{grid-column:2;grid-row:1;align-self:center;min-width:0}
   .ride .ride-btns{grid-column:1/-1;grid-row:2;width:auto;padding-left:0;margin-top:0}
   .ride .m-nf{display:none}
+  .ride-btns .rorg{grid-column:1/-1;width:100%}
   .lmart{min-height:0}
   .lmart .fb{font-size:15px;letter-spacing:3px}
   .lmdesc{display:none}
@@ -1475,6 +1482,18 @@ function rideFacts(r){const km=parseFloat(r.distance),pace=parseFloat(r.pace),[h
     out+=box('Ride time',`${Math.floor(mins/60)}:${String(mins%60).padStart(2,'0')} h`)+box('Back at',fmtTime(`${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}`))}
   else out+=box('Pace',(r.pace||'').replace(/\s*avg$/,''))+box('Terrain',r.type||'');
   return `<div class="ride-facts">${out}</div>`}
+// last slide of the group rides: invite visitors to organise and share their own ride (organize-ride.html)
+function organizerCard(){return `<div class="ride th-org haspage" data-page="organize-ride.html" title="Organize your own group ride">
+      <svg class="ride-route" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true"><path d="M10 30 C110 70 190 10 300 46 S470 70 590 24" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="10" cy="30" r="5" fill="#ffffff55"/><circle cx="300" cy="46" r="4" fill="#ffffff40"/><circle cx="590" cy="24" r="5" fill="#ffffff55"/></svg>
+      <div class="ride-date org-tile"><span>YOUR</span><b>+</b><span>RIDE</span></div>
+      <div class="ride-body">
+        <div class="ride-tag"><span class="star">🧭 Ride organizer</span><span class="typ">Free · 1 minute</span></div>
+        <div class="ride-title">Organize your ride · <span>invite your crew</span></div>
+        <div class="ride-meta">📍 Pick track, time &amp; pace · 🌤️ forecast card · share to WhatsApp</div>
+      </div>
+      <div class="ride-facts"><div><small>Step 1</small><b>Details</b></div><div><small>Step 2</small><b>Forecast</b></div><div><small>Step 3</small><b>Share</b></div></div>
+      <div class="ride-btns"><a class="rshare rorg" href="organize-ride.html">✚ <span>Start now ›</span></a></div>
+    </div>`}
 function renderRides(){
   const rs=upcomingRides();
   $('rides').innerHTML='<div class="car-view"><div class="car-track">'+rs.map((r,i)=>{const l=parseLocal(r.occ+'T00:00'),rd=relDay(r.occ+'T00:00'),f=rideForecast(r);
@@ -1494,7 +1513,7 @@ function renderRides(){
         ${r.page?`<a class="rloc" href="${esc(r.page)}">Details ›</a>`:r.location?`<a class="rloc" href="${esc(r.location)}" target="_blank" rel="noopener">Location ↗</a>`:''}
         <button class="cshare rshare" data-rd="${i}" aria-label="Share ride" title="Share ride">${SHARE_ICO}<span>Share</span></button>
       </div>
-    </div>`}).join('')+'</div></div>';carSync('rides');
+    </div>`}).join('')+organizerCard()+'</div></div>';carSync('rides');
   $('rides').querySelectorAll('[data-rd]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();shareRide(upcomingRides()[+b.dataset.rd])});
   // cards with their own page open it (a swipe never does: the carousel swallows that click)
   $('rides').querySelectorAll('.ride[data-page]').forEach(c=>c.addEventListener('click',e=>{if(e.target.closest('a,button'))return;location.href=c.dataset.page}));
