@@ -9,13 +9,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="ride-page.css">
 <link rel="stylesheet" href="home-btn.css">
 <script src="site-data.js"></script>
 <script src="share-core.js"></script>
 <script src="route-presets.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 body.th-strava{--p0:#242428;--p1:#e34402;--p2:#fc4c02;--p3:#ff7a3d;--p4:#ffe4d6;--p5:#fff6f1;--glow:#ffffff00;--shadow:#fc4c0226;--bd:#ffd9c4;--bd2:#f7f7fa;--red:#fc4c02;--ink:#242428;--mut:#6d6d78}
 body.th-strava{background:#f7f7fa}
@@ -112,7 +110,13 @@ body.th-strava{background:#f7f7fa}
 .whenbar .wt{font-size:12px;font-weight:700;color:#6d6d78}
 @media (max-width:480px){.whenbar{gap:6px;padding:9px 8px}.whenbar .wl{display:none}.whenbar label{padding:1px 2px 1px 6px;font-size:13px}.whenbar input{font-size:12.5px}.whenbar .wt{flex-basis:100%;text-align:center}}
 
-/* compact layout v3: one map beside the sliding route info */
+/* compact layout v3: one route illustration beside the sliding route info */
+.mapbox.illu{background:linear-gradient(135deg,#fff,#fff6f1);overflow:hidden}
+.mapbox.illu::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,#24242814 0 1.4px,transparent 1.9px) 0 0/18px 18px}
+#illu{position:absolute;inset:0;width:100%;height:100%}
+.whenbar label.pace{border:2px solid #fc4c02;background:#fff;box-shadow:0 0 0 3px #fc4c021f;position:relative}
+.whenbar label.pace em{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#fc4c02;padding-right:2px}
+.whenbar label.pace input{font-weight:800;color:#fc4c02;font-size:14px}
 .hero.compact{padding:14px 16px}.hero.compact h1{font-size:23px}
 .rbox{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);border-top:0}
 .rbox .mapbox{height:auto;min-height:330px;border-right:1px solid var(--bd)}
@@ -125,12 +129,14 @@ body.th-strava{background:#f7f7fa}
 .whenbar{justify-content:flex-start}.whenbar .wt b.h{color:#dc2626}.whenbar .wt b.t{color:#16a34a}
 .whenbar label.pace input{width:44px;text-align:right}.whenbar label.pace span{font-size:11px;font-weight:800;color:#6d6d78;padding-right:6px}
 .more{border-top:1px solid var(--bd)}
-.more summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 16px;font-weight:800;color:#242428}
-.more summary::-webkit-details-marker{display:none}
-.more summary small{flex:1;font-weight:600;color:#6d6d78;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.more summary i{margin-left:auto;font-style:normal;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:#fff6f1;border:1px solid #ffd9c4;color:#fc4c02;font-weight:900;transition:transform .2s}
-.more[open] summary i{transform:rotate(45deg)}
-.more summary:hover{background:#fff8f4}
+.more-h{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 16px;font-weight:800;color:#242428;font-family:Sora,system-ui,sans-serif}
+.more-h:hover{background:#fff8f4}.more-h:focus-visible{outline:2px solid #fc4c02;outline-offset:-2px}
+.more-h small{flex:1;font-weight:600;color:#6d6d78;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.more-h .chev{margin-left:auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#fff6f1;border:1px solid #ffd9c4;color:#fc4c02;transition:transform .55s cubic-bezier(.4,0,.2,1),background .3s}
+.more.open .more-h .chev{transform:rotate(180deg);background:#fc4c02;color:#fff;border-color:#fc4c02}
+.more-b{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s cubic-bezier(.4,0,.2,1)}
+.more.open .more-b{grid-template-rows:1fr}
+.more-in{overflow:hidden;min-height:0;opacity:0;transition:opacity .45s ease .1s}.more.open .more-in{opacity:1}
 .more .form{padding:4px 16px 16px}
 .locrow{display:flex;gap:8px}.locrow input{flex:1}
 .btn.sm{height:40px;font-size:12.5px;white-space:nowrap;padding:0 12px}
@@ -140,8 +146,7 @@ body.th-strava{background:#f7f7fa}
 .shside .acts{margin-top:12px}
 @media (max-width:900px){.rbox{grid-template-columns:1fr}.rbox .mapbox{min-height:260px;height:260px;border-right:0;border-bottom:1px solid var(--bd)}
   .shbox{grid-template-columns:minmax(0,1fr)}.shbox .one canvas{max-width:340px}}
-@media (max-width:480px){.locrow{flex-direction:column}.more summary small{display:none}
-  .whenbar{display:grid;grid-template-columns:1.45fr 1fr .85fr;gap:6px}.whenbar label{min-width:0;padding:1px 2px 1px 5px;font-size:12px;gap:3px}.whenbar input{width:100%;font-size:12px}.whenbar label.pace input{width:100%}.whenbar label.pace span{padding-right:3px;font-size:10px}.whenbar .wt{grid-column:1/-1}.whenbar label i{display:none}.whenbar input::-webkit-calendar-picker-indicator{margin:0;padding:0;width:12px}}
+@media (max-width:480px){.mapbox.illu .legend{display:none}.mapbox.illu .wbadge{padding:5px 8px;gap:7px}.mapbox.illu .warr{width:26px;height:26px;font-size:14px}.mapbox.illu .wbadge b{font-size:13px}.mapbox.illu .wbadge small{font-size:10px}.locrow{flex-direction:column}  .whenbar{display:grid;grid-template-columns:1.3fr 1fr;gap:6px}.whenbar label.pace{grid-column:1/-1;justify-content:center;padding:3px 8px}.whenbar label.pace input{width:44px!important;flex:none}.whenbar label{min-width:0;padding:1px 2px 1px 5px;font-size:12px;gap:3px}.whenbar input{width:100%;font-size:12px}.whenbar label.pace input{width:100%}.whenbar label.pace span{padding-right:3px;font-size:10px}.whenbar .wt{grid-column:1/-1}.whenbar label i{display:none}.whenbar input::-webkit-calendar-picker-indicator{margin:0;padding:0;width:12px}}
 </style>
 </head>
 <body class="th-strava">
@@ -164,7 +169,7 @@ body.th-strava{background:#f7f7fa}
 <section class="sec rsec">
   <div class="sech"><h2>🗺️ Pick a route</h2><div class="sp"></div><span class="note" id="rcCount"></span></div>
   <div class="rbox">
-    <div class="mapbox"><div id="map"></div><canvas id="wind"></canvas><div class="mhint" id="mhint">Use two fingers to move the map</div>
+    <div class="mapbox illu"><svg id="illu" viewBox="0 0 600 420" preserveAspectRatio="xMidYMid meet" aria-label="Route illustration"></svg><canvas id="wind"></canvas>
       <div class="mapui"><div class="wbadge"><div class="warr" id="wArr">↓</div><div><b id="wSpd">--</b><small id="wTxt">Wind at start</small></div></div>
         <div class="legend" id="legend"><span><i style="background:#dc2626"></i>Head</span><span><i style="background:#16a34a"></i>Tail</span><span><i style="background:#eab308"></i>Cross</span></div></div>
     </div>
@@ -173,9 +178,10 @@ body.th-strava{background:#f7f7fa}
       <div class="rc-nav"><button class="rc-arr" id="rcPrev" type="button" aria-label="Previous route">‹</button><div class="rc-dots" id="rcDots"></div><button class="rc-arr" id="rcNext" type="button" aria-label="Next route">›</button></div>
     </div>
   </div>
-  <div class="whenbar"><label title="Ride date"><i>📅</i><input type="date" id="fDate" aria-label="Ride date"></label><label title="Start time"><i>⏰</i><input type="time" id="fTime" value="06:30" step="300" aria-label="Start time"></label><label title="Average speed" class="pace"><i>⚡</i><input type="number" id="fPace" min="12" max="50" step="1" value="28" aria-label="Average speed in km/h"><span>km/h</span></label><span class="wt" id="whenTxt"></span></div>
-  <details class="more" id="more">
-    <summary><span>✏️ Add details manually</span><small id="moreSum">name · start location · organiser · join link · notes</small><i>＋</i></summary>
+  <div class="whenbar"><label title="Ride date"><i>📅</i><input type="date" id="fDate" aria-label="Ride date"></label><label title="Start time"><i>⏰</i><input type="time" id="fTime" value="06:30" step="300" aria-label="Start time"></label><label title="Your planned average speed for the group" class="pace"><em>Planned avg speed</em><i>⚡</i><input type="number" id="fPace" min="12" max="50" step="1" value="28" aria-label="Planned average speed in km/h"><span>km/h</span></label><span class="wt" id="whenTxt"></span></div>
+  <div class="more" id="more">
+    <button type="button" class="more-h" id="moreBtn" aria-expanded="false" aria-controls="moreBody"><span>✏️ Add details manually</span><small id="moreSum">name · start location · organiser · join link · notes</small><i class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></i></button>
+    <div class="more-b" id="moreBody"><div class="more-in">
     <div class="form">
       <div class="full autonote" id="autoNote"></div>
       <label class="full">Ride name<input id="fName" maxlength="40" placeholder="Saturday Coffee Ride"></label>
@@ -191,7 +197,8 @@ body.th-strava{background:#f7f7fa}
       <label class="full">Notes <small>(optional, short)</small><textarea id="fNotes" maxlength="140" placeholder="Coffee stop at the end · bring 2 bottles"></textarea></label>
       <label class="full tog"><input type="checkbox" id="fRule" checked> ⛑️💡 Lights &amp; helmet mandatory</label>
     </div>
-  </details>
+    </div></div>
+  </div>
 </section>
 
 <section class="sec share">

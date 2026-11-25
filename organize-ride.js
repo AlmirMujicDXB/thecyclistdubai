@@ -3,7 +3,7 @@
    plus a weather card for the ride window (Open-Meteo), and shares both images with a WhatsApp-ready message
    that links to thecyclistdubai.com and lists the recommended events from site-data.js.
    Ready routes (route-presets.js, the owner's Strava GPX routes): a swipe/arrow carousel; picking one fills the form,
-   draws the route on the map coloured by the forecast wind (head/tail/cross at the time you reach each part),
+   draws the route illustration coloured by the forecast wind (head/tail/cross at the time you reach each part),
    and adds a third share image (route card) + Strava/GPX links to the message. */
 (function(){
 const $=id=>document.getElementById(id);
@@ -94,7 +94,7 @@ function selectSlide(i){if(i===curSlide)return;curSlide=i;
     if(nameAuto)$('fName').value=`${preset.short} Ride`;
     const ql=`https://www.google.com/maps/search/?api=1&query=${preset.pts[0][0]},${preset.pts[0][1]}`;if(!$('fLoc').value||$('fLoc').value===locAuto)$('fLoc').value=ql;locAuto=ql;
     $('autoNote').innerHTML=`✨ Auto-filled from <b>${preset.name}</b>${preset.dir?` (${DIRN[preset.dir].toLowerCase()})`:''}: Al Qudra · start ${preset.start} · ${preset.km} km · ${preset.gain} m climb. Just set the date &amp; time under the routes (edit anything below if you like).`}
-  else{$('autoNote').innerHTML='';if(curSlide>=0&&!first0)$('more').open=true}first0=false;
+  else{$('autoNote').innerHTML='';if(curSlide>=0&&!first0)setMore(true)}first0=false;
   loadWx().then(update)}
 let scT;view.addEventListener('scroll',()=>{clearTimeout(scT);scT=setTimeout(()=>selectSlide(Math.round(view.scrollLeft/Math.max(1,view.clientWidth))),110)},{passive:true});
 $('fTrack').addEventListener('change',()=>{if(preset&&$('fTrack').value!=='alqudra')goSlide(NS-1)});
@@ -103,21 +103,23 @@ addEventListener('resize',()=>{view.style.scrollBehavior='auto';view.scrollLeft=
 $('fName').addEventListener('input',()=>{nameAuto=!$('fName').value.trim()});
 $('fPace').addEventListener('input',()=>document.querySelectorAll('.rslide .et').forEach(b=>b.textContent=estTime(+b.dataset.km)));
 
-/* ---------- map ---------- */
-let map=null,lay=null;
-try{if(window.L&&L.map){map=L.map('map',{zoomControl:true,attributionControl:true});
-  L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',{maxZoom:20,attribution:'CyclOSM · © OpenStreetMap contributors'}).addTo(map);lay=L.layerGroup().addTo(map);
-  if(matchMedia('(pointer:coarse)').matches){map.dragging.disable();if(map.tap)map.tap.disable();let tm;$('map').addEventListener('touchmove',e=>{const h=$('mhint');if(e.touches.length===1){h.classList.add('on');clearTimeout(tm);tm=setTimeout(()=>h.classList.remove('on'),1200)}else h.classList.remove('on')},{passive:true})}}}catch(e){map=null}
-const pinI=(bg,t)=>L.divIcon({className:'',html:`<div class="pin" style="background:${bg}">${t}</div>`,iconSize:[30,30],iconAnchor:[15,15]});
-function drawMap(r,wi){if(!map)return;try{lay.clearLayers();
-  if(preset){const ll=preset.pts.map(q=>[q[0],q[1]]);L.polyline(ll,{color:'#fff',weight:10,opacity:.95,interactive:false}).addTo(lay);
-    if(wi){let run=[ll[0]],k=wi.kinds[0];for(let i=1;i<ll.length;i++){const kk=wi.kinds[i-1];if(kk!==k){L.polyline(run,{color:KCOL[k],weight:5.5,lineCap:'round'}).addTo(lay);run=[ll[i-1]];k=kk}run.push(ll[i])}L.polyline(run,{color:KCOL[k],weight:5.5,lineCap:'round'}).addTo(lay)}
-    else L.polyline(ll,{color:'#fc4c02',weight:5.5,lineCap:'round'}).addTo(lay);
-    if(preset.turn)L.marker(ll[preset.ti],{icon:pinI('#242428',preset.turnIcon)}).bindTooltip(`Turnaround: ${preset.turn} · km ${preset.turnKm}`).addTo(lay);
-    if(preset.dir)arrowsAt(preset,[.12,.3,.48,.66,.84]).forEach(([i,b])=>L.marker(ll[i],{interactive:false,icon:L.divIcon({className:'',html:`<div class="darrow" style="transform:rotate(${b}deg)">▲</div>`,iconSize:[22,22],iconAnchor:[11,11]})}).addTo(lay));
-    L.marker(ll[0],{icon:pinI('#16a34a','🚴')}).bindTooltip(`Start & finish: ${preset.start}`).addTo(lay);
-    if(fitFor!==preset.id){map.fitBounds(L.latLngBounds(ll),{padding:[28,28]});fitFor=preset.id}}
-  else{const t=TR();L.marker([t.lat,t.lon],{icon:pinI('#fc4c02','🚴')}).bindTooltip(t.name).addTo(lay);if(fitFor!=='c-'+t.id){map.setView([t.lat,t.lon],t.id==='alqudra'?11:13);fitFor='c-'+t.id}}}catch(e){}}
+/* ---------- route illustration (one drawing that changes with the slides; no map tiles) ---------- */
+// coloured by the forecast wind at the time the group reaches each part; out & back = two lanes; loops get direction arrows
+function drawIllu(r,wi){const svg=$('illu'),W=600,H=420;
+  if(!preset){const t=TR();svg.innerHTML=`<g font-family="Sora,sans-serif" text-anchor="middle"><circle cx="300" cy="180" r="62" fill="#fff6f1" stroke="#ffd9c4" stroke-width="3"/><text x="300" y="204" font-size="62">✏️</text>
+    <text x="300" y="285" font-size="24" font-weight="800" fill="#242428">Your own route</text><text x="300" y="317" font-size="17" font-weight="600" fill="#6d6d78">${t.name}</text></g>`;return}
+  const p=preset,P=TCDS_fit(p.pts,0,86,W,H-86,34),xy=p.pts.map(P),off=p.turn?6:0,d='M'+xy.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L');
+  let segs='';for(let i=1;i<xy.length;i++){const A=xy[i-1],B=xy[i],dx=B[0]-A[0],dy=B[1]-A[1],L=Math.hypot(dx,dy)||1,ox=-dy/L*off,oy=dx/L*off;
+    segs+=`<path d="M${(A[0]-ox).toFixed(1)} ${(A[1]-oy).toFixed(1)}L${(B[0]-ox).toFixed(1)} ${(B[1]-oy).toFixed(1)}" stroke="${wi?KCOL[wi.kinds[i-1]]:'#fc4c02'}"/>`}
+  const arr=p.dir?arrowsAt(p,[.15,.35,.55,.75,.9]).map(([i,b])=>`<path d="M0 -9L7 6L-7 6Z" transform="translate(${xy[i][0].toFixed(1)} ${xy[i][1].toFixed(1)}) rotate(${b.toFixed(0)})" fill="#242428" stroke="#fff" stroke-width="2"/>`).join(''):'';
+  const pin=(q,c,t)=>`<g transform="translate(${q[0].toFixed(1)} ${q[1].toFixed(1)})"><circle r="15" fill="${c}" stroke="#fff" stroke-width="4"/><text y="6" text-anchor="middle" font-size="15" font-weight="800" fill="#fff" font-family="Sora,sans-serif">${t}</text></g>`;
+  svg.innerHTML=`<path d="${d}" fill="none" stroke="#fff" stroke-width="${off?24:18}" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#ececf0" stroke-width="${off?20:14}" stroke-linejoin="round" stroke-linecap="round"/>
+    <g fill="none" stroke-width="${off?6:8}" stroke-linecap="round">${segs}</g>${arr}${p.turn?pin(xy[p.ti],'#242428','T'):''}${pin(xy[0],'#16a34a','S')}`}
+const TCDS_fit=fitter;
+
+/* ---------- collapsible manual details (slow, chevron) ---------- */
+function setMore(o){$('more').classList.toggle('open',o);$('moreBtn').setAttribute('aria-expanded',o)}
+$('moreBtn').onclick=()=>setMore(!$('more').classList.contains('open'));
 
 /* ---------- wind particles over the map (as on the homepage / ride pages) ---------- */
 const wcv=$('wind'),wcx=wcv.getContext('2d');let WPT=[],wvx=0,wvy=0,wpA=.5;
@@ -163,7 +165,7 @@ function stats(r,f,wi){const km=parseFloat($('fDist').value)||0,mins=km/paceKmh(
   if(w){$('wArr').style.transform=`rotate(${w.wind_direction_10m}deg)`;$('wSpd').textContent=`${Math.round(w.wind_speed_10m)} km/h ${card(w.wind_direction_10m)}`;$('wTxt').textContent=`Wind at ${TCDS.fmtTime(r.time)} · gusts ${Math.round(w.wind_gusts_10m)}`;setParticles(w.wind_direction_10m,w.wind_speed_10m)}
   else{$('wArr').style.transform='';$('wSpd').textContent='--';$('wTxt').textContent=WX[TR().id]===null?'Forecast unavailable':'Forecast closer to the day';setParticles(null)}
   $('legend').style.display=preset&&wi?'':'none';
-  $('whenTxt').innerHTML=`${km?`${km} km · ${fmtDur(mins)} · back ${backT}`:TCDS.occLabel(r.occ)}${wi?` · <b class="h">${wi.head}% head</b> · <b class="t">${wi.tail}% tail</b>`:f?` · ${f.tr}`:''}`;if(map)setTimeout(()=>map.invalidateSize(),0)}
+  $('whenTxt').innerHTML=`${km?`${km} km · ${fmtDur(mins)} · back ${backT}`:TCDS.occLabel(r.occ)}${wi?` · <b class="h">${wi.head}% head</b> · <b class="t">${wi.tail}% tail</b>`:f?` · ${f.tr}`:''}`}
 
 /* ---------- ride + message ---------- */
 function ride(){const t=TR(),dist=parseFloat($('fDist').value);
@@ -184,7 +186,7 @@ let CUR={};
 function update(){const r=ride(),f=forecast(r),wi=windInfo(r);
   try{localStorage.setItem('tcd_org',JSON.stringify(Object.assign(Object.fromEntries(FIELDS.map(k=>[k,$(k).value])),{fRule:$('fRule').checked,color,colorPicked,dirPref:DIRP,preset:preset?preset.id:'custom',nameAuto})))}catch(e){}
   const sc=TCDS.shareCard(r,f,wi,preset,paceKmh());const t=$('cvShare');t.getContext('2d').drawImage(sc,0,0);const text=message(r,f,wi);$('txt').textContent=text;
-  stats(r,f,wi);drawMap(r,wi);
+  stats(r,f,wi);drawIllu(r,wi);
   $('fcNote').textContent=WX[TR().id]===null?'Forecast unavailable right now':f?`Forecast loaded · ride score ${f.sc}`:'Forecast comes closer to the day';
   CUR={r,f,sc,text}}
 function toast(m){const t=$('rToast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200)}
