@@ -45,7 +45,7 @@ window.SITE = {
   ],
 
   /* ---------- EVENTS ----------
-     Shown under the map, soonest first. theme: 'yellow' (L'Étape) or 'lime' (Spinneys green) for a coloured card (default blue). Leave out time if not announced (shows 'time TBC').
+     Shown under the map, soonest first. The homepage shows ONE at a time (left-to-right slider, 7 s, loops; a single event stays still). theme: 'yellow' (L'Étape) or 'lime' (Spinneys green) for a coloured card (default blue). Leave out time if not announced (shows 'time TBC').
      code + discount: discount code shown on the card and in shares.
      Every upcoming event (link + code) is added to every group ride share automatically. */
   events: [
