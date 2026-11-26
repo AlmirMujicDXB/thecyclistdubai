@@ -411,6 +411,9 @@ a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px 
 .evts.is-slider .ev-track>.evt{grid-area:1/1;min-width:0;max-width:100%;transform:translateX(-100%);visibility:hidden;transition:box-shadow .2s}
 .evts.is-slider .ev-track>.evt.on{transform:none;visibility:visible;z-index:1;transition:box-shadow .2s,transform .2s}
 .evts.is-slider .ev-track>.evt.enter{visibility:visible}
+.evts.is-slider .ev-track.to-left>.evt.enter{transform:translateX(100%)}
+.evts.is-slider .ev-track.to-left>.evt.leave,.evts.is-slider .ev-track.to-left.is-anim>.evt.leave,.evts.is-slider .ev-track.to-left.is-anim>.evt.leave:hover{transform:translateX(-100%)}
+.evts.is-slider .ev-view{cursor:grab;user-select:none;-webkit-user-select:none}.evts.is-slider .ev-view a,.evts.is-slider .ev-view img{-webkit-user-drag:none}
 .evts.is-slider .ev-track>.evt.leave{transform:translateX(100%);visibility:visible;z-index:0;pointer-events:none}
 .evts.is-slider .ev-track>.evt.on:hover{transform:translateY(-1px)}
 .evts.is-slider .ev-track.is-anim>.evt{transition:transform .6s cubic-bezier(.22,.8,.2,1),box-shadow .2s}
@@ -1575,7 +1578,7 @@ const EV_MS=7000;
 function evReduce(){return window.matchMedia('(prefers-reduced-motion: reduce)').matches}
 function evHeld(){return EVS.hover||EVS.touch>0||EVS.focus}
 function evDots(i){const d=$('evDots');if(d)[...d.children].forEach((el,j)=>el.classList.toggle('on',j===i))}
-function evShow(i,animate){
+function evShow(i,animate,toLeft){
   const tr=$('evTrack');if(!tr)return;
   const slides=[...tr.children],n=slides.length;if(!n)return;
   i=((i%n)+n)%n;
@@ -1587,7 +1590,7 @@ function evShow(i,animate){
     EVS.i=i;evDots(i);return;
   }
   const cur=slides[prev],next=slides[i];
-  tr.classList.remove('is-anim');
+  tr.classList.remove('is-anim');tr.classList.toggle('to-left',!!toLeft);
   slides.forEach((el,j)=>{if(j!==prev&&j!==i){el.classList.remove('on','leave','enter');mark(el,false)}});
   next.classList.remove('on','leave');next.classList.add('enter');
   void tr.offsetWidth;
@@ -1638,6 +1641,17 @@ function evInit(){
     const tr=$('evTrack');if(!tr||!tr.contains(e.target))return;
     tr.classList.remove('is-anim');e.target.classList.remove('leave');
   });
+  // finger swipe (phone) / mouse drag (laptop): left = next event (slides in from the right), right = previous
+  const view=()=>$('evView');let sx=null,sy=0,moved=false;
+  const start=(x,y)=>{if(!box.classList.contains('is-slider'))return;sx=x;sy=y;moved=false};
+  const end=(x,y)=>{if(sx==null)return;const dx=x-sx,dy=y-sy;sx=null;
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.2){moved=true;dx<0?evShow(EVS.i+1,true,true):evShow(EVS.i-1,true,false);evArm()}};
+  box.addEventListener('touchstart',e=>{if(e.target.closest('#evView'))start(e.touches[0].clientX,e.touches[0].clientY)},{passive:true});
+  box.addEventListener('touchend',e=>{const t=e.changedTouches[0];end(t.clientX,t.clientY)},{passive:true});
+  box.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button===0&&e.target.closest('#evView')&&!e.target.closest('button'))start(e.clientX,e.clientY)});
+  box.addEventListener('pointerup',e=>{if(e.pointerType==='mouse')end(e.clientX,e.clientY)});
+  box.addEventListener('click',e=>{if(moved&&e.target.closest('#evView')){e.preventDefault();e.stopPropagation();moved=false}},true);
+  box.addEventListener('dragstart',e=>{if(e.target.closest&&e.target.closest('#evView'))e.preventDefault()});
   matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',evSync);
 }
 // three facts for the card's middle (desktop): start, ride time, back at (from distance, pace and any stop)
