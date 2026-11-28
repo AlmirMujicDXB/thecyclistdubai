@@ -34,8 +34,10 @@
 .rsvp-empty b{display:block;font-size:22px;font-weight:800;letter-spacing:-.3px;color:#14532d}
 .rsvp-empty span{display:block;margin-top:3px;font-size:14px;font-weight:500;color:#5b6b80;line-height:1.4}
 .rsvp-id strong{font-size:16px}
-.rsvp-who-top{display:grid;grid-template-columns:1fr auto;grid-template-areas:"title pills" "count pills";align-items:center;column-gap:12px;row-gap:2px}
+.rsvp-who-top{display:grid;grid-template-columns:1fr auto;grid-template-areas:"title pills" "when pills" "count pills";align-items:center;column-gap:12px;row-gap:2px}
 .rsvp-who h3{grid-area:title;margin:0;font-size:18px;font-weight:800;letter-spacing:-.2px}
+.rsvp-when{grid-area:when;margin:0;font-size:13px;font-weight:700;color:#3f6b55}
+.rsvp-when:empty{display:none}
 .rsvp-count{grid-area:count;margin:0;display:flex;align-items:baseline;gap:8px}
 .rsvp-count b{font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:700;font-size:42px;line-height:1;letter-spacing:-1px;color:var(--rsvp-green);font-variant-numeric:tabular-nums}
 .rsvp-count span{font-size:15px;font-weight:600;color:var(--rsvp-mut)}
@@ -65,7 +67,7 @@
   .rsvp-lead{font-size:13px}
   .rsvp-form{grid-template-columns:1fr;gap:10px}
   .rsvp-go{width:100%;height:48px}
-  .rsvp-who-top{grid-template-areas:"title pills" "count count";align-items:center;row-gap:4px}
+  .rsvp-who-top{grid-template-areas:"title pills" "when when" "count count";align-items:center;row-gap:4px}
   .rsvp-count b{font-size:34px}
   .rsvp-count span{font-size:14px}
   .rsvp-pill.ex{font-size:9.5px;padding:4px 7px}
