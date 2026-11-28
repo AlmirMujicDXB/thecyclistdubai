@@ -31,17 +31,18 @@ Table: `public.rsvps`
 | What | Where it comes from |
 | --- | --- |
 | `ride_ref` | `data-ride-ref` on the page. TCD Ride is `tcd-ride`. Purple Ride is `purple-ride`. |
-| `ride_date` | The day selected on the ride page (the chips under "Plan for"), when one is showing. |
+| `ride_date` | The day selected on the ride page (the chips under "Plan for"). Asia/Dubai calendar date. |
+| `ride_time` | The scheduled start for that date (`time` in site-data.js, or that date's `changes.time`). Asia/Dubai wall clock. The planner's start clock does not change this. |
 | `email` | The form, stored in lower case. |
 | `name` | The form, or empty. |
 | `status` | `confirmed` |
 | `confirmed` | true |
 
-One email can sign up once for TCD Ride and once for Purple Ride. A second try on the same ride is refused by the database (unique on ride ref + email).
+One email can sign up once for each occurrence of TCD Ride and once for each occurrence of Purple Ride. A second try for the same ride, date and start time is refused by the database (unique on ride ref + date + time + email). Next week's date is a new occurrence, so the same email can confirm again. Old rows are kept.
 
-The public list is not a direct read of the table. The page calls `ride_attendees(ride_ref)`, which returns only the short name, the status, and the count. The visitor key in `js/supabase-config.js` is the publishable key. It is allowed to insert a row and to call that function. It is not allowed to read the table, so the page never asks the insert to return the new row.
+The public list is not a direct read of the table. The page calls `ride_occurrence_attendees(ride_ref, ride_date, ride_time)`, which returns only the short name, the status, and the count for that occurrence. `ride_attendees(ride_ref)` remains for older pages: it returns confirmations whose scheduled start is still in the future in Asia/Dubai, and hides ones that have already started. The visitor key in `js/supabase-config.js` is the publishable key. It is allowed to insert a row and to call those functions. It is not allowed to read the table, so the page never asks the insert to return the new row.
 
-The list is everyone for that ride, not one Tuesday or one Thursday on its own. The date is stored so you can see which occurrence they had on screen when they signed up. The same person cannot sign up again next week under the same email; they will see the "already on the list" message.
+The list is that Tuesday or that Thursday on its own. After the start time passes, the ride page moves to the next week and the count starts at zero. Nothing is deleted.
 
 Rows whose `ride_ref` starts with `test-` are checks made while building this. They are not real riders. You can delete them in the Supabase table editor when you like.
 
@@ -60,7 +61,7 @@ To look at it before merge, open the branch files with a local web server (the p
 ## Go live later
 
 1. Read the pull request and merge it into `main` when you are happy with it. Pages will publish the two ride pages with the RSVP on them.
-2. Do not change the Supabase table for this. It is already set up.
+2. The occurrence columns and functions are in `supabase/migrations/20261128033000_rsvp_per_occurrence.sql`. They are already applied on the live project. Do not delete rows to reset a week.
 3. Do not put a service-role key, secret key, or database password in the site. The publishable key in `js/supabase-config.js` is the only key the pages need.
 4. Real sign-ups use `tcd-ride` and `purple-ride`. Leave those refs as they are unless you want a new list.
 
@@ -70,4 +71,4 @@ To look at it before merge, open the branch files with a local web server (the p
 2. After `ride-page.js`, add a mount and the three scripts, the same way `tcd-ride.html` does.
 3. Set `data-ride-ref` to a new slug that is not `tcd-ride` or `purple-ride`. That slug is the list. Same table, separate people.
 
-To give each date its own list instead of one list for the whole ride, the `data-ride-ref` value itself has to be different per date. The database lists people by that value only. Do that only if you want separate lists.
+Each date already has its own list. Use the same `data-ride-ref` every week. The ride page passes that week's date and scheduled start time.

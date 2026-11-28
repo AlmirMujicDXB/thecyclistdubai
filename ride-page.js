@@ -136,6 +136,10 @@ function nextRides(n){const out=[],now=dubaiNow();let d=new Date(Date.UTC(now.ge
 const DATES=nextRides(4);if(!DATES.length)DATES.push(ymd(dubaiNow()));
 const timeFor=d=>(RIDE.changes&&RIDE.changes[d]&&RIDE.changes[d].time)||RIDE.time||'06:30';
 const ST={date:DATES[0],start:timeFor(DATES[0]),leg:'out',mode:'speed',wx:null,layer:'cycle'};
+/* Scheduled occurrence for the sign-up list. The planner clock (ST.start) can move; the list does not. Asia/Dubai wall time. */
+function markOccurrence(){const t=timeFor(ST.date);document.body.setAttribute('data-ride-date',ST.date);document.body.setAttribute('data-ride-time',t);
+  const rsvp=document.getElementById('rsvp');if(rsvp){rsvp.setAttribute('data-ride-date',ST.date);rsvp.setAttribute('data-ride-time',t)}}
+markOccurrence();
 if(FULL)$('tStart').value=ST.start;
 
 /* ---------- route ---------- */
@@ -248,8 +252,7 @@ function score(w){if(!w)return null;let s=100;const f=w.apparent_temperature,ws=
 function renderFull(){
   const p=dateParts(ST.date),sm=startMins(),has=hasWx(),pace=groupPace();
   $('hDow').textContent=p.dow;$('hDay').textContent=p.day;$('hMon').textContent=p.mon;
-  document.body.setAttribute('data-ride-date',ST.date);
-  const rsvp=document.getElementById('rsvp');if(rsvp)rsvp.setAttribute('data-ride-date',ST.date);
+  markOccurrence();
   $('hTime').textContent=clock(sm);const rl=relLabel(ST.date);$('hNext').textContent=/^(Today|Tomorrow)/.test(rl)?'📅 '+rl.split(' ')[0]:'';$('hNext').style.display=$('hNext').textContent?'':'none';
   $('sPace').textContent=pace+' km/h';
   if(NET){$('sDist').textContent=RIDE.distance||`${routeKm()} km`;$('sDistN').textContent=RIDE.distance?'':'set in the planner';$('sGain').textContent=CFG.gainText||'Rolling';$('sTurn').textContent=`${(NETLEN/1000).toFixed(1)} km`}
@@ -352,8 +355,7 @@ function renderAll(){
   $('hWhen').textContent=`${soon?soon+' · ':''}${clock(sm)}`;
   $('sPace').textContent=pace+' km/h';
   $('sDist').textContent=NET?(RIDE.distance||`${routeKm().toFixed(1)} km`):(CUM[CUM.length-1]/1000).toFixed(1)+' km';
-  document.body.setAttribute('data-ride-date',ST.date);
-  const rsvp=document.getElementById('rsvp');if(rsvp)rsvp.setAttribute('data-ride-date',ST.date);
+  markOccurrence();
   const g=sim('speed',pace,has);
   drawRoute(g);
   const w0=wxAt(sm);
