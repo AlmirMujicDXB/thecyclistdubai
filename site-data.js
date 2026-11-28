@@ -12,7 +12,6 @@ window.SITE = {
     whatsappGroup: 'https://chat.whatsapp.com/HJNHNBjf88KEudF1uojZIo?mode=gi_t',
     instagram: 'https://www.instagram.com/thecyclistdubai/',
     strava: 'https://www.strava.com/athletes/13924498',
-    // Homepage contact card and contact.html use whatsappGroup, instagram and strava.
     bikeRental: 'https://wolfis.ae/pages/rental-bikes',   // Wolfi's bike rental (every "Bike rental" button links here)
     bikeRentalLogo: 'https://wolfis.ae/cdn/shop/files/WOLFIS_HOMEPAGE_TOP_LOGO_24_YEARS.png?v=1787554065&width=420',
   },
