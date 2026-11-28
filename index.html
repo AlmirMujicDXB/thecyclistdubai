@@ -532,13 +532,15 @@ a.rentlink{color:inherit;font-weight:700;text-decoration:none;border-bottom:2px 
 
 /* ---------- etiquette strip: under Events, about a quarter of an event card ---------- */
 .eqsec{min-width:0}
-.eq{box-sizing:border-box;height:32px;display:flex;align-items:center;gap:8px;padding:0 4px 0 10px;border-radius:12px;color:#13233f;background:linear-gradient(90deg,#4f7a64,#6b9a80 42%,#86b39a) top/100% 3px no-repeat,linear-gradient(110deg,#fdf9f2 0%,#f8eedd 58%,#f3e5cb 100%);border:1px solid #ead9bb;box-shadow:inset 0 1px 0 #fff,0 4px 12px #8a5a1f16}
+.eq{box-sizing:border-box;height:32px;display:flex;align-items:center;gap:8px;padding:0 4px 0 12px;border-radius:12px;color:#13233f;background:linear-gradient(90deg,#4f7a64,#6b9a80 42%,#86b39a) top/100% 3px no-repeat,linear-gradient(110deg,#fdf9f2 0%,#f8eedd 58%,#f3e5cb 100%);border:1px solid #ead9bb;box-shadow:inset 0 1px 0 #fff,0 4px 12px #8a5a1f16}
 .eq-k{margin:0;font-size:12.5px;font-weight:800;letter-spacing:-.2px;white-space:nowrap}
-.eq-btns{margin-left:auto;display:flex;align-items:center;gap:6px;min-width:0}
+.eq-btns{margin-left:12px;align-items:center;gap:8px;min-width:0}
 .eqb{height:24px;padding:0 10px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font:800 12px Sora,sans-serif;white-space:nowrap;box-sizing:border-box}
-.eqb.go{background:linear-gradient(110deg,#4f7a64,#6b9a80 70%,#86b39a);color:#fff;border:1px solid #3f6b55}
-.eqb.qz{background:#fff;color:#3f6b55;border:1px solid #dcc49a}
-.eqb:hover{transform:translateY(-1px)}
+.eq-btns{flex:1;display:grid;grid-template-columns:1fr 1fr}
+.eqb{gap:6px;background:#fff;color:#3f6b55;border:1px solid #dcc49a;box-shadow:0 1px 2px #8a5a1f14;transition:transform .15s,background .15s,border-color .15s;overflow:hidden;text-overflow:ellipsis}
+.eqb::after{content:"›";font-size:15px;line-height:1;color:#6b9a80;transition:transform .15s}
+.eqb:hover{transform:translateY(-1px);background:#f6faf7;border-color:#6b9a80}
+.eqb:hover::after{transform:translateX(2px)}
 .eqb:focus-visible{outline:2px solid #e11d48;outline-offset:2px}
 /* ---------- footer, share, toast ---------- */
 footer{margin-top:16px;padding:14px 0 2px;border-top:1px solid var(--th-line);color:var(--muted)}
@@ -674,9 +676,9 @@ footer{margin-top:16px;padding:14px 0 2px;border-top:1px solid var(--th-line);co
   footer{margin-top:14px;padding-top:12px}
   .eq{height:52px;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:14px 28px;align-content:center;gap:2px 6px;padding:0 8px}
   .eq-k{font-size:11px;line-height:14px}
-  .eq-btns{margin-left:0;display:grid;grid-template-columns:minmax(0,1fr) auto;width:100%}
-  .eqb{height:28px;font-size:12px;padding:0 9px}
-  .eqb.go{width:100%}
+  .eq-btns{margin-left:0;grid-template-columns:1fr 1fr;gap:6px;width:100%}
+  .eqb{height:28px;font-size:11px;padding:0 6px;gap:4px;letter-spacing:-.2px}
+  @media (max-width:380px){.eqb::after{display:none}}
   .evt-tag:has(.code) .st-l{display:none}
   .mapinfo{padding:11px 12px 13px}
   .fac{gap:6px}
